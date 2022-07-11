@@ -45,22 +45,22 @@
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
             <ul class="sub-menu" id="sublist-repair">
-                <li>
-                  <a class="link-name" href="<%= url %>veiws/inventory/">Inventory</a>
-                </li>
-                <li>
-                  <a href="<%= url %>veiws/Rak/">Master Rak</a>
-                </li>
-                <li>
-                  <a href="<%= url %>veiws/Barang/">Master Barang</a>
-                </li>
-                <li>
-                  <a href="<%= url %>veiws/kodeBarang/">Master Kode Barang</a>
-                </li>
-                <li>
-                  <a href="<%= url %>veiws/vendor/">Master Vandor</a>
-                </li>
-              </ul>
+              <li>
+                <a class="link-name" href="<%= url %>veiws/inventory/">Inventory</a>
+              </li>
+              <li>
+                <a href="<%= url %>veiws/Rak/">Master Rak</a>
+              </li>
+              <li>
+                <a href="<%= url %>veiws/Barang/">Master Barang</a>
+              </li>
+              <li>
+                <a href="<%= url %>veiws/kodeBarang/">Master Kode Barang</a>
+              </li>
+              <li>
+                <a href="<%= url %>veiws/vendor/">Master Vandor</a>
+              </li>
+            </ul>
           <li class="nav-text">
             <a href="#"><i class="bi bi-check2-all"></i> QR/QC</a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
@@ -74,7 +74,7 @@
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
           <li class="nav-text">
-            <a href="#"><i class="bi bi-house-door"></i> Mark/Purchase</a>
+            <a href="#"><i class="bi bi-cash-stack"></i> Mark/Purchase</a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
           <li class="nav-text">
@@ -82,12 +82,26 @@
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
           <li class="nav-text">
-            <a href="#"><i class="bi bi-globe2"></i> HR/GA</a>
+            <a href="#" onclick="toggle('sublist-hr')"><i class="bi bi-globe2"></i> HR/GA</a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
+            <ul class="sub-menu" id="sublist-hr">
+              <li>
+                <a class="link-name" href="<%= url %>veiws/hr/">HR/GA</a>
+              </li>
+            </ul>
         </div>
         <hr />
         <div class="nav-section">
+          <li class="nav-text">
+            <a href="#" onclick="toggle('sublist-cabang')"><i class="bi bi-house-door"></i> Cabang</a>
+            <i class="bi bi-chevron-compact-down" id="iconDown"></i>
+          </li>
+            <ul class="sub-menu" id="sublist-cabang">
+              <li>
+                <a class="link-name" href="<%= url %>veiws/cabang/">Cabang</a>
+              </li>
+            </ul>
           <li class="nav-text">
             <a href="#"><i class="bi bi-clock-history"></i> History</a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>

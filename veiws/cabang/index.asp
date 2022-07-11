@@ -3,7 +3,7 @@
     set data =  Server.CreateObject ("ADODB.Command")
     data.ActiveConnection = mm_Delima_String
 
-    data.commandText = "SELECT * FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y'"
+    data.commandText = "SELECT * FROM GLB_M_Agen"
     set vendor = data.execute
 
     set conn = Server.CreateObject("ADODB.Connection")
@@ -17,28 +17,11 @@
     if len(angka) = 0 then 
         angka = Request.form("urut") + 1
     end if
-    ' untuk data
-    code = Request.QueryString("code")
-    if len(code) = 0 then
-        code = Request.form("code")
-    end if
-    nama = Request.QueryString("nama")
-    if len(nama) = 0 then 
-        nama = Request.form("nama")
-    end if
-    aktifId = Request.QueryString("aktifId")
-    if len(aktifId) = 0 then    
-        aktifId = Request.form("aktifId")
-    end if
-    updateId = Request.QueryString("updateId")
-    if len(updateId) = 0 then
-        updateId = Request.form("updateId")
-    end if
     page = Request.QueryString("page")
 
-    orderBy = " order by Ven_Nama ASC"
+    orderBy = " order by Agen_Nama ASC"
     set rs = Server.CreateObject("ADODB.Recordset")
-    sqlawal = "SELECT * FROM DLK_M_Vendor"
+    sqlawal = "SELECT * FROM GLB_M_Agen"
     sql=sqlawal + orderBy
     rs.open sql, conn
     ' records per halaman
@@ -58,7 +41,7 @@
     end if
     rs.close
     set rs = server.CreateObject("ADODB.RecordSet")
-    sqlawal = "SELECT * from DLK_M_Vendor"
+    sqlawal = "SELECT * from GLB_M_Agen"
     sql=sqlawal + orderBy
     rs.open sql, conn
     ' reads first records (offset) without showing them (can't find another solution!)
@@ -77,7 +60,7 @@
 <div class="container">
     <div class="row mt-3 mb-3 text-center">
         <div class="col-lg-12">
-            <h3>MASTER VENDOR</h3>
+            <h3>MASTER CABANG</h3>
         </div>
     </div>
     <div class="row mb-3">
