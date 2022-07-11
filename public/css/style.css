@@ -1,0 +1,158 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:wght@200&family=Oswald:wght@200&display=swap');
+
+@font-face {
+    font-family: firsans;
+    src: url(../font/FiraSansCondensed-Regular.ttf);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: firsans;
+}
+
+hr {
+    background-color: black;
+    height: 1px;
+    border: none;
+}
+
+#navbar {
+    background-color: #212121;
+    height: 100px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.menu-bars {
+    margin-left: 2rem;
+    font-size: 2rem;
+    color: #fff;
+}
+
+#nav-menu {
+    background-color: #212121;
+    width: 250px;
+    height: 100vh;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    transition: 400ms;
+}
+
+#nav-menu.active {
+    left: 0;
+    transition: 400ms;
+    z-index: 1000;
+}
+.nav-text {
+    display: flex;
+    list-style: none;
+    height: 50px;
+    padding: 1rem;
+    align-items: center;
+    justify-content: space-between;
+}
+.nav-text #iconDown{
+    color:#fff
+}
+.nav-text a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.2rem;
+    margin-left: 1rem;
+    width: 100%;
+}
+.nav-text:hover {
+    background-color: rgba(144, 144, 144, 0.219);
+    cursor: pointer;
+}
+
+.nav-menu-items {
+    width: 100%;
+    padding-left: 0;
+}
+
+.nav-icon {
+    padding-right: 1rem;
+    color: #909090;
+}
+
+#delima-logo {
+    padding-right: 0.2rem;
+    margin-left: 0.2rem;
+}
+
+#navbar-toggle {
+    background-color: #212121;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+#navbar-toggle h1 {
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+}
+
+#navbar-toggle a {
+    text-decoration: none;
+}
+
+.bi-bi {
+    color: #fff;
+}
+
+.sub-menu{
+  padding:6px 6px 14px 65px;
+  margin-top:-10px;
+  background: rgba(0, 0, 0, 0.5);
+  display:none;
+  list-style: none;
+  /* transition: all 0.3s; */
+}
+.sub-menu li{
+    padding:7px;
+}
+
+.sub-menu li:hover{
+    background-color: red;
+}
+
+.sub-menu a{
+  color:#fff;
+  font-size:15px;
+  text-decoration:none;
+  padding:5px 0;
+  white-space:nowrap;
+}  
+
+.open-list{
+    display: block;
+    transition: all 0.3s;
+}
+
+.nav-section.close .sub-menu a .link-name{
+  font-size:20px;
+}
+
+/* for disable screem */
+.overlay {
+    background-color: #EFEFEF;
+    /* position: fixed; */
+    /* width: 100%;
+    height: 100%; */
+    /* z-index: 999;
+    top: 0px;
+    left: 0px; */
+    opacity: .5;
+    /* in FireFox */
+    filter: alpha(opacity=50);
+    /* in IE */
+    pointer-events:none;
+}
