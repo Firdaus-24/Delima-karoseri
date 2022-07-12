@@ -1,7 +1,5 @@
 <!--#include file="../../init.asp"-->
-<% 
-    call header("kodebarangUpdate")
- %>
+<% call header("kodebarangUpdate") %>
 <!--#include file="../../navbar.asp"-->
 <% 
     id = Request.QueryString("id")

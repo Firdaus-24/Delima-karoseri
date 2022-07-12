@@ -12,3 +12,4 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <!-- build-in style -->
     <link href="../../public/css/style.css" rel="stylesheet" />
+    <link href="../../public/css/cabang.css" rel="stylesheet" />

@@ -9,7 +9,7 @@ sub tambahKdBarang()
     data_cmd.commandText = "SELECT * FROM DLK_M_KodeBarang WHERE Kode_Nama = '"& nama &"'"
     set data = data_cmd.execute
 
-    if data.eof then
+    if not data.eof then
         call query("exec sp_AddDLK_M_KodeBarang '"& nama &"','"& deskripsi &"'")
         value = 1 'case untuk insert data
     else

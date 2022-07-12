@@ -18,22 +18,6 @@
         angka = Request.form("urut") + 1
     end if
     ' untuk data
-    code = Request.QueryString("code")
-    if len(code) = 0 then
-        code = Request.form("code")
-    end if
-    nama = Request.QueryString("nama")
-    if len(nama) = 0 then 
-        nama = Request.form("nama")
-    end if
-    aktifId = Request.QueryString("aktifId")
-    if len(aktifId) = 0 then    
-        aktifId = Request.form("aktifId")
-    end if
-    updateId = Request.QueryString("updateId")
-    if len(updateId) = 0 then
-        updateId = Request.form("updateId")
-    end if
     page = Request.QueryString("page")
 
     orderBy = " order by Ven_Nama ASC"
@@ -82,7 +66,7 @@
     </div>
     <div class="row mb-3">
         <div class="col-lg-2">
-            <a href="tambah.asp" class="btn btn-primary">Tambah</a>
+            <a href="ven_add.asp" class="btn btn-primary">Tambah</a>
         </div>
     </div>
     <div class="row">

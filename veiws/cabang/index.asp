@@ -3,8 +3,8 @@
     set data =  Server.CreateObject ("ADODB.Command")
     data.ActiveConnection = mm_Delima_String
 
-    data.commandText = "SELECT * FROM GLB_M_Agen"
-    set vendor = data.execute
+    data.commandText = "SELECT * FROM GLB_M_Agen WHERE AgenAktifYN = 'Y'"
+    set cabang = data.execute
 
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
@@ -19,9 +19,9 @@
     end if
     page = Request.QueryString("page")
 
-    orderBy = " order by Agen_Nama ASC"
+    orderBy = " order by AgenID ASC"
     set rs = Server.CreateObject("ADODB.Recordset")
-    sqlawal = "SELECT * FROM GLB_M_Agen"
+    sqlawal = "SELECT * FROM GLB_M_Agen WHERE AgenAktifYN = 'Y'"
     sql=sqlawal + orderBy
     rs.open sql, conn
     ' records per halaman
@@ -41,7 +41,7 @@
     end if
     rs.close
     set rs = server.CreateObject("ADODB.RecordSet")
-    sqlawal = "SELECT * from GLB_M_Agen"
+    sqlawal = "SELECT * from GLB_M_Agen WHERE AgenAktifYN = 'Y'"
     sql=sqlawal + orderBy
     rs.open sql, conn
     ' reads first records (offset) without showing them (can't find another solution!)
@@ -54,7 +54,7 @@
         end if	
     loop
 
-    call header("Vendor")
+    call header("Master Cabang")
 %>    
 <!--#include file="../../navbar.asp"-->
 <div class="container">
@@ -65,7 +65,7 @@
     </div>
     <div class="row mb-3">
         <div class="col-lg-2">
-            <a href="tambah.asp" class="btn btn-primary">Tambah</a>
+            <a href="cb_add.asp" class="btn btn-primary">Tambah</a>
         </div>
     </div>
     <div class="row">
@@ -76,8 +76,11 @@
                     <th scope="col">No</th>
                     <th scope="col">Nama</th>
                     <th scope="col">Alamat</th>
+                    <th scope="col">Pos</th>
+                    <th scope="col">Phone1</th>
+                    <th scope="col">Phone2</th>
+                    <th scope="col">Email</th>
                     <th scope="col">Contact</th>
-                    <th scope="col">Aktif</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -91,11 +94,19 @@
                     %>
                     <tr>
                         <th scope="row"><%= recordcounter %></th>
-                        <td><%= rs("ven_Nama") %></td>
-                        <td><%= rs("ven_Alamat") %></td>
-                        <td><%= rs("ven_phone") %></td>
-                        <td><%if rs("ven_AktifYN") = "Y" then%>Aktif <% end if %></td>
-                        <td></td>
+                        <td><%= rs("agenName") %></td>
+                        <td><%= rs("agenAlamat") %></td>
+                        <td><%= rs("agenKodepos") %></td>
+                        <td><%= rs("agenphone1") %></td>
+                        <td><%= rs("agenphone2") %></td>
+                        <td><%= rs("agenEmail") %></td>
+                        <td><%= rs("agencontactperson") %></td>
+                        <td class="text-center">
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <a href="cb_u.asp?id=<%= rs("agenID") %>" class="btn badge text-bg-primary">update</a>
+                                <a href="aktif.asp?id=<%= rs("AgenID") %>" class="btn badge text-bg-danger btn-aktifCabang">delete</a>
+                            </div>
+                        </td>
                     </tr>
                     <% 
                     showrecords = showrecords - 1
