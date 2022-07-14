@@ -6,6 +6,6 @@
 <!--#include file="../../navbar.asp"-->
 <%      
         call query("UPDATE DLK_M_KodeBarang SET Kode_AktifYN = 'N' WHERE Kode_ID = '"& id &"'")
-        call alert("KODE BARANG", "berhasil non aktifkan", "success","index.asp") 
+        call alert("KODE BARANG ID "& id &"", "berhasil non aktifkan", "success","index.asp") 
 call footer() 
 %>

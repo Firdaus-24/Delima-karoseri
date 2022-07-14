@@ -41,6 +41,7 @@ hr {
     top: 0;
     left: -100%;
     transition: 400ms;
+    overflow-y: auto;
 }
 
 #nav-menu.active {
@@ -48,6 +49,7 @@ hr {
     transition: 400ms;
     z-index: 1000;
 }
+
 .nav-text {
     display: flex;
     list-style: none;
@@ -145,15 +147,40 @@ hr {
 /* for disable screem */
 .overlay {
     background-color: #EFEFEF;
-    /* position: fixed; */
-    /* width: 100%;
-    height: 100%; */
-    /* z-index: 999;
-    top: 0px;
-    left: 0px; */
     opacity: .5;
     /* in FireFox */
     filter: alpha(opacity=50);
     /* in IE */
     pointer-events:none;
+}
+
+/* for scroll bar */
+/* width */
+::-webkit-scrollbar {
+    width: 2px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgb(96, 88, 88); 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #b30000; 
+  }
+
+/* fortable data */
+@media (max-width:801px){
+    .table{
+        display: block;
+        overflow-x: scroll;
+    }
 }

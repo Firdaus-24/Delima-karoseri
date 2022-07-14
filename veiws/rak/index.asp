@@ -1,14 +1,14 @@
 <!--#include file="../../init.asp"-->
 <% 
     agen = trim(Request.Form("agen"))
-    nama = trim(Request.Form("nama"))
+    nama = trim(Ucase(Request.Form("nama")))
 
-    ' query cabang 
-    set agen_cmd =  Server.CreateObject ("ADODB.Command")
-    agen_cmd.ActiveConnection = mm_delima_string
+    'query cabang/agen
+    set cabang_cmd =  Server.CreateObject ("ADODB.Command")
+    cabang_cmd.ActiveConnection = mm_delima_string
 
-    agen_cmd.commandText = "SELECT AgenID, AgenName FROM GLB_M_Agen WHERE AgenAktifYN = 'Y'"
-    set agendata = agen_cmd.execute
+    cabang_cmd.commandText = "SELECT agenID, AgenName FROM GLB_M_Agen WHERE AgenAktifYN = 'Y'"
+    set agendata = cabang_cmd.execute
 
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
@@ -21,22 +21,22 @@
     if len(angka) = 0 then 
         angka = Request.form("urut") + 1
     end if
-    
+
     ' query seach 
     if agen <> "" and nama <> "" then
-        strquery = "SELECT * FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y' AND left(Ven_id,3) = '"& agen &"' AND ven_Nama LIKE '%"& nama &"%'"
+        strquery = "SELECT * FROM DLK_M_Rak WHERE Rak_AktifYN = 'Y' AND left(Rak_id,3) = '"& agen &"' AND Rak_Nama LIKE '%"& nama &"%'"
     elseif agen <> "" then
-        strquery = "SELECT * FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y' AND left(Ven_id,3) = '"& agen &"'"
+        strquery = "SELECT * FROM DLK_M_Rak WHERE Rak_AktifYN = 'Y' AND left(Rak_id,3) = '"& agen &"'"
     elseif nama <> "" then
-        strquery = "SELECT * FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y' AND ven_Nama LIKE '%"& nama &"%'"
+        strquery = "SELECT * FROM DLK_M_Rak WHERE Rak_AktifYN = 'Y' AND Rak_Nama LIKE '%"& nama &"%'"
     else
-        strquery = "SELECT * FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y'"
+        strquery = "SELECT * FROM DLK_M_Rak WHERE Rak_AktifYN = 'Y'"
     end if
 
     ' untuk data paggination
     page = Request.QueryString("page")
 
-    orderBy = " order by Ven_Nama ASC"
+    orderBy = " order by Rak_Nama ASC"
     set rs = Server.CreateObject("ADODB.Recordset")
     sqlawal = strquery
 
@@ -72,18 +72,19 @@
         end if	
     loop
 
-    call header("Vendor")
-%>    
+    call header("Master Rak") 
+
+%>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
-    <div class="row mt-3 mb-3 text-center">
-        <div class="col-lg-12">
-            <h3>MASTER VENDOR</h3>
+    <div class="row mt-3">
+        <div class="col-lg-12 text-center">
+            <h3>MASTER RAK INVENTORY</h3>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-2 mb-3">
-            <a href="ven_add.asp" class="btn btn-primary">Tambah</a>
+    <div class="row mt-3 mb-3">
+        <div class="col-lg-2">
+            <a href="ra_add.asp" class="btn btn-primary">Tambah</a>
         </div>
     </div>
     <div class="row">
@@ -100,7 +101,7 @@
                 </select>
         </div>
         <div class="col-lg-4 mb-3">
-                <input type="text" class="form-control" name="nama" id="nama" autocomplete="off" placeholder="cari nama vendor">
+                <input type="text" class="form-control" name="nama" id="nama" autocomplete="off" placeholder="cari nama rak">
         </div>
         <div class="col-lg mb-3">
             <button type="submit" class="btn btn-primary">Cari</button>
@@ -114,30 +115,32 @@
                     <tr>
                     <th scope="col">No</th>
                     <th scope="col">Nama</th>
-                    <th scope="col">Alamat</th>
-                    <th scope="col">Contact</th>
+                    <th scope="col">UpdateTime</th>
+                    <th scope="col">UpdateID</th>
+                    <th scope="col">Keterangan</th>
                     <th scope="col">Aktif</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% 
-                    'prints records in the table
+                   'prints records in the table
                     showrecords = recordsonpage
                     recordcounter = requestrecords
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
                     %>
                     <tr>
-                        <th scope="row"><%= recordcounter %></th>
-                        <td><%= rs("ven_Nama") %></td>
-                        <td><%= rs("ven_Alamat") %></td>
-                        <td><%= rs("ven_phone") %></td>
-                        <td><%if rs("ven_AktifYN") = "Y" then%>Aktif <% end if %></td>
+                        <th scope="row"><%= recordcounter %> </th>
+                        <td><%= rs("Rak_Nama") %></td>
+                        <td><%= rs("Rak_updateTime") %></td>
+                        <td><%= rs("Rak_UpdateID") %></td>
+                        <td><%= rs("Rak_Keterangan") %></td>
+                        <td><%if rs("Rak_AktifYN") = "Y" then %>Aktif <% end if %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="vn_u.asp?id=<%= rs("Ven_Id") %>" class="btn badge text-bg-primary">update</a>
-                                <a href="aktif.asp?id=<%= rs("Ven_Id") %>" class="btn badge text-bg-danger btn-aktifvendor">delete</a>
+                                <a href="ra_u.asp?id=<%= rs("Rak_Id") %>" class="btn badge text-bg-primary">update</a>
+                                <a href="aktif.asp?id=<%= rs("Rak_Id") %>" class="btn badge text-bg-danger btn-aktifrak">delete</a>
                             </div>
                         </td>
                     </tr>
@@ -149,7 +152,7 @@
                     end if
                     loop
                     rs.close
-                    %>
+                     %>
                 </tbody>
             </table>
         </div>

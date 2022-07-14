@@ -1,14 +1,6 @@
 <!--#include file="../../init.asp"-->
 <% 
-    agen = trim(Request.Form("agen"))
-    nama = trim(Request.Form("nama"))
-
-    ' query cabang 
-    set agen_cmd =  Server.CreateObject ("ADODB.Command")
-    agen_cmd.ActiveConnection = mm_delima_string
-
-    agen_cmd.commandText = "SELECT AgenID, AgenName FROM GLB_M_Agen WHERE AgenAktifYN = 'Y'"
-    set agendata = agen_cmd.execute
+    nama = trim(Ucase(Request.Form("nama")))
 
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
@@ -21,22 +13,18 @@
     if len(angka) = 0 then 
         angka = Request.form("urut") + 1
     end if
-    
+
     ' query seach 
-    if agen <> "" and nama <> "" then
-        strquery = "SELECT * FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y' AND left(Ven_id,3) = '"& agen &"' AND ven_Nama LIKE '%"& nama &"%'"
-    elseif agen <> "" then
-        strquery = "SELECT * FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y' AND left(Ven_id,3) = '"& agen &"'"
-    elseif nama <> "" then
-        strquery = "SELECT * FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y' AND ven_Nama LIKE '%"& nama &"%'"
+    if nama <> "" then
+        strquery = "SELECT * FROM DLK_M_Kategori WHERE KategoriAktifYN = 'Y' AND KategoriNama LIKE '%"& nama &"%'"
     else
-        strquery = "SELECT * FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y'"
+        strquery = "SELECT * FROM DLK_M_Kategori WHERE KategoriAktifYN = 'Y'"
     end if
 
     ' untuk data paggination
     page = Request.QueryString("page")
 
-    orderBy = " order by Ven_Nama ASC"
+    orderBy = " order by KategoriId ASC"
     set rs = Server.CreateObject("ADODB.Recordset")
     sqlawal = strquery
 
@@ -72,35 +60,25 @@
         end if	
     loop
 
-    call header("Vendor")
-%>    
+    call header("Master Kategori") 
+
+%>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
-    <div class="row mt-3 mb-3 text-center">
-        <div class="col-lg-12">
-            <h3>MASTER VENDOR</h3>
+    <div class="row mt-3">
+        <div class="col-lg-12 text-center">
+            <h3>MASTER KATEGORI</h3>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-2 mb-3">
-            <a href="ven_add.asp" class="btn btn-primary">Tambah</a>
+    <div class="row mt-3 mb-3">
+        <div class="col-lg-2">
+            <a href="kat_add.asp" class="btn btn-primary">Tambah</a>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-4 mb-3">
-            <form action="index.asp" method="post">
-                <select class="form-select" aria-label="Default select example" name="agen" id="agen">
-                    <option value="">Pilih</option>
-                    <% do while not agendata.eof %>
-                    <option value="<%= agendata("agenID") %>"><%= agendata("agenNAme") %></option>
-                    <% 
-                    agendata.movenext
-                    loop
-                    %>
-                </select>
-        </div>
-        <div class="col-lg-4 mb-3">
-                <input type="text" class="form-control" name="nama" id="nama" autocomplete="off" placeholder="cari nama vendor">
+        <form action="index.asp" method="post">
+                <input type="text" class="form-control" name="nama" id="nama" autocomplete="off" placeholder="cari kategori">
         </div>
         <div class="col-lg mb-3">
             <button type="submit" class="btn btn-primary">Cari</button>
@@ -112,32 +90,30 @@
             <table class="table">
                 <thead class="bg-secondary text-light">
                     <tr>
-                    <th scope="col">No</th>
+                    <th scope="col">Id</th>
                     <th scope="col">Nama</th>
-                    <th scope="col">Alamat</th>
-                    <th scope="col">Contact</th>
+                    <th scope="col">Keterangan</th>
                     <th scope="col">Aktif</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% 
-                    'prints records in the table
+                   'prints records in the table
                     showrecords = recordsonpage
                     recordcounter = requestrecords
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
                     %>
                     <tr>
-                        <th scope="row"><%= recordcounter %></th>
-                        <td><%= rs("ven_Nama") %></td>
-                        <td><%= rs("ven_Alamat") %></td>
-                        <td><%= rs("ven_phone") %></td>
-                        <td><%if rs("ven_AktifYN") = "Y" then%>Aktif <% end if %></td>
+                        <th scope="row"><%= rs("KategoriId") %> </th>
+                        <td><%= rs("KategoriNama") %></td>
+                        <td><%= rs("KategoriKeterangan") %></td>
+                        <td><%if rs("KategoriAktifYN") = "Y" then%>Aktif <% end if %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="vn_u.asp?id=<%= rs("Ven_Id") %>" class="btn badge text-bg-primary">update</a>
-                                <a href="aktif.asp?id=<%= rs("Ven_Id") %>" class="btn badge text-bg-danger btn-aktifvendor">delete</a>
+                                <a href="kat_u.asp?id=<%= rs("KategoriId") %>" class="btn badge text-bg-primary">update</a>
+                                <a href="aktif.asp?id=<%= rs("KategoriId") %>" class="btn badge text-bg-danger btn-aktifkat">delete</a>
                             </div>
                         </td>
                     </tr>
@@ -149,7 +125,7 @@
                     end if
                     loop
                     rs.close
-                    %>
+                     %>
                 </tbody>
             </table>
         </div>

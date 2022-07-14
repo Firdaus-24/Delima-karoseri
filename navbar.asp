@@ -20,24 +20,36 @@
         <hr />
         <div class="nav-section">
           <li class="nav-text">
-            <a href="#" onclick="toggle('sublist-inventory')"><i class="bi bi-box-seam"></i> Inventory</a>
+            <a href="#" onclick="toggle('sublist-master')"><i class="bi bi-boxes"></i> Master</a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
-            <ul class="sub-menu" id="sublist-inventory">
+            <ul class="sub-menu" id="sublist-master">
               <li>
-                <a class="link-name" href="<%= url %>veiws/inventory/">Inventory</a>
+                <a href="<%= url %>veiws/kategori/">Master Kategori</a>
+              </li>
+              <li>
+                <a href="<%= url %>veiws/jenis/">Master jenis</a>
               </li>
               <li>
                 <a href="<%= url %>veiws/Rak/">Master Rak</a>
               </li>
               <li>
-                <a href="<%= url %>veiws/Barang/">Master Barang</a>
+                <a href="<%= url %>veiws/satbarang/">Master Satuan Barang</a>
               </li>
               <li>
                 <a href="<%= url %>veiws/kodeBarang/">Master Kode Barang</a>
               </li>
               <li>
                 <a href="<%= url %>veiws/vendor/">Master Vandor</a>
+              </li>
+            </ul>
+          <li class="nav-text">
+            <a href="#" onclick="toggle('sublist-inventory')"><i class="bi bi-box-seam"></i> Inventory</a>
+            <i class="bi bi-chevron-compact-down" id="iconDown"></i>
+          </li>
+            <ul class="sub-menu" id="sublist-inventory">
+              <li>
+                <a class="link-name" href="<%= url %>veiws/inventory/">Inventory</a>
               </li>
             </ul>
           <li class="nav-text">
@@ -52,7 +64,7 @@
                 <a href="<%= url %>veiws/Rak/">Master Rak</a>
               </li>
               <li>
-                <a href="<%= url %>veiws/Barang/">Master Barang</a>
+                <a href="<%= url %>veiws/satbarang/">Master Satuan Barang</a>
               </li>
               <li>
                 <a href="<%= url %>veiws/kodeBarang/">Master Kode Barang</a>

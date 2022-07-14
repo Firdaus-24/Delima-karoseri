@@ -1,4 +1,5 @@
 <!--#include file="../../init.asp"-->
+<!--#include file="../../functions/func_kdbarang.asp"-->
 <% 
 call header("kodebarangAdd")
 
@@ -12,7 +13,7 @@ call header("kodebarangAdd")
     </div>
     <div class="row d-flex justify-content-center">
         <div class="col-lg-10">
-            <form action="tambah.asp" method="post">
+            <form action="tambah.asp" method="post" id="formKdBarang">
                 <div class="mb-3">
                     <label for="nama" class="form-label">Kode Type</label>
                     <input type="text" class="form-control" id="nama" name="nama" maxlength="20" autocomplete="off" required>

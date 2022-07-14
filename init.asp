@@ -3,4 +3,3 @@
 <!--#include file="functions/func_template.asp"-->
 <!--#include file="functions/func_query.asp"-->
 <!--#include file="functions/func_alert.asp"-->
-<!--#include file="functions/func_kdbarang.asp"-->

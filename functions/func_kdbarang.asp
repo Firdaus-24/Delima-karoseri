@@ -6,10 +6,10 @@ sub tambahKdBarang()
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_M_KodeBarang WHERE Kode_Nama = '"& nama &"'"
+    data_cmd.commandText = "SELECT * FROM DLK_M_KodeBarang WHERE Kode_Nama = '"& nama &"' AND Kode_Keterangan = '"& deskripsi &"'"
     set data = data_cmd.execute
 
-    if not data.eof then
+    if data.eof then
         call query("exec sp_AddDLK_M_KodeBarang '"& nama &"','"& deskripsi &"'")
         value = 1 'case untuk insert data
     else

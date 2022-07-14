@@ -1,4 +1,5 @@
 <!--#include file="../../init.asp"-->
+<!--#include file="../../functions/func_kdbarang.asp"-->
 <% call header("kodebarangUpdate") %>
 <!--#include file="../../navbar.asp"-->
 <% 
@@ -20,7 +21,7 @@
     </div>
     <div class="row d-flex justify-content-center">
         <div class="col-lg-10">
-            <form action="update.asp" method="post">
+            <form action="update.asp" method="post" id="formKdBarang">
                 <input type="hidden" class="form-control" id="id" name="id" value="<%= kdbarang("Kode_ID") %> ">
                 <div class="mb-3">
                     <label for="nama" class="form-label">Kode Type</label>
