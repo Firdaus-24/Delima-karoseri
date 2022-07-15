@@ -16,7 +16,7 @@
 <div class="container">
     <div class="row mt-3 mb-3">
         <div class="col-lg text-center">
-            <h3>FORM RUBAH KODE BARANG</h3>
+            <h3>FORM UPDATE KODE BARANG</h3>
         </div>
     </div>
     <div class="row d-flex justify-content-center">

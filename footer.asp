@@ -11,4 +11,6 @@
   <script src="../../public/js/rak.js"></script>
   <script src="../../public/js/satuanbarang.js"></script>
   <script src="../../public/js/kategori.js"></script>
+  <script src="../../public/js/jenis.js"></script>
+  <script src="../../public/js/divisi.js"></script>
 </html>
