@@ -25,6 +25,9 @@
           </li>
             <ul class="sub-menu" id="sublist-master">
               <li>
+                <a href="<%= url %>veiws/Barang/">Master Barang</a>
+              </li>
+              <li>
                 <a href="<%= url %>veiws/kategori/">Master Kategori</a>
               </li>
               <li>
@@ -42,9 +45,6 @@
               <li>
                 <a href="<%= url %>veiws/vendor/">Master Vandor</a>
               </li>
-              <li>
-                <a href="<%= url %>veiws/aset/">Master Aset</a>
-              </li>
             </ul>
           <li class="nav-text">
             <a href="#" onclick="toggle('sublist-inventory')"><i class="bi bi-box-seam"></i> Inventory</a>
@@ -52,7 +52,7 @@
           </li>
             <ul class="sub-menu" id="sublist-inventory">
               <li>
-                <a class="link-name" href="<%= url %>veiws/inventory/p_b_purce">Permintaan Barang</a>
+                <a class="link-name" href="<%= url %>veiws/inventory/p_b_purce.asp">Permintaan Barang</a>
               </li>
             </ul>
           <li class="nav-text">
