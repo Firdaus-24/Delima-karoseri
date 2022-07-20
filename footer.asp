@@ -14,4 +14,5 @@
   <script src="../../public/js/kategori.js"></script>
   <script src="../../public/js/jenis.js"></script>
   <script src="../../public/js/divisi.js"></script>
+  <script src="../../public/js/inventory.js"></script>
 </html>

@@ -52,7 +52,10 @@
           </li>
             <ul class="sub-menu" id="sublist-inventory">
               <li>
-                <a class="link-name" href="<%= url %>veiws/inventory/p_b_purce.asp">Permintaan Barang</a>
+                <a class="link-name" href="<%= url %>veiws/inventory/">Inventory</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>veiws/inventory/pb_barang.asp">Permintaan Barang</a>
               </li>
             </ul>
           <li class="nav-text">
@@ -89,9 +92,14 @@
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
           <li class="nav-text">
-            <a href="#"><i class="bi bi-cash-stack"></i> Mark/Purchase</a>
+            <a href="#" onclick="toggle('sublist-purces')"><i class="bi bi-cash-stack"></i> Mark/Purchase</a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
+            <ul class="sub-menu" id="sublist-purces">
+              <li>
+                <a class="link-name" href="<%= url %>veiws/purces/">Purchase</a>
+              </li>
+            </ul>
           <li class="nav-text">
             <a href="#"><i class="bi bi-bag-plus-fill"></i> Finc/Acc Dev</a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
