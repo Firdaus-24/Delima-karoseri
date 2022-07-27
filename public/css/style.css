@@ -157,7 +157,7 @@ hr {
 /* for scroll bar */
 /* width */
 ::-webkit-scrollbar {
-    width: 2px;
+    width: 1px;
   }
   
   /* Track */
@@ -182,5 +182,11 @@ hr {
     .table{
         display: block;
         overflow-x: scroll;
+    }
+    .table tr:nth-child(1){
+        white-space: nowrap;
+      }
+    ::-webkit-scrollbar {
+        width: 0.1;
     }
 }

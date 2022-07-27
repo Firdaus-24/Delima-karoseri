@@ -126,7 +126,7 @@
         </div>
         <div class="col-lg mb-3">
             <select class="form-select" aria-label="Default select example" name="kategori" id="kategori">
-                <option value="">Pilih Vendor</option>
+                <option value="">Pilih kategori</option>
                 <% do while not fkategori.eof %>
                 <option value="<%= fkategori("KategoriID") %>"><%= fkategori("KategoriNama") %></option>
                 <% 
@@ -137,7 +137,7 @@
         </div>
         <div class="col-lg mb-3">
             <select class="form-select" aria-label="Default select example" name="jenis" id="jenis">
-                <option value="">Pilih Vendor</option>
+                <option value="">Pilih Jenis</option>
                 <% do while not fjenis.eof %>
                 <option value="<%= fjenis("jenisID") %>"><%= fjenis("jenisNama") %></option>
                 <% 

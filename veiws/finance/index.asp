@@ -1,14 +1,23 @@
 <!--#include file="../../init.asp"-->
 <% 
     agen = trim(Request.Form("agen"))
-    nama = trim(Request.Form("nama"))
+    keb = trim(Request.Form("keb"))
+    tgla = trim(Request.Form("tgla"))
+    tgle = trim(Request.Form("tgle"))
 
-    ' query cabang 
+    ' query data  
+    set data_cmd =  Server.CreateObject ("ADODB.Command")
+    data_cmd.ActiveConnection = mm_delima_string
+
+    ' query cabang  
     set agen_cmd =  Server.CreateObject ("ADODB.Command")
     agen_cmd.ActiveConnection = mm_delima_string
-
-    agen_cmd.commandText = "SELECT AgenID, AgenName FROM GLB_M_Agen WHERE AgenAktifYN = 'Y'"
+    ' filter agen
+    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'N' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
     set agendata = agen_cmd.execute
+    ' filter kebutuhan
+    agen_cmd.commandText = "SELECT dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama FROM dbo.DLK_M_Kebutuhan INNER JOIN dbo.DLK_T_Memo_H ON dbo.DLK_M_Kebutuhan.kebID = dbo.DLK_T_Memo_H.memoKebID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y'  AND DLK_T_Memo_H.memoApproveYN = 'N' GROUP BY dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama"
+    set kebData = agen_cmd.execute
 
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
@@ -22,21 +31,32 @@
         angka = Request.form("urut") + 1
     end if
     
-    ' query seach 
-    if agen <> "" and nama <> "" then
-        strquery = "SELECT * FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y' AND left(Ven_id,3) = '"& agen &"' AND ven_Nama LIKE '%"& nama &"%'"
-    elseif agen <> "" then
-        strquery = "SELECT * FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y' AND left(Ven_id,3) = '"& agen &"'"
-    elseif nama <> "" then
-        strquery = "SELECT * FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y' AND ven_Nama LIKE '%"& nama &"%'"
+    if agen <> "" then
+        filterAgen = "AND memoAgenID = '"& agen &"'"
     else
-        strquery = "SELECT * FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y'"
+        filterAgen = ""
     end if
+
+    if keb <> "" then
+        filterKeb = "AND memoKebID = '"& keb &"'"
+    else
+        filterKeb = ""
+    end if
+
+    if tgla <> "" AND tgle <> "" then
+        filtertgl = "AND memotgl BETWEEN '"& tgla &"' AND '"& tgle &"'"
+    elseIf tgla <> "" AND tgle = "" then
+        filtertgl = "AND memotgl = '"& tgla &"'"
+    else 
+        filtertgl = ""
+    end if
+    ' query seach 
+    strquery = "SELECT * FROM DLK_T_Memo_H WHERE MemoAktifYN = 'Y' AND memoApproveYN = 'N' "& filterAgen &" "& filterKeb &" "& filtertgl &""
 
     ' untuk data paggination
     page = Request.QueryString("page")
 
-    orderBy = " order by Ven_Nama ASC"
+    orderBy = " order by memoTgl DESC"
     set rs = Server.CreateObject("ADODB.Recordset")
     sqlawal = strquery
 
@@ -72,23 +92,20 @@
         end if	
     loop
 
-    call header("Vendor")
-%>    
+
+    call header("Finance") 
+%>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
-    <div class="row mt-3 mb-3 text-center">
-        <div class="col-lg-12">
-            <h3>MASTER VENDOR</h3>
+    <div class="row">
+        <div class="col-lg-12 mt-3 mb-3 text-center">
+            <h3>FINANCE REQUEST</h3>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-2 mb-3">
-            <a href="ven_add.asp" class="btn btn-primary">Tambah</a>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-4 mb-3">
-            <form action="index.asp" method="post">
+    <form action="index.asp" method="post">
+        <div class="row">
+            <div class="col-lg-3 mb-3">
+                <label for="Agen">Cabang</label>
                 <select class="form-select" aria-label="Default select example" name="agen" id="agen">
                     <option value="">Pilih</option>
                     <% do while not agendata.eof %>
@@ -98,25 +115,45 @@
                     loop
                     %>
                 </select>
+            </div>
+            <div class="col-lg-3 mb-3">
+                <label for="keb">Kebutuhan</label>
+                <select class="form-select" aria-label="Default select example" name="keb" id="keb">
+                    <option value="">Pilih</option>
+                    <% do while not kebData.eof %>
+                    <option value="<%= kebData("kebID") %>"><%= kebData("kebNama") %></option>
+                    <% 
+                    kebData.movenext
+                    loop
+                    %>
+                </select>
+            </div>
+            <div class="col-lg-2 mb-3">
+                <label for="tgl">Tanggal Pertama</label>
+                <input type="date" class="form-control" name="tgla" id="tgla" autocomplete="off" >
+            </div>
+            <div class="col-lg-2 mb-3">
+                <label for="tgl">Tanggal Kedua</label>
+                <input type="date" class="form-control" name="tgle" id="tgle" autocomplete="off" >
+            </div>
+            <div class="col-lg-2 mt-4 mb-3">
+                <button type="submit" class="btn btn-primary">Cari</button>
+            </div>
         </div>
-        <div class="col-lg-4 mb-3">
-                <input type="text" class="form-control" name="nama" id="nama" autocomplete="off" placeholder="cari nama vendor">
-        </div>
-        <div class="col-lg mb-3">
-            <button type="submit" class="btn btn-primary">Cari</button>
-            </form>
-        </div>
-    </div>
+    </form>
     <div class="row">
         <div class="col-lg-12">
             <table class="table">
                 <thead class="bg-secondary text-light">
                     <tr>
                     <th scope="col">No</th>
-                    <th scope="col">Nama</th>
-                    <th scope="col">Alamat</th>
-                    <th scope="col">Contact</th>
+                    <th scope="col">No Memo</th>
+                    <th scope="col">Tanggal</th>
+                    <th scope="col">Cabang</th>
+                    <th scope="col">Divisi</th>
+                    <th scope="col">Kebutuhan</th>
                     <th scope="col">Aktif</th>
+                    <th scope="col">Permintaan</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -127,17 +164,29 @@
                     recordcounter = requestrecords
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
+
+                    data_cmd.commandText = "SELECT SUM(dbo.DLK_T_Memo_D.memoHarga * dbo.DLK_T_Memo_D.memoQtty) As tharga FROM dbo.DLK_T_Memo_H INNER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) WHERE (dbo.DLK_T_Memo_H.memoID = '"& rs("memoID") &"')"
+                    set ddata = data_cmd.execute
                     %>
                     <tr>
                         <th scope="row"><%= recordcounter %></th>
-                        <td><%= rs("ven_Nama") %></td>
-                        <td><%= rs("ven_Alamat") %></td>
-                        <td><%= rs("ven_phone") %></td>
-                        <td><%if rs("ven_AktifYN") = "Y" then%>Aktif <% end if %></td>
+                        <td>
+                            <%= left(rs("memoID"),4) %>/<% call getKebutuhan(mid(rs("memoId"),5,3),"") %>-<% call getAgen(mid(rs("memoID"),8,3),"") %>/<%= mid(rs("memoID"),11,4) %>/<%= right(rs("memoID"),3) %>
+                        </td>
+                        <td><%= rs("memoTgl") %></td>
+                        <td><% call getAgen(rs("memoAgenID"),"p") %></td>
+                        <td><% call getDivisi(rs("memoDivID")) %></td>
+                        <td><% call getKebutuhan(rs("memoKebID"),"P") %></td>
+                        <td>
+                            <%if rs("memoAktifYN") = "Y" then %>Aktif <% else %>Off <% end if %>
+                        </td>
+                        <td>
+                            <%= replace(formatCurrency(ddata("tharga")),"$","") %>
+                        </td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="vn_u.asp?id=<%= rs("Ven_Id") %>" class="btn badge text-bg-primary">update</a>
-                                <a href="aktif.asp?id=<%= rs("Ven_Id") %>" class="btn badge text-bg-danger btn-aktifvendor">delete</a>
+                                <a href="approvepbarang.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-primary btnAppPer">Approve</a>
+                                <a href="dpbarang.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-danger">Detail</a>
                             </div>
                         </td>
                     </tr>

@@ -1,17 +1,20 @@
 <!--#include file="../../init.asp"-->
-<!--#include file="../../functions/func_inventory.asp"-->
+<!--#include file="../../functions/func_permintaanb.asp"-->
 <% 
     set data =  Server.CreateObject ("ADODB.Command")
     data.ActiveConnection = mm_delima_string
     ' get agen / cabang
     data.commandText = "SELECT AgenName, AgenID FROM GLB_M_Agen WHERE agenAktifYN = 'Y' ORDER BY AgenName ASC"
     set pcabang = data.execute    
-    ' get divisi
-    data.commandText = "SELECT divNama, divID FROM DLK_M_Divisi WHERE divAktifYN = 'Y' ORDER BY divNama ASC"
-    set pdivisi = data.execute    
+    ' get kebutuhan
+    data.commandText = "SELECT KebNama, KebID FROM DLK_M_Kebutuhan WHERE KebAktifYN = 'Y' ORDER BY KebNama ASC"
+    set pkebutuhan = data.execute    
     ' get satuan
     data.commandText = "SELECT sat_Nama, sat_ID FROM DLK_M_satuanBarang WHERE sat_AktifYN = 'Y' ORDER BY sat_Nama ASC"
     set psatuan = data.execute    
+    ' get divisi
+    data.commandText = "SELECT DivNama, DivID FROM DLK_M_Divisi WHERE DivAktifYN = 'Y' ORDER BY DivNama ASC"
+    set pdivisi = data.execute    
 
     call header("From Permintaan Barang") 
 %>
@@ -23,7 +26,7 @@
             <h3>FORM PERMINTAAN BARANG</h3>
         </div>
     </div>
-    <form action="p_b_purce.asp" method="post" id="formpbarang">
+    <form action="pb_add.asp" method="post" id="formpbarang">
     <div class="row">
          <div class="col-lg-12">
             <div class="row">
@@ -32,6 +35,22 @@
                 </div>
                 <div class="col-sm-3 mb-3">
                     <input type="date" id="tgl" class="form-control" name="tgl" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <label for="divisi" class="col-form-label">Divisi</label>
+                </div>
+                <div class="col-sm-3 mb-3">
+                    <select class="form-select" aria-label="Default select example" name="divisi" id="divisi" required> 
+                        <option value="">Pilih</option>
+                        <% do while not pdivisi.eof %>
+                        <option value="<%= pdivisi("divId") %>"><%= pdivisi("divNama") %></option>
+                        <%  
+                        pdivisi.movenext
+                        loop
+                        %>
+                    </select>
                 </div>
             </div>
             <div class="row">
@@ -52,15 +71,15 @@
             </div>
             <div class="row">
                 <div class="col-sm-3">
-                    <label for="agen" class="col-form-label">Kebutuhan Divisi</label>
+                    <label for="kebutuhan" class="col-form-label">Kebutuhan Untuk</label>
                 </div>
                 <div class="col-sm-9 mb-3">
-                    <select class="form-select" aria-label="Default select example" name="divisi" id="divisi" required> 
+                    <select class="form-select" aria-label="Default select example" name="kebutuhan" id="kebutuhan" required> 
                         <option value="">Pilih</option>
-                        <% do while not pdivisi.eof %>
-                        <option value="<%= pdivisi("divID") %>"><%= pdivisi("divnama") %></option>
-                        <%  
-                        pdivisi.movenext
+                        <% do while not pkebutuhan.eof %>
+                            <option value="<%= pkebutuhan("KebID") %>"><%= pkebutuhan("KebNama") %></option>
+                        <% 
+                        pkebutuhan.movenext
                         loop
                         %>
                     </select>
@@ -104,7 +123,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-3">
-                    <label for="satuan" class="col-form-label">Satuan Berat</label>
+                    <label for="satuan" class="col-form-label">Satuan Barang</label>
                 </div>
                 <div class="col-sm-4 mb-3">
                     <select class="form-select" aria-label="Default select example" name="satuan" id="satuan" required> 
@@ -139,16 +158,15 @@
     <!-- button add barang -->
     <div class="row mb-3">
         <div class="col-sm-12">
-                <button type="button" class="btn btn-secondary justify-content-sm-start addBrg" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"><i class="bi bi-plus-lg"></i> item</button>
-                <button type="button" class="btn btn-secondary justify-content-sm-end minBrg" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"><i class="bi bi-dash"></i> item</button>
-            </div>
+            <button type="button" class="btn btn-secondary justify-content-sm-start addBrg" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"><i class="bi bi-plus-lg"></i> item</button>
+            <button type="button" class="btn btn-secondary justify-content-sm-end minBrg" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"><i class="bi bi-dash"></i> item</button>
         </div>
     </div>
     <!-- end button -->
     <div class="row">
         <div class="col-lg-12 text-center">
             <button type="submit" class="btn btn-primary">Tambah</button>
-            <button type="button" class="btn btn-danger">Kembali</button>
+            <button type="button" onclick="window.location.href='p_barang.asp'" class="btn btn-danger">Kembali</button>
         </div>
     </div>
     </form>
@@ -157,9 +175,9 @@
 if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
     call tambahPbarang()
     if value = 1 then
-        call alert("PERMINTAAN BARANG", "berhasil di tambahkan", "success","index.asp") 
+        call alert("PERMINTAAN BARANG", "berhasil di tambahkan", "success","p_barang.asp") 
     elseif value = 2 then
-        call alert("PERMINTAAN BARANG", "sudah terdaftar", "warning","index.asp")
+        call alert("PERMINTAAN BARANG", "sudah terdaftar", "warning","p_barang.asp")
     else
         value = 0
     end if

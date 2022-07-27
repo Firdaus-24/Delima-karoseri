@@ -1,27 +1,13 @@
 $(document).ready(function(){
-    // add barang
-    $('.addBrg').click(function(){
-        let clone = $( ".dpermintaan:first" ).clone()
-        let last = $(".dpermintaan:last")
-        clone.insertAfter(last)
-        
-    })
-    // delete barang
-    $('.minBrg').click(function(){
-        if ($(".dpermintaan").length > 1 ){
-            $(".dpermintaan").last().remove()
-        }
-    })
-    
-    // validasi tambah
-    $('#formpbarang').submit(function(e) {
+    // validasi tambah satuan
+    $('#formApprove').submit(function(e) {
         let form = this;
         
         e.preventDefault(); // <--- prevent form from submitting
-      
+        
         swal({
             title: "APAKAH ANDA SUDAH YAKIN??",
-            text: "form permintaan barang",
+            text: "Pencairan Dana Permintaan Barang",
             icon: "warning",
             buttons: [
               'No',
@@ -37,14 +23,14 @@ $(document).ready(function(){
         })
     })
 
-    // // aktifasi rak
-    // $('.btn-aktifrak').click(function(e){
+    // aktifasi sat
+    // $('.btn-aktifjen').click(function(e){
         
     //     e.preventDefault(); // <--- prevent click
         
     //     swal({
     //         title: "YAKIN UNTUK DI HAPUS??",
-    //         text: "delete master rak",
+    //         text: "delete master jenis barang",
     //         icon: "warning",
     //         buttons: [
     //           'No',

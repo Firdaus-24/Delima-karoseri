@@ -8,11 +8,12 @@
   <script src="../../public/js/barang.js"></script>
   <script src="../../public/js/cabang.js"></script>
   <script src="../../public/js/vendor.js"></script>
-  <script src="../../public/js/kdbarang.js"></script>
   <script src="../../public/js/rak.js"></script>
   <script src="../../public/js/satuanbarang.js"></script>
   <script src="../../public/js/kategori.js"></script>
   <script src="../../public/js/jenis.js"></script>
   <script src="../../public/js/divisi.js"></script>
-  <script src="../../public/js/inventory.js"></script>
+  <script src="../../public/js/permintaanb.js"></script>
+  <script src="../../public/js/kebutuhan.js"></script>
+  <script src="../../public/js/approvepbarang.js"></script>
 </html>
