@@ -15,5 +15,6 @@
   <script src="../../public/js/divisi.js"></script>
   <script src="../../public/js/permintaanb.js"></script>
   <script src="../../public/js/kebutuhan.js"></script>
-  <script src="../../public/js/approvepbarang.js"></script>
+  <script src="../../public/js/finance.js"></script>
+  <script src="../../public/js/purches.js"></script>
 </html>

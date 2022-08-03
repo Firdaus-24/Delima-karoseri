@@ -30,10 +30,17 @@ sub tambahPbarang()
         set data = data_cmd.execute
 
         id = data("ID")
-        ' set looping barang 
+        ' set looping barang
+         if ubound(strbrg) = 0 then
+            range = 1
+        else
+            range = ubound(strbrg) 
+        end if 
+        
         no = 0
-        for i = 0 to ubound(strbrg)
+        for i = 0 to range
         no = no + 1
+
         strno = right("000" & no,3)
             data_cmd.commandText = "INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoHarga, memoKeterangan, memoAktifYN) VALUES ( '"& id + strno &"','"& trim(strbrg(i)) &"', '"& trim(strspect(i)) &"', "& trim(strqtty(i) ) &", '"& trim(strsatuan(i)) &"', "& trim(strharga(i)) &", '"& trim(strket(i)) &"', 'Y')"
             ' response.write data_cmd.commandText & "<br>"

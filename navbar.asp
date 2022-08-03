@@ -113,6 +113,9 @@
               <li>
                 <a class="link-name" href="<%= url %>veiws/finance/index.asp">Finance</a>
               </li>
+              <li>
+                <a class="link-name" href="<%= url %>veiws/finance/dapppermintaan.asp">Detail Anggaran Permintaan</a>
+              </li>
             </ul>
           <!-- hr/ga -->
           <li class="nav-text">

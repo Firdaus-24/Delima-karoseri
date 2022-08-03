@@ -42,7 +42,7 @@
                     <label for="tgl" class="col-form-label">Tanggal PO</label>
                 </div>
                 <div class="col-sm-3 mb-3">
-                    <input type="text" id="tgl" class="form-control" name="tgl" value="<%= mdata("memoTgl") %>" required>
+                    <input type="text" id="tgl" class="form-control" name="tgl" value="<%= mdata("memoTgl") %>" onfocus="(this.type='date')"  required>
                 </div>
             </div>
             <div class="row">
@@ -96,6 +96,11 @@
         </div>
     </div>
     <!-- detail barang -->
+    <div class="row bg-primary text-light mb-3 mt-4 rounded-pill">
+        <div class="col-lg text-center mb-2 mt-2">
+            <h5>DETAIL BARANG</h5>
+        </div>
+    </div>
     <% 
      ' get data detail
     data.commandText = "SELECT dbo.DLK_T_Memo_D.memoID, dbo.DLK_T_Memo_D.memoItem, dbo.DLK_T_Memo_D.memoSpect, dbo.DLK_T_Memo_D.memoQtty, dbo.DLK_T_Memo_D.memoSatuan, dbo.DLK_T_Memo_D.memoHarga, dbo.DLK_T_Memo_D.memoKeterangan, dbo.DLK_T_Memo_D.memoAktifYN, dbo.DLK_T_Memo_H.memoID AS Expr1 FROM dbo.DLK_T_Memo_H INNER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) WHERE (dbo.DLK_T_Memo_H.memoID = '"& mdata("memoId") &"') AND dbo.DLK_T_Memo_D.memoAktifYN = 'Y' ORDER BY memoItem ASC"
@@ -187,8 +192,8 @@
     <!-- end button -->
     <div class="row">
         <div class="col-lg-12 text-center">
-            <button type="submit" class="btn btn-primary">UPDATE</button>
             <a href="detailpb.asp?id=<%= id %>" class="btn btn-danger">Kembali</a>
+            <button type="submit" class="btn btn-primary">UPDATE</button>
         </div>
     </div>
     </form>

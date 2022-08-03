@@ -9,10 +9,10 @@
     set agen_cmd =  Server.CreateObject ("ADODB.Command")
     agen_cmd.ActiveConnection = mm_delima_string
     ' filter agen
-    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'N' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
     set agendata = agen_cmd.execute
     ' filter kebutuhan
-    agen_cmd.commandText = "SELECT dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama FROM dbo.DLK_M_Kebutuhan INNER JOIN dbo.DLK_T_Memo_H ON dbo.DLK_M_Kebutuhan.kebID = dbo.DLK_T_Memo_H.memoKebID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y' GROUP BY dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama"
+    agen_cmd.commandText = "SELECT dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama FROM dbo.DLK_M_Kebutuhan INNER JOIN dbo.DLK_T_Memo_H ON dbo.DLK_M_Kebutuhan.kebID = dbo.DLK_T_Memo_H.memoKebID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'N' GROUP BY dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama"
     set kebData = agen_cmd.execute
 
     set conn = Server.CreateObject("ADODB.Connection")
@@ -94,7 +94,7 @@
 <div class="container">
     <div class="row mt-3 mb-3 text-center">
         <div class="col-lg-12">
-            <h3>PERMINTAAN BARANG</h3>
+            <h3>FORM PERMINTAAN BARANG</h3>
         </div>
     </div>
     <div class="row">

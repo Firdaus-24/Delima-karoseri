@@ -87,6 +87,12 @@
             </div>
         </div>
     </div>
+     <!-- detail barang -->
+    <div class="row bg-primary text-light mb-3 mt-4 rounded-pill">
+        <div class="col-lg text-center mb-2 mt-2">
+            <h5>DETAIL BARANG</h5>
+        </div>
+    </div>
     <div class="row dpermintaan">
         <div class="col-lg-12 mb-3">
             <div class="row">
@@ -165,8 +171,8 @@
     <!-- end button -->
     <div class="row">
         <div class="col-lg-12 text-center">
-            <button type="submit" class="btn btn-primary">Tambah</button>
             <button type="button" onclick="window.location.href='p_barang.asp'" class="btn btn-danger">Kembali</button>
+            <button type="submit" class="btn btn-primary">Tambah</button>
         </div>
     </div>
     </form>

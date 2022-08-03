@@ -1,10 +1,23 @@
 <!--#include file="../../init.asp"-->
-<!--#include file="../../functions/func_purces.asp"-->
 <% 
-    call header("Purchase")
+    agen = trim(Request.Form("agen"))
+    keb = trim(Request.Form("keb"))
+    tgla = trim(Request.Form("tgla"))
+    tgle = trim(Request.Form("tgle"))
 
-    kode = trim(Request.Form("kode"))
-    keterangan = trim(Request.Form("keterangan"))
+    set data_cmd =  Server.CreateObject ("ADODB.Command")
+    data_cmd.ActiveConnection = mm_delima_string
+
+    ' query cabang  
+    set agen_cmd =  Server.CreateObject ("ADODB.Command")
+    agen_cmd.ActiveConnection = mm_delima_string
+    ' filter agen
+    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    set agendata = agen_cmd.execute
+
+    ' filter kebutuhan
+    agen_cmd.commandText = "SELECT dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama FROM dbo.DLK_T_Memo_H LEFT OUTER JOIN dbo.DLK_M_Kebutuhan ON dbo.DLK_T_Memo_H.memoKebID = dbo.DLK_M_Kebutuhan.kebID LEFT OUTER JOIN DLK_T_appPermintaan ON dbo.DLK_T_AppPermintaan.AppMemoID = DLK_T_Memo_H.memoID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'Y' AND DLK_T_AppPermintaan.AppAktifYN = 'Y' GROUP BY dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama"
+    set kebData = agen_cmd.execute
 
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
@@ -18,21 +31,32 @@
         angka = Request.form("urut") + 1
     end if
     
-    ' query seach 
-    if kode <> "" and keterangan <> "" then
-        strquery = "SELECT * FROM DLK_M_KodeBarang WHERE Kode_AktifYN = 'Y' AND Kode_Nama LIKE '%"& kode &"%' AND Kode_Keterangan LIKE '%"& keterangan &"%'"
-    elseif kode <> "" then
-        strquery = "SELECT * FROM DLK_M_KodeBarang WHERE Kode_AktifYN = 'Y' AND Kode_Nama LIKE '%"& kode &"%'"
-    elseif keterangan <> "" then
-        strquery = "SELECT * FROM DLK_M_KodeBarang WHERE Kode_AktifYN = 'Y' AND Kode_Keterangan LIKE '%"& keterangan &"%'"
+    if agen <> "" then
+        filterAgen = "AND DLK_T_Memo_H.memoAgenID = '"& agen &"'"
     else
-        strquery = "SELECT * FROM DLK_M_KodeBarang WHERE Kode_AktifYN = 'Y'"
+        filterAgen = ""
     end if
 
+    if keb <> "" then
+        filterKeb = "AND dbo.DLK_T_Memo_H.memoKebID = '"& keb &"'"
+    else
+        filterKeb = ""
+    end if
+
+    if tgla <> "" AND tgle <> "" then
+        filtertgl = "AND dbo.DLK_T_Memo_H.memotgl BETWEEN '"& tgla &"' AND '"& tgle &"'"
+    elseIf tgla <> "" AND tgle = "" then
+        filtertgl = "AND dbo.DLK_T_Memo_H.memotgl = '"& tgla &"'"
+    else 
+        filtertgl = ""
+    end if
+
+    ' query seach 
+    strquery = "SELECT TOP (100) PERCENT dbo.DLK_T_AppPermintaan.AppMemoID, dbo.DLK_T_AppPermintaan.AppID, dbo.DLK_T_AppPermintaan.AppTgl, dbo.DLK_T_AppPermintaan.AppDana, dbo.DLK_T_AppPermintaan.AppKeterangan, dbo.DLK_T_AppPermintaan.AppAktifYN, dbo.DLK_T_Memo_H.memoTgl, dbo.DLK_T_Memo_H.memoAgenID, dbo.DLK_T_Memo_H.memoKebID, dbo.DLK_T_Memo_H.memoDivID, dbo.DLK_T_Memo_H.memoApproveYN, dbo.DLK_T_Memo_H.memoID FROM dbo.DLK_T_AppPermintaan INNER JOIN dbo.DLK_T_Memo_H ON dbo.DLK_T_AppPermintaan.AppMemoID = dbo.DLK_T_Memo_H.memoID WHERE (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_AppPermintaan.AppAktifYN = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN = 'Y') "& filterAgen &" "& filterKeb &" "& filtertgl &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
-    orderBy = " order by Kode_Nama ASC"
+    orderBy = " order by dbo.DLK_T_AppPermintaan.AppTgl DESC"
     set rs = Server.CreateObject("ADODB.Recordset")
     sqlawal = strquery
 
@@ -67,42 +91,71 @@
         lastrecord = 1
         end if	
     loop
+
+
+    call header("PURCHES ORDER") 
 %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
-    <div class="row mt-3 mb-3 text-center">
-        <div class="col-lg">
-            <h3>MASTER KODE BARANG</h3>
-        </div>
-    </div>
     <div class="row">
-        <div class="col-lg mb-3">
-            <a href="tambah.asp"><button type="button" class="btn btn-primary">Tambah</button></a>
+        <div class="col-lg-12 mb-3 mt-3 text-center">
+            <h3>PURCHES ORDER MEMO</h3> 
         </div>
     </div>
+    <form action="index.asp" method="post">
+        <div class="row">
+            <div class="col-lg-3 mb-3">
+                <label for="Agen">Cabang</label>
+                <select class="form-select" aria-label="Default select example" name="agen" id="agen">
+                    <option value="">Pilih</option>
+                    <% do while not agendata.eof %>
+                    <option value="<%= agendata("agenID") %>"><%= agendata("agenNAme") %></option>
+                    <% 
+                    agendata.movenext
+                    loop
+                    %>
+                </select>
+            </div>
+            <div class="col-lg-3 mb-3">
+                <label for="keb">Kebutuhan</label>
+                <select class="form-select" aria-label="Default select example" name="keb" id="keb">
+                    <option value="">Pilih</option>
+                    <% do while not kebData.eof %>
+                    <option value="<%= kebData("kebID") %>"><%= kebData("kebNama") %></option>
+                    <% 
+                    kebData.movenext
+                    loop
+                    %>
+                </select>
+            </div>
+            <div class="col-lg-2 mb-3">
+                <label for="tgla">Tanggal Pertama</label>
+                <input type="date" class="form-control" name="tgla" id="tgla" autocomplete="off" >
+            </div>
+            <div class="col-lg-2 mb-3">
+                <label for="tgle">Tanggal Kedua</label>
+                <input type="date" class="form-control" name="tgle" id="tgle" autocomplete="off" >
+            </div>
+            <div class="col-lg-2 mt-4 mb-3">
+                <button type="submit" class="btn btn-primary">Cari</button>
+            </div>
+        </div>
+    </form>
     <div class="row">
-        <div class="col-lg-4 mb-3">
-            <form action="index.asp" method="post">
-               <input type="text" class="form-control" name="kode" id="kode" autocomplete="off" placeholder="cari kode">
-        </div>
-        <div class="col-lg-4 mb-3">
-                <input type="text" class="form-control" name="keterangan" id="keterangan" autocomplete="off" placeholder="cari keterangan">
-        </div>
-        <div class="col-lg">
-            <button type="submit" class="btn btn-primary">Cari</button>
-            </form>
-        </div>
-    </div>
-    <div class="row mt-3">
         <div class="col-lg-12">
             <table class="table">
                 <thead class="bg-secondary text-light">
                     <tr>
-                    <th scope="col">No</th>
-                    <th scope="col">Kode</th>
-                    <th scope="col">Keterangan</th>
-                    <th scope="col">Aktif</th>
-                    <th scope="col" class="text-center">Aksi</th>
+                        <th scope="col">Memo</th>
+                        <th scope="col">Tanggal Acc</th>
+                        <th scope="col">Dana Acc</th>
+                        <th scope="col">Tanggal Ajuan</th>
+                        <th scope="col">Permintaan</th>
+                        <th scope="col">Cabang</th>
+                        <th scope="col">Divisi</th>
+                        <th scope="col">Keperluan</th>
+                        <th scope="col">Keterangan</th>
+                        <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -112,18 +165,42 @@
                     recordcounter = requestrecords
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
+
+                    data_cmd.commandText = "SELECT SUM(dbo.DLK_T_Memo_D.memoHarga * dbo.DLK_T_Memo_D.memoQtty) As tharga FROM dbo.DLK_T_Memo_H INNER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) WHERE (dbo.DLK_T_Memo_H.memoID = '"& rs("appMemoID") &"') AND DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_D.memoAktifYn = 'Y'"
+                    ' response.write data_cmd.commandText & "<br>"
+                    set ddata = data_cmd.execute
                     %>
                     <tr>
-                        <th scope="row"><%= recordcounter %> </th>
-                        <td><%= rs("kode_nama") %> </td>
-                        <td><%= rs("kode_Keterangan") %> </td>
+                        <TH>
+                            <%= rs("appMemoID") %>
+                        </TH>
                         <td>
-                            <%if rs("kode_AktifYN") = "Y" then %>Aktif <% else %>Off <% end if %> 
+                            <%= rs("appTgl") %>
+                        </td>
+                        <td>
+                            <%= replace(formatCurrency(rs("appDana")),"$","") %>
+                        </td>
+                        <td>
+                            <%= rs("memoTgl") %>
+                        </td>
+                        <td>
+                            <%= replace(formatCurrency(ddata("tharga")),"$","") %>
+                        </td>
+                        <td>
+                            <% call getAgen(rs("memoAgenID"),"p") %>
+                        </td>
+                        <td>
+                            <% call getDivisi(rs("memoDivid")) %>
+                        </td>
+                        <td>
+                            <% call getKebutuhan(rs("memokebID"),"p") %>
+                        </td>
+                        <td>
+                            <%= rs("appKeterangan") %>
                         </td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="update.asp?id=<%= rs("Kode_ID") %>" class="btn badge text-bg-primary">update</a>
-                                <a href="aktif.asp?id=<%= rs("Kode_ID") %>" class="btn badge text-bg-danger btn-aktifkdbarang">delete</a>
+                                <a href="purc_add.asp?id=<%= rs("appID") %>" class="btn badge text-bg-primary">Process</a>
                             </div>
                         </td>
                     </tr>
@@ -154,7 +231,7 @@
                         end if
                         if requestrecords <> 0 then 
                     %>
-                        <a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Prev </a>
+                        <a class="page-link prev" href="dappPermintaan.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Prev </a>
                     <% else %>
                         <p class="page-link prev-p">&#x25C4; Prev </p>
                     <% end if %>
@@ -172,9 +249,9 @@
                         end if
                         if Cint(page) = pagelistcounter then
                         %>
-                            <a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal bg-primary text-light" href="dappPermintaan.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
                         <%else%>
-                            <a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal" href="dappPermintaan.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
                         <%
                         end if
                         pagelist = pagelist + recordsonpage
@@ -190,7 +267,7 @@
                         end if
                         %>
                         <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                            <a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
+                            <a class="page-link next" href="dappPermintaan.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
                         <% else %>
                             <p class="page-link next-p">Next &#x25BA;</p>
                         <% end if %>
@@ -200,4 +277,6 @@
         </div>
     </div>
 </div>
+
+
 <% call footer() %>

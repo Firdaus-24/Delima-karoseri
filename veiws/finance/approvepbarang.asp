@@ -6,7 +6,7 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT SUM(dbo.DLK_T_Memo_D.memoHarga * dbo.DLK_T_Memo_D.memoQtty) As tharga FROM dbo.DLK_T_Memo_H INNER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) WHERE (dbo.DLK_T_Memo_H.memoID = '"& id &"')"
+    data_cmd.commandText = "SELECT SUM(dbo.DLK_T_Memo_D.memoHarga * dbo.DLK_T_Memo_D.memoQtty) As tharga FROM dbo.DLK_T_Memo_H INNER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) WHERE (dbo.DLK_T_Memo_H.memoID = '"& id &"') AND DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_D.memoAktifYn = 'Y'"
     
     set ddata = data_cmd.execute
 
@@ -77,9 +77,9 @@
     if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
         call tambahAppPermintaan()
         if value = 1 then
-            call alert("PENCAIRAN DANA PERMINTAAN BARANG", "berhasil di tambahkan", "success","approvepbarang.asp?id="&id) 
+            call alert("PENCAIRAN DANA PERMINTAAN BARANG", "berhasil di tambahkan", "success","index.asp") 
         elseif value = 2 then
-            call alert("PENCAIRAN DANA PERMINTAAN BARANG", "sudah terdaftar", "warning","approvepbarang.asp?id="&id)
+            call alert("PENCAIRAN DANA PERMINTAAN BARANG", "sudah terdaftar", "warning","index.asp")
         else
             value = 0
         end if

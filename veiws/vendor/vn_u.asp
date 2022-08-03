@@ -61,6 +61,12 @@
                         <input type="tel" class="form-control" id="phone" name="phone" autocomplete="off" pattern="[0-9]{12}" value="<%= vendor("ven_Phone") %>" required>
                     </div>
                 </div>
+                <div class="row mb-3">
+                    <div class="col-lg-6">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" maxlength="50" autocomplete="off" value="<%= vendor("ven_email") %>">
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-lg text-center">
                         <button type="submit" class="btn btn-primary">Update</button>

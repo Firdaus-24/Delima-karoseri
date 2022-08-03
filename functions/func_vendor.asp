@@ -4,6 +4,7 @@ sub tambahVendor()
     alamat = trim(Request.Form("alamat"))
     cabang = trim(Request.Form("cabang"))
     phone = trim(Request.Form("phone"))
+    email = trim(Request.Form("email"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
@@ -12,7 +13,7 @@ sub tambahVendor()
     set data = data_cmd.execute
 
     if data.eof then
-        call query("exec sp_AddDLK_M_Vendor '"& cabang &"','"& nama &"','"& alamat &"','"& phone &"'")
+        call query("exec sp_AddDLK_M_Vendor '"& cabang &"','"& nama &"','"& alamat &"','"& phone &"','"& email &"'")
         value = 1 'case untuk insert data
     else
         value = 2 'case jika gagal insert 
@@ -26,6 +27,7 @@ sub updateVendor()
     alamat = trim(Request.Form("alamat"))
     cabang = trim(Request.Form("cabang"))
     phone = trim(Request.Form("phone"))
+    email = trim(Request.Form("email"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
@@ -34,7 +36,7 @@ sub updateVendor()
     set data = data_cmd.execute
 
     if not data.eof then
-        call query("UPDATE DLK_M_Vendor SET Ven_Nama = '"& nama &"', Ven_Alamat = '"& alamat &"', Ven_Phone = '"& phone &"' WHERE Ven_ID = '"& id &"'")
+        call query("UPDATE DLK_M_Vendor SET Ven_Nama = '"& nama &"', Ven_Alamat = '"& alamat &"', Ven_Phone = '"& phone &"', ven_email = '"& email &"' WHERE Ven_ID = '"& id &"'")
         value = 1 'case untuk insert data
     else
         value = 2 'case jika gagal insert 

@@ -116,6 +116,7 @@
                     <th scope="col">Nama</th>
                     <th scope="col">Alamat</th>
                     <th scope="col">Contact</th>
+                    <th scope="col">Email</th>
                     <th scope="col">Aktif</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
@@ -133,6 +134,7 @@
                         <td><%= rs("ven_Nama") %></td>
                         <td><%= rs("ven_Alamat") %></td>
                         <td><%= rs("ven_phone") %></td>
+                        <td><%= rs("ven_Email") %></td>
                         <td><%if rs("ven_AktifYN") = "Y" then%>Aktif <% end if %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
