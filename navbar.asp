@@ -26,25 +26,25 @@
           </li>
             <ul class="sub-menu" id="sublist-master">
               <li>
-                <a href="<%= url %>veiws/Barang/">Master Barang</a>
+                <a href="<%= url %>views/Barang/">Master Barang</a>
               </li>
               <li>
-                <a href="<%= url %>veiws/kategori/">Master Kategori</a>
+                <a href="<%= url %>views/kategori/">Master Kategori</a>
               </li>
               <li>
-                <a href="<%= url %>veiws/jenis/">Master jenis</a>
+                <a href="<%= url %>views/jenis/">Master jenis</a>
               </li>
               <li>
-                <a href="<%= url %>veiws/Rak/">Master Rak</a>
+                <a href="<%= url %>views/Rak/">Master Rak</a>
               </li>
               <li>
-                <a href="<%= url %>veiws/satbarang/">Master Satuan Barang</a>
+                <a href="<%= url %>views/satbarang/">Master Satuan Barang</a>
               </li>
               <li>
-                <a href="<%= url %>veiws/kebutuhan/">Kebutuhan Permintaan</a>
+                <a href="<%= url %>views/kebutuhan/">Kebutuhan Permintaan</a>
               </li>
               <li>
-                <a href="<%= url %>veiws/vendor/">Master Vandor</a>
+                <a href="<%= url %>views/vendor/">Master Vandor</a>
               </li>
             </ul>
           <!-- inventory -->
@@ -54,7 +54,10 @@
           </li>
             <ul class="sub-menu" id="sublist-inventory">
               <li>
-                <a class="link-name" href="<%= url %>veiws/inventory/">Inventory</a>
+                <a class="link-name" href="<%= url %>views/inventory/">Inventory</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/inventory/incomming.asp">Incomming</a>
               </li>
             </ul>
           <!-- repair -->
@@ -64,19 +67,19 @@
           </li>
             <ul class="sub-menu" id="sublist-repair">
               <li>
-                <a class="link-name" href="<%= url %>veiws/inventory/">Inventory</a>
+                <a class="link-name" href="<%= url %>views/inventory/">Inventory</a>
               </li>
               <li>
-                <a href="<%= url %>veiws/Rak/">Master Rak</a>
+                <a href="<%= url %>views/Rak/">Master Rak</a>
               </li>
               <li>
-                <a href="<%= url %>veiws/satbarang/">Master Satuan Barang</a>
+                <a href="<%= url %>views/satbarang/">Master Satuan Barang</a>
               </li>
               <li>
-                <a href="<%= url %>veiws/kodeBarang/">Master Kode Barang</a>
+                <a href="<%= url %>views/kodeBarang/">Master Kode Barang</a>
               </li>
               <li>
-                <a href="<%= url %>veiws/vendor/">Master Vandor</a>
+                <a href="<%= url %>views/vendor/">Master Vandor</a>
               </li>
             </ul>
           <!-- qc -->
@@ -101,10 +104,10 @@
           </li>
             <ul class="sub-menu" id="sublist-purces">
               <li>
-                <a class="link-name" href="<%= url %>veiws/purces/">Purchase</a>
+                <a class="link-name" href="<%= url %>views/purces/">Purchase</a>
               </li>
               <li>
-                <a class="link-name" href="<%= url %>veiws/purces/purcesDetail.asp">Purchase Detail</a>
+                <a class="link-name" href="<%= url %>views/purces/purcesDetail.asp">Purchase Detail</a>
               </li>
             </ul>
           <!-- finance -->
@@ -114,10 +117,10 @@
           </li>
             <ul class="sub-menu" id="sublist-finance">
               <li>
-                <a class="link-name" href="<%= url %>veiws/finance/index.asp">Finance</a>
+                <a class="link-name" href="<%= url %>views/finance/index.asp">Finance</a>
               </li>
               <li>
-                <a class="link-name" href="<%= url %>veiws/finance/dapppermintaan.asp">Detail Anggaran Permintaan</a>
+                <a class="link-name" href="<%= url %>views/finance/dapppermintaan.asp">Detail Anggaran Permintaan</a>
               </li>
             </ul>
           <!-- hr/ga -->
@@ -127,10 +130,10 @@
           </li>
             <ul class="sub-menu" id="sublist-hr">
               <li>
-                <a class="link-name" href="<%= url %>veiws/hr/">HR/GA</a>
+                <a class="link-name" href="<%= url %>views/hr/">HR/GA</a>
               </li>
               <li>
-                <a class="link-name" href="<%= url %>veiws/divisi/">Divisi</a>
+                <a class="link-name" href="<%= url %>views/divisi/">Divisi</a>
               </li>
             </ul>
           <!-- permintaan barang -->
@@ -140,7 +143,7 @@
           </li>
             <ul class="sub-menu" id="sublist-permintaanb">
               <li>
-                <a class="link-name" href="<%= url %>veiws/permintaanBarang/p_barang.asp">Permintaan Barang</a>
+                <a class="link-name" href="<%= url %>views/permintaanBarang/p_barang.asp">Permintaan Barang</a>
               </li>
             <ul>
         </div>
@@ -152,7 +155,7 @@
           </li>
             <ul class="sub-menu" id="sublist-cabang">
               <li>
-                <a class="link-name" href="<%= url %>veiws/cabang/">Cabang</a>
+                <a class="link-name" href="<%= url %>views/cabang/">Cabang</a>
               </li>
             </ul>
           <li class="nav-text">
