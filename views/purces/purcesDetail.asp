@@ -4,6 +4,19 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
+    ' filter agen
+    data_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_OrPemH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_OrPemH.OPH_AgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_OrPemH.OPH_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    set agendata = data_cmd.execute
+    ' filter agen
+    data_cmd.commandText = "SELECT dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_ID FROM dbo.DLK_T_OrPemH LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_OrPemH.OPH_venID = dbo.DLK_M_Vendor.Ven_ID WHERE DLK_T_OrPemH.OPH_AktifYN = 'Y' GROUP BY dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_ID ORDER BY Ven_Nama ASC"
+    set vendata = data_cmd.execute
+
+    agen = trim(Request.Form("agen"))
+    vendor = trim(Request.Form("vendor"))
+    metpem = trim(Request.Form("metpem"))
+    tgla = trim(Request.Form("tgla"))
+    tgle = trim(Request.Form("tgle"))
+
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
 
@@ -16,28 +29,34 @@
         angka = Request.form("urut") + 1
     end if
     
-    ' if agen <> "" then
-    '     filterAgen = "AND DLK_T_Memo_H.memoAgenID = '"& agen &"'"
-    ' else
-    '     filterAgen = ""
-    ' end if
+    if agen <> "" then
+        filterAgen = "AND DLK_T_OrPemH.OPH_AgenID = '"& agen &"'"
+    else
+        filterAgen = ""
+    end if
 
-    ' if keb <> "" then
-    '     filterKeb = "AND dbo.DLK_T_Memo_H.memoKebID = '"& keb &"'"
-    ' else
-    '     filterKeb = ""
-    ' end if
+    if vendor <> "" then
+        filtervendor = "AND dbo.DLK_T_OrPemH.OPH_VenID = '"& vendor &"'"
+    else
+        filtervendor = ""
+    end if
 
-    ' if tgla <> "" AND tgle <> "" then
-    '     filtertgl = "AND dbo.DLK_T_Memo_H.memotgl BETWEEN '"& tgla &"' AND '"& tgle &"'"
-    ' elseIf tgla <> "" AND tgle = "" then
-    '     filtertgl = "AND dbo.DLK_T_Memo_H.memotgl = '"& tgla &"'"
-    ' else 
-    '     filtertgl = ""
-    ' end if
+    if metpem <> "" then
+        filtermetpem = "AND dbo.DLK_T_OrPemH.OPH_metpem = '"& metpem &"'"
+    else
+        filtermetpem = ""
+    end if
+
+    if tgla <> "" AND tgle <> "" then
+        filtertgl = "AND dbo.DLK_T_OrPemH.OPH_Date BETWEEN '"& tgla &"' AND '"& tgle &"'"
+    elseIf tgla <> "" AND tgle = "" then
+        filtertgl = "AND dbo.DLK_T_OrPemH.OPH_Date = '"& tgla &"'"
+    else 
+        filtertgl = ""
+    end if
 
     ' query seach 
-    strquery = "SELECT * FROM DLK_T_OrPemH WHERE OPH_AktifYN = 'Y' "
+    strquery = "SELECT * FROM DLK_T_OrPemH WHERE OPH_AktifYN = 'Y' "& filterAgen &"  "& filtervendor &" "& filtermetpem &" "& filtertgl &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
@@ -92,11 +111,62 @@
             <a href="purc_ad.asp" class="btn btn-primary">Tambah</a>
         </div>
     </div>
+    <form action="purcesDetail.asp" method="post">
+        <div class="row">
+            <div class="col-lg-4 mb-3">
+                <label for="Agen">Cabang</label>
+                <select class="form-select" aria-label="Default select example" name="agen" id="agen">
+                    <option value="">Pilih</option>
+                    <% do while not agendata.eof %>
+                    <option value="<%= agendata("agenID") %>"><%= agendata("agenNAme") %></option>
+                    <% 
+                    agendata.movenext
+                    loop
+                    %>
+                </select>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <label for="vendor">Vendor</label>
+                <select class="form-select" aria-label="Default select example" name="vendor" id="vendor">
+                    <option value="">Pilih</option>
+                    <% do while not vendata.eof %>
+                    <option value="<%= vendata("ven_id") %>"><%= vendata("ven_nama") %></option>
+                    <% 
+                    vendata.movenext
+                    loop
+                    %>
+                </select>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <label for="metpem">Pembayaran</label>
+                <select class="form-select" aria-label="Default select example" name="metpem" id="metpem">
+                    <option value="">Pilih</option>
+                    <option value="1">Transfer</option>
+                    <option value="2">Cash</option>
+                    <option value="3">PayLater</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 mb-3">
+                <label for="tgla">Tanggal Pertama</label>
+                <input type="date" class="form-control" name="tgla" id="tgla" autocomplete="off" >
+            </div>
+            <div class="col-lg-4 mb-3">
+                <label for="tgle">Tanggal Kedua</label>
+                <input type="date" class="form-control" name="tgle" id="tgle" autocomplete="off" >
+            </div>
+            <div class="col-lg-2 mt-4 mb-3">
+                <button type="submit" class="btn btn-primary">Cari</button>
+            </div>
+        </div>
+    </form>
     <div class="row">
         <div class="col-lg-12">
             <table class="table table-hover">
                 <thead class="bg-secondary text-light">
                     <th>No</th>
+                    <th>OrderID</th>
                     <th>Cabang</th>
                     <th>Tanggal</th>
                     <th>Vendor</th>
@@ -116,6 +186,7 @@
                     recordcounter = recordcounter + 1
                     %>
                         <tr><TH><%= recordcounter %></TH>
+                        <th><%= rs("OPH_ID") %></th>
                         <td><% call getAgen(rs("OPH_AgenID"),"P") %></td>
                         <td><%= rs("OPH_Date") %></td>
                         <td><% call getVendor(rs("OPH_VenID")) %></td>
