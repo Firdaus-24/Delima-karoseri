@@ -103,6 +103,9 @@
               <li>
                 <a class="link-name" href="<%= url %>veiws/purces/">Purchase</a>
               </li>
+              <li>
+                <a class="link-name" href="<%= url %>veiws/purces/purcesDetail.asp">Purchase Detail</a>
+              </li>
             </ul>
           <!-- finance -->
           <li class="nav-text">

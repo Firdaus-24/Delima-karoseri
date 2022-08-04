@@ -96,9 +96,9 @@
         </div>
     </div>
     <!-- detail barang -->
-    <div class="row bg-primary text-light mb-3 mt-4 rounded-pill">
+    <div class="row mb-3 mt-4">
         <div class="col-lg text-center mb-2 mt-2">
-            <h5>DETAIL BARANG</h5>
+            <h5 style="background-color:blue;display:inline-block;padding:10px;color:white;border-radius:10px;letter-spacing: 5px;">DETAIL BARANG</h5>
         </div>
     </div>
     <% 
