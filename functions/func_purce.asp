@@ -7,6 +7,7 @@ sub tambahPurce()
     tgljt = trim(Request.Form("tgljt"))
     metpem = trim(Request.Form("metpem"))
     diskon = trim(Request.Form("diskon"))
+    keterangan = trim(Request.Form("keterangan"))
     if diskon = "" then
         diskon = 0
     end if
@@ -67,6 +68,7 @@ sub tambahPurce2()
     tgljt = trim(Request.Form("tgljt"))
     metpem = trim(Request.Form("metpem"))
     diskon = trim(Request.Form("diskon"))
+    keterangan = trim(Request.Form("keterangan"))
     if diskon = "" then
         diskon = 0
     end if
@@ -129,6 +131,7 @@ sub updatePurce()
     tgljt = trim(Request.Form("tgljt"))
     metpem = trim(Request.Form("metpem"))
     diskon = trim(Request.Form("diskon"))
+    keterangan = trim(Request.Form("keterangan"))
     if diskon = "" then
         diskon = 0
     end if
@@ -176,10 +179,10 @@ sub updatePurce()
     set data = data_cmd.execute
 
     if not data.eof then
-        call query("UPDATE DLK_T_OrPemH SET OPH_AgenID = '"& agen &"', OPH_Date = '"& tgl &"', OPH_VenID = '"& vendor &"', OPH_JTDate = '"& tgljt &"', OPH_MetPem = "& metpem &", OPH_DiskonAll = '"& diskon &"',OPH_PPn = "& ppn &" WHERE OPH_ID = '"& id &"' AND OPH_AktifYN = 'Y' ")
+        call query("UPDATE DLK_T_OrPemH SET OPH_AgenID = '"& agen &"', OPH_Date = '"& tgl &"', OPH_VenID = '"& vendor &"', OPH_JTDate = '"& tgljt &"', OPH_MetPem = "& metpem &", OPH_DiskonAll = '"& diskon &"',OPH_PPn = "& ppn &", OPH_Keterangan = '"& keterangan &"' WHERE OPH_ID = '"& id &"' AND OPH_AktifYN = 'Y' ")
 
         for i = 0 to ubound(vitem)  
-            data_cmd.commandText = "SELECT * FROM DLK_T_OrPemD WHERE OPD_OPHID = '"& id &"' AND OPD_Item = '"& oldvitem(i) &"' AND OPD_QtySatuan = "& oldvqtty(i) &" AND OPD_Harga = '"& oldvharga(i) &"' AND OPD_JenisSat = '"& oldvsatuan(i) &"' AND OPD_Disc1 = '"& oldvdisc1(i) &"' AND OPD_Disc2 = '"& oldvdisc2(i) &"' AND OPD_AktifYN = 'Y'"
+            data_cmd.commandText = "SELECT * FROM DLK_T_OrPemD WHERE OPD_OPHID = '"& id &"' AND OPD_Item = '"& trim(oldvitem(i)) &"' AND OPD_QtySatuan = "& trim(oldvqtty(i)) &" AND OPD_Harga = '"& trim(oldvharga(i)) &"' AND OPD_JenisSat = '"& trim(oldvsatuan(i)) &"' AND OPD_Disc1 = '"& trim(oldvdisc1(i)) &"' AND OPD_Disc2 = '"& trim(oldvdisc2(i)) &"' AND OPD_AktifYN = 'Y'"
             ' response.write data_cmd.commandText
             set q = data_cmd.execute
             

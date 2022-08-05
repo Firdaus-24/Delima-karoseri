@@ -17,4 +17,5 @@
   <script src="../../public/js/kebutuhan.js"></script>
   <script src="../../public/js/finance.js"></script>
   <script src="../../public/js/purches.js"></script>
+  <script src="../../public/js/faktur.js"></script>
 </html>
