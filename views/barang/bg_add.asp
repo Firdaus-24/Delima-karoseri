@@ -6,9 +6,6 @@
     ' cabang
     data_cmd.commandText = "SELECT AgenID, AgenNAme FROM GLB_M_Agen where AgenAktifYN = 'Y' ORDER BY AgenName ASC"
     set agen = data_cmd.execute
-    ' vendor
-    data_cmd.commandText = "SELECT Ven_ID, Ven_Nama FROM DLK_M_Vendor where Ven_AktifYN = 'Y' ORDER BY Ven_Nama ASC"
-    set vendor = data_cmd.execute
     ' kategori
     data_cmd.commandText = "SELECT KategoriId, KategoriNama FROM DLK_M_Kategori where KategoriAktifYN = 'Y' ORDER BY KategoriNama ASC"
     set kategori = data_cmd.execute
@@ -16,9 +13,7 @@
     data_cmd.commandText = "SELECT JenisID, JenisNama FROM DLK_M_JenisBarang where JenisAktifYN = 'Y' ORDER BY JenisNama ASC"
     set Jenis = data_cmd.execute
 
-
-    
-call header("Form Barang")
+    call header("Form Barang")
 %>
 <!--#include file="../../navbar.asp"-->
 
@@ -81,20 +76,6 @@ call header("Form Barang")
             <label for="tgl" class="col-sm-2 col-form-label offset-sm-1">Tanggal</label>
             <div class="col-sm-5">
                 <input type="date" class="form-control" id="tgl" name="tgl" autocomplete="off" required>
-            </div>
-        </div>
-        <div class="mb-3 row">
-            <label for="vendor" class="col-sm-2 col-form-label offset-sm-1">Vendor</label>
-            <div class="col-sm-8">
-                <select class="form-select" aria-label="Default select example" name="vendor" id="vendor" required>
-                    <option value="">Pilih</option>
-                    <% do while not vendor.eof %>
-                        <option value="<%= vendor("ven_ID") %>"><%= vendor("Ven_Nama") %></option>
-                    <% 
-                    vendor.movenext
-                    loop
-                    %>
-                </select>
             </div>
         </div>
         <div class="mb-3 row">

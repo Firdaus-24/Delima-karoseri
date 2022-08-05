@@ -9,10 +9,6 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = MM_Delima_string
 
-    ' vendor
-    data_cmd.CommandText = "SELECT Ven_Id, Ven_Nama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Vendor ON DLK_M_Barang.Brg_VendorID = DLK_M_Vendor.Ven_ID WHERE DLK_M_Barang.Brg_AktifYN = 'Y' GROUP BY Ven_Id, Ven_Nama ORDER BY DLK_M_Vendor.ven_Nama ASC"
-
-    set fvendor = data_cmd.execute
     ' kategori
     data_cmd.CommandText = "SELECT DLK_M_Kategori.KategoriId, DLK_M_Kategori.KategoriNama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID WHERE DLK_M_Barang.Brg_AktifYN = 'Y' GROUP BY DLK_M_Kategori.KategoriId, DLK_M_Kategori.KategoriNama ORDER BY DLK_M_Kategori.KategoriNama ASC"
 
@@ -114,17 +110,6 @@
             <input type="text" class="form-control" name="nama" id="nama" autocomplete="off" placeholder="cari nama barang">
         </div>
         <div class="col-lg mb-3">
-            <select class="form-select" aria-label="Default select example" name="vendor" id="vendor">
-                <option value="">Pilih Vendor</option>
-                <% do while not fvendor.eof %>
-                <option value="<%= fvendor("Ven_ID") %>"><%= fvendor("Ven_Nama") %></option>
-                <% 
-                fvendor.movenext
-                loop
-                %>
-            </select>
-        </div>
-        <div class="col-lg mb-3">
             <select class="form-select" aria-label="Default select example" name="kategori" id="kategori">
                 <option value="">Pilih kategori</option>
                 <% do while not fkategori.eof %>
@@ -158,7 +143,6 @@
                     <tr>
                     <th scope="col">Nama</th>
                     <th scope="col">Tanggal</th>
-                    <th scope="col">Vendor</th>
                     <th scope="col">Harga</th>
                     <th scope="col">Kategori</th>
                     <th scope="col">Jenis</th>
@@ -179,7 +163,6 @@
                     <tr>
                         <td><%= rs("Brg_Nama") %></td>
                         <td><%= rs("Brg_Tanggal") %></td>
-                        <td><% call getVendor(rs("Brg_VendorID")) %></td>
                         <td><%= replace(formatCurrency(rs("Brg_Harga")),"$","Rp ") %></td>
                         <td><% call getKategori(rs("KategoriID")) %></td>
                         <td><% call getJenis(rs("JenisID")) %></td>

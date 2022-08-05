@@ -11,9 +11,6 @@
     ' cabang
     data_cmd.commandText = "SELECT AgenID, AgenNAme FROM GLB_M_Agen where AgenAktifYN = 'Y' ORDER BY AgenName ASC"
     set agen = data_cmd.execute
-    ' vendor
-    data_cmd.commandText = "SELECT Ven_ID, Ven_Nama FROM DLK_M_Vendor where Ven_AktifYN = 'Y' ORDER BY Ven_Nama ASC"
-    set pvendor = data_cmd.execute
     ' kategori
     data_cmd.commandText = "SELECT KategoriId, KategoriNama FROM DLK_M_Kategori where KategoriAktifYN = 'Y' ORDER BY KategoriNama ASC"
     set pkategori = data_cmd.execute
@@ -77,20 +74,6 @@ call header("Form Barang")
             </div>
         </div>
         <div class="mb-3 row">
-            <label for="vendor" class="col-sm-2 col-form-label offset-sm-1">Vendor</label>
-            <div class="col-sm-8">
-                <select class="form-select" aria-label="Default select example" name="vendor" id="vendor" required>
-                    <option value="<%= barang("Brg_VendorID") %>"><% call getVendor(barang("Brg_VendorID")) %></option>
-                    <% do while not pvendor.eof %>
-                        <option value="<%= pvendor("ven_ID") %>"><%= pvendor("Ven_Nama") %></option>
-                    <% 
-                    pvendor.movenext
-                    loop
-                    %>
-                </select>
-            </div>
-        </div>
-        <div class="mb-3 row">
             <label for="stok" class="col-sm-2 col-form-label offset-sm-1">Stok</label>
             <div class="col-sm-8">
                 <div class="form-check form-check-inline">
@@ -124,7 +107,7 @@ call header("Form Barang")
         </div>
         <div class="row">
             <div class="col-lg text-center">
-                <button type="submit" class="btn btn-primary btn-tambahBarang">Tambah</button>
+                <button type="submit" class="btn btn-primary btn-tambahBarang">Update</button>
                 <a href="index.asp"><button type="button" class="btn btn-danger">kembali</button></a>
             </div>
         </div>
