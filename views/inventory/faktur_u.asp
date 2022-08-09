@@ -8,10 +8,13 @@
     data_cmd.ActiveConnection = mm_delima_string
     
     ' get data
-    data_cmd.commandText = "SELECT dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_ophID, dbo.DLK_T_InvPemH.IPH_AgenID, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_venID, dbo.DLK_T_InvPemH.IPH_JTDate, dbo.DLK_T_InvPemH.IPH_Keterangan,dbo.DLK_T_InvPemH.IPH_DiskonAll, dbo.DLK_T_InvPemH.IPH_PPn, dbo.DLK_T_InvPemH.IPH_AktifYN, dbo.DLK_T_InvPemH.IPH_MetPem, dbo.DLK_T_InvPemD.IPD_IPHID,dbo.DLK_T_InvPemD.IPD_Item, dbo.DLK_T_InvPemD.IPD_QtySatuan, dbo.DLK_T_InvPemD.IPD_Disc1, dbo.DLK_T_InvPemD.IPD_JenisSat, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_Disc2, dbo.DLK_T_InvPemD.IPD_AktifYN FROM dbo.DLK_T_InvPemH INNER JOIN dbo.DLK_T_InvPemD ON dbo.DLK_T_InvPemH.IPH_ID = dbo.DLK_T_InvPemD.IPD_IPHID where DLK_T_InvPemH.IPH_ID = '"& id &"' AND DLK_T_InvPemH.IPH_AktifYN = 'Y' AND DLK_T_InvPemD.IPD_AktifYN = 'Y' GROUP BY dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_ophID, dbo.DLK_T_InvPemH.IPH_AgenID, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_venID, dbo.DLK_T_InvPemH.IPH_JTDate, dbo.DLK_T_InvPemH.IPH_Keterangan,dbo.DLK_T_InvPemH.IPH_DiskonAll, dbo.DLK_T_InvPemH.IPH_PPn, dbo.DLK_T_InvPemH.IPH_AktifYN, dbo.DLK_T_InvPemH.IPH_MetPem, dbo.DLK_T_InvPemD.IPD_IPHID,dbo.DLK_T_InvPemD.IPD_Item, dbo.DLK_T_InvPemD.IPD_QtySatuan, dbo.DLK_T_InvPemD.IPD_Disc1, dbo.DLK_T_InvPemD.IPD_JenisSat, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_Disc2, dbo.DLK_T_InvPemD.IPD_AktifYN"
+    data_cmd.commandText = "SELECT dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_ophID, dbo.DLK_T_InvPemH.IPH_AgenID, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_venID, dbo.DLK_T_InvPemH.IPH_JTDate, dbo.DLK_T_InvPemH.IPH_Keterangan,dbo.DLK_T_InvPemH.IPH_DiskonAll, dbo.DLK_T_InvPemH.IPH_PPn, dbo.DLK_T_InvPemH.IPH_AktifYN, dbo.DLK_T_InvPemH.IPH_MetPem, dbo.DLK_T_InvPemD.IPD_IPHID,dbo.DLK_T_InvPemD.IPD_Item, dbo.DLK_T_InvPemD.IPD_QtySatuan, dbo.DLK_T_InvPemD.IPD_Disc1, dbo.DLK_T_InvPemD.IPD_JenisSat, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_Disc2, dbo.DLK_T_InvPemD.IPD_AktifYN, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_InvPemH INNER JOIN dbo.DLK_T_InvPemD ON dbo.DLK_T_InvPemH.IPH_ID = dbo.DLK_T_InvPemD.IPD_IPHID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_InvPemD.IPD_Item = DLK_M_Barang.Brg_ID     where DLK_T_InvPemH.IPH_ID = '"& id &"' AND DLK_T_InvPemH.IPH_AktifYN = 'Y' AND DLK_T_InvPemD.IPD_AktifYN = 'Y' GROUP BY dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_ophID, dbo.DLK_T_InvPemH.IPH_AgenID, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_venID, dbo.DLK_T_InvPemH.IPH_JTDate, dbo.DLK_T_InvPemH.IPH_Keterangan,dbo.DLK_T_InvPemH.IPH_DiskonAll, dbo.DLK_T_InvPemH.IPH_PPn, dbo.DLK_T_InvPemH.IPH_AktifYN, dbo.DLK_T_InvPemH.IPH_MetPem, dbo.DLK_T_InvPemD.IPD_IPHID,dbo.DLK_T_InvPemD.IPD_Item, dbo.DLK_T_InvPemD.IPD_QtySatuan, dbo.DLK_T_InvPemD.IPD_Disc1, dbo.DLK_T_InvPemD.IPD_JenisSat, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_Disc2, dbo.DLK_T_InvPemD.IPD_AktifYN,DLK_M_Barang.Brg_Nama"
 
     set data = data_cmd.execute
 
+    ' barang
+    data_cmd.commandText = "SELECT Brg_Nama, Brg_ID FROM DLK_M_Barang WHERE Brg_AktifYN = 'Y' ORDER BY Brg_Nama ASC"
+    set barang = data_cmd.execute
     ' satuan
     data_cmd.commandText = "SELECT sat_Nama, sat_ID FROM DLK_M_satuanBarang WHERE sat_AktifYN = 'Y' ORDER BY sat_Nama ASC"
     set psatuan = data_cmd.execute
@@ -139,7 +142,16 @@
                 </div>
                 <div class="col-sm-10 mb-3">
                     <input type="hidden" id="olditempo" class="form-control" name="olditempo" autocomplete="off" maxlength="30" value="<%= data("IPD_Item") %>" required>
-                    <input type="text" id="itempo" class="form-control" name="itempo" autocomplete="off" maxlength="30" value="<%= data("IPD_Item") %>" required>
+                    <select class="form-select" id="itempo" name="itempo" aria-label="Default select example" required>
+                        <option value="<%= data("IPD_Item") %>"><%= data("Brg_nama") %></option>
+                        <% do while not barang.eof %>
+                        <option value="<%= barang("Brg_ID") %>"><%= barang("Brg_nama") %></option>
+                        <% 
+                        barang.movenext
+                        loop
+                        barang.movefirst
+                        %>
+                    </select>
                 </div>
             </div>
             <div class="row">
@@ -166,7 +178,6 @@
                 </div>
                 <div class="col-sm-4 mb-3">
                     <input type="hidden" id="oldsatuanpo" class="form-control" name="oldsatuanpo" value="<%= data("IPD_Jenissat") %>" required>
-                    
                     <select class="form-select" aria-label="Default select example" name="satuanpo" id="satuanpo" required> 
                         <option value="<%= data("IPD_Jenissat") %>"><% call getSatBerat(data("IPD_Jenissat")) %></option>
                         <% do while not psatuan.eof %>
@@ -174,7 +185,7 @@
                         <%  
                         psatuan.movenext
                         loop
-                        ' movefirst
+                        psatuan.movefirst
                         %>
                     </select>
                 </div>

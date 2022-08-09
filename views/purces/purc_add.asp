@@ -6,7 +6,7 @@
     data_cmd.ActiveConnection = mm_delima_string
 
 
-    data_cmd.commandText = "SELECT  dbo.DLK_T_AppPermintaan.AppID, dbo.DLK_T_Memo_D.memoID, dbo.DLK_T_Memo_D.memoItem, dbo.DLK_T_Memo_D.memoSpect, dbo.DLK_T_Memo_D.memoQtty, dbo.DLK_T_Memo_D.memoSatuan, dbo.DLK_T_Memo_D.memoHarga,dbo.DLK_T_Memo_D.memoKeterangan FROM DLK_T_Memo_D LEFT OUTER JOIN dbo.DLK_T_AppPermintaan ON left(dbo.DLK_T_Memo_D.memoID,17) = dbo.DLK_T_AppPermintaan.AppMemoID WHERE dbo.DLK_T_AppPermintaan.AppID = '"& id &"' AND DLK_T_Memo_D.memoAktifYN = 'Y'"
+    data_cmd.commandText = "SELECT dbo.DLK_T_AppPermintaan.AppID, dbo.DLK_T_Memo_D.memoID, dbo.DLK_T_Memo_D.memoItem, dbo.DLK_T_Memo_D.memoSpect, dbo.DLK_T_Memo_D.memoQtty, dbo.DLK_T_Memo_D.memoSatuan, dbo.DLK_T_Memo_D.memoHarga,dbo.DLK_T_Memo_D.memoKeterangan, DLK_M_Barang.Brg_Nama FROM DLK_T_Memo_D LEFT OUTER JOIN dbo.DLK_T_AppPermintaan ON left(dbo.DLK_T_Memo_D.memoID,17) = dbo.DLK_T_AppPermintaan.AppMemoID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.Memoitem = DLK_M_Barang.Brg_ID WHERE dbo.DLK_T_AppPermintaan.AppID = '"& id &"' AND DLK_T_Memo_D.memoAktifYN = 'Y'"
     ' response.write data_cmd.commandText & "<br>"
     set data = data_cmd.execute
 
@@ -102,7 +102,7 @@
                 <label for="keterangan" class="col-form-label">Keterangan</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50">
+                <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" autocomplete="off">
             </div>
         </div>
         <div class="row">
@@ -126,7 +126,10 @@
                                 <input class="form-check-input ckpo" type="checkbox" value="" id="ckpo">
                             </td>
                             <td>
-                                <input type="text" id="item" name="item" class="form-control " value="<%= data("memoItem") %>">
+                                <select class="form-control" aria-label="Default select example" id="item" name="item" >
+                                    <option value="<%= data("memoItem") %>"><%= data("Brg_Nama")%></option>
+                                    
+                                </select>
                             </td>
                             <td>
                                 <input type="text" id="qtty" name="qtty" class="form-control " value="<%= data("memoQtty") %>">

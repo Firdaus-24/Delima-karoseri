@@ -10,6 +10,9 @@ sub tambahPbarang()
     harga = trim(Request.Form("harga"))
     satuan = trim(Request.Form("satuan"))
     ket = trim(Request.Form("ket"))
+    if ket = "" then
+        ket = "null"
+    end if
 
     strbrg = Split(brg, ",")
     strspect = Split(spect, ",")
@@ -31,18 +34,12 @@ sub tambahPbarang()
 
         id = data("ID")
         ' set looping barang
-         if ubound(strbrg) = 0 then
-            range = 1
-        else
-            range = ubound(strbrg) 
-        end if 
-        
         no = 0
-        for i = 0 to range
+        for i = 0 to ubound(strbrg)
         no = no + 1
 
         strno = right("000" & no,3)
-            data_cmd.commandText = "INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoHarga, memoKeterangan, memoAktifYN) VALUES ( '"& id + strno &"','"& trim(strbrg(i)) &"', '"& trim(strspect(i)) &"', "& trim(strqtty(i) ) &", '"& trim(strsatuan(i)) &"', "& trim(strharga(i)) &", '"& trim(strket(i)) &"', 'Y')"
+            data_cmd.commandText = "INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoHarga, memoKeterangan, memoAktifYN) VALUES ( '"& id + strno &"','"& trim(strbrg(i)) &"', '"& trim(strspect(i)) &"', "& trim(strqtty(i) ) &",'"& trim(strsatuan(i)) &"', "& trim(strharga(i)) &",'"& trim(strket(i)) &"','Y')"
             ' response.write data_cmd.commandText & "<br>"
             data_cmd.execute
         next

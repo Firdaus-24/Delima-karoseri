@@ -14,6 +14,10 @@
     data_cmd.commandText = "SELECT ven_Nama, Ven_ID FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y' ORDER BY ven_Nama ASC"
     set vendor = data_cmd.execute
 
+    ' get barang
+    data_cmd.commandText = "SELECT Brg_ID, Brg_Nama FROM DLK_M_Barang WHERE Brg_AktifYN = 'Y' ORDER BY Brg_Nama ASC"
+    set getBarang = data_cmd.execute
+
     call header("Prosess Purches")
 %>
 <!--#include file="../../navbar.asp"--> 
@@ -116,7 +120,16 @@
                     <label for="itempo" class="col-form-label">Jenis Barang</label>
                 </div>
                 <div class="col-sm-10 mb-3">
-                    <input type="text" id="itempo" class="form-control" name="itempo" autocomplete="off" maxlength="30" required>
+                    <select class="form-select" aria-label="Default select example" name="itempo" id="itempo" required> 
+                        <option value="">Pilih</option>
+                        <% do while not getbarang.eof %>
+                        <option value="<%= getbarang("Brg_ID") %>"><%= getbarang("Brg_nama") %></option>
+                        <%  
+                        getbarang.movenext
+                        loop
+                        getbarang.movefirst 
+                        %>
+                    </select>
                 </div>
             </div>
             <div class="row">

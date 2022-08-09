@@ -50,12 +50,13 @@ $(document).ready(function(){
         $.get("../../ajax/detailPermintaanBarang.asp?id="+ id, function(data){
             let x = data.split(",")
             $('#nbrg').val(x[0])
-            $('#dbrg').val(x[1])
+            $('#dbrgnama').val(x[1])
             $('#dspect').val(x[2])
             $('#dqtty').val(x[3])
             $('#dharga').val(x[4])
             $('#dsatuan').val(x[5])
             $('#dket').val(x[6])
+            $('#dbrg').val(x[8])
         });
     })
 

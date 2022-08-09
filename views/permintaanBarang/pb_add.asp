@@ -3,6 +3,9 @@
 <% 
     set data =  Server.CreateObject ("ADODB.Command")
     data.ActiveConnection = mm_delima_string
+    ' get barang
+    data.commandText = "SELECT Brg_ID, Brg_Nama FROM DLK_M_Barang WHERE Brg_AktifYN = 'Y' ORDER BY Brg_Nama ASC"
+    set getBarang = data.execute
     ' get agen / cabang
     data.commandText = "SELECT AgenName, AgenID FROM GLB_M_Agen WHERE agenAktifYN = 'Y' ORDER BY AgenName ASC"
     set pcabang = data.execute    
@@ -100,7 +103,15 @@
                     <label for="brg" class="col-form-label">Jenis Barang</label>
                 </div>
                 <div class="col-sm-9 mb-3">
-                    <input type="text" id="brg" class="form-control" name="brg" autocomplete="off" maxlength="30" required>
+                    <select class="form-select" aria-label="Default select example" name="brg" id="brg" required> 
+                        <option value="">Pilih</option>
+                        <% do while not getBarang.eof %>
+                        <option value="<%= getBarang("Brg_ID") %>"><%= getBarang("Brg_nama") %></option>
+                        <%  
+                        getBarang.movenext
+                        loop
+                        %>
+                    </select>
                 </div>
             </div>
             <div class="row">

@@ -10,6 +10,9 @@
     data.commandText = "SELECT * FROM DLK_T_Memo_H WHERE memoID = '"& id &"' AND memoAktifYN = 'Y'"
     set mdata = data.execute
 
+    ' get Barang
+    data.commandText = "SELECT Brg_Nama, Brg_ID FROM DLK_M_Barang WHERE Brg_aktifYN = 'Y' ORDER BY Brg_Nama ASC"
+    set barang = data.execute    
     ' get agen / cabang
     data.commandText = "SELECT AgenName, AgenID FROM GLB_M_Agen WHERE agenAktifYN = 'Y' ORDER BY AgenName ASC"
     set pcabang = data.execute    
@@ -103,7 +106,7 @@
     </div>
     <% 
      ' get data detail
-    data.commandText = "SELECT dbo.DLK_T_Memo_D.memoID, dbo.DLK_T_Memo_D.memoItem, dbo.DLK_T_Memo_D.memoSpect, dbo.DLK_T_Memo_D.memoQtty, dbo.DLK_T_Memo_D.memoSatuan, dbo.DLK_T_Memo_D.memoHarga, dbo.DLK_T_Memo_D.memoKeterangan, dbo.DLK_T_Memo_D.memoAktifYN, dbo.DLK_T_Memo_H.memoID AS Expr1 FROM dbo.DLK_T_Memo_H INNER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) WHERE (dbo.DLK_T_Memo_H.memoID = '"& mdata("memoId") &"') AND dbo.DLK_T_Memo_D.memoAktifYN = 'Y' ORDER BY memoItem ASC"
+    data.commandText = "SELECT dbo.DLK_T_Memo_D.memoID, dbo.DLK_T_Memo_D.memoItem, dbo.DLK_T_Memo_D.memoSpect, dbo.DLK_T_Memo_D.memoQtty, dbo.DLK_T_Memo_D.memoSatuan, dbo.DLK_T_Memo_D.memoHarga, dbo.DLK_T_Memo_D.memoKeterangan, dbo.DLK_T_Memo_D.memoAktifYN, dbo.DLK_T_Memo_H.memoID AS Expr1, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_Memo_H INNER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.memoitem = DLK_M_Barang.Brg_ID WHERE (dbo.DLK_T_Memo_H.memoID = '"& mdata("memoId") &"') AND dbo.DLK_T_Memo_D.memoAktifYN = 'Y' ORDER BY memoItem ASC"
     set ddata = data.execute
 
     do while not ddata.eof
@@ -116,7 +119,16 @@
                     <label for="brg" class="col-form-label">Jenis Barang</label>
                 </div>
                 <div class="col-sm-9 mb-3">
-                    <input type="text" id="brg" class="form-control" name="brg" autocomplete="off" maxlength="30" value="<%= ddata("memoItem") %>" required>
+                    <select class="form-select" aria-label="Default select example" id="brg"  name="brg" required>
+                        <option value="<%= ddata("memoItem") %>"><%= ddata("Brg_Nama") %></option>
+                        <% do while not barang.eof %>
+                        <option value="<%= barang("Brg_ID") %>"><%= barang("Brg_Nama") %></option>
+                        <% 
+                        barang.movenext
+                        loop
+                        barang.movefirst
+                        %>
+                    </select>
                 </div>
             </div>
             <div class="row">
