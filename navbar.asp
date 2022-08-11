@@ -46,6 +46,9 @@
               <li>
                 <a href="<%= url %>views/vendor/">Master Vandor</a>
               </li>
+              <li>
+                <a href="<%= url %>views/customer/">Master Customer</a>
+              </li>
             </ul>
           <!-- inventory -->
           <li class="nav-text">

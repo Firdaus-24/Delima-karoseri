@@ -27,7 +27,7 @@
         <div class="mb-3 row">
             <label for="agen" class="col-sm-2 col-form-label offset-sm-1">Cabang/agen</label>
             <div class="col-sm-8">
-                <select class="form-select" aria-label="Default select example" name="agen" id="agen" required>
+                <select class="form-select" aria-label="Default select example" name="agen" id="agen" autofocus required>
                     <option value="">Pilih</option>
                     <% do while not agen.eof %>
                         <option value="<%= agen("agenID") %>"><%= agen("agenName") %></option>
@@ -41,7 +41,7 @@
         <div class="mb-3 row">
             <label for="nama" class="col-sm-2 col-form-label offset-sm-1">Nama</label>
             <div class="col-sm-8">
-                <input type="text" class="form-control" id="nama" name="nama" autocomplete="off" autofocus maxlength="30" required>
+                <input type="text" class="form-control" id="nama" name="nama" autocomplete="off" maxlength="30" required>
             </div>
         </div>
         <div class="mb-3 row">
