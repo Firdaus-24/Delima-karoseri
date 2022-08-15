@@ -92,11 +92,10 @@ sub updateUPbarang()
         for x = 0 to ubound(strid)
         angka = angka + 1
         strno = right("000" & angka,3)
-
             ddata_cmd.commandText = "SELECT * FROM DLK_T_Memo_D WHERE memoId = '"& trim(strid(x)) &"' AND MemoAktifYN = 'Y'"
             ' response.write ddata_cmd.commandTExt & "<br>"
             set ddata = ddata_cmd.execute
-
+            
             if not ddata.eof then
                 call query("UPDATE DLK_T_Memo_D SET memoItem = '"& trim(strbrg(x)) &"', memospect = '"& trim(strspect(x)) &"', memoQtty = '"& trim(strqtty(x)) &"', memoSatuan = '"& trim(strsatuan(x)) &"', memoHarga = '"& trim(strharga(x)) &"', memoKeterangan = '"& trim(strket(x)) &"' WHERE memoID = '"& trim(strid(x)) &"'")
             else
@@ -111,27 +110,27 @@ sub updateUPbarang()
 end sub 
 
 ' update detail barang
-sub updateDPbarang()
-    id = trim(Request.Form("nbrg"))
-    dbrg = trim(Request.Form("dbrg"))
-    dspect = trim(Request.Form("dspect"))
-    dqtty = trim(Request.Form("dqtty"))
-    dharga = trim(Request.Form("dharga"))
-    dsatuan = trim(Request.Form("dsatuan"))
-    dket = trim(Request.Form("dket"))
+' sub updateDPbarang()
+'     id = trim(Request.Form("nbrg"))
+'     dbrg = trim(Request.Form("dbrg"))
+'     dspect = trim(Request.Form("dspect"))
+'     dqtty = trim(Request.Form("dqtty"))
+'     dharga = trim(Request.Form("dharga"))
+'     dsatuan = trim(Request.Form("dsatuan"))
+'     dket = trim(Request.Form("dket"))
 
-    set pdata_cmd =  Server.CreateObject ("ADODB.Command")
-    pdata_cmd.ActiveConnection = mm_delima_string
+'     set pdata_cmd =  Server.CreateObject ("ADODB.Command")
+'     pdata_cmd.ActiveConnection = mm_delima_string
 
-    pdata_cmd.commandText = "SELECT * FROM DLK_T_Memo_D WHERE MemoID = '"& id &"' AND memoAktifYN = 'Y'"
-    ' response.write pdata_cmd.commandText
-    set pdata = pdata_cmd.execute
+'     pdata_cmd.commandText = "SELECT * FROM DLK_T_Memo_D WHERE MemoID = '"& id &"' AND memoAktifYN = 'Y'"
+'     ' response.write pdata_cmd.commandText
+'     set pdata = pdata_cmd.execute
 
-    if not pdata.eof then
-        call query("UPDATE DLK_T_Memo_D SET memoItem = '"& dbrg &"', memoSpect = '"& dspect &"', memoQtty = '"& dqtty &"', memoSatuan = '"& dsatuan &"', memoHarga = '"& dharga &"', memoKeterangan = '"& dket &"' WHERE memoId = '"& id &"'")
-        value = 1
-    else
-        value = 2
-    end if
-end sub
+'     if not pdata.eof then
+'         call query("UPDATE DLK_T_Memo_D SET memoItem = '"& dbrg &"', memoSpect = '"& dspect &"', memoQtty = '"& dqtty &"', memoSatuan = '"& dsatuan &"', memoHarga = '"& dharga &"', memoKeterangan = '"& dket &"' WHERE memoId = '"& id &"'")
+'         value = 1
+'     else
+'         value = 2
+'     end if
+' end sub
 %>

@@ -1,4 +1,36 @@
 $(document).ready(function(){
+    // get data barang
+    $("#agenpb").change(function(){
+        let agen = $("#agenpb").val()
+        if(agen != ''){
+            $.ajax({
+                method: "POST",
+                url: "../../ajax/getpermintaan.asp",
+                data: { agen }
+            }).done(function( msg ) {   
+                $(".pbviewsal").hide()
+                $(".pbviewhasil").html(msg)
+            });
+        }else{
+            $(".pbviewsal").show()
+            $(".pbviewhasil").html('')
+        }
+    })
+    // update data update
+    $("#agenpbu").change(function(){
+        let agen = $("#agenpbu").val()
+        
+        if(agen != ''){
+            $.ajax({
+                method: "POST",
+                url: "../../ajax/getpermintaan.asp",
+                data: { agen }
+            }).done(function( msg ) {   
+                $(".pbviewusal").remove()
+                $(".pbviewuhasil").html(msg)
+            });
+        }
+    })
     // add barang
     $('.addBrg').click(function(){
         let clone = $( ".dpermintaan:first" ).clone()
