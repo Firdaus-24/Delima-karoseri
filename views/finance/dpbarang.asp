@@ -1,5 +1,4 @@
 <!--#include file="../../init.asp"-->
-<!--#include file="../../functions/func_permintaanb.asp"-->
 <% 
     id = trim(Request.QueryString("id"))
 
@@ -111,7 +110,7 @@
                 </thead>
                 <tbody>
                     <% 
-                    data_cmd.commandText = "SELECT * FROM DLK_T_Memo_D WHERE left(MemoID,17) = '"& dataH("MemoID") &"' AND memoAktifYN = 'Y' ORDER BY memoItem ASC"
+                    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_barang.Brg_Nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.memoItem = DLK_M_barang.Brg_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' AND memoAktifYN = 'Y' ORDER BY memoItem ASC"
                     ' response.write data_cmd.commandText
                     set dataD = data_cmd.execute
 
@@ -121,7 +120,7 @@
                     %>
                         <tr>
                             <th scope="row"><%= no %></th>
-                            <td><%= dataD("memoItem") %></td>
+                            <td><%= dataD("Brg_Nama") %></td>
                             <td><%= dataD("memoSpect") %></td>
                             <td><%= dataD("memoQtty") %></td>
                             <td><% call getSatBerat(dataD("memoSatuan")) %></td>

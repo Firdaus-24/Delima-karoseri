@@ -1,19 +1,21 @@
 <!--#include file="../../init.asp"-->
+<!--#include file="../../functions/func_metpem.asp"-->
 <% 
+    set data_cmd =  Server.CreateObject ("ADODB.Command")
+    data_cmd.ActiveConnection = mm_delima_string
+
+    ' filter agen
+    data_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_OrJulH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_OrJulH.OJH_AgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_OrJulH.OJH_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    set agendata = data_cmd.execute
+    ' filter agen
+    data_cmd.commandText = "SELECT dbo.DLK_M_Customer.custNama, dbo.DLK_M_Customer.custID FROM dbo.DLK_T_OrJulH LEFT OUTER JOIN dbo.DLK_M_Customer ON dbo.DLK_T_OrJulH.OJH_custID = dbo.DLK_M_Customer.custID WHERE DLK_T_OrJulH.OJH_AktifYN = 'Y' GROUP BY dbo.DLK_M_Customer.custNama, dbo.DLK_M_Customer.custID ORDER BY custNama ASC"
+    set dcustomer = data_cmd.execute
+
     agen = trim(Request.Form("agen"))
-    keb = trim(Request.Form("keb"))
+    customer = trim(Request.Form("customer"))
+    metpem = trim(Request.Form("metpem"))
     tgla = trim(Request.Form("tgla"))
     tgle = trim(Request.Form("tgle"))
-
-    ' query cabang  
-    set agen_cmd =  Server.CreateObject ("ADODB.Command")
-    agen_cmd.ActiveConnection = mm_delima_string
-    ' filter agen
-    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'N' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
-    set agendata = agen_cmd.execute
-    ' filter kebutuhan
-    agen_cmd.commandText = "SELECT dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama FROM dbo.DLK_M_Kebutuhan INNER JOIN dbo.DLK_T_Memo_H ON dbo.DLK_M_Kebutuhan.kebID = dbo.DLK_T_Memo_H.memoKebID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'N' GROUP BY dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama"
-    set kebData = agen_cmd.execute
 
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
@@ -28,31 +30,37 @@
     end if
     
     if agen <> "" then
-        filterAgen = "AND memoAgenID = '"& agen &"'"
+        filterAgen = "AND DLK_T_OrJulH.OJH_AgenID = '"& agen &"'"
     else
         filterAgen = ""
     end if
 
-    if keb <> "" then
-        filterKeb = "AND memoKebID = '"& keb &"'"
+    if customer <> "" then
+        filtercustomer = "AND dbo.DLK_T_OrJulH.OJH_custID = '"& customer &"'"
     else
-        filterKeb = ""
+        filtercustomer = ""
+    end if
+
+    if metpem <> "" then
+        filtermetpem = "AND dbo.DLK_T_OrJulH.OJH_metpem = '"& metpem &"'"
+    else
+        filtermetpem = ""
     end if
 
     if tgla <> "" AND tgle <> "" then
-        filtertgl = "AND memotgl BETWEEN '"& tgla &"' AND '"& tgle &"'"
+        filtertgl = "AND dbo.DLK_T_OrJulH.OJH_Date BETWEEN '"& tgla &"' AND '"& tgle &"'"
     elseIf tgla <> "" AND tgle = "" then
-        filtertgl = "AND memotgl = '"& tgla &"'"
+        filtertgl = "AND dbo.DLK_T_OrJulH.OJH_Date = '"& tgla &"'"
     else 
         filtertgl = ""
     end if
-    ' query seach 
-    strquery = "SELECT * FROM DLK_T_Memo_H WHERE MemoAktifYN = 'Y' AND memoApproveYN = 'N' "& filterAgen &" "& filterKeb &" "& filtertgl &""
 
+    ' query seach 
+    strquery = "SELECT DLK_T_OrJulH.*, DLK_M_customer.CustNama FROM DLK_T_OrJulH LEFT OUTER JOIN DLK_M_Customer ON DLK_T_OrJulH.OJH_CustID = DLK_M_Customer.custId WHERE OJH_AktifYN = 'Y' "& filterAgen &"  "& filtercustomer &" "& filtermetpem &" "& filtertgl &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
-    orderBy = " order by memoTgl DESC"
+    orderBy = " ORDER BY OJH_Date DESC"
     set rs = Server.CreateObject("ADODB.Recordset")
     sqlawal = strquery
 
@@ -88,23 +96,24 @@
         end if	
     loop
 
-    call header("Permintaan Barang")
-%>    
+    call header("Order Customer") 
+%>
+
 <!--#include file="../../navbar.asp"-->
 <div class="container">
-    <div class="row mt-3 mb-3 text-center">
-        <div class="col-lg-12">
-            <h3>FORM PERMINTAAN BARANG</h3>
-        </div>
+    <div class="row">
+        <div class="col-lg-12 mb-3 mt-3 text-center">
+            <h3>DETAIL ORDER PENJUAL CUSTOMER</h3>
+        </div>  
     </div>
     <div class="row">
-        <div class="col-lg-2 mb-3">
-            <a href="pb_add.asp" class="btn btn-primary">Tambah</a>
+        <div class="col-lg-12 mb-3">
+            <a href="orjul_add.asp" class="btn btn-primary">Tambah</a>
         </div>
     </div>
-    <form action="p_barang.asp" method="post">
+    <form action="outgoing.asp" method="post">
         <div class="row">
-            <div class="col-lg-3 mb-3">
+            <div class="col-lg-4 mb-3">
                 <label for="Agen">Cabang</label>
                 <select class="form-select" aria-label="Default select example" name="agen" id="agen">
                     <option value="">Pilih</option>
@@ -116,24 +125,35 @@
                     %>
                 </select>
             </div>
-            <div class="col-lg-3 mb-3">
-                <label for="keb">Kebutuhan</label>
-                <select class="form-select" aria-label="Default select example" name="keb" id="keb">
+            <div class="col-lg-4 mb-3">
+                <label for="cutomer">Cutomer</label>
+                <select class="form-select" aria-label="Default select example" name="cutomer" id="cutomer">
                     <option value="">Pilih</option>
-                    <% do while not kebData.eof %>
-                    <option value="<%= kebData("kebID") %>"><%= kebData("kebNama") %></option>
+                    <% do while not dcustomer.eof %>
+                    <option value="<%= dcustomer("custid") %>"><%= dcustomer("custnama") %></option>
                     <% 
-                    kebData.movenext
+                    dcustomer.movenext
                     loop
                     %>
                 </select>
             </div>
-            <div class="col-lg-2 mb-3">
-                <label for="tgl">Tanggal Pertama</label>
+            <div class="col-lg-4 mb-3">
+                <label for="metpem">Pembayaran</label>
+                <select class="form-select" aria-label="Default select example" name="metpem" id="metpem">
+                    <option value="">Pilih</option>
+                    <option value="1">Transfer</option>
+                    <option value="2">Cash</option>
+                    <option value="3">PayLater</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 mb-3">
+                <label for="tgla">Tanggal Pertama</label>
                 <input type="date" class="form-control" name="tgla" id="tgla" autocomplete="off" >
             </div>
-            <div class="col-lg-2 mb-3">
-                <label for="tgl">Tanggal Kedua</label>
+            <div class="col-lg-4 mb-3">
+                <label for="tgle">Tanggal Kedua</label>
                 <input type="date" class="form-control" name="tgle" id="tgle" autocomplete="off" >
             </div>
             <div class="col-lg-2 mt-4 mb-3">
@@ -143,18 +163,19 @@
     </form>
     <div class="row">
         <div class="col-lg-12">
-            <table class="table">
+            <table class="table table-hover">
                 <thead class="bg-secondary text-light">
-                    <tr>
-                    <th scope="col">No</th>
-                    <th scope="col">No Memo</th>
-                    <th scope="col">Tanggal</th>
-                    <th scope="col">Cabang</th>
-                    <th scope="col">Divisi</th>
-                    <th scope="col">Kebutuhan</th>
-                    <th scope="col">Aktif</th>
-                    <th scope="col" class="text-center">Aksi</th>
-                    </tr>
+                    <th>No</th>
+                    <th>OrderID</th>
+                    <th>Cabang</th>
+                    <th>Tanggal</th>
+                    <th>Customer</th>
+                    <th>Tanggal JT</th>
+                    <th>Diskon</th>
+                    <th>PPn</th>
+                    <th>Pembayaran</th>
+                    <th>Keterangan</th>
+                    <th class="text-center">Aksi</th>
                 </thead>
                 <tbody>
                     <% 
@@ -164,22 +185,25 @@
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
                     %>
-                    <tr>
-                        <th scope="row"><%= recordcounter %></th>
+                        <tr><TH><%= recordcounter %></TH>
+                        <th><%= rs("OJH_ID") %></th>
+                        <td><% call getAgen(rs("OJH_AgenID"),"P") %></td>
+                        <td><%= rs("OJH_Date") %></td>
+                        <td><%= rs("custNama") %></td>
                         <td>
-                            <%= left(rs("memoID"),4) %>/<% call getKebutuhan(mid(rs("memoId"),5,3),"") %>-<% call getAgen(mid(rs("memoID"),8,3),"") %>/<%= mid(rs("memoID"),11,4) %>/<%= right(rs("memoID"),3) %>
+                            <% if rs("OJH_JTDate") <> "1900-01-01" then %>
+                            <%= rs("OJH_JTDate") %>
+                            <% end if %>
                         </td>
-                        <td><%= rs("memoTgl") %></td>
-                        <td><% call getAgen(rs("memoAgenID"),"p") %></td>
-                        <td><% call getDivisi(rs("memoDivID")) %></td>
-                        <td><% call getKebutuhan(rs("memoKebID"),"P") %></td>
-                        <td>
-                            <%if rs("memoAktifYN") = "Y" then %>Aktif <% else %>Off <% end if %>
-                        </td>
+                        <td><%= rs("OJH_DiskonAll") %></td>
+                        <td><%= rs("OJH_PPn") %></td>
+                        <td><% call getmetpem(rs("OJH_MetPem")) %></td>
+                        <td><%= rs("OJH_Keterangan") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="detailpb.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-primary">Detail</a>
-                                <a href="haktif.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-danger btn-aktifpbarang">delete</a>
+                                <a href="orjul_d.asp?id=<%= rs("OJH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
+                                <a href="purc_u.asp?id=<%= rs("OJH_ID") %>" class="btn badge text-bg-primary" >Update</a>
+                                <a href="aktifh.asp?id=<%= rs("OJH_ID") %>" class="btn badge text-bg-danger btn-orjual">Delete</a>
                             </div>
                         </td>
                     </tr>
@@ -192,10 +216,11 @@
                     loop
                     rs.close
                     %>
+
                 </tbody>
             </table>
         </div>
-    </div>
+    </div>  
     <div class="row">
         <div class="col-sm-12">
             <!-- paggination -->
@@ -210,7 +235,7 @@
                         end if
                         if requestrecords <> 0 then 
                     %>
-                        <a class="page-link prev" href="p_barang.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Prev </a>
+                        <a class="page-link prev" href="outgoing.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Prev </a>
                     <% else %>
                         <p class="page-link prev-p">&#x25C4; Prev </p>
                     <% end if %>
@@ -228,9 +253,9 @@
                         end if
                         if Cint(page) = pagelistcounter then
                         %>
-                            <a class="page-link hal bg-primary text-light" href="p_barang.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal bg-primary text-light" href="outgoing.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
                         <%else%>
-                            <a class="page-link hal" href="p_barang.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal" href="outgoing.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
                         <%
                         end if
                         pagelist = pagelist + recordsonpage
@@ -246,7 +271,7 @@
                         end if
                         %>
                         <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                            <a class="page-link next" href="p_barang.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
+                            <a class="page-link next" href="outgoing.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
                         <% else %>
                             <p class="page-link next-p">Next &#x25BA;</p>
                         <% end if %>
@@ -256,4 +281,6 @@
         </div>
     </div>
 </div>
+
+
 <% call footer() %>

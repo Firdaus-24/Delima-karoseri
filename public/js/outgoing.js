@@ -1,13 +1,13 @@
 $(document).ready(function(){
     // validasi tambah satuan
-    $('#formcust').submit(function(e) {
+    $('#formorjul').submit(function(e) {
         let form = this;
         
         e.preventDefault(); // <--- prevent form from submitting
         
         swal({
             title: "APAKAH ANDA SUDAH YAKIN??",
-            text: "Data Customer",
+            text: "Order Penjualan Customer",
             icon: "warning",
             buttons: [
               'No',
@@ -24,13 +24,13 @@ $(document).ready(function(){
     })
 
     // aktifasi sat
-    $('.btn-aktifcust').click(function(e){
+    $('.btn-orjual').click(function(e){
         
         e.preventDefault(); // <--- prevent click
         
         swal({
             title: "YAKIN UNTUK DI HAPUS??",
-            text: "Delete Customer",
+            text: "Delete Order Penjualan",
             icon: "warning",
             buttons: [
               'No',

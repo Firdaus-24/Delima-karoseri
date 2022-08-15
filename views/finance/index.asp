@@ -51,7 +51,7 @@
         filtertgl = ""
     end if
     ' query seach 
-    strquery = "SELECT * FROM DLK_T_Memo_H WHERE MemoAktifYN = 'Y' AND memoApproveYN = 'N' "& filterAgen &" "& filterKeb &" "& filtertgl &""
+    strquery = "SELECT DLK_T_Memo_H.* FROM DLK_T_Memo_H WHERE MemoAktifYN = 'Y' AND memoApproveYN = 'N' "& filterAgen &" "& filterKeb &" "& filtertgl &""
 
     ' untuk data paggination
     page = Request.QueryString("page")

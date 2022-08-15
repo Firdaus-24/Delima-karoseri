@@ -62,6 +62,9 @@
               <li>
                 <a class="link-name" href="<%= url %>views/inventory/incomming.asp">Incomming</a>
               </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/inventory/outgoing.asp">Outgoing</a>
+              </li>
             </ul>
           <!-- repair -->
           <li class="nav-text">
@@ -146,7 +149,7 @@
           </li>
             <ul class="sub-menu" id="sublist-permintaanb">
               <li>
-                <a class="link-name" href="<%= url %>views/permintaanBarang/p_barang.asp">Permintaan Barang</a>
+                <a class="link-name" href="<%= url %>views/permintaan/index.asp">Permintaan Barang</a>
               </li>
             <ul>
         </div>

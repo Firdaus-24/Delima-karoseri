@@ -1,7 +1,23 @@
 <!--#include file="../../init.asp"-->
 <% 
+    agen = trim(Request.Form("agen"))
+    div = trim(Request.Form("div"))
+    tgla = trim(Request.Form("tgla"))
+    tgle = trim(Request.Form("tgle"))
+
+    ' query data  
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
+    ' query cabang  
+    set agen_cmd =  Server.CreateObject ("ADODB.Command")
+    agen_cmd.ActiveConnection = mm_delima_string
+    ' filter agen
+    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    set agendata = agen_cmd.execute
+    ' filter divisi
+    agen_cmd.commandText = "SELECT dbo.DLK_M_Divisi.DivID, dbo.DLK_M_Divisi.divNama FROM dbo.DLK_M_Divisi INNER JOIN dbo.DLK_T_Memo_H ON dbo.DLK_M_Divisi.DivID = dbo.DLK_T_Memo_H.memoDivID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y'  AND DLK_T_Memo_H.memoApproveYN = 'Y' GROUP BY dbo.DLK_M_Divisi.DivID, dbo.DLK_M_Divisi.divNama"
+    set kebData = agen_cmd.execute
+
 
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
@@ -15,27 +31,27 @@
         angka = Request.form("urut") + 1
     end if
     
-    ' if agen <> "" then
-    '     filterAgen = "AND memoAgenID = '"& agen &"'"
-    ' else
-    '     filterAgen = ""
-    ' end if
+    if agen <> "" then
+        filterAgen = "AND memoAgenID = '"& agen &"'"
+    else
+        filterAgen = ""
+    end if
 
-    ' if keb <> "" then
-    '     filterKeb = "AND memoKebID = '"& keb &"'"
-    ' else
-    '     filterKeb = ""
-    ' end if
+    if div <> "" then
+        filterdiv = "AND memodivID = '"& div &"'"
+    else
+        filterdiv = ""
+    end if
 
-    ' if tgla <> "" AND tgle <> "" then
-    '     filtertgl = "AND memotgl BETWEEN '"& tgla &"' AND '"& tgle &"'"
-    ' elseIf tgla <> "" AND tgle = "" then
-    '     filtertgl = "AND memotgl = '"& tgla &"'"
-    ' else 
-    '     filtertgl = ""
-    ' end if
+    if tgla <> "" AND tgle <> "" then
+        filtertgl = "AND memotgl BETWEEN '"& tgla &"' AND '"& tgle &"'"
+    elseIf tgla <> "" AND tgle = "" then
+        filtertgl = "AND memotgl = '"& tgla &"'"
+    else 
+        filtertgl = ""
+    end if
     ' query seach 
-    strquery = "SELECT TOP (100) PERCENT dbo.DLK_T_AppPermintaan.AppMemoID, dbo.DLK_T_AppPermintaan.AppID, dbo.DLK_T_AppPermintaan.AppTgl, dbo.DLK_T_AppPermintaan.AppDana, dbo.DLK_T_AppPermintaan.AppKeterangan, dbo.DLK_T_AppPermintaan.AppAktifYN, dbo.DLK_T_Memo_H.memoTgl, dbo.DLK_T_Memo_H.memoAgenID, dbo.DLK_T_Memo_H.memoKebID, dbo.DLK_T_Memo_H.memoDivID, dbo.DLK_T_Memo_H.memoApproveYN, dbo.DLK_T_Memo_H.memoID FROM dbo.DLK_T_AppPermintaan INNER JOIN dbo.DLK_T_Memo_H ON dbo.DLK_T_AppPermintaan.AppMemoID = dbo.DLK_T_Memo_H.memoID WHERE (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_AppPermintaan.AppAktifYN = 'Y')"
+    strquery = "SELECT TOP (100) PERCENT dbo.DLK_T_AppPermintaan.AppMemoID, dbo.DLK_T_AppPermintaan.AppID, dbo.DLK_T_AppPermintaan.AppTgl, dbo.DLK_T_AppPermintaan.AppDana, dbo.DLK_T_AppPermintaan.AppKeterangan, dbo.DLK_T_AppPermintaan.AppAktifYN, dbo.DLK_T_Memo_H.memoTgl, dbo.DLK_T_Memo_H.memoAgenID, dbo.DLK_T_Memo_H.memoKebID, dbo.DLK_T_Memo_H.memoDivID, dbo.DLK_T_Memo_H.memoApproveYN, dbo.DLK_T_Memo_H.memoID FROM dbo.DLK_T_AppPermintaan INNER JOIN dbo.DLK_T_Memo_H ON dbo.DLK_T_AppPermintaan.AppMemoID = dbo.DLK_T_Memo_H.memoID WHERE (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_AppPermintaan.AppAktifYN = 'Y') "& filterAgen&" "& filterdiv &""& filtertgl &""
 
     ' untuk data paggination
     page = Request.QueryString("page")
@@ -86,24 +102,64 @@
             <h3>ANGGARAN DANA PERMINTAAN BARANG</h3>
         </div>
     </div>
+    <form action="dappPermintaan.asp" method="post">
+        <div class="row">
+            <div class="col-lg-3 mb-3">
+                <label for="Agen">Cabang</label>
+                <select class="form-select" aria-label="Default select example" name="agen" id="agen">
+                    <option value="">Pilih</option>
+                    <% do while not agendata.eof %>
+                    <option value="<%= agendata("agenID") %>"><%= agendata("agenNAme") %></option>
+                    <% 
+                    agendata.movenext
+                    loop
+                    %>
+                </select>
+            </div>
+            <div class="col-lg-3 mb-3">
+                <label for="div">Divisi</label>
+                <select class="form-select" aria-label="Default select example" name="div" id="div">
+                    <option value="">Pilih</option>
+                    <% do while not kebData.eof %>
+                    <option value="<%= kebData("divID") %>"><%= kebData("divNama") %></option>
+                    <% 
+                    kebData.movenext
+                    loop
+                    %>
+                </select>
+            </div>
+            <div class="col-lg-2 mb-3">
+                <label for="tgl">Tanggal Pertama</label>
+                <input type="date" class="form-control" name="tgla" id="tgla" autocomplete="off" >
+            </div>
+            <div class="col-lg-2 mb-3">
+                <label for="tgl">Tanggal Kedua</label>
+                <input type="date" class="form-control" name="tgle" id="tgle" autocomplete="off" >
+            </div>
+            <div class="col-lg-2 mt-4 mb-3">
+                <button type="submit" class="btn btn-primary">Cari</button>
+            </div>
+        </div>
+    </form>
     <div class="row">
         <div class="col-lg-12">
             <table class="table">
                 <thead class="bg-secondary text-light">
                     <tr>
                         <th scope="col">Memo</th>
-                        <th scope="col">Tanggal Acc</th>
+                        <th scope="col">Tgl Acc</th>
                         <th scope="col">Dana Acc</th>
-                        <th scope="col">Tanggal Ajuan</th>
+                        <th scope="col">Tgl Ajuan</th>
                         <th scope="col">Permintaan</th>
                         <th scope="col">Cabang</th>
                         <th scope="col">Divisi</th>
                         <th scope="col">Keperluan</th>
                         <th scope="col">Keterangan</th>
+                        <th scope="col">Status</th>
                         <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style="font-size:14px;padding:0;margin:0;">
                     <% 
                     'prints records in the table
                     showrecords = recordsonpage
@@ -144,10 +200,16 @@
                             <%= rs("appKeterangan") %>
                         </td>
                         <td>
+                            <%if rs("appDana") < ddata("tharga") then %><b style="color:red"> Waiting </b> <% else %> <b style="color:green">Done </b><% end if %>
+                        </td>
+                        <td class="text-center">
+                            <%if rs("appDana") < ddata("tharga") then %>
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <a href="dapp_u.asp?id=<%= rs("appID") %>" class="btn badge text-bg-primary">Update</a>
-                                <a href="aktifapp.asp?id=<%= rs("appID") %>" class="btn badge text-bg-danger btn-appYN">Delete</a>
                             </div>
+                            <% else %>
+                                -
+                            <% end if %>
                         </td>
                     </tr>
                     <% 
