@@ -52,7 +52,7 @@
     end if
 
     ' query seach 
-    strquery = "SELECT TOP (100) PERCENT dbo.DLK_T_AppPermintaan.AppMemoID, dbo.DLK_T_AppPermintaan.AppID, dbo.DLK_T_AppPermintaan.AppTgl, dbo.DLK_T_AppPermintaan.AppDana, dbo.DLK_T_AppPermintaan.AppKeterangan, dbo.DLK_T_AppPermintaan.AppAktifYN, dbo.DLK_T_Memo_H.memoTgl, dbo.DLK_T_Memo_H.memoAgenID, dbo.DLK_T_Memo_H.memoKebID, dbo.DLK_T_Memo_H.memoDivID, dbo.DLK_T_Memo_H.memoApproveYN, dbo.DLK_T_Memo_H.memoID FROM dbo.DLK_T_AppPermintaan INNER JOIN dbo.DLK_T_Memo_H ON dbo.DLK_T_AppPermintaan.AppMemoID = dbo.DLK_T_Memo_H.memoID WHERE (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_AppPermintaan.AppAktifYN = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN = 'Y') "& filterAgen &" "& filterKeb &" "& filtertgl &""
+    strquery = "SELECT TOP (100) PERCENT dbo.DLK_T_AppPermintaan.AppMemoID, dbo.DLK_T_AppPermintaan.AppID, dbo.DLK_T_AppPermintaan.AppTgl, dbo.DLK_T_AppPermintaan.AppDana, dbo.DLK_T_AppPermintaan.AppKeterangan, dbo.DLK_T_AppPermintaan.AppAktifYN, dbo.DLK_T_Memo_H.memoTgl, dbo.DLK_T_Memo_H.memoAgenID, dbo.DLK_T_Memo_H.memoKebID, dbo.DLK_T_Memo_H.memoDivID, dbo.DLK_T_Memo_H.memoApproveYN, dbo.DLK_T_Memo_H.memoID FROM dbo.DLK_T_AppPermintaan INNER JOIN dbo.DLK_T_Memo_H ON dbo.DLK_T_AppPermintaan.AppMemoID = dbo.DLK_T_Memo_H.memoID WHERE NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) AND (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_AppPermintaan.AppAktifYN = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN = 'Y') "& filterAgen &" "& filterKeb &" "& filtertgl &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
@@ -154,7 +154,6 @@
                         <th scope="col">Cabang</th>
                         <th scope="col">Divisi</th>
                         <th scope="col">Keperluan</th>
-                        <th scope="col">Keterangan</th>
                         <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -195,12 +194,9 @@
                         <td>
                             <% call getKebutuhan(rs("memokebID"),"p") %>
                         </td>
-                        <td>
-                            <%= rs("appKeterangan") %>
-                        </td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="purc_add.asp?id=<%= rs("appID") %>" class="btn badge text-bg-primary">Process</a>
+                                <a href="purc_add.asp?id=<%= rs("appMemoId") %>" class="btn badge text-bg-primary">Process</a>
                             </div>
                         </td>
                     </tr>

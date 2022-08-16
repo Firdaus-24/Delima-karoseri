@@ -8,12 +8,12 @@
     data_cmd.ActiveConnection = mm_delima_string
     
     ' get data
-    data_cmd.commandText = "SELECT dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_AgenID, dbo.DLK_T_OrPemH.OPH_Date, dbo.DLK_T_OrPemH.OPH_venID, dbo.DLK_T_OrPemH.OPH_JTDate, dbo.DLK_T_OrPemH.OPH_Keterangan,dbo.DLK_T_OrPemH.OPH_DiskonAll, dbo.DLK_T_OrPemH.OPH_PPn, dbo.DLK_T_OrPemH.OPH_AktifYN, dbo.DLK_T_OrPemH.OPH_MetPem, dbo.DLK_T_OrPemH.OPH_appID, dbo.DLK_T_OrPemD.OPD_OPHID,dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Disc1, dbo.DLK_T_OrPemD.OPD_JenisSat, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_Disc2, dbo.DLK_T_OrPemD.OPD_AktifYN, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_OrPemH INNER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = dbo.DLK_T_OrPemD.OPD_OPHID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrpemD.OPD_Item = DLK_M_Barang.Brg_ID where DLK_T_OrPemH.OPH_ID = '"& id &"' AND DLK_T_OrPemH.OPH_AktifYN = 'Y' AND DLK_T_OrPemD.OPD_AktifYN = 'Y' GROUP BY dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_AgenID, dbo.DLK_T_OrPemH.OPH_Date, dbo.DLK_T_OrPemH.OPH_venID, dbo.DLK_T_OrPemH.OPH_JTDate, dbo.DLK_T_OrPemH.OPH_Keterangan,dbo.DLK_T_OrPemH.OPH_DiskonAll, dbo.DLK_T_OrPemH.OPH_PPn, dbo.DLK_T_OrPemH.OPH_AktifYN, dbo.DLK_T_OrPemH.OPH_MetPem, dbo.DLK_T_OrPemH.OPH_appID, dbo.DLK_T_OrPemD.OPD_OPHID,dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Disc1, dbo.DLK_T_OrPemD.OPD_JenisSat, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_Disc2, dbo.DLK_T_OrPemD.OPD_AktifYN,DLK_M_Barang.Brg_Nama "
+    data_cmd.commandText = "SELECT DLK_T_AppPermintaan.AppDana, dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_AgenID, dbo.DLK_T_OrPemH.OPH_Date, dbo.DLK_T_OrPemH.OPH_venID, dbo.DLK_T_OrPemH.OPH_JTDate, dbo.DLK_T_OrPemH.OPH_Keterangan,dbo.DLK_T_OrPemH.OPH_DiskonAll, dbo.DLK_T_OrPemH.OPH_PPn, dbo.DLK_T_OrPemH.OPH_AktifYN, dbo.DLK_T_OrPemH.OPH_MetPem, dbo.DLK_T_OrPemH.OPH_memoId, dbo.DLK_T_OrPemD.OPD_OPHID,dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Disc1, dbo.DLK_T_OrPemD.OPD_JenisSat, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_Disc2, dbo.DLK_T_OrPemD.OPD_AktifYN, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_OrPemH INNER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = dbo.DLK_T_OrPemD.OPD_OPHID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrpemD.OPD_Item = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_T_AppPermintaan ON DLK_T_OrPemH.OPH_MemoID = DLK_T_AppPermintaan.appMemoID where DLK_T_OrPemH.OPH_ID = '"& id &"' AND DLK_T_OrPemH.OPH_AktifYN = 'Y' AND DLK_T_OrPemD.OPD_AktifYN = 'Y' GROUP BY  DLK_T_AppPermintaan.AppDana, dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_AgenID, dbo.DLK_T_OrPemH.OPH_Date, dbo.DLK_T_OrPemH.OPH_venID, dbo.DLK_T_OrPemH.OPH_JTDate, dbo.DLK_T_OrPemH.OPH_Keterangan,dbo.DLK_T_OrPemH.OPH_DiskonAll, dbo.DLK_T_OrPemH.OPH_PPn, dbo.DLK_T_OrPemH.OPH_AktifYN, dbo.DLK_T_OrPemH.OPH_MetPem, dbo.DLK_T_OrPemH.OPH_memoId, dbo.DLK_T_OrPemD.OPD_OPHID,dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Disc1, dbo.DLK_T_OrPemD.OPD_JenisSat, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_Disc2, dbo.DLK_T_OrPemD.OPD_AktifYN,DLK_M_Barang.Brg_Nama "
 
     set data = data_cmd.execute
 
     ' barang
-    data_cmd.commandText = "SELECT brg_Nama, brg_ID FROM DLK_M_Barang WHERE brg_AktifYN = 'Y' ORDER BY Brg_Nama ASC"
+    data_cmd.commandText = "SELECT brg_Nama, brg_ID FROM DLK_M_Barang WHERE brg_AktifYN = 'Y' AND left(Brg_Id,3) = '"& data("OPH_AgenID") &"' ORDER BY Brg_Nama ASC"
     set barang = data_cmd.execute
 
     ' satuan
@@ -44,12 +44,14 @@
             <div class="col-lg-4 mb-3">
                 <select class="form-select" aria-label="Default select example" id="agen" name="agen" required>
                     <option value="<%= data("OPH_AgenID") %>"><% call getAgen(data("OPH_AgenID"),"p") %></option>
+                    <!-- 
                     <% do while not agen.eof %>
                     <option value="<%= agen("AgenID") %>"><%= agen("AgenName") %></option>
                     <% 
                     agen.movenext
                     loop
                     %>
+                     -->
                 </select>
             </div>
             <div class="col-lg-2 mb-3">
@@ -108,13 +110,20 @@
                 <input type="number" id="ppn" name="ppn" class="form-control" value="<%= data("OPH_ppn") %>">
             </div>
             <div class="col-lg-2 mb-3">
-                <label for="keterangan" class="col-form-label">Keterangan</label>
+                <label for="dana_tpo" class="col-form-label">Acc Dana</label>
             </div>
             <div class="col-lg-4 mb-3">
+                <input type="text" id="dana_tpo" name="dana_tpo" class="form-control" value="<%= replace(formatCurrency(data("appDana")),"$","") %>" readonly> 
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 mb-3">
+                <label for="keterangan" class="col-form-label">Keterangan</label>
+            </div>
+            <div class="col-lg-10 mb-3">
                 <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" value="<%= data("OPH_Keterangan") %>">
             </div>
         </div>
-
         <!-- detail barang -->
         <div class="row mb-3 mt-4">
             <div class="col-lg text-center mb-2 mt-2">

@@ -6,13 +6,10 @@
     data_cmd.ActiveConnection = mm_delima_string
 
 
-    data_cmd.commandText = "SELECT dbo.DLK_T_AppPermintaan.AppID, dbo.DLK_T_Memo_D.memoID, dbo.DLK_T_Memo_D.memoItem, dbo.DLK_T_Memo_D.memoSpect, dbo.DLK_T_Memo_D.memoQtty, dbo.DLK_T_Memo_D.memoSatuan, dbo.DLK_T_Memo_D.memoHarga,dbo.DLK_T_Memo_D.memoKeterangan, DLK_M_Barang.Brg_Nama FROM DLK_T_Memo_D LEFT OUTER JOIN dbo.DLK_T_AppPermintaan ON left(dbo.DLK_T_Memo_D.memoID,17) = dbo.DLK_T_AppPermintaan.AppMemoID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.Memoitem = DLK_M_Barang.Brg_ID WHERE dbo.DLK_T_AppPermintaan.AppID = '"& id &"' AND DLK_T_Memo_D.memoAktifYN = 'Y'"
+    data_cmd.commandText = "SELECT dbo.DLK_T_AppPermintaan.AppID, dbo.DLK_T_AppPermintaan.Appdana, dbo.DLK_T_Memo_D.memoID, dbo.DLK_T_Memo_D.memoItem, dbo.DLK_T_Memo_D.memoSpect, dbo.DLK_T_Memo_D.memoQtty, dbo.DLK_T_Memo_D.memoSatuan, dbo.DLK_T_Memo_D.memoHarga,dbo.DLK_T_Memo_D.memoKeterangan, DLK_M_Barang.Brg_Nama FROM DLK_T_Memo_D LEFT OUTER JOIN dbo.DLK_T_AppPermintaan ON left(dbo.DLK_T_Memo_D.memoID,17) = dbo.DLK_T_AppPermintaan.AppMemoID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.Memoitem = DLK_M_Barang.Brg_ID WHERE dbo.DLK_T_AppPermintaan.AppmemoID = '"& id &"' AND DLK_T_Memo_D.memoAktifYN = 'Y'"
     ' response.write data_cmd.commandText & "<br>"
     set data = data_cmd.execute
 
-    ' agen
-    data_cmd.commandText = "SELECT AgenName, AgenID FROM GLB_M_Agen WHERE AgenAktifYN = 'Y' ORDER BY AgenName ASC"
-    set agen = data_cmd.execute
     ' vendor
     data_cmd.commandText = "SELECT ven_Nama, Ven_ID FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y' ORDER BY ven_Nama ASC"
     set vendor = data_cmd.execute
@@ -27,20 +24,25 @@
         </div>
     </div>
     <form action="purc_add.asp?id=<%= id %>" method="post" id="formpur">
-        <input type="hidden" id="appid" name="appid" value="<%= id %>">
         <div class="row align-items-center">
+            <div class="col-lg-2 mb-3">
+                <label for="memoId" class="col-form-label">No Memo</label>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <input type="text" id="memoId" name="memoId" class="form-control" value="<%= id %>" readonly>
+            </div>
+            <div class="col-lg-2 mb-3">
+                <label for="nfinance" class="col-form-label">No Finance</label>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <input type="text" id="nfinance" name="nfinance" class="form-control" value="<%= data("AppID") %>" readonly>
+            </div>
             <div class="col-lg-2 mb-3">
                 <label for="agen" class="col-form-label">Cabang / Agen</label>
             </div>
             <div class="col-lg-4 mb-3">
                 <select class="form-select" aria-label="Default select example" id="agen" name="agen" required>
-                    <option value="<%= mid(data("memoID"),8,3) %>"><% call getAgen(mid(data("memoID"),8,3),"P") %></option>
-                    <% do while not agen.eof %>
-                    <option value="<%= agen("AgenID") %>"><%= agen("AgenName") %></option>
-                    <% 
-                    agen.movenext
-                    loop
-                    %>
+                    <option value="<%= mid(data("memoID"),8,3) %>" selected ><% call getAgen(mid(data("memoID"),8,3),"P") %></option>
                 </select>
             </div>
             <div class="col-lg-2 mb-3">
@@ -99,9 +101,17 @@
                 <input type="number" id="ppn" name="ppn" class="form-control">
             </div>
             <div class="col-lg-2 mb-3">
-                <label for="keterangan" class="col-form-label">Keterangan</label>
+                <label for="dana_tpo" class="col-form-label">Acc Dana</label>
             </div>
             <div class="col-lg-4 mb-3">
+                <input type="text" id="dana_tpo" name="dana_tpo" class="form-control" value="<%= replace(formatCurrency(data("appDana")),"$","") %>" readonly> 
+            </div>
+        </div>
+         <div class="row">
+            <div class="col-lg-2 mb-3">
+                <label for="keterangan" class="col-form-label">Keterangan</label>
+            </div>
+            <div class="col-lg-10 mb-3">
                 <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" autocomplete="off">
             </div>
         </div>
@@ -159,44 +169,48 @@
             </div>
         </div>
         <!-- value get data -->
-        <div class="value" style="display:none">
-        <div class="row">
-            <div class="col-lg-12">
-                <input type="text" id="valitem" name="valitem" class="form-control">
+        <div class="value" style="display:none;">
+            <div class="row">
+                <div class="col-lg-12">
+                    <input type="text" id="valitem" name="valitem" class="form-control">
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <input type="text" id="valqtty" name="valqtty" class="form-control">
+            <div class="row">
+                <div class="col-lg-12">
+                    <input type="text" id="valqtty" name="valqtty" class="form-control">
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <input type="text" id="valharga" name="valharga" class="form-control">
+            <div class="row">
+                <div class="col-lg-12">
+                    <input type="text" id="valharga" name="valharga" class="form-control">
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <input type="text" id="valsatuan" name="valsatuan" class="form-control">
+            <div class="row">
+                <div class="col-lg-12">
+                    <input type="text" id="valsatuan" name="valsatuan" class="form-control">
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <input type="text" id="valdisc1" name="valdisc1" class="form-control">
+            <div class="row">
+                <div class="col-lg-12">
+                    <input type="text" id="valdisc1" name="valdisc1" class="form-control">
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <input type="text" id="valdisc2" name="valdisc2" class="form-control">
+            <div class="row">
+                <div class="col-lg-12">
+                    <input type="text" id="valdisc2" name="valdisc2" class="form-control">
+                </div>
             </div>
-        </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <input type="text" id="thargapo" name="thargapo" class="form-control">
+                </div>
+            </div>
         </div>
         <!-- end getdata -->
         <div class="row">
             <div class="col-lg-12 text-center">
                 <a href="index.asp" type="button" class="btn btn-danger">Kembali</a>
                 <button type="submit" class="btn btn-primary">Save</button>
-
             </div>
         </div>
     </form>

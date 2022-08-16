@@ -1,4 +1,7 @@
 $(function(){
+
+    let qttypo 
+    let hargapo 
     // set value untuk disc1 dan disc2 jika kosong
     if (!$('input[name=disc1]').val()){
         $('input[name=disc1]').val(0)
@@ -6,30 +9,32 @@ $(function(){
     if(!$('input[name=disc2]').val()){
         $('input[name=disc2]').val(0)
     }
-    
     // cekbox 
     $(".ckpo").on("click", function() {
-      var data = [];
-      $("table > tbody > tr").each(function () {
-        var $tr = $(this);
-        if ($tr.find(".ckpo").is(":checked")) {
-          data.push({
-            item: $tr.find("#item").val(),
-            qtty: $tr.find("#qtty").val(),
-            harga: $tr.find("#hargapo").val(),
-            satuan: $tr.find("#satuan").val(),
-            disc1: $tr.find("#disc1").val(),
-            disc2: $tr.find("#disc2").val()
-          });
-        }
-      });      
-      $("#valitem").val(data.map(el=>el.item).toString())
-      $("#valqtty").val(data.map(el=>el.qtty).toString())
-      $("#valharga").val(data.map(el=>el.harga).toString())
-      $("#valsatuan").val(data.map(el=>el.satuan).toString())
-      $("#valdisc1").val(data.map(el=>el.disc1).toString())
-      $("#valdisc2").val(data.map(el=>el.disc2).toString())
-      
+        let tpo = 0
+        var data = [];
+        $("table > tbody > tr").each(function (i, val) {
+            var $tr = $(this);
+            if ($tr.find(".ckpo").is(":checked")) {
+                data.push({
+                    item: $tr.find("#item").val(),
+                    qtty: $tr.find("#qtty").val(),
+                    harga: $tr.find("#hargapo").val(),
+                    satuan: $tr.find("#satuan").val(),
+                    disc1: $tr.find("#disc1").val(),
+                    disc2: $tr.find("#disc2").val(),
+                    total: $tr.find("#hargapo").val() * $tr.find("#qtty").val()
+                });
+                tpo += data[i].total            
+            }
+        });      
+        $("#valitem").val(data.map(el=>el.item).toString())
+        $("#valqtty").val(data.map(el=>el.qtty).toString())
+        $("#valharga").val(data.map(el=>el.harga).toString())
+        $("#valsatuan").val(data.map(el=>el.satuan).toString())
+        $("#valdisc1").val(data.map(el=>el.disc1).toString())
+        $("#valdisc2").val(data.map(el=>el.disc2).toString())
+        $("#thargapo").val(tpo)
     });
 
     // add barang
@@ -53,7 +58,8 @@ $(function(){
 
     // validasi tambah pruchase
     $('#formpur').submit(function(e) {
-
+        let tdana = Number($('#dana_tpo').val().replace(/[^0-9\.]+/g, ""))
+        let thargapo = Number($('#thargapo').val())
         let form = this;
         
         e.preventDefault(); // <--- prevent form from submitting
@@ -63,22 +69,26 @@ $(function(){
             swal("Pilih Salah Satu Barang");
             return false;
         }else{
-            swal({
-                title: "APAKAH ANDA SUDAH YAKIN??",
-                text: "Purchase Order",
-                icon: "warning",
-                buttons: [
-                'No',
-                'Yes'
-                ],
-                dangerMode: true,
-            }).then(function(isConfirm) {
-                if (isConfirm) {
-                    form.submit(); // <--- submit form programmatically
-                } else {
-                swal("Form gagal di kirim");
-                }
-            })
+            if(tdana < thargapo){
+                swal("Permintaan PO Melebihi Batas");
+            }else{
+                swal({
+                    title: "APAKAH ANDA SUDAH YAKIN??",
+                    text: "Purchase Order",
+                    icon: "warning",
+                    buttons: [
+                    'No',
+                    'Yes'
+                    ],
+                    dangerMode: true,
+                }).then(function(isConfirm) {
+                    if (isConfirm) {
+                        form.submit(); // <--- submit form programmatically
+                    } else {
+                    swal("Form gagal di kirim");
+                    }
+                })  
+            }
         }
     })
 

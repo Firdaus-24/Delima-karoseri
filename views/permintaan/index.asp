@@ -9,10 +9,10 @@
     set agen_cmd =  Server.CreateObject ("ADODB.Command")
     agen_cmd.ActiveConnection = mm_delima_string
     ' filter agen
-    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'N' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
     set agendata = agen_cmd.execute
     ' filter kebutuhan
-    agen_cmd.commandText = "SELECT dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama FROM dbo.DLK_M_Kebutuhan INNER JOIN dbo.DLK_T_Memo_H ON dbo.DLK_M_Kebutuhan.kebID = dbo.DLK_T_Memo_H.memoKebID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'N' GROUP BY dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama"
+    agen_cmd.commandText = "SELECT dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama FROM dbo.DLK_M_Kebutuhan INNER JOIN dbo.DLK_T_Memo_H ON dbo.DLK_M_Kebutuhan.kebID = dbo.DLK_T_Memo_H.memoKebID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y' GROUP BY dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama"
     set kebData = agen_cmd.execute
 
     set conn = Server.CreateObject("ADODB.Connection")
@@ -47,7 +47,7 @@
         filtertgl = ""
     end if
     ' query seach 
-    strquery = "SELECT * FROM DLK_T_Memo_H WHERE MemoAktifYN = 'Y' AND memoApproveYN = 'N' "& filterAgen &" "& filterKeb &" "& filtertgl &""
+    strquery = "SELECT * FROM DLK_T_Memo_H WHERE MemoAktifYN = 'Y' "& filterAgen &" "& filterKeb &" "& filtertgl &""
 
     ' untuk data paggination
     page = Request.QueryString("page")
@@ -179,7 +179,9 @@
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <a href="detailpb.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-primary">Detail</a>
+                            <% if rs("memoApproveYN") = "N" then %>
                                 <a href="haktif.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-danger btn-aktifpbarang">delete</a>
+                            <% end if %>
                             </div>
                         </td>
                     </tr>

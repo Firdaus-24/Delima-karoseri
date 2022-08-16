@@ -106,11 +106,13 @@
             <h3>DETAIL PURCHASE ORDER</h3>
         </div>  
     </div>
+    <!-- 
     <div class="row">
         <div class="col-lg-12 mb-3">
             <a href="purc_ad.asp" class="btn btn-primary">Tambah</a>
         </div>
     </div>
+     -->
     <form action="purcesDetail.asp" method="post">
         <div class="row">
             <div class="col-lg-4 mb-3">

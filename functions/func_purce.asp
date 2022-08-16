@@ -1,6 +1,6 @@
 <% 
 sub tambahPurce()
-    appid = trim(Request.Form("appid"))
+    memoId = trim(Request.Form("memoId"))
     agen = trim(Request.Form("agen"))
     tgl = trim(Request.Form("tgl"))
     vendor = trim(Request.Form("vendor"))
@@ -26,7 +26,7 @@ sub tambahPurce()
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_T_OrPemH WHERE OPH_AgenID = '"& agen &"' AND OPH_Date = '"& tgl &"' AND OPH_VenID = '"& vendor &"' AND OPH_JTDate = '"& tgljt &"' AND OPH_MetPem = "& metpem &" AND OPH_DiskonAll = '"& diskon &"' AND OPH_PPn = "& ppn &" AND OPH_AppID = '"& appid &"' AND OPH_AktifYN = 'Y'"
+    data_cmd.commandText = "SELECT * FROM DLK_T_OrPemH WHERE OPH_AgenID = '"& agen &"' AND OPH_Date = '"& tgl &"' AND OPH_VenID = '"& vendor &"' AND OPH_JTDate = '"& tgljt &"' AND OPH_MetPem = "& metpem &" AND OPH_DiskonAll = '"& diskon &"' AND OPH_PPn = "& ppn &" AND OPH_memoId = '"& memoId &"' AND OPH_AktifYN = 'Y'"
     ' response.write data_cmd.commandText & "<br>"
     set data = data_cmd.execute
 
@@ -37,7 +37,7 @@ sub tambahPurce()
     vdisc1 = Split(valdisc1, ",")
     vdisc2 = Split(valdisc2, ",")
     if data.eof then
-        data_cmd.commandText = "exec sp_AddDLK_T_OrPemH '"& agen &"', '"& tgl &"', '"& vendor &"', '"& tgljt &"', '"& keterangan &"', "& diskon &", "& ppn &", "& metpem &", '"& appid &"' "
+        data_cmd.commandText = "exec sp_AddDLK_T_OrPemH '"& agen &"', '"& tgl &"', '"& vendor &"', '"& tgljt &"', '"& keterangan &"', "& diskon &", "& ppn &", "& metpem &", '"& memoId &"' "
         ' response.write data_cmd.commandText & "<br>"
         set p = data_cmd.execute
 

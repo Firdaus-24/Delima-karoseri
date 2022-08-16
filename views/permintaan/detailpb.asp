@@ -93,7 +93,9 @@
     <div class="row">
         <div class="col-sm-6 mb-3">
             <div class="btn-group" role="group" aria-label="Basic example">
+                <% if dataH("memoApproveYN") = "N" then %>
                 <a href="pb_u.asp?id=<%= dataH("memoID") %>" class="btn btn-primary btn-sm">Update</a>
+                <% end if %>
                 <a href="index.asp" class="btn btn-danger btn-sm">Kembali</a>
             </div>
         </div>
@@ -140,9 +142,13 @@
                                 <%if dataD("memoAktifYN") = "Y" then%>Aktif <% else %>Off <% end if %>
                             </td>
                             <td  class="text-center">
+                                <% if dataH("memoApproveYN") = "N" then %>
                                 <div class="btn-group" role="group" aria-label="Basic example">
                                     <a href="aktif.asp?databrg=<%= dataD("memoID") %>&id=<%= dataH("MemoID") %>" class="btn badge text-bg-danger btn-aktifdpbarang">delete</a>
                                 </div>
+                                <% else %>
+                                    <b style="color:green">Done</b>
+                                <% end if %>
                             </td>
                         </tr>
                     <% 
