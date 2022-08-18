@@ -8,6 +8,7 @@
         metpem = trim(Request.Form("metpem"))
         diskon = trim(Request.Form("diskon"))
         keterangan = trim(Request.Form("keterangan"))
+        typebelanja = trim(Request.Form("typebelanja"))
         if diskon = "" then
             diskon = 0
         end if
@@ -34,12 +35,12 @@
         set data_cmd =  Server.CreateObject ("ADODB.Command")
         data_cmd.ActiveConnection = mm_delima_string
 
-        data_cmd.commandText = "SELECT * FROM DLK_T_invPemH WHERE IPH_OPHID = '"& ophid &"' AND IPH_AgenID = '"& agen &"' AND IPH_Date = '"& tgl &"' AND IPH_VenID = '"& vendor &"' AND IPH_JTDate = '"& tgljt &"' AND IPH_MetPem = "& metpem &" AND IPH_DiskonAll = '"& diskon &"' AND IPH_PPn = "& ppn &" AND IPH_AktifYN = 'Y'"
+        data_cmd.commandText = "SELECT * FROM DLK_T_invPemH WHERE IPH_OPHID = '"& ophid &"' AND IPH_AgenID = '"& agen &"' AND IPH_Date = '"& tgl &"' AND IPH_VenID = '"& vendor &"' AND IPH_JTDate = '"& tgljt &"' AND IPH_MetPem = "& metpem &" AND IPH_DiskonAll = '"& diskon &"' AND IPH_PPn = "& ppn &" AND IPH_AktifYN = 'Y' AND IPH_Belanja = '"& typebelanja &"'"
         ' response.write data_cmd.commandText & "<br>"
         set data = data_cmd.execute
 
         if data.eof then
-            data_cmd.commandText = "exec sp_AddDLK_T_invPemH '"& agen &"', '"& ophid &"','"& tgl &"', '"& vendor &"', '"& tgljt &"', '"& keterangan &"', "& diskon &", "& ppn &", "& metpem &" "
+            data_cmd.commandText = "exec sp_AddDLK_T_invPemH '"& agen &"', '"& ophid &"','"& tgl &"', '"& vendor &"', '"& tgljt &"', '"& keterangan &"', "& diskon &", "& ppn &", "& metpem &", "&typebelanja&" "
             ' response.write data_cmd.commandText & "<br>"
             set p = data_cmd.execute
 
@@ -72,6 +73,7 @@
         metpem = trim(Request.Form("metpem"))
         diskon = trim(Request.Form("diskon"))
         keterangan = trim(Request.Form("keterangan"))
+        typebelanja = trim(Request.Form("typebelanja"))
         if diskon = "" then
             diskon = 0
         end if
@@ -118,7 +120,7 @@
         set data = data_cmd.execute
 
         if not data.eof then
-            call query("UPDATE DLK_T_InvPemH SET IPH_AgenID = '"& agen &"', IPH_Date = '"& tgl &"', IPH_VenID = '"& vendor &"', IPH_JTDate = '"& tgljt &"', IPH_MetPem = "& metpem &", IPH_DiskonAll = '"& diskon &"',IPH_PPn = "& ppn &", IPH_Keterangan = '"& keterangan &"' WHERE IPH_ID = '"& id &"' AND IPH_AktifYN = 'Y' ")
+            call query("UPDATE DLK_T_InvPemH SET IPH_AgenID = '"& agen &"', IPH_Date = '"& tgl &"', IPH_VenID = '"& vendor &"', IPH_JTDate = '"& tgljt &"', IPH_MetPem = "& metpem &", IPH_DiskonAll = '"& diskon &"',IPH_PPn = "& ppn &", IPH_Keterangan = '"& keterangan &"', IPH_Belanja = "& typebelanja &" WHERE IPH_ID = '"& id &"' AND IPH_AktifYN = 'Y' ")
 
             for i = 0 to ubound(vitem) 
                 data_cmd.commandText = "SELECT * FROM DLK_T_InvPemD WHERE IPD_IPHID = '"& data("IPH_ID") &"' AND IPD_Item = '"& trim(oldvitem(i)) &"' AND IPD_QtySatuan = "& trim(oldvqtty(i)) &" AND IPD_Harga = '"& trim(oldvharga(i)) &"' AND IPD_JenisSat = '"& trim(oldvsatuan(i)) &"' AND IPD_Disc1 = '"& trim(oldvdisc1(i)) &"' AND IPD_Disc2 = '"& trim(oldvdisc2(i)) &"' AND IPD_AktifYN = 'Y'"

@@ -8,12 +8,12 @@
     data_cmd.ActiveConnection = mm_delima_string
     
     ' get data
-    data_cmd.commandText = "SELECT dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_AgenID, dbo.DLK_T_OrPemH.OPH_Date, dbo.DLK_T_OrPemH.OPH_venID, dbo.DLK_T_OrPemH.OPH_JTDate, dbo.DLK_T_OrPemH.OPH_Keterangan,dbo.DLK_T_OrPemH.OPH_DiskonAll, dbo.DLK_T_OrPemH.OPH_PPn, dbo.DLK_T_OrPemH.OPH_AktifYN, dbo.DLK_T_OrPemH.OPH_MetPem, dbo.DLK_T_OrPemH.OPH_appID, dbo.DLK_T_OrPemD.OPD_OPHID,dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Disc1, dbo.DLK_T_OrPemD.OPD_JenisSat, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_Disc2, dbo.DLK_T_OrPemD.OPD_AktifYN, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_OrPemH INNER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = dbo.DLK_T_OrPemD.OPD_OPHID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrPemD.OPD_Item = DLK_M_Barang.Brg_ID where DLK_T_OrPemH.OPH_ID = '"& id &"' AND DLK_T_OrPemH.OPH_AktifYN = 'Y' AND DLK_T_OrPemD.OPD_AktifYN = 'Y'"
+    data_cmd.commandText = "SELECT dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_AgenID, dbo.DLK_T_OrPemH.OPH_Date, dbo.DLK_T_OrPemH.OPH_venID, dbo.DLK_T_OrPemH.OPH_JTDate, dbo.DLK_T_OrPemH.OPH_Keterangan,dbo.DLK_T_OrPemH.OPH_DiskonAll, dbo.DLK_T_OrPemH.OPH_PPn, dbo.DLK_T_OrPemH.OPH_AktifYN, dbo.DLK_T_OrPemH.OPH_MetPem, dbo.DLK_T_OrPemD.OPD_OPHID,dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Disc1, dbo.DLK_T_OrPemD.OPD_JenisSat, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_Disc2, dbo.DLK_T_OrPemD.OPD_AktifYN, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_OrPemH INNER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = dbo.DLK_T_OrPemD.OPD_OPHID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrPemD.OPD_Item = DLK_M_Barang.Brg_ID where DLK_T_OrPemH.OPH_ID = '"& id &"' AND DLK_T_OrPemH.OPH_AktifYN = 'Y' AND DLK_T_OrPemD.OPD_AktifYN = 'Y'"
 
     set data = data_cmd.execute
 
     ' barang
-    data_cmd.commandText = "SELECT Brg_Nama, Brg_ID FROM DLK_M_Barang WHERE Brg_AktifYN = 'Y' ORDER BY Brg_Nama ASC"
+    data_cmd.commandText = "SELECT Brg_Nama, Brg_ID FROM DLK_M_Barang WHERE Brg_AktifYN = 'Y' AND left(Brg_Id,3) = '"& data("OPH_AgenID") &"' ORDER BY Brg_Nama ASC"
     set barang = data_cmd.execute
     ' satuan
     data_cmd.commandText = "SELECT sat_Nama, sat_ID FROM DLK_M_satuanBarang WHERE sat_AktifYN = 'Y' ORDER BY sat_Nama ASC"
@@ -42,27 +42,26 @@
             <div class="col-lg-4 mb-3">
                 <input type="text" id="ophid" name="ophid" class="form-control" value="<%= data("OPH_ID") %>" readonly>
             </div>
-        </div>
-        <div class="row align-items-center">
             <div class="col-lg-2 mb-3">
                 <label for="agen" class="col-form-label">Cabang / Agen</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <select class="form-select" aria-label="Default select example" id="agen" name="agen" required>
-                    <option value="<%= data("OPH_AgenID") %>"><% call getAgen(data("OPH_AgenID"),"p") %></option>
-                    <% do while not agen.eof %>
-                    <option value="<%= agen("AgenID") %>"><%= agen("AgenName") %></option>
-                    <% 
-                    agen.movenext
-                    loop
-                    %>
-                </select>
+                <input type="hidden" class="form-control" name="agen" id="agen" value="<%= data("OPH_AgenID") %>" readonly>
+                <input type="text" class="form-control" name="lagen" id="lagen" value="<% call getAgen(data("OPH_AgenID"),"p") %>" readonly>
             </div>
+        </div>
+        <div class="row align-items-center">
             <div class="col-lg-2 mb-3">
                 <label for="tgl" class="col-form-label">Tanggal</label>
             </div>
             <div class="col-lg-4 mb-3">
                 <input type="date" id="tgl" name="tgl" class="form-control" required>
+            </div>
+            <div class="col-lg-2 mb-3">
+                <label for="tgljt" class="col-form-label">Tanggal Jatuh Tempo</label>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <input type="text" id="tgljt" name="tgljt" class="form-control" <% if data("OPH_JTDAte") <> "1900-01-01"  then%> value="<%= data("OPH_JTDate") %>" <% end if %> onfocus="(this.type='date')">
             </div>
         </div>
         <div class="row align-items-center">
@@ -81,10 +80,10 @@
                 </select>
             </div>
             <div class="col-lg-2 mb-3">
-                <label for="tgljt" class="col-form-label">Tanggal Jatuh Tempo</label>
+                <label for="ppn" class="col-form-label">PPn</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="text" id="tgljt" name="tgljt" class="form-control" <% if data("OPH_JTDAte") <> "1900-01-01"  then%> value="<%= data("OPH_JTDate") %>" <% end if %> onfocus="(this.type='date')">
+                <input type="number" id="ppn" name="ppn" class="form-control" value="<%= data("OPH_ppn") %>">
             </div>
         </div>
         <div class="row align-items-center">
@@ -108,16 +107,21 @@
         </div>
         <div class="row align-items-center">
             <div class="col-lg-2 mb-3">
-                <label for="ppn" class="col-form-label">PPn</label>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <input type="number" id="ppn" name="ppn" class="form-control" value="<%= data("OPH_ppn") %>">
-            </div>
-            <div class="col-lg-2 mb-3">
                 <label for="keterangan" class="col-form-label">Keterangan</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" value="<%= data("OPH_Keterangan") %>">
+                <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" value="<%= data("OPH_Keterangan") %>" autocomplete="off">
+            </div>
+            <div class="col-lg-2 mb-3">
+                <label for="typebelanja" class="col-form-label">Type belanja</label>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <select class="form-select" aria-label="Default select example" id="typebelanja" name="typebelanja" required>
+                    <option value="">Pilih</option>
+                    <option value="1">Harian</option>
+                    <option value="2">Mingguan</option>
+                    <option value="3">Tahunan</option>
+                </select>
             </div>
         </div>
 

@@ -8,7 +8,7 @@
     data_cmd.ActiveConnection = mm_delima_string
     
     ' get data
-    data_cmd.commandText = "SELECT dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_ophID, dbo.DLK_T_InvPemH.IPH_AgenID, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_venID, dbo.DLK_T_InvPemH.IPH_JTDate, dbo.DLK_T_InvPemH.IPH_Keterangan,dbo.DLK_T_InvPemH.IPH_DiskonAll, dbo.DLK_T_InvPemH.IPH_PPn, dbo.DLK_T_InvPemH.IPH_AktifYN, dbo.DLK_T_InvPemH.IPH_MetPem, dbo.DLK_T_InvPemD.IPD_IPHID,dbo.DLK_T_InvPemD.IPD_Item, dbo.DLK_T_InvPemD.IPD_QtySatuan, dbo.DLK_T_InvPemD.IPD_Disc1, dbo.DLK_T_InvPemD.IPD_JenisSat, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_Disc2, dbo.DLK_T_InvPemD.IPD_AktifYN, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_InvPemH INNER JOIN dbo.DLK_T_InvPemD ON dbo.DLK_T_InvPemH.IPH_ID = dbo.DLK_T_InvPemD.IPD_IPHID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_InvPemD.IPD_Item = DLK_M_Barang.Brg_ID     where DLK_T_InvPemH.IPH_ID = '"& id &"' AND DLK_T_InvPemH.IPH_AktifYN = 'Y' AND DLK_T_InvPemD.IPD_AktifYN = 'Y' GROUP BY dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_ophID, dbo.DLK_T_InvPemH.IPH_AgenID, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_venID, dbo.DLK_T_InvPemH.IPH_JTDate, dbo.DLK_T_InvPemH.IPH_Keterangan,dbo.DLK_T_InvPemH.IPH_DiskonAll, dbo.DLK_T_InvPemH.IPH_PPn, dbo.DLK_T_InvPemH.IPH_AktifYN, dbo.DLK_T_InvPemH.IPH_MetPem, dbo.DLK_T_InvPemD.IPD_IPHID,dbo.DLK_T_InvPemD.IPD_Item, dbo.DLK_T_InvPemD.IPD_QtySatuan, dbo.DLK_T_InvPemD.IPD_Disc1, dbo.DLK_T_InvPemD.IPD_JenisSat, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_Disc2, dbo.DLK_T_InvPemD.IPD_AktifYN,DLK_M_Barang.Brg_Nama"
+    data_cmd.commandText = "SELECT dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_ophID, dbo.DLK_T_InvPemH.IPH_AgenID, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_venID, dbo.DLK_T_InvPemH.IPH_JTDate, dbo.DLK_T_InvPemH.IPH_Keterangan,dbo.DLK_T_InvPemH.IPH_DiskonAll, dbo.DLK_T_InvPemH.IPH_PPn, dbo.DLK_T_InvPemH.IPH_AktifYN, dbo.DLK_T_InvPemH.IPH_MetPem, dbo.DLK_T_InvPemD.IPD_IPHID,dbo.DLK_T_InvPemD.IPD_Item, dbo.DLK_T_InvPemD.IPD_QtySatuan, dbo.DLK_T_InvPemD.IPD_Disc1, dbo.DLK_T_InvPemD.IPD_JenisSat, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_Disc2, dbo.DLK_T_InvPemD.IPD_AktifYN, DLK_M_Barang.Brg_Nama, DLK_T_InvPemH.IPH_belanja FROM dbo.DLK_T_InvPemH INNER JOIN dbo.DLK_T_InvPemD ON dbo.DLK_T_InvPemH.IPH_ID = dbo.DLK_T_InvPemD.IPD_IPHID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_InvPemD.IPD_Item = DLK_M_Barang.Brg_ID where DLK_T_InvPemH.IPH_ID = '"& id &"' AND DLK_T_InvPemH.IPH_AktifYN = 'Y' AND DLK_T_InvPemD.IPD_AktifYN = 'Y' GROUP BY dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_ophID, dbo.DLK_T_InvPemH.IPH_AgenID, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_venID, dbo.DLK_T_InvPemH.IPH_JTDate, dbo.DLK_T_InvPemH.IPH_Keterangan,dbo.DLK_T_InvPemH.IPH_DiskonAll, dbo.DLK_T_InvPemH.IPH_PPn, dbo.DLK_T_InvPemH.IPH_AktifYN, dbo.DLK_T_InvPemH.IPH_MetPem, dbo.DLK_T_InvPemD.IPD_IPHID,dbo.DLK_T_InvPemD.IPD_Item, dbo.DLK_T_InvPemD.IPD_QtySatuan, dbo.DLK_T_InvPemD.IPD_Disc1, dbo.DLK_T_InvPemD.IPD_JenisSat, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_Disc2, dbo.DLK_T_InvPemD.IPD_AktifYN,DLK_M_Barang.Brg_Nama,DLK_T_InvPemH.IPH_belanja"
 
     set data = data_cmd.execute
 
@@ -24,6 +24,15 @@
     ' vendor
     data_cmd.commandText = "SELECT ven_Nama, Ven_ID FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y' ORDER BY ven_Nama ASC"
     set vendor = data_cmd.execute
+
+    ' cek type belanja
+    if data("IPH_belanja") = 1 then 
+        belanja = "Harian"
+    elseif data("IPH_belanja") = 2 then 
+        belanja = "Mingguan"
+    else
+        belanja = "Tahunan"
+    end if
 
     call header("Faktur Terhutang")
 %>
@@ -54,15 +63,8 @@
                 <label for="agen" class="col-form-label">Cabang / Agen</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <select class="form-select" aria-label="Default select example" id="agen" name="agen" required>
-                    <option value="<%= data("IPH_AgenID") %>"><% call getAgen(data("IPH_AgenID"),"p") %></option>
-                    <% do while not agen.eof %>
-                    <option value="<%= agen("AgenID") %>"><%= agen("AgenName") %></option>
-                    <% 
-                    agen.movenext
-                    loop
-                    %>
-                </select>
+                <input type="hidden" class="form-control" name="agen" id="agen" value="<%= data("IPH_AgenID") %>" readonly>
+                <input type="text" class="form-control" name="lagen" id="lagen" value="<% call getAgen(data("IPH_AgenID"),"p") %>" readonly>
             </div>
             <div class="col-lg-2 mb-3">
                 <label for="tgl" class="col-form-label">Tanggal</label>
@@ -114,11 +116,24 @@
         </div>
         <div class="row align-items-center">
             <div class="col-lg-2 mb-3">
+                <label for="typebelanja" class="col-form-label">Type belanja</label>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <select class="form-select" aria-label="Default select example" id="typebelanja" name="typebelanja" required>
+                    <option value="<%= data("IPH_belanja") %>"><%= belanja %></option>
+                    <option value="1">Harian</option>
+                    <option value="2">Mingguan</option>
+                    <option value="3">Tahunan</option>
+                </select>
+            </div>
+            <div class="col-lg-2 mb-3">
                 <label for="ppn" class="col-form-label">PPn</label>
             </div>
             <div class="col-lg-4 mb-3">
                 <input type="number" id="ppn" name="ppn" class="form-control" value="<%= data("IPH_ppn") %>">
             </div>
+        </div>
+        <div class="row">
             <div class="col-lg-2 mb-3">
                 <label for="keterangan" class="col-form-label">Keterangan</label>
             </div>
