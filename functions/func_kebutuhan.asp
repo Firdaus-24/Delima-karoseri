@@ -7,7 +7,7 @@ sub tambahKeb()
     data_cmd.ActiveConnection = mm_delima_string
 
     data_cmd.commandText = "select * from dlk_m_kebutuhan WHERE kebID = '"& id &"' OR kebNama = '"& nama &"'"
-    response.write data_cmd.commandText
+    ' response.write data_cmd.commandText
     set data = data_cmd.execute
 
     if data.eof then

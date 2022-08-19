@@ -201,7 +201,7 @@
                         <td><%= rs("OJH_Keterangan") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="orjul_d.asp?id=<%= rs("OJH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
+                                <a href="detailorjul.asp?id=<%= rs("OJH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
                                 <a href="purc_u.asp?id=<%= rs("OJH_ID") %>" class="btn badge text-bg-primary" >Update</a>
                                 <a href="aktifh.asp?id=<%= rs("OJH_ID") %>" class="btn badge text-bg-danger btn-orjual">Delete</a>
                             </div>
