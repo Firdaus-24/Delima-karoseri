@@ -23,7 +23,7 @@ $(document).ready(function(){
         })
     })
 
-    // aktifasi sat
+    // aktifasi header orjul
     $('.btn-orjual').click(function(e){
         
         e.preventDefault(); // <--- prevent click
@@ -85,4 +85,27 @@ $(document).ready(function(){
         }
     })
 
+    // aktifasi detail orjul
+    // aktifasi header orjul
+    $('.btn-aktiforjuld').click(function(e){
+        
+        e.preventDefault(); // <--- prevent click
+        
+        swal({
+            title: "YAKIN UNTUK DI HAPUS??",
+            text: "Delete Detail Order Penjualan",
+            icon: "warning",
+            buttons: [
+              'No',
+              'Yes'
+            ],
+            dangerMode: true,
+        }).then(function(isConfirm) {
+            if (isConfirm) {
+                window.location.href = e.target.href // <--- submit form programmatically
+            } else {
+              swal("Request gagal di kirim");
+            }
+        })
+    })
 })

@@ -11,7 +11,7 @@
     set data = data_cmd.execute
 
     ' get data stok
-    data_cmd.commandText = "SELECT dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_Date, ISNULL(dbo.DLK_T_InvPemD.IPD_QtySatuan, 0) AS qty1, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_JenisSat, dbo.DLK_M_Barang.Brg_Id,dbo.DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_InvPemH RIGHT OUTER JOIN dbo.DLK_T_InvPemD LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_InvPemD.IPD_Item = dbo.DLK_M_Barang.Brg_Id ON dbo.DLK_T_InvPemH.IPH_ID = dbo.DLK_T_InvPemD.IPD_IphID WHERE (dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y') AND (dbo.DLK_T_InvPemD.IPD_AktifYN = 'Y') AND dbo.DLK_T_InvPemH.IPH_agenid = '"& data("agenID") &"' ORDER BY dbo.DLK_T_InvPemH.IPH_Date"
+    data_cmd.commandText = "SELECT dbo.DLK_M_Barang.Brg_Id, dbo.DLK_M_Barang.Brg_Nama, sum(isnull(dbo.DLK_T_InvPemD.IPD_QtySatuan,0) - isnull(dbo.DLK_T_InvJulD.IJD_QtySatuan,0)) as stok, dbo.DLK_T_InvPemH.IPH_Date, isnull(dbo.DLK_T_InvJulD.IJD_IPHID,''), DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_JenisSat, dbo.DLK_T_InvPemH.IPH_ID FROM dbo.DLK_M_Barang LEFT OUTER JOIN dbo.DLK_T_InvPemD ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_InvPemD.IPD_Item RIGHT OUTER JOIN dbo.DLK_T_InvPemH ON dbo.DLK_T_InvPemD.IPD_IphID = dbo.DLK_T_InvPemH.IPH_ID LEFT OUTER JOIN dbo.DLK_T_InvJulD ON dbo.DLK_T_InvPemH.IPH_ID = dbo.DLK_T_InvJulD.IJD_IPHID where dbo.DLK_T_InvPemH.IPH_agenid = '"& data("agenID") &"' and isnull(dbo.DLK_T_InvJulD.IJD_QtySatuan,0) <  dbo.DLK_T_InvPemD.IPD_QtySatuan GROUP BY dbo.DLK_M_Barang.Brg_Id, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_InvPemD.IPD_QtySatuan, dbo.DLK_T_InvJulD.IJD_QtySatuan, dbo.DLK_T_InvJulD.IJD_Item, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvJulD.IJD_IPHID, dbo.DLK_T_InvPemD.IPD_Item, DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_JenisSat,dbo.DLK_T_InvPemH.IPH_ID ORDER BY  dbo.DLK_T_InvPemH.IPH_Date ASC"
 
     set getstok = data_cmd.execute
 
@@ -19,13 +19,13 @@
     data_cmd.commandText = "SELECT DLK_T_OrjulD.*, DLK_M_Barang.Brg_Nama, DLK_M_SatuanBarang.Sat_Nama FROM DLK_T_OrjulD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrjulD.OJD_Item = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_SatuanBarang ON DLK_T_OrjulD.OJD_JenisSat = DLK_M_SatuanBarang.Sat_ID WHERE OJD_OJHID = '"& data("OJH_ID") &"' AND OJD_AktifYN = 'Y' ORDER BY DLK_M_Barang.Brg_Nama ASC"
     set dorjul = data_cmd.execute
     
-    call header("Detail OrderJual")
+    call header("Update OrderJual")
 %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row">
         <div class="col-lg-12 mb-3 mt-3 text-center">
-            <h3>DETAIL ORDER PENJUALAN</h3>
+            <h3>UPDATE DETAIL ORDER PENJUALAN</h3>
         </div>
     </div>
     <div class="row">
@@ -111,6 +111,7 @@
                         <th scope="col">Satuan</th>
                         <th scope="col">Disc1</th>
                         <th scope="col">Disc2</th>
+                        <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -118,6 +119,8 @@
                     no = 0
                     do while not dorjul.eof
                     no = no + 1
+
+                    strid = dorjul("OJD_OJHID")&","& dorjul("OJD_Item") &","& dorjul("OJD_QtySatuan") &","&  dorjul("OJD_JenisSat") &","& dorjul("OJD_Harga") &","& dorjul("OJD_Disc1") &","& dorjul("OJD_Disc2") 
                     %>
                     <tr>
                         <th scope="row"><%= no %></th>
@@ -127,6 +130,11 @@
                         <td><%= dorjul("Sat_Nama") %></td>
                         <td><%= dorjul("OJD_Disc1") %></td>
                         <td><%= dorjul("OJD_Disc2") %></td>
+                        <td class="text-center">
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                <a href="aktiforjuld.asp?id=<%= strid %>" class="btn badge text-bg-danger btn-aktiforjuld">Delete</a>
+                            </div>
+                        </td>
                     </tr>
                     <% 
                     dorjul.movenext
@@ -145,7 +153,7 @@
         <h5 class="modal-title" id="modalOrjulLabel">Rincian Barang</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="orjuld_add.asp?id=<%= id %>" method="post" id="rincianOrjul">
+      <form action="orjul_u.asp?id=<%= id %>" method="post" id="rincianOrjul">
         <div class="modal-body modalBodyOrjul">
 
             <table class="table">
@@ -159,27 +167,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <%
-                    do while not getstok.eof 
-                    ' query penjualan 
-                    data_cmd.commandText = "SELECT dbo.DLK_T_InvJulD.IJD_QtySatuan FROM dbo.DLK_T_InvJulD LEFT OUTER JOIN dbo.DLK_T_InvJulH ON dbo.DLK_T_InvJulD.IJD_IJHID = dbo.DLK_T_InvJulH.IJH_ID WHERE dbo.DLK_T_InvJulD.IJD_AktifYN = 'Y' AND dbo.DLK_T_InvJulH.IJH_AktifYN = 'Y' AND dbo.DLK_T_InvJulD.IJD_IPHID = '"& getstok("IPH_ID") &"' AND dbo.DLK_T_InvJulD.IJD_item = '"& getstok("Brg_ID") &"'"
-                    ' response.write data_cmd.commandText & "<br>"
-                    set p = data_cmd.execute
-                    ' stok value
-                    if not p.eof then 
-                        stok = getstok("qty1") - p("IJD_qtysatuan")
-                    else    
-                        stok = getstok("qty1")
-                    end if
-                    %>
+                    <%do while not getstok.eof %>
                     <tr>
                         <th scope="row"><%= Cdate(getstok("IPH_Date")) %></th>
                         <td><%= getstok("Brg_Nama") %></td>
-                        <td><%= stok %></td>
+                        <td><%= getstok("stok") %></td>
                         <td><%= replace(formatCurrency(getstok("IPD_Harga")),"$","") %></td>
                         <td class="text-center">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="ckdorjul" id="ckdorjul" value="<%= data("OJH_ID") &","& getstok("IPH_ID") &","& getstok("Brg_ID") &","& getstok("IPD_Harga") &","& getstok("IPD_JenisSat") &","& stok %>"  required>
+                                <input class="form-check-input" type="radio" name="ckdorjul" id="ckdorjul" value="<%= data("OJH_ID") &","& getstok("IPH_ID") &","& getstok("Brg_ID") &","& getstok("IPD_Harga") &","& getstok("IPD_JenisSat") &","& getstok("stok") %>"  required>
                             </div>
                         </td>
                     </tr>
@@ -226,8 +222,7 @@
 
 <% 
     if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
-        call detailOrjul()
+        call updatedetailOrjul()
     end if
-    
     call footer()
 %>

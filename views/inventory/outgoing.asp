@@ -126,8 +126,8 @@
                 </select>
             </div>
             <div class="col-lg-4 mb-3">
-                <label for="cutomer">Cutomer</label>
-                <select class="form-select" aria-label="Default select example" name="cutomer" id="cutomer">
+                <label for="customer">Customer</label>
+                <select class="form-select" aria-label="Default select example" name="customer" id="customer">
                     <option value="">Pilih</option>
                     <% do while not dcustomer.eof %>
                     <option value="<%= dcustomer("custid") %>"><%= dcustomer("custnama") %></option>
@@ -202,8 +202,8 @@
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <a href="detailorjul.asp?id=<%= rs("OJH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
-                                <a href="purc_u.asp?id=<%= rs("OJH_ID") %>" class="btn badge text-bg-primary" >Update</a>
-                                <a href="aktifh.asp?id=<%= rs("OJH_ID") %>" class="btn badge text-bg-danger btn-orjual">Delete</a>
+                                <a href="orjul_u.asp?id=<%= rs("OJH_ID") %>" class="btn badge text-bg-primary" >Update</a>
+                                <a href="aktiforjulh.asp?id=<%= rs("OJH_ID") %>" class="btn badge text-bg-danger btn-orjual">Delete</a>
                             </div>
                         </td>
                     </tr>

@@ -92,7 +92,6 @@
                         <th scope="col">Diskon1</th>
                         <th scope="col">Diskon2</th>
                         <th scope="col">Jumlah</th>
-                        <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -118,8 +117,6 @@
                     realharga = hargadiskon * data("OJD_QtySatuan")  
 
                     grantotal = grantotal + realharga
-
-                    strid = data("OJD_OJHID")&","& data("OJD_Item") &","& data("OJD_QtySatuan") &","&  data("OJD_JenisSat") &","& data("OJD_Harga") &","& data("OJD_Disc1") &","& data("OJD_Disc2")   
                     %>
                         <tr>
                             <td>
@@ -142,11 +139,6 @@
                             </td>
                             <td>
                                 <%= replace(formatCurrency(realharga),"$","") %>
-                            </td>
-                            <td class="text-center">
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="aktorjuld.asp?id=<%= strid %>" class="btn badge text-bg-danger btn-purce2">Delete</a>
-                            </div>
                             </td>
                         </tr>
                     <% 
