@@ -25,7 +25,7 @@ $(function(){
                     disc2: $tr.find("#disc2").val(),
                     total: $tr.find("#hargapo").val() * $tr.find("#qtty").val()
                 });
-                tpo += data[i].total            
+                // tpo = tpo + data[i].total            
             }
         });      
         $("#valitem").val(data.map(el=>el.item).toString())
@@ -34,32 +34,13 @@ $(function(){
         $("#valsatuan").val(data.map(el=>el.satuan).toString())
         $("#valdisc1").val(data.map(el=>el.disc1).toString())
         $("#valdisc2").val(data.map(el=>el.disc2).toString())
-        $("#thargapo").val(tpo)
+        // $("#thargapo").val(tpo)
     });
-
-    // add barang
-    $('.additempo').click(function(){
-        let clone = $( ".dpurce:first" ).clone()
-        let last = $(".dpurce:last")
-        clone.insertAfter(last)
-        $(".dpurce:last #itempo").val('')
-        $(".dpurce:last #qttypo").val('')
-        $(".dpurce:last #hargapo").val('')
-        $(".dpurce:last #satuanpo").val('')
-        $(".dpurce:last #dket").val('')
-    })
-    // delete barang
-    $('.minitempo').click(function(){
-        if ($(".dpurce").length > 1 ){
-            $(".dpurce").last().remove()
-        }
-    })
-
 
     // validasi tambah pruchase
     $('#formpur').submit(function(e) {
-        let tdana = Number($('#dana_tpo').val().replace(/[^0-9\.]+/g, ""))
-        let thargapo = Number($('#thargapo').val())
+        // let tdana = Number($('#dana_tpo').val().replace(/[^0-9\.]+/g, ""))
+        // let thargapo = Number($('#thargapo').val())
         let form = this;
         
         e.preventDefault(); // <--- prevent form from submitting
@@ -69,9 +50,9 @@ $(function(){
             swal("Pilih Salah Satu Barang");
             return false;
         }else{
-            if(tdana < thargapo){
-                swal("Permintaan PO Melebihi Batas");
-            }else{
+            // if(tdana < thargapo){
+            //     swal("Permintaan PO Melebihi Batas");
+            // }else{
                 swal({
                     title: "APAKAH ANDA SUDAH YAKIN??",
                     text: "Purchase Order",
@@ -88,7 +69,7 @@ $(function(){
                     swal("Form gagal di kirim");
                     }
                 })  
-            }
+            // }
         }
     })
 

@@ -200,11 +200,13 @@
                     <input type="text" id="valdisc2" name="valdisc2" class="form-control">
                 </div>
             </div>
+            <!-- 
             <div class="row">
                 <div class="col-lg-12">
                     <input type="text" id="thargapo" name="thargapo" class="form-control">
                 </div>
             </div>
+             -->
         </div>
         <!-- end getdata -->
         <div class="row">
