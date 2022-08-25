@@ -74,7 +74,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <a href="dapppermintaan.asp" class="btn btn-danger">Kembali</a>
+                    <a href="index.asp" class="btn btn-danger">Kembali</a>
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </div>    
@@ -87,9 +87,9 @@
     if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
         call updateAppPermintaan()
         if value = 1 then
-            call alert("PENCAIRAN DANA PERMINTAAN BARANG", "berhasil dirubah", "success","dapppermintaan.asp") 
+            call alert("PENCAIRAN DANA PERMINTAAN BARANG", "berhasil dirubah", "success","index.asp") 
         elseif value = 2 then
-            call alert("PENCAIRAN DANA PERMINTAAN BARANG", "tidak terdaftar", "warning","dapppermintaan.asp")
+            call alert("PENCAIRAN DANA PERMINTAAN BARANG", "tidak terdaftar", "warning","index.asp")
         else
             value = 0
         end if

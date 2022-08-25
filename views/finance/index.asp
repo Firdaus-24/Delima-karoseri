@@ -13,10 +13,10 @@
     set agen_cmd =  Server.CreateObject ("ADODB.Command")
     agen_cmd.ActiveConnection = mm_delima_string
     ' filter agen
-    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'N' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
     set agendata = agen_cmd.execute
     ' filter kebutuhan
-    agen_cmd.commandText = "SELECT dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama FROM dbo.DLK_M_Kebutuhan INNER JOIN dbo.DLK_T_Memo_H ON dbo.DLK_M_Kebutuhan.kebID = dbo.DLK_T_Memo_H.memoKebID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y'  AND DLK_T_Memo_H.memoApproveYN = 'N' GROUP BY dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama"
+    agen_cmd.commandText = "SELECT dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama FROM dbo.DLK_M_Kebutuhan INNER JOIN dbo.DLK_T_Memo_H ON dbo.DLK_M_Kebutuhan.kebID = dbo.DLK_T_Memo_H.memoKebID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y'  AND DLK_T_Memo_H.memoApproveYN = 'Y' GROUP BY dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama"
     set kebData = agen_cmd.execute
 
     set conn = Server.CreateObject("ADODB.Connection")
@@ -51,7 +51,7 @@
         filtertgl = ""
     end if
     ' query seach 
-    strquery = "SELECT DLK_T_Memo_H.* FROM DLK_T_Memo_H WHERE MemoAktifYN = 'Y' AND memoApproveYN = 'N' "& filterAgen &" "& filterKeb &" "& filtertgl &""
+    strquery = "SELECT DLK_T_Memo_H.* FROM DLK_T_Memo_H WHERE MemoAktifYN = 'Y' AND memoApproveYN = 'Y' "& filterAgen &" "& filterKeb &" "& filtertgl &""
 
     ' untuk data paggination
     page = Request.QueryString("page")
@@ -154,6 +154,7 @@
                     <th scope="col">Kebutuhan</th>
                     <th scope="col">Aktif</th>
                     <th scope="col">Permintaan</th>
+                    <th scope="col">Status</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -167,6 +168,12 @@
 
                     data_cmd.commandText = "SELECT SUM(dbo.DLK_T_Memo_D.memoHarga * dbo.DLK_T_Memo_D.memoQtty) As tharga FROM dbo.DLK_T_Memo_H INNER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) WHERE (dbo.DLK_T_Memo_H.memoID = '"& rs("memoID") &"') AND DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_D.memoAktifYn = 'Y'"
                     set ddata = data_cmd.execute
+
+                    ' cek approve finance
+                    
+                    data_cmd.commandText = "SELECT DLK_T_AppPermintaan.appID, DLK_T_AppPermintaan.appDana, SUM(dbo.DLK_T_Memo_D.memoHarga * dbo.DLK_T_Memo_D.memoQtty) As tharga FROM dbo.DLK_T_Memo_H INNER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = dbo.DLK_T_Memo_D.memoID LEFT OUTER JOIN DLK_T_appPermintaan ON DLK_T_Memo_H.memoID = DLK_T_AppPermintaan.AppMemoID WHERE (dbo.DLK_T_AppPermintaan.AppmemoID = '"& rs("memoID") &"') AND DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_D.memoAktifYn = 'Y' AND DLK_T_AppPermintaan.AppAktifYN = 'Y' group by DLK_T_AppPermintaan.appID, DLK_T_AppPermintaan.appDana"
+                    ' response.write data_cmd.commandText & "<br>"
+                    set app = data_cmd.execute
                     %>
                     <tr>
                         <th scope="row"><%= recordcounter %></th>
@@ -183,10 +190,25 @@
                         <td>
                             <%= replace(formatCurrency(ddata("tharga")),"$","") %>
                         </td>
+                        <td>
+                            <% if not app.eof then %>
+                                <% if app("appDana") >= app("tharga") then %>
+                                <b style="color:green">Done </b>
+                                <% else %> 
+                                <b style="color:red"> Minus </b> 
+                                <% end if %>
+                            <% else %>
+                                <b> Waiting </b>
+                            <% end if %>
+                        </td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
+                                <% if app.eof then %>
                                 <a href="approvepbarang.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-primary btnAppPer">Approve</a>
                                 <a href="dpbarang.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-danger">Detail</a>
+                                <% else %>
+                                <a href="dapp_u.asp?id=<%= app("appID") %>" class="btn badge text-bg-light">Update</a>
+                                <% end if %>
                             </div>
                         </td>
                     </tr>

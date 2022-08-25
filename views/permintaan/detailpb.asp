@@ -55,7 +55,7 @@
                     <label class="col-form-label">Hari :</label>
                 </div>
                 <div class="col-auto">
-                    <label><%= weekdayname(weekday(dataH("memoTgl"))) %></label>
+                    <label><% call getHari(weekday(dataH("memoTgl"))) %></label>
                 </div>
             </div>
         </div>
@@ -89,14 +89,24 @@
                 </div>
             </div>
         </div>
+        <div class="col-sm-6">
+            <div class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <label class="col-form-label">Keterangan :</label>
+                </div>
+                <div class="col-auto">
+                    <label><%= dataH("memoKeterangan") %></label>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row">
-        <div class="col-sm-6 mb-3">
-            <div class="btn-group" role="group" aria-label="Basic example">
-                <% if dataH("memoApproveYN") = "N" then %>
-                <a href="pb_u.asp?id=<%= dataH("memoID") %>" class="btn btn-primary btn-sm">Update</a>
-                <% end if %>
-                <a href="index.asp" class="btn btn-danger btn-sm">Kembali</a>
+        <div class="d-flex mb-3">
+            <div class="me-auto p-2">
+                <button type="button" class="btn btn-secondary" onClick="window.open('export-detailpb.asp?id=<%=id%>')" class="btn btn-danger">Export</button>
+            </div>
+            <div class="p-2">
+                <a href="index.asp" class="btn btn-danger">Kembali</a>
             </div>
         </div>
     </div>
@@ -113,7 +123,7 @@
                         <th scope="col">Harga</th>
                         <th scope="col">Keterangan</th>
                         <th scope="col">Aktif</th>
-                        <th scope="col"  class="text-center">Aksi</th>
+                        <th scope="col" class="text-center">Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -142,12 +152,10 @@
                                 <%if dataD("memoAktifYN") = "Y" then%>Aktif <% else %>Off <% end if %>
                             </td>
                             <td  class="text-center">
-                                <% if dataH("memoApproveYN") = "N" then %>
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <a href="aktif.asp?databrg=<%= dataD("memoID") %>&id=<%= dataH("MemoID") %>" class="btn badge text-bg-danger btn-aktifdpbarang">delete</a>
-                                </div>
-                                <% else %>
+                                <% if dataH("memoApproveYN") = "Y" then %>
                                     <b style="color:green">Done</b>
+                                <% else %>
+                                    -
                                 <% end if %>
                             </td>
                         </tr>
@@ -161,15 +169,5 @@
     </div> 
 </div>
 <% 
-    ' if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
-    '     call updateDPbarang()
-    '     if value = 1 then
-    '         call alert("PERMINTAAN BARANG", "berhasil di tambahkan", "success","detailpb.asp?id="& dataH("MemoID")) 
-    '     elseif value = 2 then
-    '         call alert("PERMINTAAN BARANG", "sudah terdaftar", "warning","detailpb.asp?id="& dataH("MemoID"))
-    '     else
-    '         value = 0
-    '     end if
-    ' end if
     call footer()
 %>

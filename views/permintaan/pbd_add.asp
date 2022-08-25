@@ -13,7 +13,7 @@
     data_cmd.commandText = "SELECT sat_Nama, sat_ID FROM DLK_M_satuanBarang WHERE sat_AktifYN = 'Y' ORDER BY sat_Nama ASC"
     set psatuan = data_cmd.execute    
     ' get all barang
-    data_cmd.commandText = "SELECT Brg_ID, Brg_Nama FROM DLK_M_Barang WHERE Brg_AktifYN = 'Y' ORDER BY Brg_Nama ASC"
+    data_cmd.commandText = "SELECT Brg_ID, Brg_Nama FROM DLK_M_Barang WHERE left(Brg_Id,3) = '"& dataH("memoAgenID") &"' AND Brg_AktifYN = 'Y' ORDER BY Brg_Nama ASC"
     set barang = data_cmd.execute
 %>
 <% call header("Detail Permintaan Barang") %>
@@ -55,7 +55,7 @@
                     <label class="col-form-label">Hari :</label>
                 </div>
                 <div class="col-auto">
-                    <label><% call getHari(weekday(dataH("memoTgl"))) %></label>
+                    <label><%= weekdayname(weekday(dataH("memoTgl"))) %></label>
                 </div>
             </div>
         </div>
@@ -89,24 +89,16 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6">
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label class="col-form-label">Keterangan :</label>
-                </div>
-                <div class="col-auto">
-                    <label><%= dataH("memoKeterangan") %></label>
-                </div>
-            </div>
-        </div>
     </div>
     <div class="row">
-        <div class="d-flex mb-3">
-            <div class="me-auto p-2">
-                <button type="button" class="btn btn-secondary" onClick="window.open('export-detailpb.asp?id=<%=id%>')" class="btn btn-danger">Export</button>
-            </div>
-            <div class="p-2">
-                <a href="index.asp" class="btn btn-danger">Kembali</a>
+        <div class="col-lg-12">
+            <div class="d-flex mb-3">
+                <div class="me-auto p-2">
+                    <button type="button" class="btn btn-primary btn-modalPb" data-bs-toggle="modal" data-bs-target="#modalpb">Tambah Rincian</button>
+                </div>
+                <div class="p-2">
+                    <a href="index.asp" class="btn btn-danger">Kembali</a>
+                </div>
             </div>
         </div>
     </div>
@@ -123,7 +115,6 @@
                         <th scope="col">Harga</th>
                         <th scope="col">Keterangan</th>
                         <th scope="col">Aktif</th>
-                        <th scope="col" class="text-center">Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -151,13 +142,6 @@
                             <td>
                                 <%if dataD("memoAktifYN") = "Y" then%>Aktif <% else %>Off <% end if %>
                             </td>
-                            <td  class="text-center">
-                                <% if dataH("memoApproveYN") = "Y" then %>
-                                    <b style="color:green">Done</b>
-                                <% else %>
-                                    -
-                                <% end if %>
-                            </td>
                         </tr>
                     <% 
                     dataD.movenext
@@ -168,6 +152,99 @@
         </div>
     </div> 
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalpb" tabindex="-1" aria-labelledby="modalpbLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalpbLabel">Rincian Barang</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+    <form action="pbd_add.asp?id=<%= id %>" method="post">
+        <input type="hidden" name="memoid" id="memoid" value="<%= id %>">
+      <div class="modal-body">
+         <div class="row">
+            <div class="col-sm-3">
+                <label for="brg" class="col-form-label">Jenis Barang</label>
+            </div>
+            <div class="col-sm-9 mb-3">
+                <select class="form-select" aria-label="Default select example" name="brg" id="brg"> 
+                    <option value="">Pilih</option>
+                <% do while not barang.eof %>
+                    <option value="<%= barang("Brg_ID") %>"><%= barang("Brg_Nama") %></option>
+                <% 
+                barang.movenext
+                loop
+                %>
+                </select>
+            </div>
+        </div>
+         <div class="row">
+            <div class="col-sm-3">
+                <label for="spect" class="col-form-label">Sepesification</label>
+            </div>
+            <div class="col-sm-9 mb-3">
+                <input type="text" id="spect" class="form-control" name="spect" autocomplete="off" maxlength="50" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <label for="qtty" class="col-form-label">Quantity</label>
+            </div>
+            <div class="col-sm-3 mb-3">
+                <input type="number" id="qtty" class="form-control" name="qtty" autocomplete="off" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <label for="harga" class="col-form-label">Harga Satuan</label>
+            </div>
+            <div class="col-sm-4 mb-3">
+                <input type="number" id="pbharga" class="form-control" name="harga" autocomplete="off" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <label for="satuan" class="col-form-label">Satuan Barang</label>
+            </div>
+            <div class="col-sm-4 mb-3">
+                <select class="form-select" aria-label="Default select example" name="satuan" id="satuan" required> 
+                    <option value="">Pilih</option>
+                    <% do while not psatuan.eof %>
+                    <option value="<%= psatuan("sat_ID") %>"><%= psatuan("sat_nama") %></option>
+                    <%  
+                    psatuan.movenext
+                    loop
+                    %>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <label for="ket" class="col-form-label">Keterangan</label>
+            </div>
+            <div class="col-sm-9 mb-3">
+                <div class="form-floating">
+                    <textarea class="form-control" placeholder="detail" id="ket" name="ket" autocomplete="off" maxlength="50"></textarea>
+                    <label for="ket">Detail</label>
+                </div>
+            </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
 <% 
+    if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
+        call tambahdetailPBarang()
+    end if
     call footer()
 %>

@@ -8,11 +8,10 @@ sub tambahAppPermintaan()
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_T_Memo_H WHERE MemoID = '"& no &"' AND memoAktifYN = 'Y'"
+    data_cmd.commandText = "SELECT * FROM DLK_T_AppPermintaan WHERE AppMemoID = '"& no &"' AND AppTgl = '"& tgl &"' AND AppDana = '"& dana &"' AND AppKeterangan = '"& keterangan &"' AND AppAktifYN = 'Y'"
     set data = data_cmd.execute
    
-    if not data.eof then
-        call query("UPDATE DLK_T_Memo_H SET memoApproveYN = 'Y' WHERE memoID = '"& no &"'")
+    if data.eof then
         call query("sp_addDLK_T_AppPermintaan '"& no &"','"& tgl &"','"& dana &"','"& keterangan &"' ")
         value = 1 'case untuk insert data
     else

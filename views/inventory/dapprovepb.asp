@@ -97,7 +97,7 @@
                     <button type="button" class="btn btn-primary btn-modalPb" data-bs-toggle="modal" data-bs-target="#modalpb">Tambah Rincian</button>
                 </div>
                 <div class="p-2">
-                    <a href="index.asp" class="btn btn-danger">Kembali</a>
+                    <a href="approvepb.asp" class="btn btn-danger">Kembali</a>
                 </div>
             </div>
         </div>
@@ -144,7 +144,7 @@
                                 <%if dataD("memoAktifYN") = "Y" then%>Aktif <% else %>Off <% end if %>
                             </td>
                             <td class="text-center">
-                                <a href="aktif.asp?id=<%= strid %>" class="btn badge text-bg-danger btn-aktifdpbarang">delete</a>
+                                <a href="aktifapprovepb.asp?id=<%= strid %>" class="btn badge text-bg-danger btn-aktifdpbarang">delete</a>
                             </td>
                         </tr>
                     <% 
@@ -165,7 +165,7 @@
         <h5 class="modal-title" id="modalpbLabel">Rincian Barang</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-    <form action="pbd_add.asp?id=<%= id %>" method="post">
+    <form action="dapprovepb.asp?id=<%= id %>" method="post">
         <input type="hidden" name="memoid" id="memoid" value="<%= id %>">
       <div class="modal-body">
          <div class="row">
@@ -248,7 +248,37 @@
 
 <% 
     if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
-        call tambahdetailPBarang()
+        memoid = trim(Request.Form("memoid"))
+        brg = trim(Request.Form("brg"))
+        spect = trim(Request.Form("spect"))
+        qtty = trim(Request.Form("qtty"))
+        harga = trim(Request.Form("harga"))
+        satuan = trim(Request.Form("satuan"))
+        ket = trim(Request.Form("ket"))
+
+        set data_cmd =  Server.CreateObject ("ADODB.Command")
+        data_cmd.ActiveConnection = mm_delima_string
+
+        data_cmd.commandTExt = "SELECT * FROM DLK_T_Memo_D WHERE memoID = '"& memoid &"' AND memoItem = '"& brg &"' AND memoAktifYN = 'Y'"
+        ' response.write data_cmd.commandText & "<br>"
+        set data = data_cmd.execute
+
+        if data.eof then
+            data_cmd.commandText = "INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoHarga, memoKeterangan, memoAktifYN) VALUES ( '"& memoid &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"', "& harga &",'"& ket &"','Y')"
+                ' response.write data_cmd.commandText & "<br>"
+            data_cmd.execute
+            value = 1
+        else
+            value = 2
+        end if
+
+        if value = 1 then
+            call alert("RINCIAN PERMINTAAN BARANG", "berhasil di tambahkan", "success","dapprovepb.asp?id="&memoid) 
+        elseif value = 2 then
+            call alert("RINCIAN PERMINTAAN BARANG", "sudah terdaftar", "warning","dapprovepb.asp?id="&memoid)
+        else
+            value = 0
+        end if
     end if
     call footer()
 %>

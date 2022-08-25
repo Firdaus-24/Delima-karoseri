@@ -57,7 +57,7 @@
           </li>
             <ul class="sub-menu" id="sublist-inventory">
               <li>
-                <a class="link-name" href="<%= url %>views/inventory/">Inventory</a>
+                <a class="link-name" href="<%= url %>views/inventory/approvepb.asp">Approve Permintaan</a>
               </li>
               <li>
                 <a class="link-name" href="<%= url %>views/inventory/incomming.asp">Incomming</a>
@@ -124,9 +124,6 @@
             <ul class="sub-menu" id="sublist-finance">
               <li>
                 <a class="link-name" href="<%= url %>views/finance/index.asp">Finance</a>
-              </li>
-              <li>
-                <a class="link-name" href="<%= url %>views/finance/dapppermintaan.asp">Detail Anggaran Permintaan</a>
               </li>
             </ul>
           <!-- hr/ga -->

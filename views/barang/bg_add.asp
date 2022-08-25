@@ -104,12 +104,6 @@
                 </div>
             </div>
         </div>
-        <div class="mb-3 row">
-            <label for="harga" class="col-sm-2 col-form-label offset-sm-1">Harga</label>
-            <div class="col-sm-8">
-                <input type="text" class="form-control" id="harga" name="harga" autocomplete="off" required>
-            </div>
-        </div>
         <div class="row">
             <div class="col-lg text-center">
                 <button type="submit" class="btn btn-primary btn-tambahBarang">Tambah</button>

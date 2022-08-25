@@ -138,7 +138,6 @@
                     <tr>
                     <th scope="col">Nama</th>
                     <th scope="col">Tanggal</th>
-                    <th scope="col">Harga</th>
                     <th scope="col">Kategori</th>
                     <th scope="col">Jenis</th>
                     <th scope="col" class="text-center">Stok</th>
@@ -158,7 +157,6 @@
                     <tr>
                         <td><%= rs("Brg_Nama") %></td>
                         <td><%= rs("Brg_Tanggal") %></td>
-                        <td><%= replace(formatCurrency(rs("Brg_Harga")),"$","Rp ") %></td>
                         <td><% call getKategori(rs("KategoriID")) %></td>
                         <td><% call getJenis(rs("JenisID")) %></td>
                         <td class="text-center">

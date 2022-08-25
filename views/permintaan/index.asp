@@ -178,8 +178,9 @@
                         </td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="detailpb.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-primary">Detail</a>
+                                <a href="detailpb.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-warning">Detail</a>
                             <% if rs("memoApproveYN") = "N" then %>
+                                <a href="pb_u.asp?id=<%= rs("memoID") %>" class="btn badge btn-primary btn-sm">Update</a>
                                 <a href="haktif.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-danger btn-aktifpbarang">delete</a>
                             <% end if %>
                             </div>
