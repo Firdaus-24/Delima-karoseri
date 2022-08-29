@@ -155,6 +155,15 @@ sub updatePurce()
     vdisc1 = Split(valdisc1, ",")
     vdisc2 = Split(valdisc2, ",")
 
+    ' add detail barang
+    id = trim(Request.Form("id"))
+    itempo = trim(Request.Form("itempo"))
+    qtty = trim(Request.Form("qtty"))
+    hargapo = trim(Request.Form("hargapo"))
+    satuan = trim(Request.Form("satuan"))
+    disc1 = trim(Request.Form("disc1"))
+    disc2 = trim(Request.Form("disc2"))
+
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
@@ -163,19 +172,35 @@ sub updatePurce()
     set data = data_cmd.execute
 
     if not data.eof then
-        call query("UPDATE DLK_T_OrPemH SET OPH_VenID = '"& vendor &"', OPH_JTDate = '"& tgljt &"', OPH_MetPem = "& metpem &", OPH_DiskonAll = '"& diskon &"',OPH_PPn = "& ppn &", OPH_Keterangan = '"& keterangan &"' WHERE OPH_ID = '"& id &"' AND OPH_AktifYN = 'Y' ")
-        for i = 0 to ubound(vitem)  
-            data_cmd.commandText = "SELECT * FROM DLK_T_OrPemD WHERE OPD_OPHID = '"& id &"' AND OPD_Item = '"& trim(vitem(i)) &"' AND OPD_Harga = '"& trim(vharga(i)) &"' AND OPD_JenisSat = '"& trim(vsatuan(i)) &"' AND OPD_AktifYN = 'Y'"
-            ' response.write data_cmd.commandText & "<br>"
-            set q = data_cmd.execute
+        if itempo <> "" then
+            data_cmd.commandText = "SELECT * FROM DLK_T_OrPemD WHERE OPD_OPHID = '"& id &"' AND OPD_Item = '"& itempo &"'"
             
-            if not q.eof then
-                data_cmd.commandText = "UPDATE DLK_T_OrPemD SET OPD_QtySatuan = "& trim(vqtty(i)) &", OPD_Disc1 = '"& trim(vdisc1(i)) &"',OPD_Disc2 = '"& trim(vdisc2(i)) &"' WHERE OPD_OPHID = '"& id &"' AND OPD_Item = '"& trim(vitem(i)) &"' AND OPD_Harga = '"& trim(vharga(i)) &"' AND OPD_JenisSat = '"& trim(vsatuan(i)) &"' AND OPD_AktifYN = 'Y'"
-                ' response.write data_cmd.commandText & "<br>"
-                data_cmd.execute
+            set addetail = data_cmd.execute
+
+            if addetail.eof then
+                call query("INSERT INTO DLK_T_OrPemD (OPD_OPHID, OPD_Item,OPD_QtySatuan,OPD_Harga,OPD_JenisSat,OPD_Disc1,OPD_Disc2,OPD_AktifYN) VALUES ('"& id &"','"& itempo &"',"& qtty &", '"& hargapo &"', '"& satuan &"', '"& disc1 &"', '"& disc2 &"', 'Y' ) ")
+
+                value = 1 'case untuk insert data
+            else
+                value = 2 'case jika gagal insert 
             end if
-        next
-        value = 1 'case untuk insert data
+
+        else 
+            call query("UPDATE DLK_T_OrPemH SET OPH_VenID = '"& vendor &"', OPH_JTDate = '"& tgljt &"', OPH_MetPem = "& metpem &", OPH_DiskonAll = '"& diskon &"',OPH_PPn = "& ppn &", OPH_Keterangan = '"& keterangan &"' WHERE OPH_ID = '"& id &"' AND OPH_AktifYN = 'Y' ")
+
+            for i = 0 to ubound(vitem)  
+                data_cmd.commandText = "SELECT * FROM DLK_T_OrPemD WHERE OPD_OPHID = '"& id &"' AND OPD_Item = '"& trim(vitem(i)) &"' AND OPD_Harga = '"& trim(vharga(i)) &"' AND OPD_JenisSat = '"& trim(vsatuan(i)) &"' AND OPD_AktifYN = 'Y'"
+                ' response.write data_cmd.commandText & "<br>"
+                set q = data_cmd.execute
+                
+                if not q.eof then
+                    data_cmd.commandText = "UPDATE DLK_T_OrPemD SET OPD_QtySatuan = "& trim(vqtty(i)) &", OPD_Disc1 = '"& trim(vdisc1(i)) &"',OPD_Disc2 = '"& trim(vdisc2(i)) &"' WHERE OPD_OPHID = '"& id &"' AND OPD_Item = '"& trim(vitem(i)) &"' AND OPD_Harga = '"& trim(vharga(i)) &"' AND OPD_JenisSat = '"& trim(vsatuan(i)) &"' AND OPD_AktifYN = 'Y'"
+                    ' response.write data_cmd.commandText & "<br>"
+                    data_cmd.execute
+                end if
+            next
+            value = 1 'case untuk insert data
+        end if
     else
         value = 2 'case jika gagal insert 
     end if

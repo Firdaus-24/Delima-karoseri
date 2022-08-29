@@ -156,7 +156,7 @@
                                 <%= replace(formatCurrency(realharga),"$","") %>
                             </td>
                             <td class="text-center">
-                                <% if ckstatus = "Done" then %>
+                                <% if ckstatus = "Done" OR ckstatus = "OverPO" then %>
                                     -
                                 <% else %>
                                     <div class="btn-group" role="group" aria-label="Basic example">

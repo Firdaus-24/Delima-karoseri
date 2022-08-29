@@ -19,9 +19,6 @@
     ' satuan
     data_cmd.commandText = "SELECT sat_Nama, sat_ID FROM DLK_M_satuanBarang WHERE sat_AktifYN = 'Y' ORDER BY sat_Nama ASC"
     set psatuan = data_cmd.execute
-    ' agen
-    data_cmd.commandText = "SELECT AgenName, AgenID FROM GLB_M_Agen WHERE AgenAktifYN = 'Y' ORDER BY AgenName ASC"
-    set agen = data_cmd.execute
     ' vendor
     data_cmd.commandText = "SELECT ven_Nama, Ven_ID FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y' ORDER BY ven_Nama ASC"
     set vendor = data_cmd.execute
@@ -71,7 +68,7 @@
                 <label for="tgljt" class="col-form-label">Tanggal Jatuh Tempo</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="text" id="tgljt" name="tgljt" class="form-control" <% if data("OPH_JTDAte") <> "1900-01-01"  then%> value="<%= data("OPH_JTDate") %>" <% end if %> onfocus="(this.type='date')">
+                <input type="text" id="tgljt" name="tgljt" class="form-control" <% if data("OPH_JTDAte") <> "1900-01-01"  then%> value="<%= Cdate(data("OPH_JTDate")) %>" <% end if %> onfocus="(this.type='date')">
             </div>
         </div>
         <div class="row align-items-center">
@@ -115,6 +112,20 @@
                 <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" value="<%= data("OPH_Keterangan") %>">
             </div>
         </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="d-flex">
+                    <div class="me-auto p-2">
+                        <button type="button" class="btn btn-primary btn-modalOrPemD" data-bs-toggle="modal" data-bs-target="#modalOrPemD">Tambah Rincian</button>
+                    </div>
+                    <div class="p-2">
+                        <a href="purcesDetail.asp" class="btn btn-danger">Kembali</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <div class="row">
             <div class="col-lg-12 mb-3 mt-3">
                 <table class="table table-hover">
@@ -219,6 +230,92 @@
         </div>
     </form>
 </div>  
+
+<!-- Modal -->
+<div class="modal fade" id="modalOrPemD" tabindex="-1" aria-labelledby="modalOrPemDLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalOrPemDLabel">Rincian Barang</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="purc_u.asp?id=<%= id %>" method="post">
+        <div class="modal-body modalOrPemD">
+            <input type="hidden" name="id" id="id" value="<%= id %>">
+            <div class="row">
+                <div class="col-sm-4">
+                    <label for="itempo" class="col-form-label">Barang</label>
+                </div>
+                <div class="col-sm-8 mb-3">
+                    <select class="form-select" id="itempo" name="itempo" aria-label="Default select example" required>
+                        <option value="">Pilih</option>
+                        <% do while not barang.eof %>
+                        <option value="<%= barang("Brg_ID") %>"><%= barang("Brg_nama") %></option>
+                        <% 
+                        barang.movenext
+                        loop
+                        %>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <label for="qtty" class="col-form-label">Quantity</label>
+                </div>
+                <div class="col-sm-8 mb-3">
+                    <input type="number" id="qtty" class="form-control" name="qtty" autocomplete="off" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <label for="hargapo" class="col-form-label">Harga</label>
+                </div>
+                <div class="col-sm-8 mb-3">
+                    <input type="number" id="hargapo" class="form-control" name="hargapo" autocomplete="off" required>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-4">
+                    <label for="satuan" class="col-form-label">Satuan Barang</label>
+                </div>
+                <div class="col-sm-8 mb-3">
+                    <select class="form-select" aria-label="Default select example" name="satuan" id="satuan" required> 
+                        <option value="">Pilih</option>
+                        <% do while not psatuan.eof %>
+                        <option value="<%= psatuan("sat_ID") %>"><%= psatuan("sat_nama") %></option>
+                        <%  
+                        psatuan.movenext
+                        loop
+                        %>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 mb-3">
+                    <label for="disc1" class="col-form-label">Disc1</label>
+                </div>
+                <div class="col-lg-8">
+                    <input type="number" id="disc1" name="disc1" autocomplete="off" class="form-control" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 mb-3">
+                    <label for="disc2" class="col-form-label">Disc2</label>
+                </div>
+                <div class="col-lg-8">
+                    <input type="number" id="disc2" name="disc2" autocomplete="off" class="form-control" required>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 
 <% 

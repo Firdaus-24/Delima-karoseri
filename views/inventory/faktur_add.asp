@@ -12,15 +12,10 @@
 
     set data = data_cmd.execute
 
-    ' barang
-    data_cmd.commandText = "SELECT Brg_Nama, Brg_ID FROM DLK_M_Barang WHERE Brg_AktifYN = 'Y' AND left(Brg_Id,3) = '"& data("OPH_AgenID") &"' ORDER BY Brg_Nama ASC"
-    set barang = data_cmd.execute
-    ' satuan
-    data_cmd.commandText = "SELECT sat_Nama, sat_ID FROM DLK_M_satuanBarang WHERE sat_AktifYN = 'Y' ORDER BY sat_Nama ASC"
-    set psatuan = data_cmd.execute
-    ' agen
-    data_cmd.commandText = "SELECT AgenName, AgenID FROM GLB_M_Agen WHERE AgenAktifYN = 'Y' ORDER BY AgenName ASC"
-    set agen = data_cmd.execute
+   
+    ' ' agen
+    ' data_cmd.commandText = "SELECT AgenName, AgenID FROM GLB_M_Agen WHERE AgenAktifYN = 'Y' ORDER BY AgenName ASC"
+    ' set agen = data_cmd.execute
     ' vendor
     data_cmd.commandText = "SELECT ven_Nama, Ven_ID FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y' ORDER BY ven_Nama ASC"
     set vendor = data_cmd.execute
@@ -55,7 +50,7 @@
                 <label for="tgl" class="col-form-label">Tanggal</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="date" id="tgl" name="tgl" class="form-control" required>
+                <input type="text" id="tgl" name="tgl" class="form-control" value="<%= date() %>" required>
             </div>
             <div class="col-lg-2 mb-3">
                 <label for="tgljt" class="col-form-label">Tanggal Jatuh Tempo</label>
@@ -124,100 +119,8 @@
                 </select>
             </div>
         </div>
-
-        <!-- detail barang -->
-        <div class="row mb-3 mt-4">
-            <div class="col-lg text-center mb-2 mt-2">
-                <h5 style="background-color:blue;display:inline-block;padding:10px;color:white;border-radius:10px;letter-spacing: 5px;">DETAIL BARANG</h5>
-            </div>
-        </div>
-        <% do while not data.eof %>
-        <div class="row dfaktur">
-        <div class="col-lg-12 mb-3 mt-3">
-            <div class="row">
-                <div class="col-sm-2">
-                    <label for="itempo" class="col-form-label">Jenis Barang</label>
-                </div>
-                <div class="col-sm-10 mb-3">
-                    <select class="form-select" id="itempo" name="itempo" aria-label="Default select example" required>
-                        <option value="<%= data("OPD_Item") %>"><%= data("Brg_nama") %></option>
-                        <% do while not barang.eof %>
-                        <option value="<%= barang("Brg_ID") %>"><%= barang("Brg_nama") %></option>
-                        <% 
-                        barang.movenext
-                        loop
-                        barang.movefirst
-                        %>
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2">
-                    <label for="qttypo" class="col-form-label">Quantity</label>
-                </div>
-                <div class="col-sm-3 mb-3">
-                    <input type="number" id="qttypo" class="form-control" name="qttypo" value="<%= data("OPD_qtysatuan") %>" required>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2">
-                    <label for="hargapo" class="col-form-label">Harga</label>
-                </div>
-                <div class="col-sm-4 mb-3">
-                    <input type="number" id="hargapo" class="form-control" name="hargapo" value="<%= data("OPD_Harga") %>" required>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2">
-                    <label for="satuan" class="col-form-label">Satuan Barang</label>
-                </div>
-                <div class="col-sm-4 mb-3">
-                    <select class="form-select" aria-label="Default select example" name="satuanpo" id="satuanpo" required> 
-                        <option value="<%= data("OPD_Jenissat") %>"><% call getSatBerat(data("OPD_Jenissat")) %></option>
-                        <% do while not psatuan.eof %>
-                        <option value="<%= psatuan("sat_ID") %>"><%= psatuan("sat_nama") %></option>
-                        <%  
-                        psatuan.movenext
-                        loop
-                        psatuan.movefirst
-                        %>
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2">
-                    <label for="disc1" class="col-form-label">Disc1</label>
-                </div>
-                <div class="col-sm-4 mb-3">
-                    <input type="number" id="disc1" class="form-control" name="disc1" value="<%= data("OPD_Disc1") %>">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2">
-                    <label for="disc2" class="col-form-label">Disc2</label>
-                </div>
-                <div class="col-sm-4 mb-3">
-                    <input type="number" id="disc2" class="form-control" name="disc2" value="<%= data("OPD_Disc2") %>">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg">
-                    <hr>
-                </div>
-            </div>
-        </div>
-        </div>
-        <% 
-        data.movenext
-        loop
-        %>
-        <!-- button add barang -->
-        <div class="row mb-3">
-            <div class="col-sm-12">
-                <button type="button" class="btn btn-secondary justify-content-sm-start addfaktur" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"><i class="bi bi-plus-lg"></i> item</button>
-                <button type="button" class="btn btn-secondary justify-content-sm-end minfaktur" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"><i class="bi bi-dash"></i> item</button>
-            </div>
-        </div>
+        
+        
         <div class="row">
             <div class="col-lg-12 text-center">
                 <a href="incomming.asp" type="button" class="btn btn-danger">Kembali</a>
@@ -231,13 +134,6 @@
 <% 
     if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
         call tambahFaktur()
-        if value = 1 then
-            call alert("FAKTUR TERHUTANG", "berhasil ditambahkan", "success","incomming.asp") 
-        elseif value = 2 then
-            call alert("FAKTUR TERHUTANG", "sudah terdaftar", "warning","incomming.asp")
-        else
-            value = 0
-        end if
     end if
     call footer()
 %>

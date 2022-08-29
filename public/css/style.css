@@ -177,6 +177,9 @@ hr {
     background: #b30000; 
   }
 
+  .table tr:nth-child(1){
+    white-space: nowrap;
+  }
 /* fortable data */
 @media (max-width:801px){
     .table{

@@ -190,11 +190,11 @@
                         <tr><TH><%= recordcounter %></TH>
                         <th><%= rs("OPH_ID") %></th>
                         <td><% call getAgen(rs("OPH_AgenID"),"P") %></td>
-                        <td><%= rs("OPH_Date") %></td>
+                        <td><%= Cdate(rs("OPH_Date")) %></td>
                         <td><% call getVendor(rs("OPH_VenID")) %></td>
                         <td>
                             <% if rs("OPH_JTDate") <> "1900-01-01" then %>
-                            <%= rs("OPH_JTDate") %>
+                            <%= Cdate(rs("OPH_JTDate")) %>
                             <% end if %>
                         </td>
                         <td><%= rs("OPH_DiskonAll") %></td>

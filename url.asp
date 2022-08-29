@@ -1,4 +1,4 @@
 <% 
-url = "http://localhost/"
+url = "http://103.111.190.162:8008/"
 
 %>

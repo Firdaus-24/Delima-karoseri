@@ -33,22 +33,22 @@ $(function(){
     // });
 
     // add barang
-    $('.addfaktur').click(function(){
-        let clone = $( ".dfaktur:first" ).clone()
-        let last = $(".dfaktur:last")
-        clone.insertAfter(last)
-        $(".dfaktur:last #itempo").val('')
-        $(".dfaktur:last #qttypo").val('')
-        $(".dfaktur:last #hargapo").val('')
-        $(".dfaktur:last #satuanpo").val('')
-        $(".dfaktur:last #dket").val('')
-    })
-    // delete barang
-    $('.minfaktur').click(function(){
-        if ($(".dfaktur").length > 1 ){
-            $(".dfaktur").last().remove()
-        }
-    })
+    // $('.addfaktur').click(function(){
+    //     let clone = $( ".dfaktur:first" ).clone()
+    //     let last = $(".dfaktur:last")
+    //     clone.insertAfter(last)
+    //     $(".dfaktur:last #itempo").val('')
+    //     $(".dfaktur:last #qttypo").val('')
+    //     $(".dfaktur:last #hargapo").val('')
+    //     $(".dfaktur:last #satuanpo").val('')
+    //     $(".dfaktur:last #dket").val('')
+    // })
+    // // delete barang
+    // $('.minfaktur').click(function(){
+    //     if ($(".dfaktur").length > 1 ){
+    //         $(".dfaktur").last().remove()
+    //     }
+    // })
 
 
     // validasi tambah faktur
