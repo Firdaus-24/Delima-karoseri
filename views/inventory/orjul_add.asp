@@ -47,7 +47,7 @@
                 <label for="tgl" class="col-form-label">Tanggal</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="date" id="tgl" name="tgl" class="form-control" required>
+                <input type="text" id="tgl" name="tgl" value="<%= date %>" class="form-control" onfocus="(this.type='date')" required>
             </div>
         </div>
         <div class="row align-items-center">

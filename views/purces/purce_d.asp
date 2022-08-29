@@ -116,17 +116,21 @@
                     strid = data("OPD_OPHID")&","& data("OPD_Item") &","& data("OPD_QtySatuan") &","&  data("OPD_JenisSat") &","& data("OPD_Harga") &","& data("OPD_Disc1") &","& data("OPD_Disc2")   
 
                     ' cek status pembelian
-                    data_cmd.commandText = "SELECT memoqtty FROM DLK_T_Memo_D WHERE left(memoId,17) = '"& data("OPH_MemoID") &"' AND memoitem = '"& data("OPD_Item") &"' AND memosatuan = '"& data("OPD_JenisSat") &"' AND memoAktifYN = 'Y'"
+                    data_cmd.commandText = "SELECT memoqtty FROM DLK_T_Memo_D WHERE left(memoId,17) = '"& data("OPH_MemoID") &"' AND memoitem = '"& data("OPD_Item") &"' AND memoAktifYN = 'Y'"
                     ' response.write data_cmd.commandText & "<br>"
                     set qtymemo = data_cmd.execute
 
-                    angkastatus = qtymemo("memoqtty") - data("OPD_QtySatuan")
-                    if angkastatus > 0 then
-                        ckstatus = "-"&angkastatus
-                    elseIf angkastatus = 0 then
-                        ckstatus = "Done"
+                    if not qtymemo.eof then
+                        angkastatus = qtymemo("memoqtty") - data("OPD_QtySatuan")
+                        if angkastatus > 0 then
+                            ckstatus = "-"&angkastatus
+                        elseIf angkastatus = 0 then
+                            ckstatus = "Done"
+                        else
+                            ckstatus = "OverPO"
+                        end if
                     else
-                        ckstatus = "OverPO"
+                        ckstatus = "-"
                     end if
 
                     %>
