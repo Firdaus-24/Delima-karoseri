@@ -6,7 +6,7 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT SUM(dbo.DLK_T_Memo_D.memoHarga * dbo.DLK_T_Memo_D.memoQtty) As tharga FROM dbo.DLK_T_Memo_H INNER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) WHERE (dbo.DLK_T_Memo_H.memoID = '"& id &"') AND DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_D.memoAktifYn = 'Y'"
+    data_cmd.commandText = "SELECT SUM(dbo.DLK_T_Memo_D.memoHarga * dbo.DLK_T_Memo_D.memoQtty) As tharga FROM dbo.DLK_T_Memo_H RIGHT OUTER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) WHERE (dbo.DLK_T_Memo_H.memoID = '"& id &"') AND DLK_T_Memo_H.memoAktifYN = 'Y'"
     
     set ddata = data_cmd.execute
 
@@ -35,7 +35,7 @@
                         <label for="tgl" class="col-form-label">Tanggal</label>
                     </div>
                     <div class="col-sm-3 mb-3">
-                        <input type="date" id="tgl" class="form-control" name="tgl" autocomplete="off" required>
+                        <input type="text" id="tgl" class="form-control" name="tgl" value="<%= date %>" onfocus="(this.type='date')" autocomplete="off" required>
                     </div>
                 </div>
                 <div class="row">

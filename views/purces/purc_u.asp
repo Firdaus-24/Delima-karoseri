@@ -8,7 +8,8 @@
     data_cmd.ActiveConnection = mm_delima_string
     
     ' get data
-    data_cmd.commandText = "SELECT DLK_T_AppPermintaan.AppDana, dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_AgenID, dbo.DLK_T_OrPemH.OPH_Date, dbo.DLK_T_OrPemH.OPH_venID, dbo.DLK_T_OrPemH.OPH_JTDate, dbo.DLK_T_OrPemH.OPH_Keterangan,dbo.DLK_T_OrPemH.OPH_DiskonAll, dbo.DLK_T_OrPemH.OPH_PPn, dbo.DLK_T_OrPemH.OPH_AktifYN, dbo.DLK_T_OrPemH.OPH_MetPem, dbo.DLK_T_OrPemH.OPH_memoId, dbo.DLK_T_OrPemD.OPD_OPHID,dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Disc1, dbo.DLK_T_OrPemD.OPD_JenisSat, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_Disc2, dbo.DLK_T_OrPemD.OPD_AktifYN, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_OrPemH INNER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = dbo.DLK_T_OrPemD.OPD_OPHID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrpemD.OPD_Item = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_T_AppPermintaan ON DLK_T_OrPemH.OPH_MemoID = DLK_T_AppPermintaan.appMemoID where DLK_T_OrPemH.OPH_ID = '"& id &"' AND DLK_T_OrPemH.OPH_AktifYN = 'Y' AND DLK_T_OrPemD.OPD_AktifYN = 'Y' GROUP BY  DLK_T_AppPermintaan.AppDana, dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_AgenID, dbo.DLK_T_OrPemH.OPH_Date, dbo.DLK_T_OrPemH.OPH_venID, dbo.DLK_T_OrPemH.OPH_JTDate, dbo.DLK_T_OrPemH.OPH_Keterangan,dbo.DLK_T_OrPemH.OPH_DiskonAll, dbo.DLK_T_OrPemH.OPH_PPn, dbo.DLK_T_OrPemH.OPH_AktifYN, dbo.DLK_T_OrPemH.OPH_MetPem, dbo.DLK_T_OrPemH.OPH_memoId, dbo.DLK_T_OrPemD.OPD_OPHID,dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Disc1, dbo.DLK_T_OrPemD.OPD_JenisSat, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_Disc2, dbo.DLK_T_OrPemD.OPD_AktifYN,DLK_M_Barang.Brg_Nama "
+    ' data_cmd.commandText = "SELECT DLK_T_AppPermintaan.AppDana, dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_AgenID, dbo.DLK_T_OrPemH.OPH_Date, dbo.DLK_T_OrPemH.OPH_venID, dbo.DLK_T_OrPemH.OPH_JTDate, dbo.DLK_T_OrPemH.OPH_Keterangan,dbo.DLK_T_OrPemH.OPH_DiskonAll, dbo.DLK_T_OrPemH.OPH_PPn, dbo.DLK_T_OrPemH.OPH_AktifYN, dbo.DLK_T_OrPemH.OPH_MetPem, dbo.DLK_T_OrPemH.OPH_memoId, dbo.DLK_T_OrPemD.OPD_OPHID,dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Disc1, dbo.DLK_T_OrPemD.OPD_JenisSat, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_Disc2, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_OrPemH RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID,13) LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrpemD.OPD_Item = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_T_AppPermintaan ON DLK_T_OrPemH.OPH_MemoID = DLK_T_AppPermintaan.appMemoID where DLK_T_OrPemH.OPH_ID = '"& id &"' AND DLK_T_OrPemH.OPH_AktifYN = 'Y' GROUP BY  DLK_T_AppPermintaan.AppDana, dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_AgenID, dbo.DLK_T_OrPemH.OPH_Date, dbo.DLK_T_OrPemH.OPH_venID, dbo.DLK_T_OrPemH.OPH_JTDate, dbo.DLK_T_OrPemH.OPH_Keterangan,dbo.DLK_T_OrPemH.OPH_DiskonAll, dbo.DLK_T_OrPemH.OPH_PPn, dbo.DLK_T_OrPemH.OPH_AktifYN, dbo.DLK_T_OrPemH.OPH_MetPem, dbo.DLK_T_OrPemH.OPH_memoId, dbo.DLK_T_OrPemD.OPD_OPHID,dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Disc1, dbo.DLK_T_OrPemD.OPD_JenisSat, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_Disc2,DLK_M_Barang.Brg_Nama "
+    data_cmd.commandTExt = "SELECT DLK_T_OrPemH.*, DLK_T_AppPermintaan.AppDana FROM DLK_T_OrPemH LEFT OUTER JOIN DLK_T_AppPermintaan ON DLK_T_OrPemH.OPH_MemoID = DLK_T_AppPermintaan.appMemoID WHERE OPH_ID = '"& id &"' AND OPH_AktifYN = 'Y'"
 
     set data = data_cmd.execute
 
@@ -128,7 +129,7 @@
 
         <div class="row">
             <div class="col-lg-12 mb-3 mt-3">
-                <table class="table table-hover">
+                <table class="table tableupurchase">
                     <thead class="bg-secondary text-light" style="white-space: nowrap;">
                         <tr>
                             <th>Pilih</th>
@@ -138,41 +139,53 @@
                             <th>Satuan Barang</th>
                             <th>Disc1</th>
                             <th>Disc2</th>
+                            <th scope="col" class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <% do while not data.eof %>
+                        <% 
+                        data_cmd.commandText = "SELECT DLK_T_OrPemD.*, DLK_M_Barang.Brg_Nama FROM DLK_T_OrPemD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrPemD.OPD_Item = DLK_M_Barang.Brg_ID WHERE LEFT(DLK_T_OrPemD.OPD_OPHID,13) = '"& data("OPH_ID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC "
+
+                        set ddata = data_cmd.execute
+                        do while not ddata.eof 
+                        
+                        %>
                         <tr>
                             <td class="text-center">
                                 <input class="form-check-input ckpo" type="checkbox" value="" id="ckpo">
                             </td>
                             <td>
                                 <select class="form-control" aria-label="Default select example" id="item" name="item" >
-                                    <option value="<%= data("OPD_Item") %>"><%= data("Brg_Nama")%></option>
+                                    <option value="<%= ddata("OPD_Item") %>"><%= ddata("Brg_Nama")%></option>
                                 </select>
                             </td>
                             <td>
-                                <input type="text" id="qtty" name="qtty" class="form-control " value="<%= data("OPD_QtySatuan") %>">
+                                <input type="text" id="qtty" name="qtty" class="form-control " value="<%= ddata("OPD_QtySatuan") %>">
                             </td>
                             <td>
-                                <input type="hidden" id="hargapo" name="harga" class="form-control " value="<%= data("OPD_Harga") %>" readonly>
-                                <input type="text" id="lhargapo" name="lharga" class="form-control " value="<%= replace(formatCurrency(data("OPD_Harga")),"$","") %>" readonly>
+                                <input type="hidden" id="hargapo" name="harga" class="form-control " value="<%= ddata("OPD_Harga") %>" readonly>
+                                <input type="text" id="lhargapo" name="lharga" class="form-control " value="<%= replace(formatCurrency(ddata("OPD_Harga")),"$","") %>" readonly>
                             </td>
                             <td>
                                 <select class="form-control" aria-label="Default select example" id="satuan" name="satuan" >
-                                    <option value="<%= data("OPD_JenisSat") %>"><% call getSatBerat(data("OPD_JenisSat")) %></option>
+                                    <option value="<%= ddata("OPD_JenisSat") %>"><% call getSatBerat(ddata("OPD_JenisSat")) %></option>
                                     
                                 </select>
                             </td>
                             <td>
-                                <input type="number" id="disc1" name="disc1" class="form-control " value="<%= data("OPD_Disc1") %>" required>
+                                <input type="number" id="disc1" name="disc1" class="form-control " value="<%= ddata("OPD_Disc1") %>" required>
                             </td>
                             <td>
-                                <input type="number" id="disc2" name="disc2" class="form-control" value="<%= data("OPD_Disc2") %>" required>
+                                <input type="number" id="disc2" name="disc2" class="form-control" value="<%= ddata("OPD_Disc2") %>" required>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                <a href="aktifd.asp?id=<%= ddata("OPD_OPHID") %>" class="btn badge text-bg-danger btn-purce2">Delete</a>
+                            </div>
                             </td>
                         </tr>
                         <% 
-                        data.movenext
+                        ddata.movenext
                         loop
                         %>
                     </tbody>

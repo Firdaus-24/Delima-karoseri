@@ -166,12 +166,12 @@
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
 
-                    data_cmd.commandText = "SELECT SUM(dbo.DLK_T_Memo_D.memoHarga * dbo.DLK_T_Memo_D.memoQtty) As tharga FROM dbo.DLK_T_Memo_H INNER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) WHERE (dbo.DLK_T_Memo_H.memoID = '"& rs("memoID") &"') AND DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_D.memoAktifYn = 'Y'"
+                    data_cmd.commandText = "SELECT SUM(dbo.DLK_T_Memo_D.memoHarga * dbo.DLK_T_Memo_D.memoQtty) As tharga FROM dbo.DLK_T_Memo_H RIGHT OUTER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) WHERE (dbo.DLK_T_Memo_H.memoID = '"& rs("memoID") &"') AND DLK_T_Memo_H.memoAktifYN = 'Y'"
                     set ddata = data_cmd.execute
 
                     ' cek approve finance
                     
-                    data_cmd.commandText = "SELECT DLK_T_AppPermintaan.appID, DLK_T_AppPermintaan.appDana, SUM(dbo.DLK_T_Memo_D.memoHarga * dbo.DLK_T_Memo_D.memoQtty) As tharga FROM dbo.DLK_T_Memo_H INNER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = dbo.DLK_T_Memo_D.memoID LEFT OUTER JOIN DLK_T_appPermintaan ON DLK_T_Memo_H.memoID = DLK_T_AppPermintaan.AppMemoID WHERE (dbo.DLK_T_AppPermintaan.AppmemoID = '"& rs("memoID") &"') AND DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_D.memoAktifYn = 'Y' AND DLK_T_AppPermintaan.AppAktifYN = 'Y' group by DLK_T_AppPermintaan.appID, DLK_T_AppPermintaan.appDana"
+                    data_cmd.commandText = "SELECT DLK_T_AppPermintaan.appID, DLK_T_AppPermintaan.appDana, SUM(dbo.DLK_T_Memo_D.memoHarga * dbo.DLK_T_Memo_D.memoQtty) As tharga FROM dbo.DLK_T_Memo_H RIGHT OUTER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = left(dbo.DLK_T_Memo_D.memoID,17) LEFT OUTER JOIN DLK_T_appPermintaan ON DLK_T_Memo_H.memoID = DLK_T_AppPermintaan.AppMemoID WHERE (dbo.DLK_T_AppPermintaan.AppmemoID = '"& rs("memoID") &"') AND DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_AppPermintaan.AppAktifYN = 'Y' group by DLK_T_AppPermintaan.appID, DLK_T_AppPermintaan.appDana"
                     ' response.write data_cmd.commandText & "<br>"
                     set app = data_cmd.execute
                     %>

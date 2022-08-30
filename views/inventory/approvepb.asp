@@ -165,7 +165,7 @@
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
 
-                    data_cmd.commandText = "SELECT ISNULL(SUM(ISNULL(dbo.DLK_T_Memo_D.memoHarga,0) * ISNULL(dbo.DLK_T_Memo_D.memoQtty,0)),0) AS tharga FROM dbo.DLK_T_Memo_H INNER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) WHERE (dbo.DLK_T_Memo_H.memoID = '"& rs("memoID") &"') AND DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_D.memoAktifYn = 'Y'"
+                    data_cmd.commandText = "SELECT ISNULL(SUM(ISNULL(dbo.DLK_T_Memo_D.memoHarga,0) * ISNULL(dbo.DLK_T_Memo_D.memoQtty,0)),0) AS tharga FROM dbo.DLK_T_Memo_H INNER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) WHERE (dbo.DLK_T_Memo_H.memoID = '"& rs("memoID") &"') AND DLK_T_Memo_H.memoAktifYN = 'Y'"
                     set ddata = data_cmd.execute
                     %>
                     <tr>

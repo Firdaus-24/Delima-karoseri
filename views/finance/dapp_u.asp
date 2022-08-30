@@ -12,7 +12,7 @@
     set data = data_cmd.execute
 
     ' tpermintaan
-    data_cmd.commandText = "SELECT SUM(dbo.DLK_T_Memo_D.memoHarga * dbo.DLK_T_Memo_D.memoQtty) As tharga FROM dbo.DLK_T_Memo_H INNER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) WHERE (dbo.DLK_T_Memo_H.memoID = '"& data("appMemoID") &"') AND DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_D.memoAktifYn = 'Y'"
+    data_cmd.commandText = "SELECT SUM(dbo.DLK_T_Memo_D.memoHarga * dbo.DLK_T_Memo_D.memoQtty) As tharga FROM dbo.DLK_T_Memo_H RIGHT OUTER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) WHERE (dbo.DLK_T_Memo_H.memoID = '"& data("appMemoID") &"') AND DLK_T_Memo_H.memoAktifYN = 'Y'"
     
     set ddata = data_cmd.execute
 
@@ -43,7 +43,7 @@
                             <label for="tgl" class="col-form-label">Tanggal</label>
                         </div>
                         <div class="col-sm-3 mb-3">
-                            <input type="text" id="tgl" class="form-control" name="tgl" autocomplete="off" onfocus="(this.type='date')" value="<%= data("appTgl") %>" required>
+                            <input type="text" id="tgl" class="form-control" name="tgl" autocomplete="off" onfocus="(this.type='date')" value="<%= cdate(data("appTgl")) %>" required>
                         </div>
                     </div>
                     <div class="row">

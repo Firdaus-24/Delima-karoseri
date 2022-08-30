@@ -6,7 +6,7 @@
     data_cmd.ActiveConnection = mm_delima_string
 
 
-    data_cmd.commandText = "SELECT dbo.DLK_T_AppPermintaan.AppID, dbo.DLK_T_AppPermintaan.Appdana, dbo.DLK_T_Memo_D.memoID, dbo.DLK_T_Memo_D.memoItem, dbo.DLK_T_Memo_D.memoSpect, dbo.DLK_T_Memo_D.memoQtty, dbo.DLK_T_Memo_D.memoSatuan, dbo.DLK_T_Memo_D.memoHarga,dbo.DLK_T_Memo_D.memoKeterangan, DLK_M_Barang.Brg_Nama FROM DLK_T_Memo_D LEFT OUTER JOIN dbo.DLK_T_AppPermintaan ON left(dbo.DLK_T_Memo_D.memoID,17) = dbo.DLK_T_AppPermintaan.AppMemoID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.Memoitem = DLK_M_Barang.Brg_ID WHERE dbo.DLK_T_AppPermintaan.AppmemoID = '"& id &"' AND DLK_T_Memo_D.memoAktifYN = 'Y'"
+    data_cmd.commandText = "SELECT dbo.DLK_T_AppPermintaan.AppID, dbo.DLK_T_AppPermintaan.Appdana, dbo.DLK_T_Memo_D.memoID, dbo.DLK_T_Memo_D.memoItem, dbo.DLK_T_Memo_D.memoSpect, dbo.DLK_T_Memo_D.memoQtty, dbo.DLK_T_Memo_D.memoSatuan, dbo.DLK_T_Memo_D.memoHarga,dbo.DLK_T_Memo_D.memoKeterangan, DLK_M_Barang.Brg_Nama FROM DLK_T_Memo_D LEFT OUTER JOIN dbo.DLK_T_AppPermintaan ON left(dbo.DLK_T_Memo_D.memoID,17) = dbo.DLK_T_AppPermintaan.AppMemoID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.Memoitem = DLK_M_Barang.Brg_ID WHERE dbo.DLK_T_AppPermintaan.AppmemoID = '"& id &"'"
     ' response.write data_cmd.commandText & "<br>"
     set data = data_cmd.execute
 
@@ -49,7 +49,7 @@
                 <label for="tgl" class="col-form-label">Tanggal</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="date" id="tgl" name="tgl" class="form-control" required>
+                <input type="text" id="tgl" name="tgl" value="<%= date %>" onfocus="(this.type='date')" class="form-control" required>
             </div>
         </div>
         <div class="row align-items-center">

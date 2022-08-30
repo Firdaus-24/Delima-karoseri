@@ -114,13 +114,12 @@
                         <th scope="col">Satuan</th>
                         <th scope="col">Harga</th>
                         <th scope="col">Keterangan</th>
-                        <th scope="col">Aktif</th>
                         <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% 
-                    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_Id FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' AND memoAktifYN = 'Y' ORDER BY memoItem ASC"
+                    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_Id FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
                     ' response.write data_cmd.commandText
                     set dataD = data_cmd.execute
 
@@ -128,7 +127,6 @@
                     do while not dataD.eof
                     no = no + 1
 
-                    strid = dataD("memoID")&","&dataD("Brg_Id") &","& dataD("memoSpect") &","& dataD("memoQtty") &","& dataD("memoSatuan") &","& dataD("memoHarga") &","& dataD("memoKeterangan")
                     %>
                         <tr>
                             <th scope="row"><%= no %></th>
@@ -140,11 +138,8 @@
                             <td>
                                     <%= dataD("memoKeterangan") %>
                             </td>
-                            <td>
-                                <%if dataD("memoAktifYN") = "Y" then%>Aktif <% else %>Off <% end if %>
-                            </td>
                             <td class="text-center">
-                                <a href="aktifapprovepb.asp?id=<%= strid %>" class="btn badge text-bg-danger btn-aktifdpbarang">delete</a>
+                                <a href="aktifapprovepb.asp?id=<%= dataD("memoID") %>" class="btn badge text-bg-danger btn-aktifdpbarang">delete</a>
                             </td>
                         </tr>
                     <% 
@@ -259,14 +254,29 @@
         set data_cmd =  Server.CreateObject ("ADODB.Command")
         data_cmd.ActiveConnection = mm_delima_string
 
-        data_cmd.commandTExt = "SELECT * FROM DLK_T_Memo_D WHERE memoID = '"& memoid &"' AND memoItem = '"& brg &"' AND memoAktifYN = 'Y'"
+        data_cmd.commandTExt = "SELECT * FROM DLK_T_Memo_D WHERE left(memoID,17) = '"& memoid &"' AND memoItem = '"& brg &"'"
         ' response.write data_cmd.commandText & "<br>"
         set data = data_cmd.execute
 
-        if data.eof then
-            data_cmd.commandText = "INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoHarga, memoKeterangan, memoAktifYN) VALUES ( '"& memoid &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"', "& harga &",'"& ket &"','Y')"
-                ' response.write data_cmd.commandText & "<br>"
-            data_cmd.execute
+            if data.eof then
+            data_cmd.commandTExt = "SELECT TOP 1 (right(memoID,3)) + 1 AS urut FROM DLK_T_Memo_D WHERE left(memoID,17) = '"& memoid &"' order by memoID desc"
+            ' response.write data_cmd.commandText & "<br>"
+            set p = data_cmd.execute
+
+            nol = "000"
+                if p.eof then   
+                    data_cmd.commandTExt = "SELECT (COUNT(memoID)) + 1 AS urut FROM DLK_T_Memo_D WHERE left(memoID,17) = '"& memoid &"'"
+                    ' response.write data_cmd.commandText & "<br>"
+                    set a = data_cmd.execute
+
+                    iddetail = memoid & right(nol & a("urut"),3)
+
+                    call query("INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoHarga, memoKeterangan) VALUES ( '"& iddetail &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"', "& harga &",'"& ket &"')")
+                else
+                    iddetail = memoid & right(nol & p("urut"),3)
+
+                    call query("INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoHarga, memoKeterangan) VALUES ( '"& iddetail &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"', "& harga &",'"& ket &"')")
+                end if
             value = 1
         else
             value = 2
