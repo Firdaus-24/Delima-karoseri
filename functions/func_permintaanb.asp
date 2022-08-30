@@ -45,14 +45,21 @@ sub tambahdetailPBarang ()
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandTExt = "SELECT * FROM DLK_T_Memo_D WHERE memoID = '"& memoid &"' AND memoItem = '"& brg &"' AND memoAktifYN = 'Y'"
+    data_cmd.commandTExt = "SELECT * FROM DLK_T_Memo_D WHERE left(memoID,17) = '"& memoid &"' AND memoItem = '"& brg &"'"
     ' response.write data_cmd.commandText & "<br>"
     set data = data_cmd.execute
 
     if data.eof then
-        data_cmd.commandText = "INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoHarga, memoKeterangan, memoAktifYN) VALUES ( '"& memoid &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"', "& harga &",'"& ket &"','Y')"
-            ' response.write data_cmd.commandText & "<br>"
-        data_cmd.execute
+        data_cmd.commandTExt = "SELECT (COUNT(memoID)) + 1 AS urut FROM DLK_T_Memo_D WHERE left(memoID,17) = '"& memoid &"'"
+        ' response.write data_cmd.commandText & "<br>"
+        set p = data_cmd.execute
+
+        nol = "000"
+
+        iddetail = memoid & right(nol & p("urut"),3)
+
+        call query("INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoHarga, memoKeterangan) VALUES ( '"& iddetail &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"', "& harga &",'"& ket &"')")
+
         value = 1
     else
         value = 2
@@ -67,7 +74,7 @@ sub tambahdetailPBarang ()
     end if
 
 end sub
-sub tambahdetailPBarang ()
+sub updatedetailPBarang ()
     memoid = trim(Request.Form("memoid"))
     brg = trim(Request.Form("brg"))
     spect = trim(Request.Form("spect"))
@@ -79,14 +86,29 @@ sub tambahdetailPBarang ()
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandTExt = "SELECT * FROM DLK_T_Memo_D WHERE memoID = '"& memoid &"' AND memoItem = '"& brg &"' AND memoAktifYN = 'Y'"
+    data_cmd.commandTExt = "SELECT * FROM DLK_T_Memo_D WHERE left(memoID,17) = '"& memoid &"' AND memoItem = '"& brg &"' "
     ' response.write data_cmd.commandText & "<br>"
     set data = data_cmd.execute
 
     if data.eof then
-        data_cmd.commandText = "INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoHarga, memoKeterangan, memoAktifYN) VALUES ( '"& memoid &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"', "& harga &",'"& ket &"','Y')"
-            ' response.write data_cmd.commandText & "<br>"
-        data_cmd.execute
+        data_cmd.commandTExt = "SELECT TOP 1 (right(memoID,3)) + 1 AS urut FROM DLK_T_Memo_D WHERE left(memoID,17) = '"& memoid &"' order by memoID desc"
+        ' response.write data_cmd.commandText & "<br>"
+        set p = data_cmd.execute
+
+        nol = "000"
+            if p.eof then   
+                data_cmd.commandTExt = "SELECT (COUNT(memoID)) + 1 AS urut FROM DLK_T_Memo_D WHERE left(memoID,17) = '"& memoid &"'"
+                ' response.write data_cmd.commandText & "<br>"
+                set a = data_cmd.execute
+
+                iddetail = memoid & right(nol & a("urut"),3)
+
+                call query("INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoHarga, memoKeterangan) VALUES ( '"& iddetail &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"', "& harga &",'"& ket &"')")
+            else
+                iddetail = memoid & right(nol & p("urut"),3)
+
+                call query("INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoHarga, memoKeterangan) VALUES ( '"& iddetail &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"', "& harga &",'"& ket &"')")
+            end if
         value = 1
     else
         value = 2

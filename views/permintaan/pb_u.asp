@@ -114,21 +114,18 @@
                         <th scope="col">Satuan</th>
                         <th scope="col">Harga</th>
                         <th scope="col">Keterangan</th>
-                        <th scope="col">Aktif</th>
                         <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% 
-                    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_Id FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' AND memoAktifYN = 'Y' ORDER BY memoItem ASC"
+                    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_Id FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY memoItem ASC"
                     ' response.write data_cmd.commandText
                     set dataD = data_cmd.execute
 
                     no = 0
                     do while not dataD.eof
                     no = no + 1
-
-                    strid = dataD("memoID")&","&dataD("Brg_Id") &","& dataD("memoSpect") &","& dataD("memoQtty") &","& dataD("memoSatuan") &","& dataD("memoHarga") &","& dataD("memoKeterangan")
                     %>
                         <tr>
                             <th scope="row"><%= no %></th>
@@ -140,11 +137,8 @@
                             <td>
                                     <%= dataD("memoKeterangan") %>
                             </td>
-                            <td>
-                                <%if dataD("memoAktifYN") = "Y" then%>Aktif <% else %>Off <% end if %>
-                            </td>
                             <td class="text-center">
-                                <a href="aktif.asp?id=<%= strid %>" class="btn badge text-bg-danger btn-aktifdpbarang">delete</a>
+                                <a href="aktif.asp?id=<%= dataD("memoID") %>" class="btn badge text-bg-danger btn-aktifdpbarang">delete</a>
                             </td>
                         </tr>
                     <% 
@@ -165,7 +159,7 @@
         <h5 class="modal-title" id="modalpbLabel">Rincian Barang</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-    <form action="pbd_add.asp?id=<%= id %>" method="post">
+    <form action="pb_u.asp?id=<%= id %>" method="post">
         <input type="hidden" name="memoid" id="memoid" value="<%= id %>">
       <div class="modal-body">
          <div class="row">
@@ -248,7 +242,7 @@
 
 <% 
     if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
-        call tambahdetailPBarang()
+        call updatedetailPBarang()
     end if
     call footer()
 %>

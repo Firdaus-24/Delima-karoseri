@@ -37,7 +37,7 @@
                     <label for="tgl" class="col-form-label">Tanggal PO</label>
                 </div>
                 <div class="col-sm-3 mb-3">
-                    <input type="date" id="tgl" class="form-control" name="tgl" required>
+                    <input type="text" id="tgl" class="form-control" name="tgl" value="<%= Date() %>" onfocus="(this.type='date')" required>
                 </div>
             </div>
             <div class="row">

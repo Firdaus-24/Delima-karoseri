@@ -9,12 +9,6 @@
     data_cmd.commandText = "SELECT * FROM DLK_T_Memo_H WHERE memoID = '"& id &"' and memoAktifYN = 'Y'"
     ' response.write data_cmd.commandText
     set dataH = data_cmd.execute
-    ' get satuan
-    data_cmd.commandText = "SELECT sat_Nama, sat_ID FROM DLK_M_satuanBarang WHERE sat_AktifYN = 'Y' ORDER BY sat_Nama ASC"
-    set psatuan = data_cmd.execute    
-    ' get all barang
-    data_cmd.commandText = "SELECT Brg_ID, Brg_Nama FROM DLK_M_Barang WHERE Brg_AktifYN = 'Y' ORDER BY Brg_Nama ASC"
-    set barang = data_cmd.execute
 %>
 <% call header("Detail Permintaan Barang") %>
 <!--#include file="../../navbar.asp"-->
@@ -122,13 +116,12 @@
                         <th scope="col">Satuan</th>
                         <th scope="col">Harga</th>
                         <th scope="col">Keterangan</th>
-                        <th scope="col">Aktif</th>
                         <th scope="col" class="text-center">Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% 
-                    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' AND memoAktifYN = 'Y' ORDER BY memoItem ASC"
+                    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY memoItem ASC"
                     ' response.write data_cmd.commandText
                     set dataD = data_cmd.execute
 
@@ -147,9 +140,6 @@
                                 <%if dataD("memoKeterangan") <> "null" then%>
                                     <%= dataD("memoKeterangan") %>
                                 <% end if %>
-                            </td>
-                            <td>
-                                <%if dataD("memoAktifYN") = "Y" then%>Aktif <% else %>Off <% end if %>
                             </td>
                             <td  class="text-center">
                                 <% if dataH("memoApproveYN") = "Y" then %>

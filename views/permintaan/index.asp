@@ -163,6 +163,10 @@
                     recordcounter = requestrecords
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
+
+                    ' cek data detail
+                    agen_cmd.commandText = "SELECT memoID FROM DLK_T_Memo_D WHERE Left(memoID,17) = '"& rs("memoID") &"'"
+                    set ddetail = agen_cmd.execute
                     %>
                     <tr>
                         <th scope="row"><%= recordcounter %></th>
@@ -181,7 +185,9 @@
                                 <a href="detailpb.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-warning">Detail</a>
                             <% if rs("memoApproveYN") = "N" then %>
                                 <a href="pb_u.asp?id=<%= rs("memoID") %>" class="btn badge btn-primary btn-sm">Update</a>
+                                <% if ddetail.eof then%>
                                 <a href="haktif.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-danger btn-aktifpbarang">delete</a>
+                                <% end if %>
                             <% end if %>
                             </div>
                         </td>

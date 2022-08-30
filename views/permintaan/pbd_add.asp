@@ -114,12 +114,11 @@
                         <th scope="col">Satuan</th>
                         <th scope="col">Harga</th>
                         <th scope="col">Keterangan</th>
-                        <th scope="col">Aktif</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% 
-                    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' AND memoAktifYN = 'Y' ORDER BY memoItem ASC"
+                    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY memoItem ASC"
                     ' response.write data_cmd.commandText
                     set dataD = data_cmd.execute
 
@@ -138,9 +137,6 @@
                                 <%if dataD("memoKeterangan") <> "null" then%>
                                     <%= dataD("memoKeterangan") %>
                                 <% end if %>
-                            </td>
-                            <td>
-                                <%if dataD("memoAktifYN") = "Y" then%>Aktif <% else %>Off <% end if %>
                             </td>
                         </tr>
                     <% 
