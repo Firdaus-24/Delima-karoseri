@@ -19,6 +19,5 @@
   <script src="../../public/js/purches.js"></script>
   <script src="../../public/js/faktur.js"></script>
   <script src="../../public/js/customer.js"></script>
-  <script src="../../public/js/outgoing.js"></script>
   <script src="../../public/js/inventory.js"></script>
 </html>

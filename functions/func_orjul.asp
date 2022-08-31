@@ -49,19 +49,37 @@
         disc1 = trim(Request.Form("disc1"))
         disc2 = trim(Request.Form("disc2"))
         qtyorjul = trim(Request.Form("qtyorjul"))
+        nol = "000"
         
         arydata = Split(ckdorjul, ",")
 
         set data_cmd =  Server.CreateObject ("ADODB.Command")
         data_cmd.ActiveConnection = mm_delima_string
 
-        data_cmd.commandText = "SELECT * FROM DLK_T_OrJulD WHERE OJD_OJHID = '"& trim(arydata(0)) &"' AND OJD_OPHID = '"& trim(arydata(1)) &"' AND OJD_item = '"& trim(arydata(2)) &"' AND OJD_Harga = '"& trim(arydata(3)) &"' AND OJD_JenisSat = '"& trim(arydata(4)) &"' AND OJD_AktifYN = 'Y'"
+        data_cmd.commandText = "SELECT * FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& trim(arydata(0)) &"' AND OJD_item = '"& trim(arydata(2)) &"'"
         ' response.write data_cmd.commandText & "<br>"
         set orjul = data_cmd.execute
 
         if orjul.eof then
-            call query("INSERT INTO DLK_T_OrjulD (OJD_OJHID,OJD_Item,OJD_QtySatuan,OJD_Harga,OJD_JenisSat,OJD_Disc1,OJD_Disc2,OJD_OPHID,OJD_AktifYN) VALUES ('"& trim(arydata(0)) &"', '"& trim(arydata(2)) &"', "& qtyorjul &", '"& trim(arydata(3)) &"', '"& trim(arydata(4)) &"', "& disc1 &", "& disc2 &", '"& trim(arydata(1)) &"' ,'Y')")
+            data_cmd.commandText = "SELECT TOP 1 (right(OJD_OJHID,3)) + 1 AS urut FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& trim(arydata(0)) &"' ORDER BY OJD_OJHID DESC"
 
+            set a = data_cmd.execute
+
+            if a.eof then
+                data_cmd.commandText = "SELECT (COUNT(OJD_OJHID)) + 1 AS urut FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& trim(arydata(0)) &"'"
+
+                set p = data_cmd.execute
+
+                iddetail = trim(arydata(0)) & right(nol & p("urut"),3)
+
+                call query("INSERT INTO DLK_T_OrjulD (OJD_OJHID,OJD_Item,OJD_QtySatuan,OJD_Harga,OJD_JenisSat,OJD_Disc1,OJD_Disc2,OJD_IPDIPHID) VALUES ('"& iddetail &"', '"& trim(arydata(2)) &"', "& qtyorjul &", '"& trim(arydata(3)) &"', '"& trim(arydata(4)) &"', "& disc1 &", "& disc2 &", '"& trim(arydata(1)) &"')")
+
+            else
+                iddetail = trim(arydata(0)) & right(nol & a("urut"),3)
+
+                call query("INSERT INTO DLK_T_OrjulD (OJD_OJHID,OJD_Item,OJD_QtySatuan,OJD_Harga,OJD_JenisSat,OJD_Disc1,OJD_Disc2,OJD_IPDIPHID) VALUES ('"& iddetail &"', '"& trim(arydata(2)) &"', "& qtyorjul &", '"& trim(arydata(3)) &"', '"& trim(arydata(4)) &"', "& disc1 &", "& disc2 &", '"& trim(arydata(1)) &"')")
+
+            end if
             value = 1 'case untuk insert data
         else
             value = 2 'case jika gagal insert 
@@ -81,19 +99,37 @@
         disc1 = trim(Request.Form("disc1"))
         disc2 = trim(Request.Form("disc2"))
         qtyorjul = trim(Request.Form("qtyorjul"))
+        nol = "000"
         
         arydata = Split(ckdorjul, ",")
 
         set data_cmd =  Server.CreateObject ("ADODB.Command")
         data_cmd.ActiveConnection = mm_delima_string
 
-        data_cmd.commandText = "SELECT * FROM DLK_T_OrJulD WHERE OJD_OJHID = '"& trim(arydata(0)) &"' AND OJD_OPHID = '"& trim(arydata(1)) &"' AND OJD_item = '"& trim(arydata(2)) &"' AND OJD_Harga = '"& trim(arydata(3)) &"' AND OJD_JenisSat = '"& trim(arydata(4)) &"' AND OJD_AktifYN = 'Y'"
+        data_cmd.commandText = "SELECT * FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& trim(arydata(0)) &"' AND OJD_item = '"& trim(arydata(2)) &"'"
         ' response.write data_cmd.commandText & "<br>"
         set orjul = data_cmd.execute
 
         if orjul.eof then
-            call query("INSERT INTO DLK_T_OrjulD (OJD_OJHID,OJD_Item,OJD_QtySatuan,OJD_Harga,OJD_JenisSat,OJD_Disc1,OJD_Disc2,OJD_OPHID,OJD_AktifYN) VALUES ('"& trim(arydata(0)) &"', '"& trim(arydata(2)) &"', "& qtyorjul &", '"& trim(arydata(3)) &"', '"& trim(arydata(4)) &"', "& disc1 &", "& disc2 &", '"& trim(arydata(1)) &"' ,'Y')")
+            data_cmd.commandText = "SELECT TOP 1 (right(OJD_OJHID,3)) + 1 AS urut FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& trim(arydata(0)) &"' ORDER BY OJD_OJHID DESC"
 
+            set a = data_cmd.execute
+
+            if a.eof then
+                data_cmd.commandText = "SELECT (COUNT(OJD_OJHID)) + 1 AS urut FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& trim(arydata(0)) &"'"
+
+                set p = data_cmd.execute
+
+                iddetail = trim(arydata(0)) & right(nol & p("urut"),3)
+
+                call query("INSERT INTO DLK_T_OrjulD (OJD_OJHID,OJD_Item,OJD_QtySatuan,OJD_Harga,OJD_JenisSat,OJD_Disc1,OJD_Disc2,OJD_IPDIPHID) VALUES ('"& iddetail &"', '"& trim(arydata(2)) &"', "& qtyorjul &", '"& trim(arydata(3)) &"', '"& trim(arydata(4)) &"', "& disc1 &", "& disc2 &", '"& trim(arydata(1)) &"')")
+
+            else
+                iddetail = trim(arydata(0)) & right(nol & a("urut"),3)
+
+                call query("INSERT INTO DLK_T_OrjulD (OJD_OJHID,OJD_Item,OJD_QtySatuan,OJD_Harga,OJD_JenisSat,OJD_Disc1,OJD_Disc2,OJD_IPDIPHID) VALUES ('"& iddetail &"', '"& trim(arydata(2)) &"', "& qtyorjul &", '"& trim(arydata(3)) &"', '"& trim(arydata(4)) &"', "& disc1 &", "& disc2 &", '"& trim(arydata(1)) &"')")
+
+            end if
             value = 1 'case untuk insert data
         else
             value = 2 'case jika gagal insert 

@@ -184,6 +184,10 @@
                     recordcounter = requestrecords
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
+
+                    data_cmd.commandText = "SELECT OJD_OJHID FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& rs("OJH_ID") &"'"
+
+                    set ddata = data_cmd.execute
                     %>
                         <tr><TH><%= recordcounter %></TH>
                         <th><%= rs("OJH_ID") %></th>
@@ -203,7 +207,9 @@
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <a href="detailorjul.asp?id=<%= rs("OJH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
                                 <a href="orjul_u.asp?id=<%= rs("OJH_ID") %>" class="btn badge text-bg-primary" >Update</a>
+                                <% if ddata.eof then %>
                                 <a href="aktiforjulh.asp?id=<%= rs("OJH_ID") %>" class="btn badge text-bg-danger btn-orjual">Delete</a>
+                                <% end if %>
                             </div>
                         </td>
                     </tr>

@@ -9,14 +9,13 @@
 
     data_cmd.commandText = "SELECT DLK_T_OrJulH.*, GLB_M_Agen.Agenname, GLB_M_Agen.AgenID, DLK_M_Customer.CustID, DLK_M_Customer.custNama FROM DLK_T_OrJulH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_OrJulH.OJH_AgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Customer ON DLK_T_OrJulH.OJH_CustID = DLK_M_Customer.CustID WHERE OJH_ID = '"& id &"' AND OJH_AktifYN = 'Y'"
     set data = data_cmd.execute
-
     ' get data stok
-    data_cmd.commandText = "SELECT dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_Date, ISNULL(dbo.DLK_T_InvPemD.IPD_QtySatuan, 0) AS qty1, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_JenisSat, dbo.DLK_M_Barang.Brg_Id,dbo.DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_InvPemH RIGHT OUTER JOIN dbo.DLK_T_InvPemD LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_InvPemD.IPD_Item = dbo.DLK_M_Barang.Brg_Id ON dbo.DLK_T_InvPemH.IPH_ID = dbo.DLK_T_InvPemD.IPD_IphID WHERE (dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y') AND (dbo.DLK_T_InvPemD.IPD_AktifYN = 'Y') AND dbo.DLK_T_InvPemH.IPH_agenid = '"& data("agenID") &"' ORDER BY dbo.DLK_T_InvPemH.IPH_Date"
+    data_cmd.commandText = "SELECT dbo.DLK_M_Barang.Brg_Id, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_AktifYN, isnull(dbo.DLK_T_InvPemD.IPD_QtySatuan,0) - isnull(dbo.DLK_T_InvJulD.IJD_QtySatuan,0) as stok, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_JenisSat, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_AktifYN FROM  dbo.DLK_T_InvPemD LEFT OUTER JOIN dbo.DLK_T_InvJulD ON dbo.DLK_T_InvJulD.IJD_IPDIPHID = dbo.DLK_T_InvPemD.IPD_IphID LEFT OUTER JOIN dbo.DLK_T_InvPemH ON LEFT(dbo.DLK_T_InvPemD.IPD_IphID,13) = dbo.DLK_T_InvPemH.IPH_ID LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_InvPemD.IPD_Item = dbo.DLK_M_Barang.Brg_Id WHERE (dbo.DLK_M_Barang.Brg_AktifYN = 'Y') AND (dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y') AND isnull(dbo.DLK_T_InvPemD.IPD_QtySatuan,0) > isnull(dbo.DLK_T_InvJulD.IJD_QtySatuan,0) AND dbo.DLK_T_InvPemH.IPH_AgenId = '"& data("OJH_AgenID") &"' AND isnull(dbo.DLK_T_InvPemD.IPD_QtySatuan,0) - isnull(dbo.DLK_T_InvJulD.IJD_QtySatuan,0) > 0 OR isnull(dbo.DLK_T_InvPemD.IPD_QtySatuan,0) - isnull(dbo.DLK_T_InvJulD.IJD_QtySatuan,0) <> 0 ORDER BY dbo.DLK_T_InvPemH.IPH_Date"
 
     set getstok = data_cmd.execute
 
     ' get detail 
-    data_cmd.commandText = "SELECT DLK_T_OrjulD.*, DLK_M_Barang.Brg_Nama, DLK_M_SatuanBarang.Sat_Nama FROM DLK_T_OrjulD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrjulD.OJD_Item = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_SatuanBarang ON DLK_T_OrjulD.OJD_JenisSat = DLK_M_SatuanBarang.Sat_ID WHERE OJD_OJHID = '"& data("OJH_ID") &"' AND OJD_AktifYN = 'Y' ORDER BY DLK_M_Barang.Brg_Nama ASC"
+    data_cmd.commandText = "SELECT DLK_T_OrjulD.*, DLK_M_Barang.Brg_Nama, DLK_M_SatuanBarang.Sat_Nama FROM DLK_T_OrjulD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrjulD.OJD_Item = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_SatuanBarang ON DLK_T_OrjulD.OJD_JenisSat = DLK_M_SatuanBarang.Sat_ID WHERE LEFT(OJD_OJHID,13) = '"& data("OJH_ID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
     set dorjul = data_cmd.execute
     
     call header("Detail OrderJual")
@@ -147,48 +146,37 @@
       </div>
       <form action="orjuld_add.asp?id=<%= id %>" method="post" id="rincianOrjul">
         <div class="modal-body modalBodyOrjul">
-
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Tanggal</th>
-                        <th scope="col">Barang</th>
-                        <th scope="col">Stok</th>
-                        <th scope="col">Harga</th>
-                        <th scope="col">Pilih</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <%
-                    do while not getstok.eof 
-                    ' query penjualan 
-                    data_cmd.commandText = "SELECT dbo.DLK_T_InvJulD.IJD_QtySatuan FROM dbo.DLK_T_InvJulD LEFT OUTER JOIN dbo.DLK_T_InvJulH ON dbo.DLK_T_InvJulD.IJD_IJHID = dbo.DLK_T_InvJulH.IJH_ID WHERE dbo.DLK_T_InvJulD.IJD_AktifYN = 'Y' AND dbo.DLK_T_InvJulH.IJH_AktifYN = 'Y' AND dbo.DLK_T_InvJulD.IJD_IPHID = '"& getstok("IPH_ID") &"' AND dbo.DLK_T_InvJulD.IJD_item = '"& getstok("Brg_ID") &"'"
-                    ' response.write data_cmd.commandText & "<br>"
-                    set p = data_cmd.execute
-                    ' stok value
-                    if not p.eof then 
-                        stok = getstok("qty1") - p("IJD_qtysatuan")
-                    else    
-                        stok = getstok("qty1")
-                    end if
-                    %>
-                    <tr>
-                        <th scope="row"><%= Cdate(getstok("IPH_Date")) %></th>
-                        <td><%= getstok("Brg_Nama") %></td>
-                        <td><%= stok %></td>
-                        <td><%= replace(formatCurrency(getstok("IPD_Harga")),"$","") %></td>
-                        <td class="text-center">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="ckdorjul" id="ckdorjul" value="<%= data("OJH_ID") &","& getstok("IPH_ID") &","& getstok("Brg_ID") &","& getstok("IPD_Harga") &","& getstok("IPD_JenisSat") &","& stok %>"  required>
-                            </div>
-                        </td>
-                    </tr>
-                    <% 
-                    getstok.movenext
-                    loop
-                    %>
-                <tbody>
-            </table>
+            <div class="tablestokpo" style="height: 20em;overflow-y:auto;margin-bottom:20px">
+                <table class="table">
+                    <thead class="bg-secondary text-light">
+                        <tr>
+                            <th scope="col">Tanggal</th>
+                            <th scope="col">Barang</th>
+                            <th scope="col">Stok</th>
+                            <th scope="col">Harga</th>
+                            <th scope="col">Pilih</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%do while not getstok.eof %>
+                        <tr>
+                            <th scope="row"><%= Cdate(getstok("IPH_Date")) %></th>
+                            <td><%= getstok("Brg_Nama") %></td>
+                            <td><%= getstok("stok") %></td>
+                            <td><%= replace(formatCurrency(getstok("IPD_Harga")),"$","") %></td>
+                            <td class="text-center">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="ckdorjul" id="ckdorjul" value="<%= data("OJH_ID") &","& getstok("IPH_ID") &","& getstok("Brg_ID") &","& getstok("IPD_Harga") &","& getstok("IPD_JenisSat") &","& getstok("stok") %>"  required>
+                                </div>
+                            </td>
+                        </tr>
+                        <% 
+                        getstok.movenext
+                        loop
+                        %>
+                    <tbody>
+                </table>
+            </div>
             <input type="hidden" id="fqty" name="fqty"> <!-- getstok lama -->
             <div class="row">
                 <div class="col-lg-2 mb-3">
@@ -223,7 +211,6 @@
   </div>
 </div>
 
-
 <% 
     if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
         call detailOrjul()
@@ -231,3 +218,4 @@
     
     call footer()
 %>
+<script src="../../public/js/outgoing.js"></script>

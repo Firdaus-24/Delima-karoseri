@@ -47,10 +47,11 @@ $(document).ready(function(){
     })
 
     // get stok barang
-    $("input[name='ckdorjul']").change(function(){
+    $("input[name='ckdorjul']").click(function(){
         const str =  $("input[name='ckdorjul']:checked").val()
         const pieces = str.split(/[\s,]+/)
         const last = pieces[pieces.length - 1]
+        
         $("#fqty").val(last)       
         $("#qtyorjul").val('')
     })

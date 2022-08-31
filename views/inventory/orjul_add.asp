@@ -14,10 +14,6 @@
     data_cmd.commandText = "SELECT custNama, custID FROM DLK_M_customer WHERE custAktifYN = 'Y' ORDER BY custNama ASC"
     set customer = data_cmd.execute
 
-    ' get barang
-    data_cmd.commandText = "SELECT Brg_ID, Brg_Nama FROM DLK_M_Barang WHERE Brg_AktifYN = 'Y' ORDER BY Brg_Nama ASC"
-    set getBarang = data_cmd.execute
-
     call header("Prosess Orderjual")
 %>
 <!--#include file="../../navbar.asp"--> 
