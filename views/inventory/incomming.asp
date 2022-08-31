@@ -187,6 +187,9 @@
                     recordcounter = requestrecords
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
+
+                    data_cmd.commandTExt = "SELECT IPD_IphID FROM DLK_T_InvPemD WHERE LEFT(IPD_IphID,13) = '"& rs("IPH_ID") &"'"
+                    set p = data_cmd.execute
                     %>
                         <tr><TH><%= recordcounter %></TH>
                         <th><%= rs("IPH_ID") %></th>
@@ -206,7 +209,10 @@
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <a href="detailFaktur.asp?id=<%= rs("IPH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
                                 <a href="faktur_u.asp?id=<%= rs("IPH_ID") %>" class="btn badge text-bg-primary" >Update</a>
+
+                                <% if p.eof then %>
                                 <a href="aktifh.asp?id=<%= rs("IPH_ID") %>" class="btn badge text-bg-danger btn-fakturh">Delete</a>
+                                <% end if %>
                             </div>
                         </td>
                     </tr>

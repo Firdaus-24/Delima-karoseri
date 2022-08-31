@@ -1,12 +1,18 @@
 <!--#include file="../../init.asp"-->
 <% 
         id = Request.QueryString("id")
-        nama = Request.QueryString("nama")
+        p = Request.QueryString("p")
+        strid = left(id,13)
+
+        if p = "" then
+                p = "detailFaktur"
+        end if
+        
         call header("aktif")
  %>
 <!--#include file="../../navbar.asp"-->
 <%      
-        call query("UPDATE DLK_T_InvPemD SET IPD_AktifYN = 'N' WHERE IPD_IPHID = '"& id &"' AND IPD_Item = '"& nama &"'")
-        call alert("FAKTUR BARANG DETAIL ITEM "&nama&" ", "berhasil non aktifkan", "success","detailFaktur.asp?id="&id) 
+        call query("DELETE DLK_T_InvPemD WHERE IPD_IPHID = '"& id &"'")
+        call alert("FAKTUR BARANG DETAIL ITEM "&id&" ", "berhasil hapus", "success", p&".asp?id="&strid) 
 call footer() 
 %>

@@ -98,7 +98,7 @@
                     <label>Tanggal</label>
                 </div>
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" value="<%= data("IPH_Date") %>" readonly>
+                    <input type="text" class="form-control" value="<%= Cdate(data("IPH_Date")) %>" readonly>
                 </div>
             </div>
             <div class="row mb-3">
@@ -159,13 +159,14 @@
                         <th scope="col">Diskon1</th>
                         <th scope="col">Diskon2</th>
                         <th scope="col">Jumlah</th>
+                        <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% 
                     grantotal = 0  
 
-                    data_cmd.commandText = "SELECT DLK_T_InvPemD.*, DLK_M_Barang.Brg_Nama FROM DLK_T_InvPemD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_InvPemD.IPD_Item = DLK_M_Barang.Brg_ID WHERE IPD_IPHID = '"& data("IPH_ID") &"' AND IPD_AktifYN = 'Y' ORDER BY DLK_M_Barang.Brg_Nama ASC"
+                    data_cmd.commandText = "SELECT DLK_T_InvPemD.*, DLK_M_Barang.Brg_Nama FROM DLK_T_InvPemD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_InvPemD.IPD_Item = DLK_M_Barang.Brg_ID WHERE LEFT(IPD_IPHID,13) = '"& data("IPH_ID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
 
                     set ddata = data_cmd.execute
                     do while not ddata.eof 
@@ -210,6 +211,10 @@
                             </td>
                             <td>
                                 <%= replace(formatCurrency(realharga),"$","") %>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                <a href="aktifd.asp?id=<%= ddata("IPD_IPHID") %>&p=fakturd_add" class="btn badge text-bg-danger btn-fakturd">Delete</a>
                             </td>
                         </tr>
                     <% 

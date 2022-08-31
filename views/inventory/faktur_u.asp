@@ -8,8 +8,7 @@
     data_cmd.ActiveConnection = mm_delima_string
     
     ' get data
-    data_cmd.commandText = "SELECT dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_ophID, dbo.DLK_T_InvPemH.IPH_AgenID, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_venID, dbo.DLK_T_InvPemH.IPH_JTDate, dbo.DLK_T_InvPemH.IPH_Keterangan,dbo.DLK_T_InvPemH.IPH_DiskonAll, dbo.DLK_T_InvPemH.IPH_PPn, dbo.DLK_T_InvPemH.IPH_AktifYN, dbo.DLK_T_InvPemH.IPH_MetPem, dbo.DLK_T_InvPemD.IPD_IPHID,dbo.DLK_T_InvPemD.IPD_Item, dbo.DLK_T_InvPemD.IPD_QtySatuan, dbo.DLK_T_InvPemD.IPD_Disc1, dbo.DLK_T_InvPemD.IPD_JenisSat, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_Disc2, dbo.DLK_T_InvPemD.IPD_AktifYN, DLK_M_Barang.Brg_Nama, DLK_T_InvPemH.IPH_belanja FROM dbo.DLK_T_InvPemH INNER JOIN dbo.DLK_T_InvPemD ON dbo.DLK_T_InvPemH.IPH_ID = dbo.DLK_T_InvPemD.IPD_IPHID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_InvPemD.IPD_Item = DLK_M_Barang.Brg_ID where DLK_T_InvPemH.IPH_ID = '"& id &"' AND DLK_T_InvPemH.IPH_AktifYN = 'Y' AND DLK_T_InvPemD.IPD_AktifYN = 'Y' GROUP BY dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_ophID, dbo.DLK_T_InvPemH.IPH_AgenID, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_venID, dbo.DLK_T_InvPemH.IPH_JTDate, dbo.DLK_T_InvPemH.IPH_Keterangan,dbo.DLK_T_InvPemH.IPH_DiskonAll, dbo.DLK_T_InvPemH.IPH_PPn, dbo.DLK_T_InvPemH.IPH_AktifYN, dbo.DLK_T_InvPemH.IPH_MetPem, dbo.DLK_T_InvPemD.IPD_IPHID,dbo.DLK_T_InvPemD.IPD_Item, dbo.DLK_T_InvPemD.IPD_QtySatuan, dbo.DLK_T_InvPemD.IPD_Disc1, dbo.DLK_T_InvPemD.IPD_JenisSat, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_Disc2, dbo.DLK_T_InvPemD.IPD_AktifYN,DLK_M_Barang.Brg_Nama,DLK_T_InvPemH.IPH_belanja"
-
+    data_cmd.commandText = "SELECT dbo.DLK_T_InvPemH.* FROM dbo.DLK_T_InvPemH where DLK_T_InvPemH.IPH_ID = '"& id &"' AND DLK_T_InvPemH.IPH_AktifYN = 'Y'"
     set data = data_cmd.execute
 
     ' barang
@@ -33,6 +32,18 @@
 
     call header("Faktur Terhutang")
 %>
+<style>
+    .tableufaktur .form-control{
+        padding-top:0;
+        padding-bottom:0;
+        border:none;
+        background:transparent;
+    }
+    .tableufaktur .form-control:focus{
+        outline: none !important;
+        border:none;
+    }
+</style>
 <!--#include file="../../navbar.asp"--> 
 <div class="container">
     <div class="row">
@@ -67,7 +78,7 @@
                 <label for="tgl" class="col-form-label">Tanggal</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="text" id="tgl" name="tgl" class="form-control" value="<%= data("IPH_Date") %>" onfocus="(this.type='date')" required>
+                <input type="text" id="tgl" name="tgl" class="form-control" value="<%= Cdate(data("IPH_Date")) %>" onfocus="(this.type='date')" required>
             </div>
         </div>
         <div class="row align-items-center">
@@ -152,11 +163,10 @@
             </div>
         </div>
 
-
         <!-- detail barang -->
         <div class="row">
             <div class="col-lg-12 mb-3 mt-3">
-                <table class="table table-hover">
+                <table class="table table-hover tableufaktur">
                     <thead class="bg-secondary text-light" style="white-space: nowrap;">
                         <tr>
                             <th>Pilih</th>
@@ -166,43 +176,51 @@
                             <th>Satuan Barang</th>
                             <th>Disc1</th>
                             <th>Disc2</th>
+                            <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <% do while not data.eof %>
+                        <%
+                        data_cmd.commandTExt = "SELECT DLK_T_InvPemD.*, DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_ID FROM DLK_T_InvPemD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_InvPemD.IPD_Item = DLK_M_Barang.Brg_ID WHERE LEFT(IPD_IPHID,13) = '"& data("IPH_ID") &"'ORDER BY DLK_M_Barang.Brg_Nama ASC "
+
+                        set ddata = data_cmd.execute
+                        do while not ddata.eof %>
                         <tr>
                             <td class="text-center">
                                 <input class="form-check-input ckpo" type="checkbox" value="" id="ckpo">
                             </td>
                             <td>
                                 <select class="form-control" aria-label="Default select example" id="item" name="item" >
-                                    <option value="<%= data("IPD_Item") %>"><%= data("Brg_Nama")%></option>
+                                    <option value="<%= ddata("IPD_Item") %>"><%= ddata("Brg_Nama")%></option>
                                 </select>
                             </td>
                             <td>
-                                <input type="text" id="qtty" name="qtty" class="form-control " value="<%= data("IPD_QtySatuan") %>" autocomplete="off">
+                                <input type="text" id="qtty" name="qtty" class="form-control " value="<%= ddata("IPD_QtySatuan") %>" autocomplete="off">
                             </td>
                             <td>
-                                <input type="hidden" id="hargapo" name="harga" class="form-control " value="<%= data("IPD_Harga") %>" readonly>
-                                <input type="text" id="lhargapo" name="lharga" class="form-control " value="<%= replace(formatCurrency(data("IPD_Harga")),"$","") %>" readonly>
+                                <input type="hidden" id="hargapo" name="harga" class="form-control " value="<%= ddata("IPD_Harga") %>" readonly>
+                                <input type="text" id="lhargapo" name="lharga" class="form-control " value="<%= replace(formatCurrency(ddata("IPD_Harga")),"$","") %>" readonly>
                             </td>
                             <td>
                                 <select class="form-control" aria-label="Default select example" id="satuan" name="satuan" >
-                                    <option value="<%= data("IPD_JenisSat") %>"><% call getSatBerat(data("IPD_JenisSat")) %></option>
+                                    <option value="<%= ddata("IPD_JenisSat") %>"><% call getSatBerat(ddata("IPD_JenisSat")) %></option>
                                     
                                 </select>
                             </td>
                             <td>
-                                <input type="number" id="disc1" name="disc1" class="form-control " value="<%= data("IPD_Disc1") %>" required>
+                                <input type="number" id="disc1" name="disc1" class="form-control " value="<%= ddata("IPD_Disc1") %>" required>
                             </td>
                             <td>
-                                <input type="number" id="disc2" name="disc2" class="form-control" value="<%= data("IPD_Disc2") %>" required>
+                                <input type="number" id="disc2" name="disc2" class="form-control" value="<%= ddata("IPD_Disc2") %>" required>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                <a href="aktifd.asp?id=<%= ddata("IPD_IPHID") %>&p=faktur_u" class="btn badge text-bg-danger btn-fakturd">Delete</a>
                             </td>
                         </tr>
                         <% 
-                        data.movenext
+                        ddata.movenext
                         loop
-                        data.movefirst
                         %>
                     </tbody>
                 </table>
@@ -268,7 +286,6 @@
       <form action="faktur_u.asp?id=<%= id %>" method="post">
         <div class="modal-body modalPemD">
             <input type="hidden" name="id" id="id" value="<%= id %>">
-            <input type="hidden" name="ophid" id="ophid" value="<%= data("IPH_ophID") %>">
             <div class="row">
                 <div class="col-sm-4">
                     <label for="itemf" class="col-form-label">Barang</label>

@@ -53,19 +53,33 @@
         satuanpo = trim(Request.Form("satuanpo"))
         disc1 = trim(Request.Form("disc1"))
         disc2 = trim(Request.Form("disc2"))
+        nol = "000"
 
         set data_cmd =  Server.CreateObject ("ADODB.Command")
         data_cmd.ActiveConnection = mm_delima_string
 
-        data_cmd.commandText = "SELECT * FROM DLK_T_InvPemD WHERE IPD_IPHID = '"& id &"' AND IPD_Item = '"& itempo &"' AND IPD_QtySatuan = "& qttypo &" AND IPD_Harga = '"& hargapo &"' AND IPD_JenisSat = '"& satuanpo &"' AND IPD_Disc1 = '"& disc1 &"' AND IPD_Disc2 = '"& disc2 &"' AND IPD_AktifYN = 'Y'"
-
-        set q = data_cmd.execute
+        data_cmd.commandText = "SELECT * FROM DLK_T_InvPemD WHERE LEFT(IPD_IPHID,13) = '"& id &"' AND IPD_Item = '"& itempo &"'"
+        ' response.write data_cmd.commandText & "<br>"
+        set data = data_cmd.execute
         
-        if q.eof then
-            data_cmd.commandText = "INSERT INTO DLK_T_InvPemD (IPD_IPHID, IPD_Item,IPD_QtySatuan,IPD_Harga,IPD_JenisSat,IPD_Disc1,IPD_Disc2,IPD_AktifYN) VALUES ('"& id &"','"& itempo &"',"& qttypo &", '"& hargapo &"', '"& satuanpo &"', '"& disc1 &"', '"& disc2 &"', 'Y' ) "
-            ' response.write data_cmd.commandText & "<br>"
-            data_cmd.execute
+        if data.eof then
+            data_cmd.commandText = "SELECT TOP 1 (right(IPD_IPHID,3)) + 1 AS urut FROM DLK_T_InvPemD WHERE LEFT(IPD_IPHID,13) = '"& id &"' ORDER BY IPD_IPHID DESC"
 
+            set p = data_cmd.execute
+
+            if p.eof then
+                data_cmd.commandTExt = "SELECT (COUNT(IPD_IPHID)) + 1 AS urut FROM DLK_T_InvPemD WHERE LEFT(IPD_IPHID,13) = '"& id &"'"
+
+                set a = data_cmd.execute
+
+                iddetail = id & right(nol & a("urut"),3)
+
+                call query("INSERT INTO DLK_T_InvPemD (IPD_IPHID, IPD_Item,IPD_QtySatuan,IPD_Harga,IPD_JenisSat,IPD_Disc1,IPD_Disc2) VALUES ('"& iddetail &"','"& itempo &"',"& qttypo &", '"& hargapo &"', '"& satuanpo &"', '"& disc1 &"', '"& disc2 &"') ")
+            else
+                iddetail = id & right(nol & p("urut"),3)
+
+                call query("INSERT INTO DLK_T_InvPemD (IPD_IPHID, IPD_Item,IPD_QtySatuan,IPD_Harga,IPD_JenisSat,IPD_Disc1,IPD_Disc2) VALUES ('"& iddetail &"','"& itempo &"',"& qttypo &", '"& hargapo &"', '"& satuanpo &"', '"& disc1 &"', '"& disc2 &"') ")
+            end if
             value = 1
         else
             value = 2
@@ -83,7 +97,6 @@
 
     Sub updateFaktur()
         id = trim(Request.Form("id"))
-        ophid = trim(Request.Form("ophid"))
         agen = trim(Request.Form("agen"))
         tgl = trim(Request.Form("tgl"))
         vendor = trim(Request.Form("vendor"))
@@ -116,49 +129,61 @@
         vdisc2 = Split(valdisc2, ",")
 
         ' add detail barang
-        id = trim(Request.Form("id"))
+        ' id = trim(Request.Form("id"))
         itemf = trim(Request.Form("itemf"))
         qtty = trim(Request.Form("qtty"))
         hargaf = trim(Request.Form("hargaf"))
         satuan = trim(Request.Form("satuan"))
         disc1 = trim(Request.Form("disc1"))
         disc2 = trim(Request.Form("disc2"))
+        nol = "000"
 
         set data_cmd =  Server.CreateObject ("ADODB.Command")
         data_cmd.ActiveConnection = mm_delima_string
 
-        data_cmd.commandText = "SELECT * FROM DLK_T_InvPemH WHERE IPH_ID = '"& id &"' AND IPH_OPHID = '"& ophid &"' AND IPH_AktifYN = 'Y'"
+        data_cmd.commandText = "SELECT * FROM DLK_T_InvPemH WHERE IPH_ID = '"& id &"' AND IPH_AktifYN = 'Y'"
         ' response.write data_cmd.commandText & "<br>"
         set data = data_cmd.execute
 
         if not data.eof then
             ' add detail barang
             if itemf <> "" then
-                data_cmd.commandText = "SELECT * FROM DLK_T_InvPemD WHERE IPD_IPHID = '"& id &"' AND IPD_Item = '"& itemf &"' AND IPD_AKtifYN = 'Y'"
-
+                data_cmd.commandText = "SELECT * FROM DLK_T_InvPemD WHERE LEFT(IPD_IPHID,13) = '"& id &"' AND IPD_Item = '"& itemf &"'"
+                ' response.write data_cmd.commandText & "<br>"
                 set addetail = data_cmd.execute
 
                 if addetail.eof then
-                    data_cmd.commandText = "INSERT INTO DLK_T_InvPemD (IPD_IPHID, IPD_Item,IPD_QtySatuan,IPD_Harga,IPD_JenisSat,IPD_Disc1,IPD_Disc2,IPD_AktifYN) VALUES ('"& id &"','"& itemf &"',"& qtty &", '"& hargaf &"', '"& satuan &"', '"& disc1 &"', '"& disc2 &"', 'Y' ) "
-                    ' response.write data_cmd.commandText & "<br>"
-                    data_cmd.execute
+                    data_cmd.commandText = "SELECT TOP 1 (right(IPD_IPHID,3)) + 1 AS urut FROM DLK_T_InvPemD WHERE LEFT(IPD_IPHID,13) = '"& id &"' ORDER BY IPD_IPHID DESC"
 
-                    value = 1 'case untuk insert data
+                    set p = data_cmd.execute
+
+                    if p.eof then
+                        data_cmd.commandTExt = "SELECT (COUNT(IPD_IPHID)) + 1 AS urut FROM DLK_T_InvPemD WHERE LEFT(IPD_IPHID,13) = '"& id &"'"
+
+                        set a = data_cmd.execute
+
+                        iddetail = id & right(nol & a("urut"),3)
+
+                        call query("INSERT INTO DLK_T_InvPemD (IPD_IPHID, IPD_Item,IPD_QtySatuan,IPD_Harga,IPD_JenisSat,IPD_Disc1,IPD_Disc2) VALUES ('"& iddetail &"','"& itemf &"',"& qtty &", '"& hargaf &"', '"& satuan &"', '"& disc1 &"', '"& disc2 &"') ")
+                    else
+                        iddetail = id & right(nol & p("urut"),3)
+
+                        call query("INSERT INTO DLK_T_InvPemD (IPD_IPHID, IPD_Item,IPD_QtySatuan,IPD_Harga,IPD_JenisSat,IPD_Disc1,IPD_Disc2) VALUES ('"& iddetail &"','"& itemf &"',"& qtty &", '"& hargaf &"', '"& satuan &"', '"& disc1 &"', '"& disc2 &"') ")
+                    end if
+                    value = 1 'case jika berhasi insert 
                 else
-                    value = 2 'case jika gagal insert 
+                    value = 3 'case jika gagal insert 
                 end if
             else
                 call query("UPDATE DLK_T_InvPemH SET IPH_AgenID = '"& agen &"', IPH_Date = '"& tgl &"', IPH_VenID = '"& vendor &"', IPH_JTDate = '"& tgljt &"', IPH_MetPem = "& metpem &", IPH_DiskonAll = '"& diskon &"',IPH_PPn = "& ppn &", IPH_Keterangan = '"& keterangan &"', IPH_Belanja = "& typebelanja &" WHERE IPH_ID = '"& id &"' AND IPH_AktifYN = 'Y' ")
 
                 for i = 0 to ubound(vitem) 
-                    data_cmd.commandText = "SELECT * FROM DLK_T_InvPemD WHERE IPD_IPHID = '"& data("IPH_ID") &"' AND IPD_Item = '"& trim(vitem(i)) &"' AND IPD_Harga = '"& trim(vharga(i)) &"' AND IPD_JenisSat = '"& trim(vsatuan(i)) &"' AND IPD_AktifYN = 'Y'"
+                    data_cmd.commandText = "SELECT * FROM DLK_T_InvPemD WHERE LEFT(IPD_IPHID,13) = '"& data("IPH_ID") &"' AND IPD_Item = '"& trim(vitem(i)) &"' AND IPD_Harga = '"& trim(vharga(i)) &"' AND IPD_JenisSat = '"& trim(vsatuan(i)) &"'"
                     ' response.write data_cmd.commandText & "<br>"
                     set q = data_cmd.execute
 
                     if not q.eof then
-                        data_cmd.commandText = "UPDATE DLK_T_InvPemD SET IPD_QtySatuan = "& trim(vqtty(i)) &", IPD_Disc1 = '"& trim(vdisc1(i)) &"',IPD_Disc2 = '"& trim(vdisc2(i)) &"' WHERE IPD_IPHID = '"& data("IPH_ID") &"' AND IPD_Item = '"& trim(vitem(i)) &"'  AND IPD_AktifYN ='Y'"
-                        ' response.write data_cmd.commandText & "<br>"
-                        data_cmd.execute
+                        call query("UPDATE DLK_T_InvPemD SET IPD_QtySatuan = "& trim(vqtty(i)) &", IPD_Disc1 = '"& trim(vdisc1(i)) &"',IPD_Disc2 = '"& trim(vdisc2(i)) &"' WHERE IPD_IPHID = '"& q("IPD_IPHID") &"'")
                     end if
                 next
             value = 1 'case untuk insert data
@@ -171,6 +196,8 @@
             call alert("FAKTUR TERHUTANG", "berhasil di update", "success","faktur_u.asp?id="&id) 
         elseif value = 2 then
             call alert("FAKTUR TERHUTANG", "tidak terdaftar", "warning","faktur_u.asp?id="&id)
+        elseif value = 3 then
+            call alert("FAKTUR TERHUTANG", "Barang Sudah terdaftar", "warning","faktur_u.asp?id="&id)
         else
             value = 0
         end if
