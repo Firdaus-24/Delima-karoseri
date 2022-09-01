@@ -20,4 +20,5 @@
   <script src="../../public/js/faktur.js"></script>
   <script src="../../public/js/customer.js"></script>
   <script src="../../public/js/inventory.js"></script>
+  <script src="../../public/js/jbarang.js"></script>
 </html>

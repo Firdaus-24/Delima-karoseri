@@ -6,7 +6,7 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
     ' get data by id
-    data_cmd.commandText = "SELECT * FROM DLK_M_Barang WHERE Brg_ID = '"& id &"' AND Brg_AktifYN = 'Y'"
+    data_cmd.commandText = "SELECT DLK_M_Barang.*, DLK_M_Rak.Rak_Nama, DLK_M_Rak.Rak_ID FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Rak ON DLK_M_Barang.Brg_RakID = DLK_M_Rak.Rak_ID WHERE Brg_ID = '"& id &"' AND Brg_AktifYN = 'Y'"
     set barang = data_cmd.execute
     ' cabang
     data_cmd.commandText = "SELECT AgenID, AgenNAme FROM GLB_M_Agen where AgenAktifYN = 'Y' ORDER BY AgenName ASC"
@@ -17,7 +17,10 @@
     ' Jenis
     data_cmd.commandText = "SELECT JenisID, JenisNama FROM DLK_M_JenisBarang where JenisAktifYN = 'Y' ORDER BY JenisNama ASC"
     set pJenis = data_cmd.execute
-
+    ' get rak
+    data_cmd.commandText = "SELECT Rak_ID,Rak_nama FROM DLK_M_Rak where LEFT(Rak_ID,3) = '"& left(barang("Brg_ID"),3) &"' AND NOT EXISTS(SELECT Brg_RakID FROM DLK_M_Barang WHERE Brg_RakID =  Rak_ID) ORDER BY Rak_nama"
+    
+    set rak = data_cmd.execute
 
     
 call header("Form Barang")
@@ -31,7 +34,13 @@ call header("Form Barang")
         </div>
     </div>
     <form action="br_u.asp?id=<%= id %>" method="post" id="formBarang">
-        <input type="hidden" class="form-control" 1id="id" name="id" autocomplete="off" value="<%= barang("Brg_id") %>" required>
+        <input type="hidden" class="form-control" id="id" name="id" autocomplete="off" value="<%= barang("Brg_id") %>" required>
+        <div class="mb-3 row">
+            <label for="tgl" class="col-sm-2 col-form-label offset-sm-1">Tanggal</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" id="tgl" name="tgl" value="<%= barang("Brg_Tanggal") %>" autocomplete="off" onfocus="(this.type='date')" readonly required>
+            </div>
+        </div>
         <div class="mb-3 row">
             <label for="nama" class="col-sm-2 col-form-label offset-sm-1">Nama</label>
             <div class="col-sm-8">
@@ -68,9 +77,17 @@ call header("Form Barang")
             </div>
         </div>
         <div class="mb-3 row">
-            <label for="tgl" class="col-sm-2 col-form-label offset-sm-1">Tanggal</label>
-            <div class="col-sm-5">
-                <input type="text" class="form-control" id="tgl" name="tgl" value="<%= barang("Brg_Tanggal") %>" autocomplete="off" onfocus="(this.type='date')" required>
+            <label for="rak" class="col-sm-2 col-form-label offset-sm-1">Rak</label>
+            <div class="col-sm-4">
+               <select class="form-select" aria-label="Default select example" name="rak" id="rak" required>
+                    <option value="<%= barang("Rak_ID") %>"><%= barang("Rak_Nama") %></option>
+                    <% do while not rak.eof %>
+                        <option value="<%= rak("Rak_ID") %>"><%= rak("Rak_Nama") %></option>
+                    <% 
+                    rak.movenext
+                    loop
+                    %>
+                </select>
             </div>
         </div>
         <div class="mb-3 row">

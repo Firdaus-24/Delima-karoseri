@@ -5,18 +5,19 @@
     data_cmd.ActiveConnection = mm_delima_string
 
     ' get data puchaseOrder
-    data_cmd.commandText = "SELECT dbo.DLK_T_OrPemH.OPH_ID FROM dbo.DLK_T_InvPemH RIGHT OUTER JOIN dbo.DLK_T_OrPemH ON dbo.DLK_T_InvPemH.IPH_OphId = dbo.DLK_T_OrPemH.OPH_ID WHERE (dbo.DLK_T_InvPemH.IPH_OphId IS NULL) AND dbo.DLK_T_OrPemH.OPH_aktifYN = 'Y' ORDER BY dbo.DLK_T_OrPemH.OPH_ID DESC"
+    data_cmd.commandText = "SELECT dbo.DLK_T_OrJulH.OJH_ID FROM dbo.DLK_T_InvJulH RIGHT OUTER JOIN dbo.DLK_T_OrJulH ON dbo.DLK_T_InvJulH.IJH_OJHId = dbo.DLK_T_OrJulH.OJH_ID WHERE (dbo.DLK_T_InvJulH.IJH_OJHId IS NULL) AND dbo.DLK_T_OrJulH.OJH_aktifYN = 'Y' ORDER BY dbo.DLK_T_OrJulH.OJH_ID DESC"
     set getpo = data_cmd.execute
 
     ' filter agen
-    data_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_InvPemH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_InvPemH.IPH_AgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_InvPemH.IPH_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    data_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_InvJulH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_InvJulH.IJH_AgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_InvJulH.IJH_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
     set agendata = data_cmd.execute
-    ' filter agen
-    data_cmd.commandText = "SELECT dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_ID FROM dbo.DLK_T_InvPemH LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_InvPemH.IPH_venID = dbo.DLK_M_Vendor.Ven_ID WHERE DLK_T_InvPemH.IPH_AktifYN = 'Y' GROUP BY dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_ID ORDER BY Ven_Nama ASC"
-    set vendata = data_cmd.execute
+
+    ' filter customer
+    data_cmd.commandText = "SELECT dbo.DLK_M_Customer.custNama, dbo.DLK_M_Customer.custID FROM dbo.DLK_T_InvJulH LEFT OUTER JOIN dbo.DLK_M_Customer ON dbo.DLK_T_InvJulH.IJH_custID = dbo.DLK_M_Customer.custID WHERE DLK_T_InvJulH.IJH_AktifYN = 'Y' GROUP BY dbo.DLK_M_Customer.custNama, dbo.DLK_M_Customer.custID ORDER BY custNama ASC"
+    set custdata = data_cmd.execute
 
     agen = trim(Request.Form("agen"))
-    vendor = trim(Request.Form("vendor"))
+    customer = trim(Request.Form("customer"))
     metpem = trim(Request.Form("metpem"))
     tgla = trim(Request.Form("tgla"))
     tgle = trim(Request.Form("tgle"))
@@ -34,37 +35,37 @@
     end if
     
     if agen <> "" then
-        filterAgen = "AND DLK_T_InvPemH.IPH_AgenID = '"& agen &"'"
+        filterAgen = "AND DLK_T_InvJulH.IJH_AgenID = '"& agen &"'"
     else
         filterAgen = ""
     end if
 
     if vendor <> "" then
-        filtervendor = "AND dbo.DLK_T_InvPemH.IPH_VenID = '"& vendor &"'"
+        filtervendor = "AND dbo.DLK_T_InvJulH.IJH_VenID = '"& vendor &"'"
     else
         filtervendor = ""
     end if
 
     if metpem <> "" then
-        filtermetpem = "AND dbo.DLK_T_InvPemH.IPH_metpem = '"& metpem &"'"
+        filtermetpem = "AND dbo.DLK_T_InvJulH.IJH_metpem = '"& metpem &"'"
     else
         filtermetpem = ""
     end if
 
     if tgla <> "" AND tgle <> "" then
-        filtertgl = "AND dbo.DLK_T_InvPemH.IPH_Date BETWEEN '"& tgla &"' AND '"& tgle &"'"
+        filtertgl = "AND dbo.DLK_T_InvJulH.IJH_Date BETWEEN '"& tgla &"' AND '"& tgle &"'"
     elseIf tgla <> "" AND tgle = "" then
-        filtertgl = "AND dbo.DLK_T_InvPemH.IPH_Date = '"& tgla &"'"
+        filtertgl = "AND dbo.DLK_T_InvJulH.IJH_Date = '"& tgla &"'"
     else 
         filtertgl = ""
     end if
 
     ' query seach 
-    strquery = "SELECT * FROM DLK_T_InvPemH WHERE IPH_AktifYN = 'Y' "& filterAgen &"  "& filtervendor &" "& filtermetpem &" "& filtertgl &""
+    strquery = "SELECT * FROM DLK_T_InvJulH WHERE IJH_AktifYN = 'Y' "& filterAgen &"  "& filtervendor &" "& filtermetpem &" "& filtertgl &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
-    orderBy = " ORDER BY IPH_Date DESC"
+    orderBy = " ORDER BY IJH_Date DESC"
     set rs = Server.CreateObject("ADODB.Recordset")
     sqlawal = strquery
 
@@ -100,13 +101,13 @@
         end if	
     loop
 
-    call header("Incomming")
+    call header("Penjualan Barang")
 %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row">
         <div class="col-lg-12 mb-3 mt-3 text-center">
-            <h3>TRANSAKSI FAKTUR PEMBELIAN</h3>
+            <h3>TRANSAKSI FAKTUR PENJUALAN</h3>
         </div>
     </div>
     <div class="row">
@@ -114,7 +115,7 @@
             <a href="faktur_add.asp" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#carimemo">Tambah</a>
         </div>
     </div>
-    <form action="incomming.asp" method="post">
+    <form action="jbarang.asp" method="post">
         <div class="row">
             <div class="col-lg-4 mb-3">
                 <label for="Agen">Cabang</label>
@@ -129,13 +130,13 @@
                 </select>
             </div>
             <div class="col-lg-4 mb-3">
-                <label for="vendor">Vendor</label>
-                <select class="form-select" aria-label="Default select example" name="vendor" id="vendor">
+                <label for="customer">Customer</label>
+                <select class="form-select" aria-label="Default select example" name="customer" id="customer">
                     <option value="">Pilih</option>
-                    <% do while not vendata.eof %>
-                    <option value="<%= vendata("ven_id") %>"><%= vendata("ven_nama") %></option>
+                    <% do while not custdata.eof %>
+                    <option value="<%= custdata("custid") %>"><%= custdata("custnama") %></option>
                     <% 
-                    vendata.movenext
+                    custdata.movenext
                     loop
                     %>
                 </select>
@@ -172,7 +173,7 @@
                     <th>FakturID</th>
                     <th>Cabang</th>
                     <th>Tanggal</th>
-                    <th>Vendor</th>
+                    <th>Customer</th>
                     <th>Tanggal JT</th>
                     <th>Diskon</th>
                     <th>PPn</th>
@@ -188,31 +189,30 @@
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
 
-                    data_cmd.commandTExt = "SELECT IPD_IphID FROM DLK_T_InvPemD WHERE LEFT(IPD_IphID,13) = '"& rs("IPH_ID") &"'"
+                    data_cmd.commandTExt = "SELECT IJD_IJHID FROM DLK_T_InvJulD WHERE LEFT(IJD_IJHID,13) = '"& rs("IJH_ID") &"'"
                     set p = data_cmd.execute
                     %>
                         <tr><TH><%= recordcounter %></TH>
-                        <th><%= rs("IPH_ID") %></th>
-                        <td><% call getAgen(rs("IPH_AgenID"),"P") %></td>
-                        <td><%= Cdate(rs("IPH_Date")) %></td>
-                        <td><% call getVendor(rs("IPH_VenID")) %></td>
+                        <th><%= rs("IJH_ID") %></th>
+                        <td><% call getAgen(rs("IJH_AgenID"),"P") %></td>
+                        <td><%= Cdate(rs("IJH_Date")) %></td>
+                        <td><%= rs("IJH_custID") %></td>
                         <td>
-                            <% if rs("IPH_JTDate") <> "1900-01-01" then %>
-                            <%= Cdate(rs("IPH_JTDate")) %>
+                            <% if rs("IJH_JTDate") <> "1900-01-01" then %>
+                            <%= Cdate(rs("IJH_JTDate")) %>
                             <% end if %>
                         </td>
-                        <td><%= rs("IPH_DiskonAll") %></td>
-                        <td><%= rs("IPH_PPn") %></td>
-                        <td><% call getmetpem(rs("IPH_MetPem")) %></td>
-                        <td><%= rs("IPH_Keterangan") %></td>
+                        <td><%= rs("IJH_DiskonAll") %></td>
+                        <td><%= rs("IJH_PPn") %></td>
+                        <td><% call getmetpem(rs("IJH_MetPem")) %></td>
+                        <td><%= rs("IJH_Keterangan") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <% if not p.eof then %>
-                                <a href="detailFaktur.asp?id=<%= rs("IPH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
-                                <% end if %>
-                                <a href="faktur_u.asp?id=<%= rs("IPH_ID") %>" class="btn badge text-bg-primary" >Update</a>
+                                <a href="detailFaktur.asp?id=<%= rs("IJH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
+                                <a href="faktur_u.asp?id=<%= rs("IJH_ID") %>" class="btn badge text-bg-primary" >Update</a>
+
                                 <% if p.eof then %>
-                                <a href="aktifh.asp?id=<%= rs("IPH_ID") %>" class="btn badge text-bg-danger btn-fakturh">Delete</a>
+                                <a href="aktifh.asp?id=<%= rs("IJH_ID") %>" class="btn badge text-bg-danger btn-fakturh">Delete</a>
                                 <% end if %>
                             </div>
                         </td>
@@ -245,7 +245,7 @@
                         end if
                         if requestrecords <> 0 then 
                     %>
-                        <a class="page-link prev" href="incomming.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Prev </a>
+                        <a class="page-link prev" href="jbarang.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Prev </a>
                     <% else %>
                         <p class="page-link prev-p">&#x25C4; Prev </p>
                     <% end if %>
@@ -263,9 +263,9 @@
                         end if
                         if Cint(page) = pagelistcounter then
                         %>
-                            <a class="page-link hal bg-primary text-light" href="incomming.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal bg-primary text-light" href="jbarang.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
                         <%else%>
-                            <a class="page-link hal" href="incomming.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal" href="jbarang.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
                         <%
                         end if
                         pagelist = pagelist + recordsonpage
@@ -281,7 +281,7 @@
                         end if
                         %>
                         <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                            <a class="page-link next" href="incomming.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
+                            <a class="page-link next" href="jbarang.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
                         <% else %>
                             <p class="page-link next-p">Next &#x25BA;</p>
                         <% end if %>
@@ -301,11 +301,11 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="faktur_add.asp" method="get">
+        <form action="jbarang_add.asp" method="get">
             <select class="form-select" aria-label="Default select example" id="id" name="id" required>
                 <option value="">Pilih</option>
                 <% do while not getpo.eof %>
-                <option value="<%= getpo("OPH_ID") %>"><%= getpo("OPH_ID") %></option>
+                <option value="<%= getpo("OJH_ID") %>"><%= getpo("OJH_ID") %></option>
                 <% 
                 getpo.movenext
                 loop 

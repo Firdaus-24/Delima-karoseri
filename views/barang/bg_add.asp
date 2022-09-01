@@ -25,6 +25,12 @@
     </div>
     <form action="bg_add.asp" method="post" id="formBarang">
         <div class="mb-3 row">
+            <label for="tgl" class="col-sm-2 col-form-label offset-sm-1">Tanggal</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="tgl" name="tgl" autocomplete="off" value="<%= date %>" onfocus="(this.type='date')" required>
+            </div>
+        </div>
+        <div class="mb-3 row">
             <label for="agen" class="col-sm-2 col-form-label offset-sm-1">Cabang/agen</label>
             <div class="col-sm-8">
                 <select class="form-select" aria-label="Default select example" name="agen" id="agen" autofocus required>
@@ -73,9 +79,9 @@
             </div>
         </div>
         <div class="mb-3 row">
-            <label for="tgl" class="col-sm-2 col-form-label offset-sm-1">Tanggal</label>
-            <div class="col-sm-5">
-                <input type="date" class="form-control" id="tgl" name="tgl" autocomplete="off" required>
+            <label for="rak" class="col-sm-2 col-form-label offset-sm-1">Rak</label>
+            <div class="col-sm-4 tampilRak">
+               
             </div>
         </div>
         <div class="mb-3 row">

@@ -207,7 +207,9 @@
                         <td><%= rs("OPH_Keterangan") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
+                                <% if not ddata.eof then %>
                                 <a href="purce_d.asp?id=<%= rs("OPH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
+                                <% end if %>
                                 <a href="purc_u.asp?id=<%= rs("OPH_ID") %>" class="btn badge text-bg-primary" >Update</a>
                                 <% if ddata.eof then %>
                                 <a href="aktifh.asp?id=<%= rs("OPH_ID") %>" class="btn badge text-bg-danger btn-purce1">Delete</a>

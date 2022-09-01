@@ -1,18 +1,4 @@
 $(document).ready(function(){
-    // cek inputan harga
-    $("#harga").on('blur', function (){ 
-        if($("#harga").val() == ""){
-            $("#harga").val("")
-        }else{
-            if(isNaN(this.value)){
-                swal({ title: "FORMAT HARGA SALAH", icon:"error" });
-                $("#harga").val('')
-            }else{
-                this.value = parseFloat(this.value.replace(/,/g, "")).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            }   
-        }
-    })
-
     // validasi tambah satuan
     $('#formBarang').submit(function(e) {
         let form = this;
@@ -58,6 +44,18 @@ $(document).ready(function(){
               swal("Request gagal di kirim");
             }
         })
+    })
+
+    // cek inputan rak
+    $("#agen").change(function(){
+        let id = $('#agen').val()
+        $.ajax({
+            method: "POST",
+            url: "../../ajax/getrak.asp",
+            data: { id }
+        }).done(function( msg ) {
+            $(".tampilRak").html(msg)
+        });
     })
 
 })

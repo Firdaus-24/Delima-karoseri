@@ -63,7 +63,10 @@
                 <a class="link-name" href="<%= url %>views/inventory/incomming.asp">Incomming</a>
               </li>
               <li>
-                <a class="link-name" href="<%= url %>views/inventory/outgoing.asp">Outgoing</a>
+                <a class="link-name" href="<%= url %>views/inventory/outgoing.asp">Order Jual</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/inventory/jbarang.asp">Penjualan</a>
               </li>
             </ul>
           <!-- repair -->
@@ -162,9 +165,20 @@
               </li>
             </ul>
           <li class="nav-text">
-            <a href="#"><i class="bi bi-clock-history"></i> History</a>
+            <a href="#" onclick="toggle('sublist-report')"><i class="bi bi-book"></i> Report</a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
+             <ul class="sub-menu" id="sublist-report">
+              <li>
+                <a class="link-name" href="<%= url %>views/report/R_stok.asp">Stok Barang</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/report/R_cekin.asp">Barang Masuk</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/report/R_cekout.asp">Barang Keluar</a>
+              </li>
+            </ul>
         </div>
       </ul>
     </nav>
