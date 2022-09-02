@@ -114,7 +114,6 @@
                         <th scope="col">Spesification</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Satuan</th>
-                        <th scope="col">Harga</th>
                         <th scope="col">Keterangan</th>
                         <th scope="col" class="text-center">Status</th>
                     </tr>
@@ -135,11 +134,8 @@
                             <td><%= dataD("memoSpect") %></td>
                             <td><%= dataD("memoQtty") %></td>
                             <td><% call getSatBerat(dataD("memoSatuan")) %></td>
-                            <td><%= replace(formatCurrency(dataD("memoHarga")),"$","") %></td>
                             <td>
-                                <%if dataD("memoKeterangan") <> "null" then%>
-                                    <%= dataD("memoKeterangan") %>
-                                <% end if %>
+                                <%= dataD("memoKeterangan") %>
                             </td>
                             <td  class="text-center">
                                 <% if dataH("memoApproveYN") = "Y" then %>

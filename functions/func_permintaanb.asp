@@ -38,7 +38,6 @@ sub tambahdetailPBarang ()
     brg = trim(Request.Form("brg"))
     spect = trim(Request.Form("spect"))
     qtty = trim(Request.Form("qtty"))
-    harga = trim(Request.Form("harga"))
     satuan = trim(Request.Form("satuan"))
     ket = trim(Request.Form("ket"))
 
@@ -58,7 +57,7 @@ sub tambahdetailPBarang ()
 
         iddetail = memoid & right(nol & p("urut"),3)
 
-        call query("INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoHarga, memoKeterangan) VALUES ( '"& iddetail &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"', "& harga &",'"& ket &"')")
+        call query("INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoKeterangan) VALUES ( '"& iddetail &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"', '"& ket &"')")
 
         value = 1
     else
@@ -103,11 +102,11 @@ sub updatedetailPBarang ()
 
                 iddetail = memoid & right(nol & a("urut"),3)
 
-                call query("INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoHarga, memoKeterangan) VALUES ( '"& iddetail &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"', "& harga &",'"& ket &"')")
+                call query("INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoKeterangan) VALUES ( '"& iddetail &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"','"& ket &"')")
             else
                 iddetail = memoid & right(nol & p("urut"),3)
 
-                call query("INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoHarga, memoKeterangan) VALUES ( '"& iddetail &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"', "& harga &",'"& ket &"')")
+                call query("INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoKeterangan) VALUES ( '"& iddetail &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"','"& ket &"')")
             end if
         value = 1
     else

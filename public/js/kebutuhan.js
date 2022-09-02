@@ -1,34 +1,41 @@
 $(document).ready(function(){
     // cek tombol tambah
-    $('.tambahKeb').click(function(){
-        $('.titlekeb').html('FORM TAMBAH')
-        $('#formkeb').attr('action', 'keb_add.asp')
-        $('.subkeb').html('Tambah')
+    $('.tambahDep').click(function(){
+        $('.titleDep').html('FORM TAMBAH')
+        $('#formDep').attr('action', 'keb_add.asp')
+        $('.subDep').html('Tambah')
         $('#id').val('')
         $('#inpnama').val('')
+        $('#divid').val('')
     })
     // cek tombol update
-    $('.updatekeb').click(function(){
+    $('.updateDep').click(function(){
         let id = $(this).attr('data')
         let nama = $(this).attr('valname')
-
-        $('.titlekeb').html('FORM UPDATE')
-        $('#formkeb').attr('action', 'keb_u.asp')
-        $('.subkeb').html('Update')
+        let divisi = $(this).attr('divid')
+                
+        $('.titleDep').html('FORM UPDATE')
+        $('#formDep').attr('action', 'keb_u.asp')
+        $('.subDep').html('Update')
         $('#id').val(id)
         $('#oldnama').val(nama)
         $('#inpnama').val(nama)
+        // $('#divid selected').val(divisi)
+        $("#divid option").filter(function() {
+            //may want to use $.trim in here
+            return $(this).val() == divisi;
+        }).prop('selected', true);
     })
     
     // validasi tambah satuan
-    $('#formkeb').submit(function(e) {
+    $('#formDep').submit(function(e) {
         let form = this;
         
         e.preventDefault(); // <--- prevent form from submitting
       
         swal({
             title: "APAKAH ANDA SUDAH YAKIN??",
-            text: "form master kebutuhan permintaan",
+            text: "form master Departement",
             icon: "warning",
             buttons: [
               'No',
@@ -45,13 +52,13 @@ $(document).ready(function(){
     })
 
     // aktifasi sat
-    $('.btn-aktifkeb').click(function(e){
+    $('.btn-aktifDep').click(function(e){
         
         e.preventDefault(); // <--- prevent click
         
         swal({
             title: "YAKIN UNTUK DI HAPUS??",
-            text: "delete master kebutuhan permintaan",
+            text: "delete master departement",
             icon: "warning",
             buttons: [
               'No',

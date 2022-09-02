@@ -1,14 +1,14 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_Kebutuhan.asp"-->
-<%  call header("Form Kebutuhan") %>
+<%  call header("Form departement") %>
 <!--#include file="../../navbar.asp"-->
 <% 
 if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
-    call updateKeb()
+    call updateDep()
     if value = 1 then
-        call alert("MASTER KEBUTUHAN", "berhasil di Update", "success","index.asp") 
+        call alert("MASTER DEPARTEMENT", "berhasil di Update", "success","index.asp") 
     elseif value = 2 then
-        call alert("MASTER KEBUTUHAN", "tidak terdaftar", "warning","index.asp")
+        call alert("MASTER DEPARTEMENT", "tidak terdaftar", "warning","index.asp")
     else
         value = 0
     end if

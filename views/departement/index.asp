@@ -2,6 +2,12 @@
 <% 
     nama = trim(ucase(Request.Form("nama")))
 
+    set data_cmd =  Server.CreateObject ("ADODB.Command")
+    data_cmd.ActiveConnection = mm_delima_string
+
+    data_cmd.commandText = "SELECT DivID, DivNama FROM DLK_M_Divisi WHERE DivAktifYN = 'Y' ORDER BY DivNama ASC"
+    set divisi = data_cmd.execute
+
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
 
@@ -16,15 +22,16 @@
     
     ' query seach 
     if nama <> "" then
-        strquery = "SELECT * FROM DLK_M_Kebutuhan WHERE KebAktifYN = 'Y' AND KebNama LIKE '%"& nama &"%'"
+        strnama = "AND DepNama LIKE '%"& nama &"%'"
     else
-        strquery = "SELECT * FROM DLK_M_Kebutuhan WHERE KebAktifYN = 'Y'"
+        strnama = ""
     end if
+    strquery = "SELECT DLK_M_Departement.*, DLK_M_Divisi.DivNama FROM DLK_M_Departement LEFT OUTER JOIN DLK_M_Divisi ON DLK_M_Departement.DepDivid = DLK_M_Divisi.DivID WHERE DepAktifYN = 'Y' "& nama &""
 
     ' untuk data paggination
     page = Request.QueryString("page")
 
-    orderBy = " order by KebNama ASC"
+    orderBy = " order by DepNama ASC"
     set rs = Server.CreateObject("ADODB.Recordset")
     sqlawal = strquery
 
@@ -60,18 +67,18 @@
         end if	
     loop
 
-    call header("Kebutuhan Permintaan")
+    call header("Departement")
 %>    
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row mt-3 mb-3 text-center">
         <div class="col-lg-12">
-            <h3>MASTER KEBUTUHAN PERMINTAAN</h3>
+            <h3>MASTER DEPARTEMENT</h3>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-2 mb-3">
-            <a href="Keb_add.asp" class="btn btn-primary tambahKeb" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Tambah</a>
+            <a href="Dep_add.asp" class="btn btn-primary tambahDep" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Tambah</a>
         </div>
     </div>
     <form action="index.asp" method="post">
@@ -92,6 +99,7 @@
                     <th scope="col">No</th>
                     <th scope="col">Id</th>
                     <th scope="col">Nama</th>
+                    <th scope="col">Divisi</th>
                     <th scope="col">Update ID</th>
                     <th scope="col">Aktif</th>
                     <th scope="col" class="text-center">Aksi</th>
@@ -107,14 +115,15 @@
                     %>
                     <tr>
                         <th scope="row"><%= recordcounter %></th>
-                        <td><%= rs("Kebid") %></td>
-                        <td><%= rs("Kebnama") %></td>
-                        <td><%= rs("KebUpdateID") %></td>
-                        <td><%if rs("KebAktifYN") = "Y" then%>Aktif <% end if %></td>
+                        <td><%= rs("Depid") %></td>
+                        <td><%= rs("Depnama") %></td>
+                        <td><%= rs("divNama") %></td>
+                        <td><%= rs("DepUpdateID") %></td>
+                        <td><%if rs("DepAktifYN") = "Y" then%>Aktif <% end if %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="kb_u.asp?id=<%= rs("KebId") %>" class="btn badge text-bg-primary updatekeb" data-bs-toggle="modal" data-bs-target="#staticBackdrop" valname="<%= rs("kebNama") %>" data="<%= rs("kebID") %>">update</a>
-                                <a href="aktif.asp?id=<%= rs("KebId") %>" class="btn badge text-bg-danger btn-aktifkeb">delete</a>
+                                <a href="kb_u.asp?id=<%= rs("DepId") %>" class="btn badge text-bg-primary updateDep" data-bs-toggle="modal" data-bs-target="#staticBackdrop" valname="<%= rs("DepNama") %>" data="<%= rs("DepID") %>" divid="<%= rs("DepdivID") %>">update</a>
+                                <a href="aktif.asp?id=<%= rs("DepId") %>" class="btn badge text-bg-danger btn-aktifDep">delete</a>
                             </div>
                         </td>
                     </tr>
@@ -196,18 +205,32 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title titlekeb" id="staticBackdropLabel">FORM TAMBAH</h5>
+        <h5 class="modal-title titleDep" id="staticBackdropLabel">FORM TAMBAH</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-        <form action="keb_add.asp" method="post" id="formkeb">
+        <form action="keb_add.asp" method="post" id="formDep">
             <div class="modal-body">
-                <input type="text" class="form-control mb-3" name="id" id="id" maxlength="5" autocomplete="off" required>
+                <label for="id" class="form-label">ID Departement</label>
+                <input type="text" class="form-control mb-3" name="id" id="id" maxlength="3"  minlength="3" autocomplete="off" required>
                 <input type="hidden" class="form-control mb-3" name="oldnama" id="oldnama" autocomplete="off" maxlength="20" required>
-                <input type="text" class="form-control mb-3" name="nama" id="inpnama" autocomplete="off" maxlength="20" required>
+
+                <label for="Nama" class="form-label">Nama</label>
+                <input type="text" class="form-control mb-3" name="nama" id="inpnama" autocomplete="off" maxlength="30" required>
+
+                <label for="divisi" class="form-label">Divisi</label>
+                <select class="form-select" aria-label="Default select example" name="divid" id="divid" required>
+                    <option value="">Pilih</option>
+                    <% do while not divisi.eof %>
+                    <option value="<%= divisi("DivID") %>"><%= divisi("DivNama") %></option>
+                    <% 
+                    divisi.movenext
+                    loop
+                    %>
+                </select>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary subkeb">Tambah</button>
+                <button type="submit" class="btn btn-primary subDep">Tambah</button>
             </div>
         </form>
     </div>

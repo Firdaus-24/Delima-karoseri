@@ -112,7 +112,6 @@
                         <th scope="col">Spesification</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Satuan</th>
-                        <th scope="col">Harga</th>
                         <th scope="col">Keterangan</th>
                     </tr>
                 </thead>
@@ -132,7 +131,6 @@
                             <td><%= dataD("memoSpect") %></td>
                             <td><%= dataD("memoQtty") %></td>
                             <td><% call getSatBerat(dataD("memoSatuan")) %></td>
-                            <td><%= replace(formatCurrency(dataD("memoHarga")),"$","") %></td>
                             <td>
                                 <%if dataD("memoKeterangan") <> "null" then%>
                                     <%= dataD("memoKeterangan") %>
@@ -190,14 +188,6 @@
             </div>
             <div class="col-sm-3 mb-3">
                 <input type="number" id="qtty" class="form-control" name="qtty" autocomplete="off" required>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-3">
-                <label for="harga" class="col-form-label">Harga Satuan</label>
-            </div>
-            <div class="col-sm-4 mb-3">
-                <input type="number" id="pbharga" class="form-control" name="harga" autocomplete="off" required>
             </div>
         </div>
         <div class="row">

@@ -41,9 +41,6 @@
                 <a href="<%= url %>views/satbarang/">Master Satuan Barang</a>
               </li>
               <li>
-                <a href="<%= url %>views/kebutuhan/">Kebutuhan Permintaan</a>
-              </li>
-              <li>
                 <a href="<%= url %>views/vendor/">Master Vandor</a>
               </li>
               <li>
@@ -136,7 +133,7 @@
           </li>
             <ul class="sub-menu" id="sublist-hr">
               <li>
-                <a class="link-name" href="<%= url %>views/hr/">HR/GA</a>
+                <a href="<%= url %>views/departement/">Departement</a>
               </li>
               <li>
                 <a class="link-name" href="<%= url %>views/divisi/">Divisi</a>
