@@ -26,7 +26,7 @@
     else
         strnama = ""
     end if
-    strquery = "SELECT DLK_M_Departement.*, DLK_M_Divisi.DivNama FROM DLK_M_Departement LEFT OUTER JOIN DLK_M_Divisi ON DLK_M_Departement.DepDivid = DLK_M_Divisi.DivID WHERE DepAktifYN = 'Y' "& nama &""
+    strquery = "SELECT DLK_M_Departement.*, DLK_M_Divisi.DivNama FROM DLK_M_Departement LEFT OUTER JOIN DLK_M_Divisi ON DLK_M_Departement.DepDivid = DLK_M_Divisi.DivID WHERE DepAktifYN = 'Y' "& strnama &""
 
     ' untuk data paggination
     page = Request.QueryString("page")

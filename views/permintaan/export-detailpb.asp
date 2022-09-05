@@ -6,7 +6,7 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_T_Memo_H WHERE memoID = '"& id &"' and memoAktifYN = 'Y'"
+    data_cmd.commandText = "SELECT DLK_T_Memo_H.*, DLK_M_Departement.DepNama FROM DLK_T_Memo_H LEFT OUTER JOIN DLK_M_Departement ON DLK_T_Memo_H.memoDepID = DLK_M_Departement.DepID WHERE memoID = '"& id &"' and memoAktifYN = 'Y'"
     ' response.write data_cmd.commandText
     set dataH = data_cmd.execute
 %>
@@ -72,7 +72,7 @@
             <td width="10px">:</td>
             <td align="left"> 
                 <b>
-                    <%= left(dataH("memoID"),4) %>/<% call getKebutuhan(mid(dataH("memoId"),5,3),"") %>-<% call getAgen(mid(dataH("memoID"),8,3),"") %>/<%= mid(dataH("memoID"),11,4) %>/<%= right(dataH("memoID"),3) %>
+                    <%= left(dataH("memoID"),4) %>/<%=mid(dataH("memoId"),5,3) %>-<% call getAgen(mid(dataH("memoID"),8,3),"") %>/<%= mid(dataH("memoID"),11,4) %>/<%= right(dataH("memoID"),3) %>
                 </b>
             </td>
             <td width="6%">
@@ -92,13 +92,13 @@
                 <%call getHari(weekday(dataH("memoTgl"))) %>
             </td>
             <td width="6%">
-                Kebutuhan 
+                Departement 
             </td>
             <td width="10px">
                 : 
             </td>
             <td align="left">
-                <% call getKebutuhan(dataH("memoKebID"),"P") %> 
+                <%= dataH("DepNama") %> 
             </td>
         </tr> 
         <tr>
@@ -195,7 +195,7 @@
             </tr>
             <tr >
                 <td style="padding:10px;background-color:#7FFFD4;" > 
-                    Formulir Pengajuan Anggaran <% call getKebutuhan(dataH("memoKebID"),"P") %>
+                    Formulir Pengajuan Anggaran <%= dataH("DepNama") %>
                 </td>
             </tr>
             <tr>

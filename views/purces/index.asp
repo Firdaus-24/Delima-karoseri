@@ -16,7 +16,7 @@
     set agendata = agen_cmd.execute
 
     ' filter kebutuhan
-    agen_cmd.commandText = "SELECT dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama FROM dbo.DLK_T_Memo_H LEFT OUTER JOIN dbo.DLK_M_Kebutuhan ON dbo.DLK_T_Memo_H.memoKebID = dbo.DLK_M_Kebutuhan.kebID LEFT OUTER JOIN DLK_T_appPermintaan ON dbo.DLK_T_AppPermintaan.AppMemoID = DLK_T_Memo_H.memoID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'Y' AND DLK_T_AppPermintaan.AppAktifYN = 'Y' GROUP BY dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama"
+    agen_cmd.commandText = "SELECT dbo.DLK_M_Departement.DepID, dbo.DLK_M_Departement.DepNama FROM dbo.DLK_T_Memo_H LEFT OUTER JOIN dbo.DLK_M_Departement ON dbo.DLK_T_Memo_H.memoDepID = dbo.DLK_M_Departement.DepID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'Y' GROUP BY dbo.DLK_M_Departement.DepID, dbo.DLK_M_Departement.DepNama"
     set kebData = agen_cmd.execute
 
     set conn = Server.CreateObject("ADODB.Connection")
@@ -38,7 +38,7 @@
     end if
 
     if keb <> "" then
-        filterKeb = "AND dbo.DLK_T_Memo_H.memoKebID = '"& keb &"'"
+        filterKeb = "AND dbo.DLK_T_Memo_H.memoDepID = '"& keb &"'"
     else
         filterKeb = ""
     end if
@@ -52,11 +52,11 @@
     end if
 
     ' query seach 
-    strquery = "SELECT TOP (100) PERCENT dbo.DLK_T_AppPermintaan.AppMemoID, dbo.DLK_T_AppPermintaan.AppID, dbo.DLK_T_AppPermintaan.AppTgl, dbo.DLK_T_AppPermintaan.AppDana, dbo.DLK_T_AppPermintaan.AppKeterangan, dbo.DLK_T_AppPermintaan.AppAktifYN, dbo.DLK_T_Memo_H.memoTgl, dbo.DLK_T_Memo_H.memoAgenID, dbo.DLK_T_Memo_H.memoKebID, dbo.DLK_T_Memo_H.memoDivID, dbo.DLK_T_Memo_H.memoApproveYN, dbo.DLK_T_Memo_H.memoID FROM dbo.DLK_T_AppPermintaan INNER JOIN dbo.DLK_T_Memo_H ON dbo.DLK_T_AppPermintaan.AppMemoID = dbo.DLK_T_Memo_H.memoID WHERE NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) AND (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_AppPermintaan.AppAktifYN = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN = 'Y') "& filterAgen &" "& filterKeb &" "& filtertgl &""
+    strquery = "SELECT DLK_T_Memo_H.*, DLK_M_Departement.DepNama, DLK_M_Divisi.DivNama, GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN DLK_M_departement ON DLK_T_Memo_H.MemoDepID = DLK_M_Departement.DepID LEFT OUTER JOIN DLK_M_Divisi ON DLK_T_Memo_H.memoDivID = DLK_M_Divisi.DivID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = LEFT(GLB_M_Agen.AgenID,3) WHERE NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) AND (dbo.DLK_T_Memo_H.memoAktifYN = 'Y')  AND (dbo.DLK_T_Memo_H.memoApproveYN = 'Y')  "& filterAgen &" "& filterKeb &" "& filtertgl &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
-    orderBy = " order by dbo.DLK_T_AppPermintaan.AppTgl DESC"
+    orderBy = " order by dbo.DLK_T_Memo_H.MemoTgl DESC"
     set rs = Server.CreateObject("ADODB.Recordset")
     sqlawal = strquery
 
@@ -121,7 +121,7 @@
                 <select class="form-select" aria-label="Default select example" name="keb" id="keb">
                     <option value="">Pilih</option>
                     <% do while not kebData.eof %>
-                    <option value="<%= kebData("kebID") %>"><%= kebData("kebNama") %></option>
+                    <option value="<%= kebData("DepID") %>"><%= kebData("DepNama") %></option>
                     <% 
                     kebData.movenext
                     loop
@@ -146,15 +146,14 @@
             <table class="table">
                 <thead class="bg-secondary text-light">
                     <tr>
-                        <th scope="col">Memo</th>
-                        <th scope="col">Tanggal Acc</th>
-                        <th scope="col">Dana Acc</th>
-                        <th scope="col">Tanggal Ajuan</th>
-                        <th scope="col">Permintaan</th>
-                        <th scope="col">Cabang</th>
-                        <th scope="col">Divisi</th>
-                        <th scope="col">Keperluan</th>
-                        <th scope="col" class="text-center">Aksi</th>
+                    <th scope="col">No</th>
+                    <th scope="col">No Memo</th>
+                    <th scope="col">Tanggal</th>
+                    <th scope="col">Cabang</th>
+                    <th scope="col">Divisi</th>
+                    <th scope="col">Departement</th>
+                    <th scope="col">Aktif</th>
+                    <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -165,38 +164,25 @@
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
 
-                    data_cmd.commandText = "SELECT SUM(dbo.DLK_T_Memo_D.memoHarga * dbo.DLK_T_Memo_D.memoQtty) As tharga FROM dbo.DLK_T_Memo_H RIGHT OUTER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) WHERE (dbo.DLK_T_Memo_H.memoID = '"& rs("appMemoID") &"') AND DLK_T_Memo_H.memoAktifYN = 'Y'"
-                    ' response.write data_cmd.commandText & "<br>"
-                    set ddata = data_cmd.execute
+                    ' cek data detail
+                    agen_cmd.commandText = "SELECT memoID FROM DLK_T_Memo_D WHERE Left(memoID,17) = '"& rs("memoID") &"'"
+                    set ddetail = agen_cmd.execute
                     %>
                     <tr>
-                        <TH>
-                            <%= rs("appMemoID") %>
-                        </TH>
+                        <th scope="row"><%= recordcounter %></th>
                         <td>
-                            <%= rs("appTgl") %>
+                            <%= left(rs("memoID"),4) %>/<%=mid(rs("memoId"),5,3) %>-<% call getAgen(mid(rs("memoID"),8,3),"") %>/<%= mid(rs("memoID"),11,4) %>/<%= right(rs("memoID"),3) %>
                         </td>
+                        <td><%= rs("memoTgl") %></td>
+                        <td><%= rs("AgenName") %></td>
+                        <td><%= rs("DivNama") %></td>
+                        <td><%= rs("DepNama")%></td>
                         <td>
-                            <%= replace(formatCurrency(rs("appDana")),"$","") %>
-                        </td>
-                        <td>
-                            <%= rs("memoTgl") %>
-                        </td>
-                        <td>
-                            <%= replace(formatCurrency(ddata("tharga")),"$","") %>
-                        </td>
-                        <td>
-                            <% call getAgen(rs("memoAgenID"),"p") %>
-                        </td>
-                        <td>
-                            <% call getDivisi(rs("memoDivid")) %>
-                        </td>
-                        <td>
-                            <% call getKebutuhan(rs("memokebID"),"p") %>
+                            <%if rs("memoAktifYN") = "Y" then %>Aktif <% else %>Off <% end if %>
                         </td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="purc_add.asp?id=<%= rs("appMemoId") %>" class="btn badge text-bg-primary">Process</a>
+                                <a href="purc_add.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-primary">Process</a>
                             </div>
                         </td>
                     </tr>

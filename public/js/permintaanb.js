@@ -1,4 +1,21 @@
 $(document).ready(function(){
+    // getdepartement
+    $("#pbdivisi").change(function(){
+        let divisi = $("#pbdivisi").val()
+        
+        if(!divisi){
+            $(".deplama").show()
+        }else{
+            $(".deplama").hide()
+            $.ajax({
+                method: "POST",
+                url: "getdep.asp",
+                data: { divisi }
+            }).done(function( msg ) {
+                $(".depbaru").html(msg)
+            });
+        }
+    })
     // validasi tambah
     $('#formpbarang').submit(function(e) {
         let form = this;        
@@ -41,7 +58,6 @@ $(document).ready(function(){
 
     // aktifasi header permintaan barang
     $('.btn-aktifpbarang').click(function(e){
-        console.log(e);
         
         e.preventDefault(); // <--- prevent click
         
@@ -64,7 +80,6 @@ $(document).ready(function(){
     })
     // aktifasi detail permintaan barang
     $('.btn-aktifdpbarang').click(function(e){
-    console.log(e);
                     
         e.preventDefault(); // <--- prevent click
         

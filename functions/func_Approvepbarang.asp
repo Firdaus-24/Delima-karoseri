@@ -8,7 +8,7 @@ sub tambahAppPermintaan()
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_T_AppPermintaan WHERE AppMemoID = '"& no &"' AND AppTgl = '"& tgl &"' AND AppDana = '"& dana &"' AND AppKeterangan = '"& keterangan &"' AND AppAktifYN = 'Y'"
+    data_cmd.commandText = "SELECT * FROM DLK_T_AppPermintaan WHERE AppOPHID = '"& no &"' AND AppTgl = '"& tgl &"' AND AppDana = '"& dana &"' AND AppKeterangan = '"& keterangan &"' AND AppAktifYN = 'Y'"
     set data = data_cmd.execute
    
     if data.eof then

@@ -12,7 +12,7 @@
     set data = data_cmd.execute
 
     ' tpermintaan
-    data_cmd.commandText = "SELECT SUM(dbo.DLK_T_Memo_D.memoHarga * dbo.DLK_T_Memo_D.memoQtty) As tharga FROM dbo.DLK_T_Memo_H RIGHT OUTER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) WHERE (dbo.DLK_T_Memo_H.memoID = '"& data("appMemoID") &"') AND DLK_T_Memo_H.memoAktifYN = 'Y'"
+    data_cmd.commandText = "SELECT SUM(dbo.DLK_T_OrPemD.OPD_Harga * dbo.DLK_T_OrPemD.OPD_QtySatuan) As tharga FROM dbo.DLK_T_OrPemH RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID, 13) WHERE (dbo.DLK_T_OrPemH.OPH_ID = '"& data("appOPHID") &"') AND DLK_T_OrPemH.OPH_AktifYN = 'Y'"
     
     set ddata = data_cmd.execute
 

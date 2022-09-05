@@ -9,9 +9,6 @@
     ' get agen / cabang
     data.commandText = "SELECT AgenName, AgenID FROM DLK_M_Barang LEFT OUTER JOIN GLB_M_Agen ON left(DLK_M_Barang.Brg_ID,3) = GLB_M_Agen.AgenID WHERE agenAktifYN = 'Y' AND DLK_M_Barang.Brg_AktifYN = 'Y' GROUP BY AgenName, AgenID ORDER BY AgenName ASC"
     set pcabang = data.execute    
-    ' get kebutuhan
-    data.commandText = "SELECT KebNama, KebID FROM DLK_M_Kebutuhan WHERE KebAktifYN = 'Y' ORDER BY KebNama ASC"
-    set pkebutuhan = data.execute    
     ' get satuan
     data.commandText = "SELECT sat_Nama, sat_ID FROM DLK_M_satuanBarang WHERE sat_AktifYN = 'Y' ORDER BY sat_Nama ASC"
     set psatuan = data.execute    
@@ -34,7 +31,7 @@
          <div class="col-lg-12">
             <div class="row">
                 <div class="col-sm-3">
-                    <label for="tgl" class="col-form-label">Tanggal PO</label>
+                    <label for="tgl" class="col-form-label">Tanggal</label>
                 </div>
                 <div class="col-sm-3 mb-3">
                     <input type="text" id="tgl" class="form-control" name="tgl" value="<%= Date() %>" onfocus="(this.type='date')" required>
@@ -45,7 +42,7 @@
                     <label for="divisi" class="col-form-label">Divisi</label>
                 </div>
                 <div class="col-sm-3 mb-3">
-                    <select class="form-select" aria-label="Default select example" name="divisi" id="divisi" required> 
+                    <select class="form-select" aria-label="Default select example" name="divisi" id="pbdivisi" required> 
                         <option value="">Pilih</option>
                         <% do while not pdivisi.eof %>
                         <option value="<%= pdivisi("divId") %>"><%= pdivisi("divNama") %></option>
@@ -72,20 +69,17 @@
                     </select>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col-sm-3">
-                    <label for="kebutuhan" class="col-form-label">Kebutuhan Untuk</label>
+                    <label for="deputuhan" class="col-form-label">Departement</label>
                 </div>
-                <div class="col-sm-9 mb-3">
-                    <select class="form-select" aria-label="Default select example" name="kebutuhan" id="kebutuhan" required> 
-                        <option value="">Pilih</option>
-                        <% do while not pkebutuhan.eof %>
-                            <option value="<%= pkebutuhan("KebID") %>"><%= pkebutuhan("KebNama") %></option>
-                        <% 
-                        pkebutuhan.movenext
-                        loop
-                        %>
+                <div class="col-sm-9  deplama">
+                    <select class="form-select" aria-label="Default select example" name="ldep" id="ldep" > 
+                        <option value="" readonly disabled>Pilih Divisi dahulu</option>
                     </select>
+                </div>
+                <div class="col-sm-9  depbaru">
+                    <!-- kontent departement -->
                 </div>
             </div>
             <div class="row">

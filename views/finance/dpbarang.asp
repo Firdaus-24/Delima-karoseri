@@ -1,169 +1,196 @@
 <!--#include file="../../init.asp"-->
-<!--#include file="../../functions/func_permintaanb.asp"-->
 <% 
     id = trim(Request.QueryString("id"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_T_Memo_H WHERE memoID = '"& id &"' and memoAktifYN = 'Y'"
-    ' response.write data_cmd.commandText
-    set dataH = data_cmd.execute
-    ' get satuan
-    data_cmd.commandText = "SELECT sat_Nama, sat_ID FROM DLK_M_satuanBarang WHERE sat_AktifYN = 'Y' ORDER BY sat_Nama ASC"
-    set psatuan = data_cmd.execute    
-    ' get all barang
-    data_cmd.commandText = "SELECT Brg_ID, Brg_Nama FROM DLK_M_Barang WHERE Brg_AktifYN = 'Y' ORDER BY Brg_Nama ASC"
-    set barang = data_cmd.execute
+    data_cmd.commandText = "SELECT dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_ppn, dbo.DLK_T_OrPemH.OPH_diskonall, dbo.DLK_T_OrPemH.OPH_memoId, dbo.DLK_T_OrPemD.OPD_OPHID, dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_JenisSat, dbo.DLK_T_OrPemD.OPD_Disc1,dbo.DLK_T_OrPemD.OPD_Disc2, dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_phone, DLK_M_Vendor.ven_Email, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_OrPemH RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID,13) LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_OrPemH.OPH_venID = dbo.DLK_M_Vendor.Ven_ID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrPemD.OPD_Item = DLK_M_Barang.Brg_ID WHERE dbo.DLK_T_OrPemH.OPH_ID = '"& id &"' AND dbo.DLK_T_OrPemH.OPH_AktifYN = 'Y' GROUP BY dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_ppn, dbo.DLK_T_OrPemH.OPH_diskonall,dbo.DLK_T_OrPemH.OPH_memoId, dbo.DLK_T_OrPemD.OPD_OPHID, dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_JenisSat,dbo.DLK_T_OrPemD.OPD_Disc1, dbo.DLK_T_OrPemD.OPD_Disc2,dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_phone, DLK_M_Vendor.ven_Email,DLK_M_Barang.Brg_Nama"
+
+    set data = data_cmd.execute
+
+    
+    call header("Detail Barang PO")
 %>
-<% call header("Detail Permintaan Barang") %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row">
-        <div class="col-lg-12 mt-3 mb-3 text-center">
-            <h3>DETAIL PERMINTAAN BARANG</h3>
-        </div>  
-    </div> 
-    <div class="row mb-3">
-        <div class="col-sm-6">
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label class="col-form-label">Nomor :</label>
-                </div>
-                <div class="col-auto">
-                    <label>
-                        <b>
-                            <%= left(dataH("memoID"),4) %>/<% call getKebutuhan(mid(dataH("memoId"),5,3),"") %>-<% call getAgen(mid(dataH("memoID"),8,3),"") %>/<%= mid(dataH("memoID"),11,4) %>/<%= right(dataH("memoID"),3) %>
-                        </b>
-                    </label>
-                </div>
-            </div>
+        <div class="col-lg-12 mb-3 mt-3 text-center">
+            <h3>DETAIL PURCHASE ORDER</h3>
         </div>
-        <div class="col-sm-6">
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label class="col-form-label">Cabang :</label>
-                </div>
-                <div class="col-auto">
-                    <% call getAgen(dataH("memoAgenID"),"p") %>
-                </div>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <table class="table" style="border:transparent;">
+                <tr>
+                    <th>No</th>
+                    <th>:</th>
+                    <td>
+                        <%= left(data("OPH_ID"),2) %>-<% call getAgen(mid(data("OPH_ID"),3,3),"") %>/<%= mid(data("OPH_ID"),6,4) %>/<%= right(data("OPH_ID"),4) %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Vendor</th>
+                    <th>:</th>
+                    <td>
+                        <%= data("Ven_Nama") %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Phone</th>
+                    <th>:</th>
+                    <td>
+                        <%= data("Ven_Phone") %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <th>:</th>
+                    <td>
+                        <%= data("Ven_Email") %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Ppn</th>
+                    <th>:</th>
+                    <td>
+                        <%= data("OPH_PPN") %>%
+                    </td>
+                </tr>
+                <tr>
+                    <th>Diskon All</th>
+                    <th>:</th>
+                    <td>
+                        <%= data("OPH_DiskonAll") %>%
+                    </td>
+                </tr>
+            </table>
         </div>
-        <div class="col-sm-6">
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label class="col-form-label">Hari :</label>
-                </div>
-                <div class="col-auto">
-                    <label><% call getHari(weekday(dataH("memoTgl"))) %></label>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label class="col-form-label">Kebutuhan :</label>
-                </div>
-                <div class="col-auto">
-                    <label><% call getKebutuhan(dataH("memoKebID"),"P") %></label>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label class="col-form-label">Tanggal :</label>
-                </div>
-                <div class="col-auto">
-                    <label><%= Cdate(dataH("memoTgl")) %></label>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label class="col-form-label">Divisi :</label>
-                </div>
-                <div class="col-auto">
-                    <label><% call getDivisi(dataH("memoDivID")) %></label>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label class="col-form-label">Keterangan :</label>
-                </div>
-                <div class="col-auto">
-                    <label><%= dataH("memoKeterangan") %></label>
-                </div>
+        <div class="col-6 mb-3">
+            <div class="btn-group float-end p-0" role="group" aria-label="Basic example">
+                <a href="index.asp" type="button" class="btn btn-primary">Kembali</a>
+                <button type="button" class="btn btn-secondary" onClick="window.open('export-detailpb.asp?id=<%=id%>','_self')">EXPORT</button>
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="d-flex mb-3">
-            <div class="me-auto p-2">
-                <button type="button" class="btn btn-secondary" onClick="window.open('export-detailpb.asp?id=<%=id%>')" class="btn btn-danger">Export</button>
-            </div>
-            <div class="p-2">
-                <a href="index.asp" class="btn btn-danger">Kembali</a>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 mb-3">
-            <table class="table">
+        <div class="col-lg-12">
+            <table class="table table-hover">
                 <thead class="bg-secondary text-light">
                     <tr>
-                        <th scope="col">No</th>
                         <th scope="col">Item</th>
-                        <th scope="col">Spesification</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Satuan</th>
                         <th scope="col">Harga</th>
-                        <th scope="col">Keterangan</th>
-                        <th scope="col" class="text-center">Status</th>
+                        <th scope="col">Diskon1</th>
+                        <th scope="col">Diskon2</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Jumlah</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% 
-                    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
-                    ' response.write data_cmd.commandText
-                    set dataD = data_cmd.execute
+                    grantotal = 0
+                    do while not data.eof 
+                    ' cek total harga 
+                    jml = data("OPD_QtySatuan") * data("OPD_Harga")
+                    ' cek diskon peritem
+                    if data("OPD_Disc1") <> 0 and data("OPD_Disc2") <> 0  then
+                        dis1 = (data("OPD_Disc1")/100) * data("OPD_Harga")
+                        dis2 = (data("OPD_Disc2")/100) * data("OPD_Harga")
+                    elseif data("OPD_Disc1") <> 0 then
+                        dis1 = (data("OPD_Disc1")/100) * data("OPD_Harga")
+                    elseIf data("OPD_Disc2") <> 0 then
+                        dis2 = (data("OPD_Disc2")/100) * data("OPD_Harga")
+                    else    
+                        dis1 = 0
+                        dis2 = 0
+                    end if
+                    ' total dikon peritem
+                    hargadiskon = data("OPD_Harga") - dis1 - dis2
+                    realharga = hargadiskon * data("OPD_QtySatuan")  
 
-                    no = 0
-                    do while not dataD.eof
-                    no = no + 1
+                    grantotal = grantotal + realharga
+
+                    strid = data("OPD_OPHID")&","& data("OPD_Item") &","& data("OPD_QtySatuan") &","&  data("OPD_JenisSat") &","& data("OPD_Harga") &","& data("OPD_Disc1") &","& data("OPD_Disc2")   
+
+                    ' cek status pembelian
+                    data_cmd.commandText = "SELECT memoqtty FROM DLK_T_Memo_D WHERE left(memoId,17) = '"& data("OPH_MemoID") &"' AND memoitem = '"& data("OPD_Item") &"'"
+                    ' response.write data_cmd.commandText & "<br>"
+                    set qtymemo = data_cmd.execute
+
+                    if not qtymemo.eof then
+                        angkastatus = qtymemo("memoqtty") - data("OPD_QtySatuan")
+                        if angkastatus > 0 then
+                            ckstatus = "-"&angkastatus
+                        elseIf angkastatus = 0 then
+                            ckstatus = "Done"
+                        else
+                            ckstatus = "OverPO"
+                        end if
+                    else
+                        ckstatus = "-"
+                    end if
+
                     %>
                         <tr>
-                            <th scope="row"><%= no %></th>
-                            <td><%= dataD("Brg_Nama") %></td>
-                            <td><%= dataD("memoSpect") %></td>
-                            <td><%= dataD("memoQtty") %></td>
-                            <td><% call getSatBerat(dataD("memoSatuan")) %></td>
-                            <td><%= replace(formatCurrency(dataD("memoHarga")),"$","") %></td>
                             <td>
-                                <%if dataD("memoKeterangan") <> "null" then%>
-                                    <%= dataD("memoKeterangan") %>
-                                <% end if %>
+                                <%= data("Brg_Nama") %>
                             </td>
-                            <td  class="text-center">
-                                <% if dataH("memoApproveYN") = "Y" then %>
-                                    <b style="color:green">Done</b>
-                                <% else %>
-                                    -
-                                <% end if %>
+                            <td>
+                                <%= data("OPD_QtySatuan") %>
+                            </td>
+                            <td>
+                                <% call getSatBerat(data("OPD_JenisSat")) %>
+                            </td>
+                            <td>
+                                <%= replace(formatCurrency(data("OPD_Harga")),"$","") %>
+                            </td>
+                            <td>
+                                <%= data("OPD_disc1") %>%
+                            </td>
+                            <td>
+                                <%= data("OPD_disc2") %>%
+                            </td>
+                            <td>
+                                <%= ckstatus %>
+                            </td>
+                            <td>
+                                <%= replace(formatCurrency(realharga),"$","") %>
                             </td>
                         </tr>
                     <% 
-                    dataD.movenext
+                    data.movenext
                     loop
+                    data.movefirst
+                    ' cek diskonall
+                    if data("OPH_diskonall") <> 0 OR data("OPH_Diskonall") <> "" then
+                        diskonall = (data("OPH_Diskonall")/100) * grantotal
+                    else
+                        diskonall = 0
+                    end if
+
+                    ' hitung ppn
+                    if data("OPH_ppn") <> 0 OR data("OPH_ppn") <> "" then
+                        ppn = (data("OPH_ppn")/100) * grantotal
+                    else
+                        ppn = 0
+                    end if
+                    realgrantotal = (grantotal - diskonall) + ppn
                     %>
+                    <tr>
+                        <th colspan="7">Total Pembayaran</th>
+                        <th><%= replace(formatCurrency(realgrantotal),"$","") %></th>
+                        <th></th>
+                    </tr>
                 </tbody>
             </table>
         </div>
-    </div> 
-</div>
+    </div>
+</div>  
+
+
+
 <% 
     call footer()
 %>

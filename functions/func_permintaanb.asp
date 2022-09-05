@@ -4,18 +4,18 @@ sub tambahPbarang()
     tgl = trim(Request.Form("tgl"))
     agen = trim(Request.Form("agen"))
     divisi = trim(Request.Form("divisi"))
-    kebutuhan = trim(Request.Form("kebutuhan"))
+    departement = trim(Request.Form("departement"))
     keterangan = trim(Request.Form("keterangan"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_T_Memo_H WHERE MemoTgl = '"& tgl &"' AND MemoagenID = '"& agen &"' AND memoKebID = '"& kebutuhan &"' AND memoKeterangan = '"& keterangan &"' AND memoAktifYN = 'Y'"
+    data_cmd.commandText = "SELECT * FROM DLK_T_Memo_H WHERE MemoTgl = '"& tgl &"' AND MemoagenID = '"& agen &"' AND memoDepID = '"& departement &"' AND memoKeterangan = '"& keterangan &"' AND memoAktifYN = 'Y'"
     ' response.write data_cmd.commandText
     set data = data_cmd.execute
 
     if data.eof then
-        data_cmd.commandText = "sp_addDLK_T_Memo_H '"& tgl &"','"& agen &"','"& kebutuhan &"', '"& divisi &"', '"& keterangan &"' "
+        data_cmd.commandText = "sp_addDLK_T_Memo_H '"& tgl &"','"& agen &"','"& departement &"', '"& divisi &"', '"& keterangan &"' "
         set data = data_cmd.execute
 
         id = data("ID")

@@ -1,235 +1,166 @@
 <!--#include file="../../init.asp"-->
-<!--#include file="../../functions/func_permintaanb.asp"-->
 <% 
+    ' Response.ContentType = "application/vnd.ms-excel"
+    ' Response.AddHeader "content-disposition", "filename=Purchase Order "& Request.QueryString("id")&" .xls"
+
     id = trim(Request.QueryString("id"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_T_Memo_H WHERE memoID = '"& id &"' and memoAktifYN = 'Y'"
-    ' response.write data_cmd.commandText
-    set dataH = data_cmd.execute
+    data_cmd.commandText = "SELECT dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_ppn, dbo.DLK_T_OrPemH.OPH_diskonall, dbo.DLK_T_OrPemH.OPH_memoId, dbo.DLK_T_OrPemD.OPD_OPHID, dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_JenisSat, dbo.DLK_T_OrPemD.OPD_Disc1,dbo.DLK_T_OrPemD.OPD_Disc2, dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_phone, DLK_M_Vendor.ven_Email, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_OrPemH RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID,13) LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_OrPemH.OPH_venID = dbo.DLK_M_Vendor.Ven_ID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrPemD.OPD_Item = DLK_M_Barang.Brg_ID WHERE dbo.DLK_T_OrPemH.OPH_ID = '"& id &"' AND dbo.DLK_T_OrPemH.OPH_AktifYN = 'Y' GROUP BY dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_ppn, dbo.DLK_T_OrPemH.OPH_diskonall,dbo.DLK_T_OrPemH.OPH_memoId, dbo.DLK_T_OrPemD.OPD_OPHID, dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_JenisSat,dbo.DLK_T_OrPemD.OPD_Disc1, dbo.DLK_T_OrPemD.OPD_Disc2,dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_phone, DLK_M_Vendor.ven_Email,DLK_M_Barang.Brg_Nama"
+
+    set data = data_cmd.execute
+    
 %>
-<% call header("Detail Permintaan Barang") %>
-<style>
-    body{
-        padding:10px;
-    }
-    .gambar{
-        width:80px;
-        height:80px;
-        position:absolute;
-        right:70px;
-    }
-    .gambar img{
-        position:absolute;
-        width:100px;
-        height:50px;
-    }
-    #cdetail > * > tr > *  {
-        border: 1px solid black;
-        padding:5px;
-    }
+    <table>
+        <tr rowspan="3">
+            <td colspan="4">
+                <img src="../../public/img/delimapanjang.png" alt="delimapanjang"  width="500" height="70">
+            </td>
+            <td colspan="2">
+                JL.Raya Pemda (kaum pandak) No.17 <br>
+                Karadenan Cibinong-Bogor 16913 <br>
+                Telp.0251-8655385 <br>
+                Email : Dakotakaroseriindonesia01@gmail.com<br>
+            </td>
+        </tr>
+        <tr>
+            <th colspan="6"><hr></th>
+        </tr>
+        <tr>
+            <td>No</td>
+            <td>:</td>
+            <td>
+                <%= left(data("OPH_ID"),2) %>-<% call getAgen(mid(data("OPH_ID"),3,3),"") %>/<%= mid(data("OPH_ID"),6,4) %>/<%= right(data("OPH_ID"),4) %>
+            </td>
+        </tr>
+        <tr>
+            <td>Vendor</td>
+            <td>:</td>
+            <td>
+                <%= data("Ven_Nama") %>
+            </td>
+        </tr>
+        <tr>
+            <td>Phone</td>
+            <td>:</td>
+            <td>
+                <%= data("Ven_Phone") %>
+            </td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td>:</td>
+            <td>
+                <%= data("Ven_Email") %>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6" style="text-align:center;margin-top:5px;margin-bottom:5px;">
+                <h3>PURCHASE ORDER</h3>
+            </td>
+        </tr>
 
-    #cdetail{
-        width:100%;
-        font-size:12px;
-        border-collapse: collapse;
-    }
-    #cdetail2 > * > tr > *  {
-        border: 1px solid black;
-        padding:5px;
-    }
+        <tr>
+            <th scope="col">No</th>
+            <th scope="col">Item</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Satuan</th>
+            <th scope="col">Harga</th>
+            <th scope="col">Jumlah</th>
+        </tr>
+        <% 
+        no = 0
+        grantotal = 0
+        do while not data.eof 
+        no = no +1
+        ' cek total harga 
+        jml = data("OPD_QtySatuan") * data("OPD_Harga")
+        ' cek diskon peritem
+        if data("OPD_Disc1") <> 0 and data("OPD_Disc2") <> 0  then
+            dis1 = (data("OPD_Disc1")/100) * data("OPD_Harga")
+            dis2 = (data("OPD_Disc2")/100) * data("OPD_Harga")
+        elseif data("OPD_Disc1") <> 0 then
+            dis1 = (data("OPD_Disc1")/100) * data("OPD_Harga")
+        elseIf data("OPD_Disc2") <> 0 then
+            dis2 = (data("OPD_Disc2")/100) * data("OPD_Harga")
+        else    
+            dis1 = 0
+            dis2 = 0
+        end if
+        ' total dikon peritem
+        hargadiskon = data("OPD_Harga") - dis1 - dis2
+        realharga = hargadiskon * data("OPD_QtySatuan")  
 
-    #cdetail2{
-        width:30%;
-        font-size:12px;
-        border-collapse: collapse;
-        text-align: center;
-        right:10px;
-        position:absolute;
-    }
-</style>
-    <div class="row gambar">
-         <div class="col ">
-            <img src="../../public/img/delimalogo.png" alt="delimalogo">
-        </div>
-    </div>
-    <table width="100%" style="font-size:16px">
-        <tbody>
-        <tr>
-            <td align="center">DETAIL PERMINTAAN BARANG</td>
-        </tr> 
-        <tr>
-            <td>&nbsp</td>
-        </tr> 
-        </tbody>
-    </table> 
-    <table width="100%" style="font-size:12px"> 
-        <tbody>
-        <tr>
-            <td width="6%">Nomor </td>
-            <td width="10px">:</td>
-            <td align="left"> 
-                <b>
-                    <%= left(dataH("memoID"),4) %>/<% call getKebutuhan(mid(dataH("memoId"),5,3),"") %>-<% call getAgen(mid(dataH("memoID"),8,3),"") %>/<%= mid(dataH("memoID"),11,4) %>/<%= right(dataH("memoID"),3) %>
-                </b>
-            </td>
-            <td width="6%">
-                Cabang 
-            </td>
-            <td width="10px">
-                : 
-            </td>
-            <td align="left">
-                <% call getAgen(dataH("memoAgenID"),"p") %> 
-            </td>
-        </tr> 
-        <tr>
-            <td width="6%">Hari </td>
-            <td width="10px">:</td>
-            <td align="left"> 
-                <%call getHari(weekday(dataH("memoTgl"))) %>
-            </td>
-            <td width="6%">
-                Kebutuhan 
-            </td>
-            <td width="10px">
-                : 
-            </td>
-            <td align="left">
-                <% call getKebutuhan(dataH("memoKebID"),"P") %> 
-            </td>
-        </tr> 
-        <tr>
-            <td width="6%">Tanggal </td>
-            <td width="10px">:</td>
-            <td align="left"> 
-                <%= Cdate(dataH("memoTgl")) %>
-            </td>
-            <td width="6%">
-                Divisi 
-            </td>
-            <td width="10px">
-                : 
-            </td>
-            <td align="left">
-                <% call getDivisi(dataH("memoDivID")) %>
-            </td>
-        </tr> 
-        <tr>
-            <td>&nbsp</td>
-        </tr> 
-        </tbody>
-    </table> 
-    <table width="100%" style="font-size:12px" id="cdetail">
-        <tbody>
-            <tr>
-                <th>No</th>
-                <th>Item</th>
-                <th>Spesification</th>
-                <th>Quantity</th>
-                <th>Satuan</th>
-                <th>Harga</th>
-                <th>Keterangan</th>
-            </tr>
-            <% 
-            data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
-            ' response.write data_cmd.commandText
-            set dataD = data_cmd.execute
+        grantotal = grantotal + realharga
 
-            no = 0
-            do while not dataD.eof
-            no = no + 1
-            %>
-                <tr>
-                    <th><%= no %></th>
-                    <td><%= dataD("Brg_Nama") %></td>
-                    <td><%= dataD("memoSpect") %></td>
-                    <td><%= dataD("memoQtty") %></td>
-                    <td><% call getSatBerat(dataD("memoSatuan")) %></td>
-                    <td><%= replace(formatCurrency(dataD("memoHarga")),"$","") %></td>
-                    <td>
-                        <%= dataD("memoKeterangan") %>
-                    </td>
-                </tr>
-            <% 
-            dataD.movenext
-            loop
-            %>
-        </tbody>
+        ' cek status pembelian
+        data_cmd.commandText = "SELECT memoqtty FROM DLK_T_Memo_D WHERE left(memoId,17) = '"& data("OPH_MemoID") &"' AND memoitem = '"& data("OPD_Item") &"' AND memosatuan = '"& data("OPD_JenisSat") &"'"
+        ' response.write data_cmd.commandText & "<br>"
+        set qtymemo = data_cmd.execute
+
+        angkastatus = qtymemo("memoqtty") - data("OPD_QtySatuan")
+        if angkastatus > 0 then
+            ckstatus = "-"&angkastatus
+        elseIf angkastatus < 0 then
+            ckstatus = "OverPO"
+        else
+            ckstatus = "Done"
+        end if
+        %>
+            <tr>
+                <td>
+                    <%= no %>
+                </td>
+                <td>
+                    <%= data("Brg_Nama") %>
+                </td>
+                <td>
+                    <%= data("OPD_QtySatuan") %>
+                </td>
+                <td>
+                    <% call getSatBerat(data("OPD_JenisSat")) %>
+                </td>
+                <td>
+                    <%= replace(formatCurrency(data("OPD_Harga")),"$","") %>
+                </td>
+                <td>
+                    <%= replace(formatCurrency(realharga),"$","") %>
+                </td>
+            </tr>
+        <% 
+        data.movenext
+        loop
+        data.movefirst
+        ' cek diskonall
+        if data("OPH_diskonall") <> 0 OR data("OPH_Diskonall") <> "" then
+            diskonall = (data("OPH_Diskonall")/100) * grantotal
+        else
+            diskonall = 0
+        end if
+
+        ' hitung ppn
+        if data("OPH_ppn") <> 0 OR data("OPH_ppn") <> "" then
+            ppn = (data("OPH_ppn")/100) * grantotal
+        else
+            ppn = 0
+        end if
+        realgrantotal = (grantotal - diskonall) + ppn
+        %>
+        <tr>
+            <th colspan="5">Total Pembayaran</th>
+            <th><%= replace(formatCurrency(realgrantotal),"$","") %></th>
+        </tr>
+        <tr>
+            <th>ppn</th>
+            <td>:</td>
+            <th><%= data("OPH_PPN") %>%</th>
+        </tr>
+        <tr>
+            <th>Diskon All</th>
+            <td>:</td>
+            <th><%= data("OPH_Diskonall") %>%</th>
+        </tr>
     </table>
-    <table width="100%" style="font-size:12px">
-        <tbody>
-            <tr>
-                <td>
-                    &nbsp
-                </td>
-            </tr>
-            <tr>
-                <td width="6%"> 
-                    Note
-                </td>
-                <td width="10px"> 
-                    :
-                </td>
-                <td> 
-                    <%= dataH("memoketerangan") %>
-                </td>
-            </tr>
-            
-        </tbody>
-    </table>
-    <table width="50%" style="font-size:20px;">
-        <tbody>
-            <tr>
-                <td> 
-                    &nbsp
-                </td>
-            </tr>
-            <tr >
-                <td style="padding:10px;background-color:#7FFFD4;" > 
-                    Formulir Pengajuan Anggaran <% call getKebutuhan(dataH("memoKebID"),"P") %>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    &nbsp
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table id="cdetail2">
-        <tbody>
-            <tr>
-                <td>
-                    Menyetujui
-                </td>
-                <td>
-                    Mengajukan
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div style="height: 50px; overflow:hidden;">
-                        
-                    </div>
-                </td>
-                <td>
-                    <div style="height: 50px; overflow:hidden;">
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    FX Deni Arijanto
-                </td>
-                <td>
-                    Andika P.
-                </td>
-            </tr>
-        </tbody>
-    </table>
-<% 
-    call footer()
-%>
+    

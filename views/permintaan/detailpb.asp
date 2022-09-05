@@ -6,7 +6,7 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_T_Memo_H WHERE memoID = '"& id &"' and memoAktifYN = 'Y'"
+    data_cmd.commandText = "SELECT DLK_T_Memo_H.*, DLK_M_Departement.DepNama FROM DLK_T_Memo_H LEFT OUTER JOIN DLK_M_Departement ON DLK_T_Memo_H.memoDepID = DLK_M_Departement.DepID WHERE memoID = '"& id &"' and memoAktifYN = 'Y'"
     ' response.write data_cmd.commandText
     set dataH = data_cmd.execute
 %>
@@ -27,7 +27,7 @@
                 <div class="col-auto">
                     <label>
                         <b>
-                            <%= left(dataH("memoID"),4) %>/<% call getKebutuhan(mid(dataH("memoId"),5,3),"") %>-<% call getAgen(mid(dataH("memoID"),8,3),"") %>/<%= mid(dataH("memoID"),11,4) %>/<%= right(dataH("memoID"),3) %>
+                            <%= left(dataH("memoID"),4) %>/<%= mid(dataH("memoId"),5,3) %>-<% call getAgen(mid(dataH("memoID"),8,3),"") %>/<%= mid(dataH("memoID"),11,4) %>/<%= right(dataH("memoID"),3) %>
                         </b>
                     </label>
                 </div>
@@ -56,10 +56,10 @@
         <div class="col-sm-6">
             <div class="row g-3 align-items-center">
                 <div class="col-auto">
-                    <label class="col-form-label">Kebutuhan :</label>
+                    <label class="col-form-label">Departement :</label>
                 </div>
                 <div class="col-auto">
-                    <label><% call getKebutuhan(dataH("memoKebID"),"P") %></label>
+                    <label><%= dataH("Depnama") %></label>
                 </div>
             </div>
         </div>

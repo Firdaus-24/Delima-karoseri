@@ -89,19 +89,4 @@ sub getAgen(id,name)
         response.write gAgen("agenName")
     end if
 end sub
-' kebutuhan untuk permintaan barang
-sub getKebutuhan(id,name)
-    set getKeb_cmd =  Server.CreateObject ("ADODB.Command")
-    getKeb_cmd.ActiveConnection = mm_delima_string
-
-    getKeb_cmd.commandText = "SELECT KebNama, KebID FROM DLK_M_Kebutuhan where KebID = '"& id &"'"
-    ' response.write getKeb_cmd.commandText
-    set getKeb = getKeb_cmd.execute
-
-    if name <> "" then
-        response.write getKeb("KebNama")
-    else
-        response.write getkeb("KebID")
-    end if
-end sub
 %>

@@ -6,7 +6,7 @@
     data_cmd.ActiveConnection = mm_delima_string
 
 
-    data_cmd.commandText = "SELECT dbo.DLK_T_AppPermintaan.AppID, dbo.DLK_T_AppPermintaan.Appdana, dbo.DLK_T_Memo_D.memoID, dbo.DLK_T_Memo_D.memoItem, dbo.DLK_T_Memo_D.memoSpect, dbo.DLK_T_Memo_D.memoQtty, dbo.DLK_T_Memo_D.memoSatuan, dbo.DLK_T_Memo_D.memoHarga,dbo.DLK_T_Memo_D.memoKeterangan, DLK_M_Barang.Brg_Nama FROM DLK_T_Memo_D LEFT OUTER JOIN dbo.DLK_T_AppPermintaan ON left(dbo.DLK_T_Memo_D.memoID,17) = dbo.DLK_T_AppPermintaan.AppMemoID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.Memoitem = DLK_M_Barang.Brg_ID WHERE dbo.DLK_T_AppPermintaan.AppmemoID = '"& id &"'"
+    data_cmd.commandText = "SELECT dbo.DLK_T_Memo_H.MemoID, dbo.DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, GLB_M_agen.AgenID, GLB_M_Agen.AgenName FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.Memoitem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_T_Memo_H ON LEFT(DLK_T_Memo_D.memoID,17) = DLK_T_Memo_H.memoID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE LEFT(dbo.DLK_T_Memo_D.memoID,17) = '"& id &"' AND DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'Y'"
     ' response.write data_cmd.commandText & "<br>"
     set data = data_cmd.execute
 
@@ -32,24 +32,12 @@
                 <input type="text" id="memoId" name="memoId" class="form-control" value="<%= id %>" readonly>
             </div>
             <div class="col-lg-2 mb-3">
-                <label for="nfinance" class="col-form-label">No Finance</label>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <input type="text" id="nfinance" name="nfinance" class="form-control" value="<%= data("AppID") %>" readonly>
-            </div>
-            <div class="col-lg-2 mb-3">
                 <label for="agen" class="col-form-label">Cabang / Agen</label>
             </div>
             <div class="col-lg-4 mb-3">
                 <select class="form-select" aria-label="Default select example" id="agen" name="agen" required>
-                    <option value="<%= mid(data("memoID"),8,3) %>" selected ><% call getAgen(mid(data("memoID"),8,3),"P") %></option>
+                    <option value="<%= data("AgenID") %>" selected ><%=data("AgenName") %></option>
                 </select>
-            </div>
-            <div class="col-lg-2 mb-3">
-                <label for="tgl" class="col-form-label">Tanggal</label>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <input type="text" id="tgl" name="tgl" value="<%= date %>" onfocus="(this.type='date')" class="form-control" required>
             </div>
         </div>
         <div class="row align-items-center">
@@ -68,10 +56,10 @@
                 </select>
             </div>
             <div class="col-lg-2 mb-3">
-                <label for="tgljt" class="col-form-label">Tanggal Jatuh Tempo</label>
+                <label for="tgl" class="col-form-label">Tanggal</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="date" id="tgljt" name="tgljt" class="form-control">
+                <input type="text" id="tgl" name="tgl" value="<%= date %>" onfocus="(this.type='date')" class="form-control" required>
             </div>
         </div>
         <div class="row align-items-center">
@@ -87,27 +75,28 @@
                 </select>
             </div>
             <div class="col-lg-2 mb-3">
+                <label for="tgljt" class="col-form-label">Tanggal Jatuh Tempo</label>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <input type="date" id="tgljt" name="tgljt" class="form-control">
+            </div>
+        </div>
+        <div class="row align-items-center">
+            
+            <div class="col-lg-2 mb-3">
                 <label for="diskon" class="col-form-label">Diskon All</label>
             </div>
             <div class="col-lg-4 mb-3">
                 <input type="number" id="diskon" name="diskon" class="form-control">
             </div>
-        </div>
-        <div class="row align-items-center">
             <div class="col-lg-2 mb-3">
                 <label for="ppn" class="col-form-label">PPn</label>
             </div>
             <div class="col-lg-4 mb-3">
                 <input type="number" id="ppn" name="ppn" class="form-control">
             </div>
-            <div class="col-lg-2 mb-3">
-                <label for="dana_tpo" class="col-form-label">Acc Dana</label>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <input type="text" id="dana_tpo" name="dana_tpo" class="form-control" value="<%= replace(formatCurrency(data("appDana")),"$","") %>" readonly> 
-            </div>
         </div>
-         <div class="row">
+        <div class="row">
             <div class="col-lg-2 mb-3">
                 <label for="keterangan" class="col-form-label">Keterangan</label>
             </div>
@@ -145,7 +134,7 @@
                                 <input type="text" id="qtty" name="qtty" class="form-control " value="<%= data("memoQtty") %>">
                             </td>
                             <td>
-                                <input type="text" id="hargapo" name="harga" class="form-control " value="<%= data("memoharga") %>">
+                                <input type="number" id="hargapo" name="harga" class="form-control " autocomplete="off" required>
                             </td>
                             <td>
                                 <select class="form-control" aria-label="Default select example" id="satuan" name="satuan" >

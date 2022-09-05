@@ -6,7 +6,7 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_T_Memo_H WHERE memoID = '"& id &"' and memoAktifYN = 'Y'"
+    data_cmd.commandText = "SELECT DLK_T_Memo_H.*, DLK_M_Departement.DepNama, GLB_M_Agen.AgenNAme, DLK_M_Divisi.DivNama FROM DLK_T_Memo_H LEFT OUTER JOIN DLK_M_Departement ON DLK_T_Memo_H.memoDepID = DLK_M_Departement.DepID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = LEFT(GLB_M_Agen.AgenID,3) LEFT OUTER JOIN DLK_M_Divisi ON DLK_T_Memo_H.memoDivID = DLK_M_Divisi.DivID WHERE memoID = '"& id &"' and memoAktifYN = 'Y'"
     ' response.write data_cmd.commandText
     set dataH = data_cmd.execute
     ' get satuan
@@ -33,7 +33,7 @@
                 <div class="col-auto">
                     <label>
                         <b>
-                            <%= left(dataH("memoID"),4) %>/<% call getKebutuhan(mid(dataH("memoId"),5,3),"") %>-<% call getAgen(mid(dataH("memoID"),8,3),"") %>/<%= mid(dataH("memoID"),11,4) %>/<%= right(dataH("memoID"),3) %>
+                            <%= left(dataH("memoID"),4) %>/<%= mid(dataH("memoId"),5,3) %>-<% call getAgen(mid(dataH("memoID"),8,3),"") %>/<%= mid(dataH("memoID"),11,4) %>/<%= right(dataH("memoID"),3) %>
                         </b>
                     </label>
                 </div>
@@ -45,7 +45,7 @@
                     <label class="col-form-label">Cabang :</label>
                 </div>
                 <div class="col-auto">
-                    <% call getAgen(dataH("memoAgenID"),"p") %>
+                    <%= dataH("AgenName")%>
                 </div>
             </div>
         </div>
@@ -62,10 +62,10 @@
         <div class="col-sm-6">
             <div class="row g-3 align-items-center">
                 <div class="col-auto">
-                    <label class="col-form-label">Kebutuhan :</label>
+                    <label class="col-form-label">Departement :</label>
                 </div>
                 <div class="col-auto">
-                    <label><% call getKebutuhan(dataH("memoKebID"),"P") %></label>
+                    <label><%= dataH("DepNama") %></label>
                 </div>
             </div>
         </div>
@@ -85,7 +85,7 @@
                     <label class="col-form-label">Divisi :</label>
                 </div>
                 <div class="col-auto">
-                    <label><% call getDivisi(dataH("memoDivID")) %></label>
+                    <label><%= dataH("DivNama") %></label>
                 </div>
             </div>
         </div>
@@ -112,7 +112,6 @@
                         <th scope="col">Spesification</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Satuan</th>
-                        <th scope="col">Harga</th>
                         <th scope="col">Keterangan</th>
                         <th scope="col" class="text-center">Aksi</th>
                     </tr>
@@ -133,7 +132,6 @@
                             <td><%= dataD("memoSpect") %></td>
                             <td><%= dataD("memoQtty") %></td>
                             <td><% call getSatBerat(dataD("memoSatuan")) %></td>
-                            <td><%= replace(formatCurrency(dataD("memoHarga")),"$","") %></td>
                             <td>
                                     <%= dataD("memoKeterangan") %>
                             </td>
@@ -192,14 +190,6 @@
             </div>
             <div class="col-sm-3 mb-3">
                 <input type="number" id="qtty" class="form-control" name="qtty" autocomplete="off" required>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-3">
-                <label for="harga" class="col-form-label">Harga Satuan</label>
-            </div>
-            <div class="col-sm-4 mb-3">
-                <input type="number" id="pbharga" class="form-control" name="harga" autocomplete="off" required>
             </div>
         </div>
         <div class="row">

@@ -6,7 +6,7 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_T_Memo_H WHERE memoID = '"& id &"' and memoAktifYN = 'Y'"
+    data_cmd.commandText = "SELECT DLK_T_Memo_H.*, DLK_M_Departement.DepNama FROM DLK_T_Memo_H LEFT OUTER JOIN DLK_M_Departement ON DLK_T_Memo_H.memoDepID = DLK_M_Departement.DepID WHERE memoID = '"& id &"' and memoAktifYN = 'Y'"
     ' response.write data_cmd.commandText
     set dataH = data_cmd.execute
     ' get satuan
@@ -33,7 +33,7 @@
                 <div class="col-auto">
                     <label>
                         <b>
-                            <%= left(dataH("memoID"),4) %>/<% call getKebutuhan(mid(dataH("memoId"),5,3),"") %>-<% call getAgen(mid(dataH("memoID"),8,3),"") %>/<%= mid(dataH("memoID"),11,4) %>/<%= right(dataH("memoID"),3) %>
+                            <%= left(dataH("memoID"),4) %>/<%= mid(dataH("memoId"),5,3) %>-<% call getAgen(mid(dataH("memoID"),8,3),"") %>/<%= mid(dataH("memoID"),11,4) %>/<%= right(dataH("memoID"),3) %>
                         </b>
                     </label>
                 </div>
@@ -62,10 +62,10 @@
         <div class="col-sm-6">
             <div class="row g-3 align-items-center">
                 <div class="col-auto">
-                    <label class="col-form-label">Kebutuhan :</label>
+                    <label class="col-form-label">Departement :</label>
                 </div>
                 <div class="col-auto">
-                    <label><% call getKebutuhan(dataH("memoKebID"),"P") %></label>
+                    <label><%= dataH("DepNama")%></label>
                 </div>
             </div>
         </div>
@@ -112,7 +112,6 @@
                         <th scope="col">Spesification</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Satuan</th>
-                        <th scope="col">Harga</th>
                         <th scope="col">Keterangan</th>
                         <th scope="col" class="text-center">Aksi</th>
                     </tr>
@@ -134,7 +133,6 @@
                             <td><%= dataD("memoSpect") %></td>
                             <td><%= dataD("memoQtty") %></td>
                             <td><% call getSatBerat(dataD("memoSatuan")) %></td>
-                            <td><%= replace(formatCurrency(dataD("memoHarga")),"$","") %></td>
                             <td>
                                     <%= dataD("memoKeterangan") %>
                             </td>
@@ -197,14 +195,6 @@
         </div>
         <div class="row">
             <div class="col-sm-3">
-                <label for="harga" class="col-form-label">Harga Satuan</label>
-            </div>
-            <div class="col-sm-4 mb-3">
-                <input type="number" id="pbharga" class="form-control" name="harga" autocomplete="off" required>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-3">
                 <label for="satuan" class="col-form-label">Satuan Barang</label>
             </div>
             <div class="col-sm-4 mb-3">
@@ -247,7 +237,6 @@
         brg = trim(Request.Form("brg"))
         spect = trim(Request.Form("spect"))
         qtty = trim(Request.Form("qtty"))
-        harga = trim(Request.Form("harga"))
         satuan = trim(Request.Form("satuan"))
         ket = trim(Request.Form("ket"))
 
@@ -271,11 +260,11 @@
 
                     iddetail = memoid & right(nol & a("urut"),3)
 
-                    call query("INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoHarga, memoKeterangan) VALUES ( '"& iddetail &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"', "& harga &",'"& ket &"')")
+                    call query("INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoKeterangan) VALUES ( '"& iddetail &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"','"& ket &"')")
                 else
                     iddetail = memoid & right(nol & p("urut"),3)
 
-                    call query("INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoHarga, memoKeterangan) VALUES ( '"& iddetail &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"', "& harga &",'"& ket &"')")
+                    call query("INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoKeterangan) VALUES ( '"& iddetail &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"','"& ket &"')")
                 end if
             value = 1
         else

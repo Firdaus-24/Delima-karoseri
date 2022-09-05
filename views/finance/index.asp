@@ -13,11 +13,8 @@
     set agen_cmd =  Server.CreateObject ("ADODB.Command")
     agen_cmd.ActiveConnection = mm_delima_string
     ' filter agen
-    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_OrPemH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_OrPemH.OPH_AgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_OrPemH.OPH_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
     set agendata = agen_cmd.execute
-    ' filter kebutuhan
-    agen_cmd.commandText = "SELECT dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama FROM dbo.DLK_M_Kebutuhan INNER JOIN dbo.DLK_T_Memo_H ON dbo.DLK_M_Kebutuhan.kebID = dbo.DLK_T_Memo_H.memoKebID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y'  AND DLK_T_Memo_H.memoApproveYN = 'Y' GROUP BY dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama"
-    set kebData = agen_cmd.execute
 
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
@@ -32,31 +29,25 @@
     end if
     
     if agen <> "" then
-        filterAgen = "AND memoAgenID = '"& agen &"'"
+        filterAgen = "AND OPH_AgenID = '"& agen &"'"
     else
         filterAgen = ""
     end if
 
-    if keb <> "" then
-        filterKeb = "AND memoKebID = '"& keb &"'"
-    else
-        filterKeb = ""
-    end if
-
     if tgla <> "" AND tgle <> "" then
-        filtertgl = "AND memotgl BETWEEN '"& tgla &"' AND '"& tgle &"'"
+        filtertgl = "AND OPH_Date BETWEEN '"& tgla &"' AND '"& tgle &"'"
     elseIf tgla <> "" AND tgle = "" then
-        filtertgl = "AND memotgl = '"& tgla &"'"
+        filtertgl = "AND OPH_Date = '"& tgla &"'"
     else 
         filtertgl = ""
     end if
     ' query seach 
-    strquery = "SELECT DLK_T_Memo_H.* FROM DLK_T_Memo_H WHERE MemoAktifYN = 'Y' AND memoApproveYN = 'Y' "& filterAgen &" "& filterKeb &" "& filtertgl &""
+    strquery = "SELECT DLK_T_OrPemH.*, GLB_M_Agen.agenName, DLK_M_Vendor.Ven_Nama FROM DLK_T_OrPemH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_OrPemH.OPH_AgenID = LEFT(GLB_M_Agen.AgenID,3) LEFT OUTER JOIN DLK_M_Vendor ON DLK_T_OrPemH.OPH_VenID = DLK_M_Vendor.Ven_ID WHERE OPH_AktifYN = 'Y'  "& filterAgen &" "& filterDep &" "& filtertgl &""
 
     ' untuk data paggination
     page = Request.QueryString("page")
 
-    orderBy = " order by memoTgl DESC"
+    orderBy = " order by OPH_Date DESC"
     set rs = Server.CreateObject("ADODB.Recordset")
     sqlawal = strquery
 
@@ -116,18 +107,6 @@
                     %>
                 </select>
             </div>
-            <div class="col-lg-3 mb-3">
-                <label for="keb">Kebutuhan</label>
-                <select class="form-select" aria-label="Default select example" name="keb" id="keb">
-                    <option value="">Pilih</option>
-                    <% do while not kebData.eof %>
-                    <option value="<%= kebData("kebID") %>"><%= kebData("kebNama") %></option>
-                    <% 
-                    kebData.movenext
-                    loop
-                    %>
-                </select>
-            </div>
             <div class="col-lg-2 mb-3">
                 <label for="tgl">Tanggal Pertama</label>
                 <input type="date" class="form-control" name="tgla" id="tgla" autocomplete="off" >
@@ -146,13 +125,13 @@
             <table class="table">
                 <thead class="bg-secondary text-light">
                     <tr>
-                    <th scope="col">No</th>
-                    <th scope="col">No Memo</th>
+                    <th scope="col">No Purchase</th>
                     <th scope="col">Tanggal</th>
+                    <th scope="col">Tanggal JT</th>
                     <th scope="col">Cabang</th>
-                    <th scope="col">Divisi</th>
-                    <th scope="col">Kebutuhan</th>
-                    <th scope="col">Aktif</th>
+                    <th scope="col">Vendor</th>
+                    <th scope="col">Diskon</th>
+                    <th scope="col">Ppn</th>
                     <th scope="col">Permintaan</th>
                     <th scope="col">Status</th>
                     <th scope="col" class="text-center">Aksi</th>
@@ -166,30 +145,26 @@
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
 
-                    data_cmd.commandText = "SELECT SUM(dbo.DLK_T_Memo_D.memoHarga * dbo.DLK_T_Memo_D.memoQtty) As tharga FROM dbo.DLK_T_Memo_H RIGHT OUTER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) WHERE (dbo.DLK_T_Memo_H.memoID = '"& rs("memoID") &"') AND DLK_T_Memo_H.memoAktifYN = 'Y'"
+                    data_cmd.commandText = "SELECT SUM(dbo.DLK_T_OrPemD.OPD_Harga * dbo.DLK_T_OrPemD.OPD_QtySatuan) As tharga FROM dbo.DLK_T_OrPemD LEFT OUTER JOIN dbo.DLK_T_OrPemH ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID, 13) WHERE (dbo.DLK_T_OrPemH.OPH_ID = '"& rs("OPH_ID") &"') AND DLK_T_OrPemH.OPH_AktifYN = 'Y'"
                     set ddata = data_cmd.execute
 
                     ' cek approve finance
-                    
-                    data_cmd.commandText = "SELECT DLK_T_AppPermintaan.appID, DLK_T_AppPermintaan.appDana, SUM(dbo.DLK_T_Memo_D.memoHarga * dbo.DLK_T_Memo_D.memoQtty) As tharga FROM dbo.DLK_T_Memo_H RIGHT OUTER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = left(dbo.DLK_T_Memo_D.memoID,17) LEFT OUTER JOIN DLK_T_appPermintaan ON DLK_T_Memo_H.memoID = DLK_T_AppPermintaan.AppMemoID WHERE (dbo.DLK_T_AppPermintaan.AppmemoID = '"& rs("memoID") &"') AND DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_AppPermintaan.AppAktifYN = 'Y' group by DLK_T_AppPermintaan.appID, DLK_T_AppPermintaan.appDana"
+                    data_cmd.commandText = "SELECT DLK_T_AppPermintaan.appID, DLK_T_AppPermintaan.appDana, DLK_T_OrPemH.OPH_ID, SUM(dbo.DLK_T_OrPemD.OPD_Harga * dbo.DLK_T_OrPemD.OPD_QtySatuan) As tharga FROM dbo.DLK_T_OrPemD LEFT OUTER JOIN dbo.DLK_T_OrPemH ON left(dbo.DLK_T_OrPemD.OPD_OPHID,13) = DLK_T_OrPemH.OPH_ID LEFT OUTER JOIN DLK_T_appPermintaan ON LEFT(DLK_T_OrPemD.OPD_OPHID,13) = DLK_T_AppPermintaan.AppOPHID WHERE (dbo.DLK_T_AppPermintaan.AppOPHID = '"& rs("OPH_ID") &"') AND DLK_T_OrPemH.OPH_AktifYN = 'Y' AND DLK_T_AppPermintaan.AppAktifYN = 'Y' group by DLK_T_AppPermintaan.appID, DLK_T_AppPermintaan.appDana, DLK_T_OrPemH.OPH_ID"
                     ' response.write data_cmd.commandText & "<br>"
                     set app = data_cmd.execute
                     %>
                     <tr>
-                        <th scope="row"><%= recordcounter %></th>
-                        <td>
-                            <%= left(rs("memoID"),4) %>/<% call getKebutuhan(mid(rs("memoId"),5,3),"") %>-<% call getAgen(mid(rs("memoID"),8,3),"") %>/<%= mid(rs("memoID"),11,4) %>/<%= right(rs("memoID"),3) %>
-                        </td>
-                        <td><%= rs("memoTgl") %></td>
-                        <td><% call getAgen(rs("memoAgenID"),"p") %></td>
-                        <td><% call getDivisi(rs("memoDivID")) %></td>
-                        <td><% call getKebutuhan(rs("memoKebID"),"P") %></td>
-                        <td>
-                            <%if rs("memoAktifYN") = "Y" then %>Aktif <% else %>Off <% end if %>
-                        </td>
-                        <td>
-                            <%= replace(formatCurrency(ddata("tharga")),"$","") %>
-                        </td>
+                        <th>
+                            <%= rs("OPH_ID") %>
+                        </th>
+                        <td><%= Cdate(rs("OPH_Date")) %></td>
+                        <td><%= Cdate(rs("OPH_JTDate")) %></td>
+                        <td><%= rs("AgenName") %></td>
+                        <td><%= rs("Ven_Nama") %></td>
+                        <td><%= rs("OPH_DiskonAll") %></td>
+                        <td><%= rs("OPH_PPN") %></td>
+                        <td><%= replace(formatCurrency(ddata("tharga")),"$","") %></td>
+                        
                         <td>
                             <% if not app.eof then %>
                                 <% if app("appDana") >= app("tharga") then %>
@@ -204,10 +179,10 @@
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <% if app.eof then %>
-                                <a href="approvepbarang.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-primary btnAppPer">Approve</a>
-                                <a href="dpbarang.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-danger">Detail</a>
+                                <a href="approvepbarang.asp?id=<%= rs("OPH_ID") %>" class="btn badge text-bg-primary btnAppPer">Approve</a>
+                                <a href="dpbarang.asp?id=<%= rs("OPH_ID") %>" class="btn badge text-bg-danger">Detail</a>
                                 <% else %>
-                                <a href="dapp_u.asp?id=<%= app("appID") %>" class="btn badge text-bg-light">Update</a>
+                                <a href="dapp_u.asp?id=<%= app("AppID") %>" class="btn badge text-bg-light">Update</a>
                                 <% end if %>
                             </div>
                         </td>

@@ -12,8 +12,8 @@
     agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
     set agendata = agen_cmd.execute
     ' filter kebutuhan
-    agen_cmd.commandText = "SELECT dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama FROM dbo.DLK_M_Kebutuhan INNER JOIN dbo.DLK_T_Memo_H ON dbo.DLK_M_Kebutuhan.kebID = dbo.DLK_T_Memo_H.memoKebID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y' GROUP BY dbo.DLK_M_Kebutuhan.kebID, dbo.DLK_M_Kebutuhan.kebNama"
-    set kebData = agen_cmd.execute
+    agen_cmd.commandText = "SELECT dbo.DLK_M_Departement.DepID, dbo.DLK_M_Departement.DepNama FROM dbo.DLK_M_Departement INNER JOIN dbo.DLK_T_Memo_H ON dbo.DLK_M_Departement.DepID = dbo.DLK_T_Memo_H.memoDepID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y' GROUP BY dbo.DLK_M_Departement.DepID, dbo.DLK_M_Departement.DepNama"
+    set DepData = agen_cmd.execute
 
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
@@ -34,7 +34,7 @@
     end if
 
     if keb <> "" then
-        filterKeb = "AND memoKebID = '"& keb &"'"
+        filterKeb = "AND memoDepID = '"& keb &"'"
     else
         filterKeb = ""
     end if
@@ -47,7 +47,7 @@
         filtertgl = ""
     end if
     ' query seach 
-    strquery = "SELECT * FROM DLK_T_Memo_H WHERE MemoAktifYN = 'Y' "& filterAgen &" "& filterKeb &" "& filtertgl &""
+    strquery = "SELECT DLK_T_Memo_H.*, GLB_M_Agen.AgenName, DLK_M_Divisi.DivNama, DLK_M_Departement.DepNama FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = LEFT(GLB_M_Agen.AgenID,3) LEFT OUTER JOIN DLK_M_Divisi ON DLK_T_Memo_H.memoDivid = DLK_M_Divisi.divID LEFT OUTER JOIN DLK_M_Departement ON DLK_T_Memo_H.MemoDepID = DLK_M_Departement.DepID WHERE MemoAktifYN = 'Y' "& filterAgen &" "& filterKeb &" "& filtertgl &""
 
     ' untuk data paggination
     page = Request.QueryString("page")
@@ -120,10 +120,10 @@
                 <label for="keb">Kebutuhan</label>
                 <select class="form-select" aria-label="Default select example" name="keb" id="keb">
                     <option value="">Pilih</option>
-                    <% do while not kebData.eof %>
-                    <option value="<%= kebData("kebID") %>"><%= kebData("kebNama") %></option>
+                    <% do while not DepData.eof %>
+                    <option value="<%= DepData("DepID") %>"><%= DepData("DepNama") %></option>
                     <% 
-                    kebData.movenext
+                    DepData.movenext
                     loop
                     %>
                 </select>
@@ -151,7 +151,7 @@
                     <th scope="col">Tanggal</th>
                     <th scope="col">Cabang</th>
                     <th scope="col">Divisi</th>
-                    <th scope="col">Kebutuhan</th>
+                    <th scope="col">Departement</th>
                     <th scope="col">Aktif</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
@@ -171,12 +171,12 @@
                     <tr>
                         <th scope="row"><%= recordcounter %></th>
                         <td>
-                            <%= left(rs("memoID"),4) %>/<% call getKebutuhan(mid(rs("memoId"),5,3),"") %>-<% call getAgen(mid(rs("memoID"),8,3),"") %>/<%= mid(rs("memoID"),11,4) %>/<%= right(rs("memoID"),3) %>
+                            <%= left(rs("memoID"),4) %>/<%=mid(rs("memoId"),5,3) %>-<% call getAgen(mid(rs("memoID"),8,3),"") %>/<%= mid(rs("memoID"),11,4) %>/<%= right(rs("memoID"),3) %>
                         </td>
                         <td><%= rs("memoTgl") %></td>
-                        <td><% call getAgen(rs("memoAgenID"),"p") %></td>
-                        <td><% call getDivisi(rs("memoDivID")) %></td>
-                        <td><% call getKebutuhan(rs("memoKebID"),"P") %></td>
+                        <td><%= rs("AgenName") %></td>
+                        <td><%= rs("DivNama") %></td>
+                        <td><%= rs("DepNama")%></td>
                         <td>
                             <%if rs("memoAktifYN") = "Y" then %>Aktif <% else %>Off <% end if %>
                         </td>
