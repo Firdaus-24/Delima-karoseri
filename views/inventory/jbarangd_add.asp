@@ -272,7 +272,7 @@
                             <td><%= replace(formatCurrency(getstok("IPD_Harga")),"$","") %></td>
                             <td class="text-center">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="ckpenjualan" id="ckpenjualan" value="<%= data("IJH_ID") &","& getstok("IPD_IPHID") &","& getstok("Brg_ID") &","& getstok("IPD_Harga") &","& getstok("IPD_JenisSat") &","& getstok("stok") %>"  required>
+                                    <input class="form-check-input" type="radio" name="ckpenjualan" id="ckpenjualan" value="<%= data("OJH_ID") &","& getstok("IPD_IPHID") &","& getstok("Brg_ID") &","& getstok("IPD_Harga") &","& getstok("IPD_JenisSat") &","& getstok("stok") %>"  required>
                                 </div>
                             </td>
                         </tr>

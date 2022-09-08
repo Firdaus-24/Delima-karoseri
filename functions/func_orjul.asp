@@ -2,29 +2,19 @@
     sub tambahOrjul()
         agen = trim(Request.Form("agen"))
         tgl = trim(Request.Form("tgl"))
-        customer = trim(Request.Form("customer"))
-        tgljt = trim(Request.Form("tgljt"))
-        metpem = trim(Request.Form("metpem"))
-        diskon = trim(Request.Form("diskon"))
+        div = trim(Request.Form("div"))
+        departement = trim(Request.Form("departement"))
         keterangan = trim(Request.Form("keterangan"))
-        typejual = trim(Request.Form("typejual"))
-        if diskon = "" then
-            diskon = 0
-        end if
-        ppn = trim(Request.Form("ppn"))
-        if ppn = "" then
-            ppn = 0
-        end if  
 
         set data_cmd =  Server.CreateObject ("ADODB.Command")
         data_cmd.ActiveConnection = mm_delima_string
 
-        data_cmd.commandText = "SELECT * FROM DLK_T_OrJulH WHERE OJH_AgenID = '"& agen &"' AND OJH_Date = '"& tgl &"' AND OJH_custID = '"& customer &"' AND OJH_JTDate = '"& tgljt &"' AND OJH_MetPem = "& metpem &" AND OJH_DiskonAll = '"& diskon &"' AND OJH_PPn = "& ppn &" AND OJH_AktifYN = 'Y'"
+        data_cmd.commandText = "SELECT * FROM DLK_T_OrJulH WHERE OJH_AgenID = '"& agen &"' AND OJH_Date = '"& tgl &"' AND OJH_divID = '"& div &"' AND OJH_depID = '"& departement &"' AND OJH_Keterangan = '"& keterangan &"' AND OJH_AktifYN = 'Y'"
         ' response.write data_cmd.commandText & "<br>"
         set data = data_cmd.execute
 
         if data.eof then
-            data_cmd.commandText = "exec sp_AddDLK_T_OrJulH '"& agen &"', '"& tgl &"', '"& customer &"', '"& tgljt &"', '"& keterangan &"', "& diskon &", "& ppn &", "& metpem &""
+            data_cmd.commandText = "exec sp_AddDLK_T_OrJulH '"& agen &"', '"& tgl &"', '"& div &"', '"& departement &"', '"& keterangan &"'"
             ' response.write data_cmd.commandText & "<br>"
             set p = data_cmd.execute
 
@@ -45,10 +35,10 @@
     end sub
 
     sub detailOrjul()
+        agen = trim(Request.Form("agen"))
         ckdorjul = trim(Request.Form("ckdorjul"))
-        disc1 = trim(Request.Form("disc1"))
-        disc2 = trim(Request.Form("disc2"))
         qtyorjul = trim(Request.Form("qtyorjul"))
+        satuan = trim(Request.Form("satuan"))
         nol = "000"
         
         arydata = Split(ckdorjul, ",")
@@ -56,7 +46,7 @@
         set data_cmd =  Server.CreateObject ("ADODB.Command")
         data_cmd.ActiveConnection = mm_delima_string
 
-        data_cmd.commandText = "SELECT * FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& trim(arydata(0)) &"' AND OJD_item = '"& trim(arydata(2)) &"'"
+        data_cmd.commandText = "SELECT * FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& trim(arydata(0)) &"' AND OJD_item = '"& trim(arydata(1)) &"'"
         ' response.write data_cmd.commandText & "<br>"
         set orjul = data_cmd.execute
 
@@ -72,12 +62,11 @@
 
                 iddetail = trim(arydata(0)) & right(nol & p("urut"),3)
 
-                call query("INSERT INTO DLK_T_OrjulD (OJD_OJHID,OJD_Item,OJD_QtySatuan,OJD_Harga,OJD_JenisSat,OJD_Disc1,OJD_Disc2,OJD_IPDIPHID) VALUES ('"& iddetail &"', '"& trim(arydata(2)) &"', "& qtyorjul &", '"& trim(arydata(3)) &"', '"& trim(arydata(4)) &"', "& disc1 &", "& disc2 &", '"& trim(arydata(1)) &"')")
-
+                call query ("INSERT INTO DLK_T_OrjulD (OJD_OJHID,OJD_Item,OJD_QtySatuan,OJD_JenisSat) VALUES ('"& iddetail &"', '"& trim(arydata(1)) &"', "& qtyorjul &",'"& satuan &"')")
             else
                 iddetail = trim(arydata(0)) & right(nol & a("urut"),3)
 
-                call query("INSERT INTO DLK_T_OrjulD (OJD_OJHID,OJD_Item,OJD_QtySatuan,OJD_Harga,OJD_JenisSat,OJD_Disc1,OJD_Disc2,OJD_IPDIPHID) VALUES ('"& iddetail &"', '"& trim(arydata(2)) &"', "& qtyorjul &", '"& trim(arydata(3)) &"', '"& trim(arydata(4)) &"', "& disc1 &", "& disc2 &", '"& trim(arydata(1)) &"')")
+                call query("INSERT INTO DLK_T_OrjulD (OJD_OJHID,OJD_Item,OJD_QtySatuan,OJD_JenisSat) VALUES ('"& iddetail &"', '"& trim(arydata(1)) &"',"& qtyorjul &", '"& satuan &"')")
 
             end if
             value = 1 'case untuk insert data
@@ -96,9 +85,8 @@
 
     sub updatedetailOrjul()
         ckdorjul = trim(Request.Form("ckdorjul"))
-        disc1 = trim(Request.Form("disc1"))
-        disc2 = trim(Request.Form("disc2"))
         qtyorjul = trim(Request.Form("qtyorjul"))
+        satuan = trim(Request.Form("satuan"))
         nol = "000"
         
         arydata = Split(ckdorjul, ",")
@@ -106,7 +94,7 @@
         set data_cmd =  Server.CreateObject ("ADODB.Command")
         data_cmd.ActiveConnection = mm_delima_string
 
-        data_cmd.commandText = "SELECT * FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& trim(arydata(0)) &"' AND OJD_item = '"& trim(arydata(2)) &"'"
+        data_cmd.commandText = "SELECT * FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& trim(arydata(0)) &"' AND OJD_item = '"& trim(arydata(1)) &"'"
         ' response.write data_cmd.commandText & "<br>"
         set orjul = data_cmd.execute
 
@@ -122,12 +110,11 @@
 
                 iddetail = trim(arydata(0)) & right(nol & p("urut"),3)
 
-                call query("INSERT INTO DLK_T_OrjulD (OJD_OJHID,OJD_Item,OJD_QtySatuan,OJD_Harga,OJD_JenisSat,OJD_Disc1,OJD_Disc2,OJD_IPDIPHID) VALUES ('"& iddetail &"', '"& trim(arydata(2)) &"', "& qtyorjul &", '"& trim(arydata(3)) &"', '"& trim(arydata(4)) &"', "& disc1 &", "& disc2 &", '"& trim(arydata(1)) &"')")
-
+                call query ("INSERT INTO DLK_T_OrjulD (OJD_OJHID,OJD_Item,OJD_QtySatuan,OJD_JenisSat) VALUES ('"& iddetail &"', '"& trim(arydata(1)) &"', "& qtyorjul &",'"& satuan &"')")
             else
                 iddetail = trim(arydata(0)) & right(nol & a("urut"),3)
 
-                call query("INSERT INTO DLK_T_OrjulD (OJD_OJHID,OJD_Item,OJD_QtySatuan,OJD_Harga,OJD_JenisSat,OJD_Disc1,OJD_Disc2,OJD_IPDIPHID) VALUES ('"& iddetail &"', '"& trim(arydata(2)) &"', "& qtyorjul &", '"& trim(arydata(3)) &"', '"& trim(arydata(4)) &"', "& disc1 &", "& disc2 &", '"& trim(arydata(1)) &"')")
+                call query("INSERT INTO DLK_T_OrjulD (OJD_OJHID,OJD_Item,OJD_QtySatuan,OJD_JenisSat) VALUES ('"& iddetail &"', '"& trim(arydata(1)) &"',"& qtyorjul &", '"& satuan &"')")
 
             end if
             value = 1 'case untuk insert data

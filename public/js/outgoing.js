@@ -1,5 +1,24 @@
 $(document).ready(function(){
-    // validasi tambah satuan
+    // get departement 
+    $(".orjulDepfirst").hide()
+    $("#orjuldiv").change(function(){
+        let orjuldiv = $("#orjuldiv").val()
+        $.ajax({
+            method: "POST",
+            url: "../../ajax/getdepartement.asp",
+            data: { divisi: orjuldiv }
+        }).done(function( msg ) {
+            if(!orjuldiv){
+                $(".orjulDeplast").show()
+                $(".orjulDepfirst").hide()
+            }else{
+                $(".orjulDeplast").hide()
+                $(".orjulDepfirst").show()
+                $(".orjulDepfirst").html(msg)
+            }            
+        });
+    })
+    // validasi tambah permintaan barang keluar
     $('#formorjul').submit(function(e) {
         let form = this;
         
@@ -7,7 +26,7 @@ $(document).ready(function(){
         
         swal({
             title: "APAKAH ANDA SUDAH YAKIN??",
-            text: "Order Penjualan Customer",
+            text: "Permintaan Barang Keluar",
             icon: "warning",
             buttons: [
               'No',
@@ -30,7 +49,7 @@ $(document).ready(function(){
         
         swal({
             title: "YAKIN UNTUK DI HAPUS??",
-            text: "Delete Order Penjualan",
+            text: "Delete Permintaan Barang Keluar",
             icon: "warning",
             buttons: [
               'No',
@@ -94,7 +113,7 @@ $(document).ready(function(){
         
         swal({
             title: "YAKIN UNTUK DI HAPUS??",
-            text: "Delete Detail Order Penjualan",
+            text: "Delete Detail Permintaan Barang Keluar",
             icon: "warning",
             buttons: [
               'No',

@@ -1,22 +1,28 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_orjul.asp"-->
-<!--#include file="../../functions/func_metpem.asp"-->
 <% 
     id = trim(Request.QueryString("id"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT DLK_T_OrJulH.*, GLB_M_Agen.Agenname, GLB_M_Agen.AgenID, DLK_M_Customer.CustID, DLK_M_Customer.custNama FROM DLK_T_OrJulH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_OrJulH.OJH_AgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Customer ON DLK_T_OrJulH.OJH_CustID = DLK_M_Customer.CustID WHERE OJH_ID = '"& id &"' AND OJH_AktifYN = 'Y'"
+    data_cmd.commandText = "SELECT DLK_T_OrJulH.*, GLB_M_Agen.Agenname, GLB_M_Agen.AgenID, DLK_M_Divisi.divID, DLK_M_Divisi.divNama, DLK_M_Departement.depID, DLK_M_Departement.depNama FROM DLK_T_OrJulH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_OrJulH.OJH_AgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Divisi ON DLK_T_OrJulH.OJH_divID = DLK_M_Divisi.divID LEFT OUTER JOIN DLK_M_Departement ON DLK_T_OrJulH.OJH_DepID = DLK_M_Departement.depID WHERE OJH_ID = '"& id &"' AND OJH_AktifYN = 'Y'"
     set data = data_cmd.execute
     ' get data stok
-    data_cmd.commandText = "SELECT dbo.DLK_M_Barang.Brg_Id, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_AktifYN, isnull(dbo.DLK_T_InvPemD.IPD_QtySatuan,0) - isnull(dbo.DLK_T_InvJulD.IJD_QtySatuan,0) as stok, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_JenisSat, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_AktifYN, dbo.DLK_T_InvPemD.IPD_IphID FROM  dbo.DLK_T_InvPemD LEFT OUTER JOIN dbo.DLK_T_InvJulD ON dbo.DLK_T_InvJulD.IJD_IPDIPHID = dbo.DLK_T_InvPemD.IPD_IphID LEFT OUTER JOIN dbo.DLK_T_InvPemH ON LEFT(dbo.DLK_T_InvPemD.IPD_IphID,13) = dbo.DLK_T_InvPemH.IPH_ID LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_InvPemD.IPD_Item = dbo.DLK_M_Barang.Brg_Id WHERE (dbo.DLK_M_Barang.Brg_AktifYN = 'Y') AND (dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y') AND isnull(dbo.DLK_T_InvPemD.IPD_QtySatuan,0) > isnull(dbo.DLK_T_InvJulD.IJD_QtySatuan,0) AND dbo.DLK_T_InvPemH.IPH_AgenId = '"& data("OJH_AgenID") &"' AND isnull(dbo.DLK_T_InvPemD.IPD_QtySatuan,0) - isnull(dbo.DLK_T_InvJulD.IJD_QtySatuan,0) > 0 OR isnull(dbo.DLK_T_InvPemD.IPD_QtySatuan,0) - isnull(dbo.DLK_T_InvJulD.IJD_QtySatuan,0) <> 0 ORDER BY dbo.DLK_T_InvPemH.IPH_Date"
+    ' data_cmd.commandText = "SELECT dbo.DLK_M_Barang.Brg_Id, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_AktifYN, isnull(dbo.DLK_T_InvPemD.IPD_QtySatuan,0) - isnull(dbo.DLK_T_InvJulD.IJD_QtySatuan,0) as stok, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_JenisSat, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_AktifYN, dbo.DLK_T_InvPemD.IPD_IphID FROM  dbo.DLK_T_InvPemD LEFT OUTER JOIN dbo.DLK_T_InvJulD ON dbo.DLK_T_InvJulD.IJD_IPDIPHID = dbo.DLK_T_InvPemD.IPD_IphID LEFT OUTER JOIN dbo.DLK_T_InvPemH ON LEFT(dbo.DLK_T_InvPemD.IPD_IphID,13) = dbo.DLK_T_InvPemH.IPH_ID LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_InvPemD.IPD_Item = dbo.DLK_M_Barang.Brg_Id WHERE (dbo.DLK_M_Barang.Brg_AktifYN = 'Y') AND (dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y') AND isnull(dbo.DLK_T_InvPemD.IPD_QtySatuan,0) > isnull(dbo.DLK_T_InvJulD.IJD_QtySatuan,0) AND dbo.DLK_T_InvPemH.IPH_AgenId = '"& data("OJH_AgenID") &"' AND isnull(dbo.DLK_T_InvPemD.IPD_QtySatuan,0) - isnull(dbo.DLK_T_InvJulD.IJD_QtySatuan,0) > 0 OR isnull(dbo.DLK_T_InvPemD.IPD_QtySatuan,0) - isnull(dbo.DLK_T_InvJulD.IJD_QtySatuan,0) <> 0 ORDER BY dbo.DLK_T_InvPemH.IPH_Date"
+
+    data_cmd.commandText = "SELECT SUM(ISNULL(dbo.DLK_T_InvPemD.IPD_QtySatuan, 0) - ISNULL(dbo.DLK_T_InvJulD.IJD_QtySatuan, 0)) AS stok, dbo.DLK_M_Barang.Brg_Id, dbo.DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_InvPemD RIGHT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_InvPemD.IPD_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN DLK_T_InvPemH ON LEFT(DLK_T_InvPemD.IPD_IphID,13) = DLK_T_InvPemH.IPH_ID LEFT OUTER JOIN DLK_T_InvJulD ON DLK_M_Barang.Brg_Id = DLK_T_InvJulD.IJD_Item WHERE IPH_AktifYN ='Y' AND IPH_AgenId = '"& data("OJH_AgenID") &"' GROUP BY dbo.DLK_M_Barang.Brg_Id, dbo.DLK_M_Barang.Brg_Nama ORDER BY DLK_M_Barang.Brg_Nama ASC"
 
     set getstok = data_cmd.execute
 
     ' get detail 
     data_cmd.commandText = "SELECT DLK_T_OrjulD.*, DLK_M_Barang.Brg_Nama, DLK_M_SatuanBarang.Sat_Nama FROM DLK_T_OrjulD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrjulD.OJD_Item = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_SatuanBarang ON DLK_T_OrjulD.OJD_JenisSat = DLK_M_SatuanBarang.Sat_ID WHERE LEFT(OJD_OJHID,13) = '"& data("OJH_ID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
     set dorjul = data_cmd.execute
+    
+    ' get satuan
+    data_cmd.commandText = "SELECT Sat_ID, Sat_Nama FROM DLK_M_SatuanBarang WHERE Sat_AktifYN = 'Y' ORDER BY Sat_Nama"
+
+    set dsatuan = data_cmd.execute
     
     call header("Detail OrderJual")
 %>
@@ -45,43 +51,23 @@
         </div>
         <div class="row align-items-center">
             <div class="col-lg-2 mb-3">
-                <label for="customer" class="col-form-label">customer</label>
+                <label for="divisi" class="col-form-label">Divisi</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="text" id="customer" name="customer" class="form-control" value="<%= data("custNama") %>" readonly required>
+                <input type="text" id="divisi" name="divisi" class="form-control" value="<%= data("divNama") %>" readonly required>
             </div>
             <div class="col-lg-2 mb-3">
-                <label for="tgljt" class="col-form-label">Tanggal Jatuh Tempo</label>
+                <label for="departement" class="col-form-label">Departement</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="date" id="tgljt" name="tgljt" class="form-control" <% if data("OJH_JTDate") <> "1900-01-01" then %> value="<%= data("OJH_JTDate") %>" <% end if %> readonly autocomplete="off">
+                <input type="number" id="departement" name="departement" class="form-control" value="<%= data("depNama") %>" readonly  autocomplete="off">
             </div>
         </div>
         <div class="row align-items-center">
-            <div class="col-lg-2 mb-3">
-                <label for="metpem" class="col-form-label">Metode Pembayaran</label>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <input type="text" id="metpem" name="metpem" class="form-control" value="<% call getmetpem(data("OJH_Metpem")) %>" readonly required>
-            </div>
-            <div class="col-lg-2 mb-3">
-                <label for="diskon" class="col-form-label">Diskon All</label>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <input type="number" id="diskon" name="diskon" class="form-control" value="<%= data("OJH_diskonall") %>" readonly autocomplete="off">
-            </div>
-        </div>
-        <div class="row align-items-center">
-            <div class="col-lg-2 mb-3">
-                <label for="ppn" class="col-form-label">PPn</label>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <input type="number" id="ppn" name="ppn" class="form-control" value="<%= data("OJH_Ppn") %>" readonly  autocomplete="off">
-            </div>
             <div class="col-lg-2 mb-3">
                 <label for="keterangan" class="col-form-label">Keterangan</label>
             </div>
-            <div class="col-lg-4 mb-3">
+            <div class="col-lg-10 mb-3">
                 <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" value="<%= data("OJH_Keterangan") %>" readonly autocomplete="off">
             </div>
         </div>    
@@ -106,10 +92,7 @@
                         <th scope="col">No</th>
                         <th scope="col">Nama</th>
                         <th scope="col">Quantty</th>
-                        <th scope="col">Harga</th>
                         <th scope="col">Satuan</th>
-                        <th scope="col">Disc1</th>
-                        <th scope="col">Disc2</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -122,10 +105,7 @@
                         <th scope="row"><%= no %></th>
                         <td><%= dorjul("Brg_Nama") %></td>
                         <td><%= dorjul("OJD_QtySatuan") %></td>
-                        <td><%= replace(formatCurrency(dorjul("OJD_Harga")),"$","") %></td>
                         <td><%= dorjul("Sat_Nama") %></td>
-                        <td><%= dorjul("OJD_Disc1") %></td>
-                        <td><%= dorjul("OJD_Disc2") %></td>
                     </tr>
                     <% 
                     dorjul.movenext
@@ -150,23 +130,23 @@
                 <table class="table">
                     <thead class="bg-secondary text-light">
                         <tr>
-                            <th scope="col">Tanggal</th>
                             <th scope="col">Barang</th>
+                            <!-- 
                             <th scope="col">Stok</th>
-                            <th scope="col">Harga</th>
+                             -->
                             <th scope="col">Pilih</th>
                         </tr>
                     </thead>
                     <tbody>
                         <%do while not getstok.eof %>
                         <tr>
-                            <th scope="row"><%= Cdate(getstok("IPH_Date")) %></th>
                             <td><%= getstok("Brg_Nama") %></td>
+                            <!-- 
                             <td><%= getstok("stok") %></td>
-                            <td><%= replace(formatCurrency(getstok("IPD_Harga")),"$","") %></td>
+                             -->
                             <td class="text-center">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="ckdorjul" id="ckdorjul" value="<%= data("OJH_ID") &","& getstok("IPD_IPHID") &","& getstok("Brg_ID") &","& getstok("IPD_Harga") &","& getstok("IPD_JenisSat") &","& getstok("stok") %>"  required>
+                                    <input class="form-check-input" type="radio" name="ckdorjul" id="ckdorjul" value="<%= data("OJH_ID") &","& getstok("Brg_ID") &","& getstok("stok") %>"  required>
                                 </div>
                             </td>
                         </tr>
@@ -177,27 +157,34 @@
                     <tbody>
                 </table>
             </div>
-            <input type="hidden" id="fqty" name="fqty"> <!-- getstok lama -->
-            <div class="row">
-                <div class="col-lg-2 mb-3">
-                    <label for="disc1" class="col-form-label">Disc1</label>
-                </div>
-                <div class="col-lg-4 mb-3">
-                    <input type="number" id="disc1" name="disc1" class="form-control">
-                </div>
-                <div class="col-lg-2 mb-3">
-                    <label for="disc2" class="col-form-label">Disc2</label>
-                </div>
-                <div class="col-lg-4 mb-3">
-                    <input type="number" id="disc2" name="disc2" class="form-control">
-                </div>
-            </div>
+            <!-- getstok lama -->
+            <!-- 
+            <input type="hidden" id="fqty" name="fqty">  -->
+            
             <div class="row">
                 <div class="col-lg-2 mb-3">
                     <label for="qtyorjul" class="col-form-label">Quantty</label>
                 </div>
-                <div class="col-lg-4 mb-3">
+                <div class="col-lg-10 mb-3">
                     <input type="number" id="qtyorjul" name="qtyorjul" class="form-control" required>
+                </div>
+                <!-- set agen -->
+                    <input type="hidden" id="agen" name="agen" class="form-control" value="<%= data("OJH_AgenID") %>" required>
+            </div>  
+            <div class="row">
+                <div class="col-lg-2 mb-3">
+                    <label for="satuan" class="col-form-label">Satuan</label>
+                </div>
+                <div class="col-lg-10 mb-3">
+                    <select class="form-select" aria-label="Default select example" name="satuan" id="satuan" required>
+                        <option value="">Pilih</option>
+                        <% do while not dsatuan.eof %>
+                        <option value="<%= dsatuan("sat_ID") %>"><%= dsatuan("sat_Nama") %></option>
+                        <% 
+                        dsatuan.movenext
+                        loop
+                        %>
+                    </select>
                 </div>
             </div>  
 

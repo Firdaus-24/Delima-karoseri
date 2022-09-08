@@ -57,9 +57,14 @@
         set data_cmd =  Server.CreateObject ("ADODB.Command")
         data_cmd.ActiveConnection = mm_delima_string
 
-        data_cmd.commandText = "SELECT * FROM DLK_T_InvJulD WHERE LEFT(IJD_IJHID,13) = '"& trim(arydata(0)) &"' AND IJD_item = '"& trim(arydata(2)) &"'"
+        data_cmd.commandText = "SELECT * FROM DLK_T_InvJulD WHERE LEFT(IJD_IJHID,13) = '"& trim(arydata(0)) &"' AND IJD_item = '"& trim(arydata(1)) &"'"
         ' response.write data_cmd.commandText & "<br>"
         set orjul = data_cmd.execute
+
+        ' get data stok 
+        ' data_cmd.commandTExt = "SELECT dbo.DLK_T_InvPemH.IPH_AktifYN, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemD.IPD_IphID, dbo.DLK_T_InvPemD.IPD_Item, dbo.DLK_T_InvPemD.IPD_QtySatuan, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_JenisSat, dbo.DLK_T_InvPemD.IPD_Disc1, dbo.DLK_T_InvPemD.IPD_Disc2, dbo.DLK_T_InvJulD.IJD_QtySatuan, dbo.DLK_T_InvJulD.IJD_IPDIPHID, SUM(ISNULL(dbo.DLK_T_InvPemD.IPD_QtySatuan, 0) - ISNULL(dbo.DLK_T_InvJulD.IJD_QtySatuan, 0)) AS stok FROM dbo.DLK_T_InvJulD RIGHT OUTER JOIN dbo.DLK_T_InvPemD ON dbo.DLK_T_InvJulD.IJD_IPDIPHID = dbo.DLK_T_InvPemD.IPD_IphID LEFT OUTER JOIN dbo.DLK_T_InvPemH ON LEFT(dbo.DLK_T_InvPemD.IPD_IphID, 13) = dbo.DLK_T_InvPemH.IPH_ID WHERE (ISNULL(dbo.DLK_T_InvPemD.IPD_QtySatuan, 0) - ISNULL(dbo.DLK_T_InvJulD.IJD_QtySatuan, 0)) <> 0 AND (ISNULL(dbo.DLK_T_InvPemD.IPD_QtySatuan, 0) > ISNULL(dbo.DLK_T_InvJulD.IJD_QtySatuan, 0)) AND DLK_T_InvPemH.IPH_AgenId = '"& trim(arydata(2)) &"' AND DLK_T_InvPemD.IPD_Item = '"& trim(arydata(1)) &"' GROUP BY dbo.DLK_T_InvPemH.IPH_AktifYN, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemD.IPD_IphID, dbo.DLK_T_InvPemD.IPD_Item, dbo.DLK_T_InvPemD.IPD_QtySatuan, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_JenisSat, dbo.DLK_T_InvPemD.IPD_Disc1, dbo.DLK_T_InvPemD.IPD_Disc2,dbo.DLK_T_InvJulD.IJD_QtySatuan, dbo.DLK_T_InvJulD.IJD_IPDIPHID HAVING (dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y') ORDER BY DLK_T_InvPemH.IPH_Date"
+
+        ' set datastok = data_cmd.execue
 
         if orjul.eof then
             data_cmd.commandText = "SELECT TOP 1 (right(IJD_IJHID,3)) + 1 AS urut FROM DLK_T_InvJulD WHERE LEFT(IJD_IJHID,13) = '"& trim(arydata(0)) &"' ORDER BY IJD_IJHID DESC"
@@ -73,6 +78,7 @@
 
                 iddetail = trim(arydata(0)) & right(nol & p("urut"),3)
 
+
                 call query("INSERT INTO DLK_T_InvJulD (IJD_IJHID,IJD_Item,IJD_QtySatuan,IJD_Harga,IJD_JenisSat,IJD_Disc1,IJD_Disc2,IJD_IPDIPHID) VALUES ('"& iddetail &"', '"& trim(arydata(2)) &"', "& qtyjual &", '"& trim(arydata(3)) &"', '"& trim(arydata(4)) &"', "& disc1 &", "& disc2 &", '"& trim(arydata(1)) &"')")
 
             else
@@ -81,9 +87,9 @@
                 call query("INSERT INTO DLK_T_InvJulD (IJD_IJHID,IJD_Item,IJD_QtySatuan,IJD_Harga,IJD_JenisSat,IJD_Disc1,IJD_Disc2,IJD_IPDIPHID) VALUES ('"& iddetail &"', '"& trim(arydata(2)) &"', "& qtyjual &", '"& trim(arydata(3)) &"', '"& trim(arydata(4)) &"', "& disc1 &", "& disc2 &", '"& trim(arydata(1)) &"')")
 
             end if
-            value = 1 'case untuk insert data
+            ' value = 1 'case untuk insert data
         else
-            value = 2 'case jika gagal insert 
+            ' value = 2 'case jika gagal insert 
         end if
 
         if value = 1 then

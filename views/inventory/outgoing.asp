@@ -7,13 +7,16 @@
     ' filter agen
     data_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_OrJulH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_OrJulH.OJH_AgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_OrJulH.OJH_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
     set agendata = data_cmd.execute
-    ' filter agen
-    data_cmd.commandText = "SELECT dbo.DLK_M_Customer.custNama, dbo.DLK_M_Customer.custID FROM dbo.DLK_T_OrJulH LEFT OUTER JOIN dbo.DLK_M_Customer ON dbo.DLK_T_OrJulH.OJH_custID = dbo.DLK_M_Customer.custID WHERE DLK_T_OrJulH.OJH_AktifYN = 'Y' GROUP BY dbo.DLK_M_Customer.custNama, dbo.DLK_M_Customer.custID ORDER BY custNama ASC"
-    set dcustomer = data_cmd.execute
+    ' filter divisi
+    data_cmd.commandText = "SELECT dbo.DLK_M_Divisi.divNama, dbo.DLK_M_Divisi.divID FROM dbo.DLK_T_OrJulH LEFT OUTER JOIN dbo.DLK_M_Divisi ON dbo.DLK_T_OrJulH.OJH_divID = dbo.DLK_M_Divisi.divID WHERE DLK_T_OrJulH.OJH_AktifYN = 'Y' GROUP BY dbo.DLK_M_Divisi.divNama, dbo.DLK_M_Divisi.divID ORDER BY divNama ASC"
+    set divisi = data_cmd.execute
+    ' filter departement
+    data_cmd.commandText = "SELECT dbo.DLK_M_Departement.depNama, dbo.DLK_M_Departement.depID FROM dbo.DLK_T_OrJulH LEFT OUTER JOIN dbo.DLK_M_Departement ON dbo.DLK_T_OrJulH.OJH_depID = dbo.DLK_M_Departement.depID WHERE DLK_T_OrJulH.OJH_AktifYN = 'Y' GROUP BY dbo.DLK_M_Departement.depNama, dbo.DLK_M_Departement.depID ORDER BY depNama ASC"
+    set dep = data_cmd.execute
 
     agen = trim(Request.Form("agen"))
-    customer = trim(Request.Form("customer"))
-    metpem = trim(Request.Form("metpem"))
+    divout = trim(Request.Form("divout"))
+    departement = trim(Request.Form("departement"))
     tgla = trim(Request.Form("tgla"))
     tgle = trim(Request.Form("tgle"))
 
@@ -35,16 +38,16 @@
         filterAgen = ""
     end if
 
-    if customer <> "" then
-        filtercustomer = "AND dbo.DLK_T_OrJulH.OJH_custID = '"& customer &"'"
+    if divout <> "" then
+        filterdiv = "AND dbo.DLK_T_OrJulH.OJH_DivID = '"& divout &"'"
     else
-        filtercustomer = ""
+        filterdiv = ""
     end if
 
-    if metpem <> "" then
-        filtermetpem = "AND dbo.DLK_T_OrJulH.OJH_metpem = '"& metpem &"'"
+    if departement <> "" then
+        filterdep = "AND dbo.DLK_T_OrJulH.OJH_depID = '"& departement &"'"
     else
-        filtermetpem = ""
+        filterdep = ""
     end if
 
     if tgla <> "" AND tgle <> "" then
@@ -56,7 +59,7 @@
     end if
 
     ' query seach 
-    strquery = "SELECT DLK_T_OrJulH.*, DLK_M_customer.CustNama FROM DLK_T_OrJulH LEFT OUTER JOIN DLK_M_Customer ON DLK_T_OrJulH.OJH_CustID = DLK_M_Customer.custId WHERE OJH_AktifYN = 'Y' "& filterAgen &"  "& filtercustomer &" "& filtermetpem &" "& filtertgl &""
+    strquery = "SELECT DLK_T_OrJulH.*, DLK_M_Divisi.divNama, DLK_M_Departement.DepNama FROM DLK_T_OrJulH LEFT OUTER JOIN DLK_M_Divisi ON DLK_T_OrJulH.OJH_divID = DLK_M_Divisi.divId LEFT OUTER JOIN DLK_M_Departement ON DLK_T_OrJulH.OJH_DepID = DLK_M_Departement.DepID WHERE OJH_AktifYN = 'Y' "& filterAgen &"  "& filterdiv &" "& filterdep &" "& filtertgl &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
@@ -96,14 +99,14 @@
         end if	
     loop
 
-    call header("Order Customer") 
+    call header("Permintaan Barang") 
 %>
 
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row">
         <div class="col-lg-12 mb-3 mt-3 text-center">
-            <h3>DETAIL ORDER PENJUAL CUSTOMER</h3>
+            <h3>DETAIL PERMINTAAN BARANG</h3>
         </div>  
     </div>
     <div class="row">
@@ -126,24 +129,27 @@
                 </select>
             </div>
             <div class="col-lg-4 mb-3">
-                <label for="customer">Customer</label>
-                <select class="form-select" aria-label="Default select example" name="customer" id="customer">
+                <label for="divout">divisi</label>
+                <select class="form-select" aria-label="Default select example" name="divout" id="divout">
                     <option value="">Pilih</option>
-                    <% do while not dcustomer.eof %>
-                    <option value="<%= dcustomer("custid") %>"><%= dcustomer("custnama") %></option>
+                    <% do while not divisi.eof %>
+                    <option value="<%= divisi("divID") %>"><%= divisi("divNama") %></option>
                     <% 
-                    dcustomer.movenext
+                    divisi.movenext
                     loop
                     %>
                 </select>
             </div>
             <div class="col-lg-4 mb-3">
-                <label for="metpem">Pembayaran</label>
-                <select class="form-select" aria-label="Default select example" name="metpem" id="metpem">
+                <label for="departement">Departement</label>
+                <select class="form-select" aria-label="Default select example" name="departement" id="departement">
                     <option value="">Pilih</option>
-                    <option value="1">Transfer</option>
-                    <option value="2">Cash</option>
-                    <option value="3">PayLater</option>
+                    <% do while not dep.eof %>
+                    <option value="<%= dep("depID") %>"><%= dep("depNama") %></option>
+                    <% 
+                    dep.movenext
+                    loop
+                    %>
                 </select>
             </div>
         </div>
@@ -169,11 +175,8 @@
                     <th>OrderID</th>
                     <th>Cabang</th>
                     <th>Tanggal</th>
-                    <th>Customer</th>
-                    <th>Tanggal JT</th>
-                    <th>Diskon</th>
-                    <th>PPn</th>
-                    <th>Pembayaran</th>
+                    <th>Divisi</th>
+                    <th>Departement</th>
                     <th>Keterangan</th>
                     <th class="text-center">Aksi</th>
                 </thead>
@@ -193,15 +196,8 @@
                         <th><%= rs("OJH_ID") %></th>
                         <td><% call getAgen(rs("OJH_AgenID"),"P") %></td>
                         <td><%= Cdate(rs("OJH_Date")) %></td>
-                        <td><%= rs("custNama") %></td>
-                        <td>
-                            <% if rs("OJH_JTDate") <> "1900-01-01" then %>
-                            <%= Cdate(rs("OJH_JTDate")) %>
-                            <% end if %>
-                        </td>
-                        <td><%= rs("OJH_DiskonAll") %></td>
-                        <td><%= rs("OJH_PPn") %></td>
-                        <td><% call getmetpem(rs("OJH_MetPem")) %></td>
+                        <td><%= rs("divNama") %></td>
+                        <td><%= rs("depNama") %></td>
                         <td><%= rs("OJH_Keterangan") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">

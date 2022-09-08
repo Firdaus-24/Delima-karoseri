@@ -5,12 +5,12 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT DLK_T_OrJulH.*, GLB_M_Agen.Agenname, GLB_M_Agen.AgenID, dbo.DLK_M_CUstomer.custNama, dbo.DLK_M_CUstomer.custPhone1,dbo.DLK_M_CUstomer.custPhone2, dbo.DLK_M_CUstomer.custEmail FROM DLK_T_OrJulH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_OrJulH.OJH_AgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Customer ON DLK_T_OrJulH.OJH_CustID = DLK_M_Customer.CustID WHERE OJH_ID = '"& id &"' AND OJH_AktifYN = 'Y'"
+    data_cmd.commandText = "SELECT DLK_T_OrJulH.*, GLB_M_Agen.Agenname, GLB_M_Agen.AgenID, dbo.DLK_M_Divisi.divNama, DLK_M_Departement.DepNama FROM DLK_T_OrJulH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_OrJulH.OJH_AgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Divisi ON DLK_T_OrJulH.OJH_divID = DLK_M_Divisi.divID LEFT OUTER JOIN DLK_M_Departement ON DLK_T_OrJulH.OJH_DepID = DLK_M_Departement.DepID WHERE OJH_ID = '"& id &"' AND OJH_AktifYN = 'Y'"
 
     set data = data_cmd.execute
 
     ' get detail
-    data_cmd.commandText = "SELECT DLK_T_OrJulD.*, DLK_M_Barang.Brg_Nama FROM DLK_T_OrjulD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrjulD.OJD_Item = DLK_M_Barang.Brg_ID WHERE LEFT(OJD_OJHID,13) = '"& data("OJH_ID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
+    data_cmd.commandText = "SELECT DLK_T_OrJulD.*, DLK_M_Barang.Brg_Nama, DLK_M_SatuanBarang.Sat_Nama FROM DLK_T_OrjulD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrjulD.OJD_Item = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_SatuanBarang ON DLK_T_OrjulD.OJD_JenisSat = DLK_M_SatuanBarang.Sat_ID WHERE LEFT(OJD_OJHID,13) = '"& data("OJH_ID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
 
     set ddata = data_cmd.execute
 
@@ -72,31 +72,31 @@
             </td>
         </tr>
         <tr>
-            <td width="6%">Customer</td>
+            <td width="6%">Tanggal</td>
             <td width="10px">:</td>
             <td>
-                <%= data("CustNama") %>
+                <%= data("OJH_Date") %>
             </td>
         </tr>
         <tr>
-            <td width="6%">Phone1</td>
+            <td width="6%">Divisi</td>
             <td width="10px">:</td>
             <td>
-                <%= data("CustPhone1") %>
+                <%= data("DivNama") %>
             </td>
         </tr>
         <tr>
-            <td width="6%">Phone2</td>
+            <td width="6%">Departement</td>
             <td width="10px">:</td>
             <td>
-                <%= data("CustPhone2") %>
+                <%= data("DepNama") %>
             </td>
         </tr>
         <tr>
-            <td width="6%">Email</td>
+            <td width="6%">Keterangan</td>
             <td width="10px">:</td>
             <td>
-                <%= data("CustEmail") %>
+                <%= data("OJH_KEterangan") %>
             </td>
         </tr>
         <tr>
@@ -108,7 +108,7 @@
         <tbody>
         <tr>
             <td width="100%" align="center">
-                <b>DETAIL ORDER PENJUALAN</b>
+                <b>DETAIL PERMINTAAN BARANG</b>
             </td>
         </tr>
         <tr>
@@ -123,33 +123,31 @@
             <th>Item</th>
             <th>Quantity</th>
             <th>Satuan</th>
-            <th>Harga</th>
-            <th>Jumlah</th>
         </tr>
 		<% 
         no = 0
-        grantotal = 0
+        ' grantotal = 0
         do while not ddata.eof 
         no = no +1
         ' cek total harga 
-        jml = ddata("OJD_QtySatuan") * ddata("OJD_Harga")
-        ' cek diskon peritem
-        if ddata("OJD_Disc1") <> 0 and ddata("OJD_Disc2") <> 0  then
-            dis1 = (ddata("OJD_Disc1")/100) * ddata("OJD_Harga")
-            dis2 = (ddata("OJD_Disc2")/100) * ddata("OJD_Harga")
-        elseif ddata("OJD_Disc1") <> 0 then
-            dis1 = (ddata("OJD_Disc1")/100) * ddata("OJD_Harga")
-        elseIf ddata("OJD_Disc2") <> 0 then
-            dis2 = (ddata("OJD_Disc2")/100) * ddata("OJD_Harga")
-        else    
-            dis1 = 0
-            dis2 = 0
-        end if
-        ' total dikon peritem
-        hargadiskon = ddata("OJD_Harga") - dis1 - dis2
-        realharga = hargadiskon * ddata("OJD_QtySatuan")  
+        ' jml = ddata("OJD_QtySatuan") * ddata("OJD_Harga")
+        ' ' cek diskon peritem
+        ' if ddata("OJD_Disc1") <> 0 and ddata("OJD_Disc2") <> 0  then
+        '     dis1 = (ddata("OJD_Disc1")/100) * ddata("OJD_Harga")
+        '     dis2 = (ddata("OJD_Disc2")/100) * ddata("OJD_Harga")
+        ' elseif ddata("OJD_Disc1") <> 0 then
+        '     dis1 = (ddata("OJD_Disc1")/100) * ddata("OJD_Harga")
+        ' elseIf ddata("OJD_Disc2") <> 0 then
+        '     dis2 = (ddata("OJD_Disc2")/100) * ddata("OJD_Harga")
+        ' else    
+        '     dis1 = 0
+        '     dis2 = 0
+        ' end if
+        ' ' total dikon peritem
+        ' hargadiskon = ddata("OJD_Harga") - dis1 - dis2
+        ' realharga = hargadiskon * ddata("OJD_QtySatuan")  
 
-        grantotal = grantotal + realharga
+        ' grantotal = grantotal + realharga
         %>
             <tr >
                 <td align="center">
@@ -162,39 +160,36 @@
                     <%= ddata("OJD_QtySatuan") %>
                 </td>
                 <td align="center">
-                    <% call getSatBerat(ddata("OJD_JenisSat")) %>
-                </td>
-                <td align="center">
-                    <%= replace(formatCurrency(ddata("OJD_Harga")),"$","") %>
-                </td>
-                <td align="center">
-                    <%= replace(formatCurrency(realharga),"$","") %>
+                    <%= ddata("sat_Nama") %>
                 </td>
             </tr>
         <% 
         ddata.movenext
         loop
         ' cek diskonall
-        if data("OJH_diskonall") <> 0 OR data("OJH_Diskonall") <> "" then
-            diskonall = (data("OJH_Diskonall")/100) * grantotal
-        else
-            diskonall = 0
-        end if
+        ' if data("OJH_diskonall") <> 0 OR data("OJH_Diskonall") <> "" then
+        '     diskonall = (data("OJH_Diskonall")/100) * grantotal
+        ' else
+        '     diskonall = 0
+        ' end if
 
-        ' hitung ppn
-        if data("OJH_ppn") <> 0 OR data("OJH_ppn") <> "" then
-            ppn = (data("OJH_ppn")/100) * grantotal
-        else
-            ppn = 0
-        end if
-        realgrantotal = (grantotal - diskonall) + ppn
+        ' ' hitung ppn
+        ' if data("OJH_ppn") <> 0 OR data("OJH_ppn") <> "" then
+        '     ppn = (data("OJH_ppn")/100) * grantotal
+        ' else
+        '     ppn = 0
+        ' end if
+        ' realgrantotal = (grantotal - diskonall) + ppn
         %>
+        <!-- 
         <tr>
             <th colspan="5">Total Pembayaran</th>
             <th align="center"><%= replace(formatCurrency(realgrantotal),"$","") %></th>
         </tr>
+         -->
         </tbody>
     </table>
+    <!-- 
     <table width="100%" style="font-size:12px;">
         <tbody>
         <tr>
@@ -213,3 +208,4 @@
 
         </tbody>
     </table>
+     -->
