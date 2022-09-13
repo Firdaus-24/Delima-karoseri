@@ -24,13 +24,13 @@
     
     ' query seach 
     if agen <> "" and nama <> "" then
-        strquery = "SELECT * FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y' AND left(Ven_id,3) = '"& agen &"' AND ven_Nama LIKE '%"& nama &"%'"
+        strquery = "SELECT DLK_M_Vendor.*, GL_M_CategoryItem.cat_name FROM DLK_M_Vendor LEFT OUTER JOIN GL_M_CategoryItem ON DLK_M_Vendor.ven_kodeakun = GL_M_CategoryItem.cat_ID WHERE Ven_AktifYN = 'Y' AND left(Ven_id,3) = '"& agen &"' AND ven_Nama LIKE '%"& nama &"%'"
     elseif agen <> "" then
-        strquery = "SELECT * FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y' AND left(Ven_id,3) = '"& agen &"'"
+        strquery = "SELECT DLK_M_Vendor.*, GL_M_CategoryItem.cat_name FROM DLK_M_Vendor LEFT OUTER JOIN GL_M_CategoryItem ON DLK_M_Vendor.ven_kodeakun = GL_M_CategoryItem.cat_ID WHERE Ven_AktifYN = 'Y' AND left(Ven_id,3) = '"& agen &"'"
     elseif nama <> "" then
-        strquery = "SELECT * FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y' AND ven_Nama LIKE '%"& nama &"%'"
+        strquery = "SELECT DLK_M_Vendor.*, GL_M_CategoryItem.cat_name FROM DLK_M_Vendor LEFT OUTER JOIN GL_M_CategoryItem ON DLK_M_Vendor.ven_kodeakun = GL_M_CategoryItem.cat_ID WHERE Ven_AktifYN = 'Y' AND ven_Nama LIKE '%"& nama &"%'"
     else
-        strquery = "SELECT * FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y'"
+        strquery = "SELECT DLK_M_Vendor.*, GL_M_CategoryItem.cat_name FROM DLK_M_Vendor LEFT OUTER JOIN GL_M_CategoryItem ON DLK_M_Vendor.ven_kodeakun = GL_M_CategoryItem.cat_ID WHERE Ven_AktifYN = 'Y'"
     end if
 
     ' untuk data paggination
@@ -117,6 +117,8 @@
                     <th scope="col">Alamat</th>
                     <th scope="col">Contact</th>
                     <th scope="col">Email</th>
+                    <th scope="col">TOP</th>
+                    <th scope="col">Kode Akun</th>
                     <th scope="col">Aktif</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
@@ -128,6 +130,10 @@
                     recordcounter = requestrecords
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
+
+                    ' cek data detail yang kosong untuk delete header
+                    agen_cmd.commandText = "SELECT dven_venid FROM DLK_T_VendorD WHERE LEFT(dven_venid,9) = '"& rs("ven_ID") &"'"
+                    set ddata = agen_cmd.execute
                     %>
                     <tr>
                         <th scope="row"><%= recordcounter %></th>
@@ -135,11 +141,16 @@
                         <td><%= rs("ven_Alamat") %></td>
                         <td><%= rs("ven_phone") %></td>
                         <td><%= rs("ven_Email") %></td>
+                        <td><%= rs("ven_TOP") %></td>
+                        <td><%= rs("Cat_Name") %></td>
                         <td><%if rs("ven_AktifYN") = "Y" then%>Aktif <% end if %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
+                                <a href="detailvendor.asp?id=<%= rs("Ven_Id") %>" class="btn badge text-bg-warning">Detail</a>
                                 <a href="vn_u.asp?id=<%= rs("Ven_Id") %>" class="btn badge text-bg-primary">update</a>
+                                <% if ddata.eof then %>
                                 <a href="aktif.asp?id=<%= rs("Ven_Id") %>" class="btn badge text-bg-danger btn-aktifvendor">delete</a>
+                                <% end if %>
                             </div>
                         </td>
                     </tr>

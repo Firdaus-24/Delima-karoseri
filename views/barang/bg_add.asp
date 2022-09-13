@@ -79,12 +79,6 @@
             </div>
         </div>
         <div class="mb-3 row">
-            <label for="rak" class="col-sm-2 col-form-label offset-sm-1">Rak</label>
-            <div class="col-sm-4 tampilRak">
-               
-            </div>
-        </div>
-        <div class="mb-3 row">
             <label for="stok" class="col-sm-2 col-form-label offset-sm-1">Stok</label>
             <div class="col-sm-8">
                 <div class="form-check form-check-inline">

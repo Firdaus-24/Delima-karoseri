@@ -7,7 +7,6 @@ sub tambahBarang()
     tgl = trim(Request.Form("tgl"))
     jual = trim(Request.Form("jual"))
     stok = trim(Request.Form("stok"))
-    rak = trim(Request.Form("rak"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
@@ -16,7 +15,7 @@ sub tambahBarang()
     set data = data_cmd.execute
 
     if data.eof then
-        call query("exec sp_AddDLK_M_Barang '"& agen &"','"& nama &"', '"& tgl &"', '"& jenis &"','"& kategori &"','"& stok &"','"& jual &"','"& rak &"'")
+        call query("exec sp_AddDLK_M_Barang '"& agen &"','"& nama &"', '"& tgl &"', '"& jenis &"','"& kategori &"','"& stok &"','"& jual &"',''")
         value = 1 'case untuk insert data
     else
         value = 2 'case jika gagal insert 
@@ -31,7 +30,6 @@ sub updateBarang()
     tgl = trim(Request.Form("tgl"))
     jual = trim(Request.Form("jual"))
     stok = trim(Request.Form("stok"))
-    rak = trim(Request.Form("rak"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
@@ -40,7 +38,7 @@ sub updateBarang()
     set data = data_cmd.execute
 
     if not data.eof then
-        call query("UPDATE DLK_M_Barang SET Brg_Nama = '"& nama &"', KategoriId = '"& kategori &"', JenisID = '"& jenis &"', Brg_tanggal = '"& tgl &"', Brg_StokYN = '"& stok &"', Brg_jualYN = '"& jual &"', Brg_RakID = '"& rak &"' WHERE Brg_ID = '"& id &"'")
+        call query("UPDATE DLK_M_Barang SET Brg_Nama = '"& nama &"', KategoriId = '"& kategori &"', JenisID = '"& jenis &"', Brg_tanggal = '"& tgl &"', Brg_StokYN = '"& stok &"', Brg_jualYN = '"& jual &"' WHERE Brg_ID = '"& id &"'")
         value = 1 'case untuk insert data
     else
         value = 2 'case jika gagal insert 

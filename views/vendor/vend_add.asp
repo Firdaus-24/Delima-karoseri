@@ -24,7 +24,7 @@
 <div class="container">
     <div class="row mt-3">
         <div class="col-lg text-center">
-            <h3>UPDATE DETAIL VENDOR</h3>
+            <h3>FORM TAMBAH VENDOR</h3>
         </div>
     </div>
     <div class="row mb-3">
@@ -87,7 +87,6 @@
                         <th scope="col">Nama</th>
                         <th scope="col">Spesification</th>
                         <th scope="col">Harga</th>
-                        <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -101,9 +100,6 @@
                         </td>
                         <td><%= ddata("Dven_Spesification") %></td>
                         <td><%= replace(formatCurrency(ddata("Dven_Harga")),"$","") %></td>
-                        <td class="text-center">
-                            <a href="aktifd.asp?id=<%= ddata("Dven_Venid") %>" class="btn badge text-bg-danger btn-aktifdvendor">delete</a>
-                        </td>
                     </tr>
                     <% 
                     ddata.movenext
@@ -122,7 +118,7 @@
                 <h5 class="modal-title" id="modalDVendorLabel">Rincian Barang</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="vn_u.asp?id=<%= id %>" method="post">
+            <form action="vend_add.asp?id=<%= id %>" method="post">
             <input type="hidden" id="id" name="id" class="form-control" value="<%= data("Ven_ID") %>">
             <div class="modal-body">
                 <div class="row g-3 align-items-center mb-3">
@@ -206,7 +202,7 @@
 </div>
 <% 
     if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
-        call updateVendor()
+        call tambahdetailVendor()
     end if
     call footer()
 %>

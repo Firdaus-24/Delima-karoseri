@@ -1,0 +1,12 @@
+<!--#include file="../../init.asp"-->
+<% 
+        id = Request.QueryString("id")
+        strid = left(id,9)
+        call header("aktif")
+ %>
+<!--#include file="../../navbar.asp"-->
+<%      
+        call query("delete FROM DLK_T_Vendord WHERE dven_VenId = '"& id &"'")
+        call alert("DETAIL VENDOR DENGAN ID "&id&" ", "berhasil hapus", "success","vn_u.asp?id="&strid) 
+call footer() 
+%>

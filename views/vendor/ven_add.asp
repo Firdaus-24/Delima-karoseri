@@ -7,7 +7,10 @@
     cabang_cmd.commandText = "SELECT * FROM GLB_M_Agen WHERE AgenAktifYN = 'Y' ORDER BY AgenName ASC"
     set cabang = cabang_cmd.execute
 
-    call header("tambah vendor")
+    cabang_cmd.commandText = "SELECT * FROM GL_M_CategoryItem WHERE cat_AktifYN = 'Y' ORDER BY cat_Name ASC"
+    set dataakun = cabang_cmd.execute
+
+    call header("Tambah Vendor")
 %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
@@ -52,11 +55,29 @@
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" name="email" maxlength="50" autocomplete="off">
                     </div>
+                    <div class="col-lg-6 mb-3">
+                        <label for="top" class="form-label">TOP</label>
+                        <input type="number" class="form-control" id="top" name="top" autocomplete="off" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 mb-3">
+                        <label for="kdakun" class="form-label">Kode Akun</label>
+                        <select class="form-select" aria-label="Default select example" id="kdakun" name="kdakun" required>
+                            <option value="">Pilih</option>
+                            <% do while not dataakun.eof %>
+                                <option value="<%= dataakun("Cat_ID") %>"><%= dataakun("cat_Name") %></option>
+                            <% 
+                            dataakun.movenext
+                            loop
+                            %>
+                        </select>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-lg text-center">
-                        <button type="submit" class="btn btn-primary">Tambah</button>
                         <a href="index.asp"><button type="button" class="btn btn-danger">kembali</button></a>
+                        <button type="submit" class="btn btn-primary">Tambah</button>
                     </div>
                 </div>                
             </form>
@@ -66,13 +87,6 @@
 <% 
 if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
     call tambahVendor()
-    if value = 1 then
-        call alert("MASTER VENDOR", "berhasil di tambahkan", "success","index.asp") 
-    elseif value = 2 then
-        call alert("MASTER VENDOR", "sudah terdaftar", "warning","index.asp")
-    else
-        value = 0
-    end if
 end if
 call footer() 
 %>
