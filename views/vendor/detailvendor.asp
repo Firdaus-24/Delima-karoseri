@@ -27,7 +27,7 @@
         </div>
     </div>
     <div class="row mb-3">
-        <div class="col-lg text-center">
+        <div class="col-lg text-center labelId">
             <h3><%= id %></h3>
         </div>
     </div>

@@ -14,9 +14,14 @@
 %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
-    <div class="row mt-3 mb-3">
+    <div class="row mt-3">
         <div class="col-lg text-center">
             <h3>FORM UPDATE CABANG</h3>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-lg text-center labelId">
+            <h3><%= id %></h3>
         </div>
     </div>
     <div class="row d-flex justify-content-center">

@@ -6,6 +6,7 @@ sub tambahCust()
     alamat = trim(Request.Form("alamat"))
     phone1 = trim(Request.Form("phone1"))
     phone2 = trim(Request.Form("phone2"))
+    kdakun = trim(Request.Form("kdakun"))
     updatetime = now()
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
@@ -15,7 +16,7 @@ sub tambahCust()
     set data = data_cmd.execute
 
     if data.eof then
-        call query ("exec sp_AddDLK_M_customer '"& nama &"', '"& email &"', '"& alamat &"', '"& phone1 &"','"& phone2 &"','"& session("username") &"', '"& updatetime &"','"& tgl &"'")
+        call query ("exec sp_AddDLK_M_customer '"& nama &"', '"& email &"', '"& alamat &"', '"& phone1 &"','"& phone2 &"','"& session("username") &"', '"& updatetime &"','"& tgl &"','"& kdakun &"'")
         value = 1 'case untuk insert data
     else
         value = 2 'case jika gagal insert 
@@ -31,6 +32,7 @@ sub updateCust()
     alamat = trim(Request.Form("alamat"))
     phone1 = trim(Request.Form("phone1"))
     phone2 = trim(Request.Form("phone2"))
+    kdakun = trim(Request.Form("kdakun"))
     updatetime = now()
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
@@ -40,7 +42,7 @@ sub updateCust()
     set data = data_cmd.execute
 
     if not data.eof then
-        call query ("UPDATE DLK_M_customer SET custnama = '"& nama &"', custEmail = '"& email &"', custAlamat = '"& alamat &"', custPhone1 = '"& phone1 &"', custPhone2 = '"& phone2 &"', custUpdateId = '"& session("username") &"', custUpdateTime = '"& updatetime &"', custTgl = '"& tgl &"' WHERE custID  = '"& id &"'")
+        call query ("UPDATE DLK_M_customer SET custnama = '"& nama &"', custEmail = '"& email &"', custAlamat = '"& alamat &"', custPhone1 = '"& phone1 &"', custPhone2 = '"& phone2 &"', custUpdateId = '"& session("username") &"', custUpdateTime = '"& updatetime &"', custTgl = '"& tgl &"', custKodeAkun = '"& kdakun &"' WHERE custID  = '"& id &"'")
         value = 1 'case untuk insert data
     else
         value = 2 'case jika gagal insert 

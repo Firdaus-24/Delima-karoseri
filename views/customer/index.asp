@@ -25,7 +25,7 @@
     end if
 
     ' real query
-    strquery = "SELECT * FROM DLK_M_Customer WHERE custAktifYN = 'Y' "& filterNama &" "& filteralamat &""
+    strquery = "SELECT DLK_M_Customer.*, GL_M_CategoryItem.cat_Name FROM DLK_M_Customer LEFT OUTER JOIN GL_M_CategoryItem ON DLK_M_Customer.custkodeakun = GL_M_CategoryItem.cat_ID WHERE custAktifYN = 'Y' "& filterNama &" "& filteralamat &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
@@ -109,7 +109,7 @@
                         <th scope="col">Phone2</th>
                         <th scope="col">UpdateId</th>
                         <th scope="col" >UpdateTime</th>
-                        <th scope="col" >Aktif</th>
+                        <th scope="col" >Kode akun</th>
                         <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -130,7 +130,7 @@
                         <td><%= rs("custPhone2") %></td>
                         <td><%= rs("custUpdateID") %></td>
                         <td><%= rs("custUpdateTime") %></td>
-                        <td><%if rs("custAktifYN") = "Y" then%>Aktif <% end if %></td>
+                        <td><%=rs("cat_Name") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <a href="cust_u.asp?id=<%= rs("custId") %>" class="btn badge text-bg-primary">update</a> 

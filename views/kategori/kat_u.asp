@@ -20,8 +20,13 @@
     </div>
     <form action="kat_u.asp?id=<%= id %>" method="post" id="formkat" >
         <div class="row d-flex justify-content-center">
-            <input type="hidden" class="form-control" id="id" name="id" value="<%= kategori("kategoriId") %>" maxlength="30" autocomplete="off" required>
             <div class="col-lg-5 mb-3 mt-3">
+                <label for="id" class="form-label">ID</label>
+                <input type="text" class="form-control" id="id" name="id" value="<%= kategori("kategoriId") %>" maxlength="30" autocomplete="off" readonly required>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center">
+            <div class="col-lg-5 mb-3">
                 <label for="nama" class="form-label">Nama</label>
                 <input type="hidden" class="form-control" id="oldnama" name="oldnama" value="<%= kategori("kategoriNama") %>" maxlength="30" autocomplete="off" required>
                 <input type="text" class="form-control" id="nama" name="nama" value="<%= kategori("kategoriNama") %>" maxlength="30" autocomplete="off" required>

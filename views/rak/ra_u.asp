@@ -21,9 +21,14 @@
 %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
-    <div class="row mt-3 mb-3">
+    <div class="row mt-3">
         <div class="col-lg text-center">
             <h3>FORM UPDATE RAK INVENTORY</h3>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-lg text-center labelId">
+            <h3><%= id %></h3>
         </div>
     </div>
     <form action="ra_u.asp?id=<%= id %>" method="post" id="formrak">
@@ -60,7 +65,7 @@
         </div>
         <div class="row">
             <div class="col-lg">
-                <button type="submit" class="btn btn-primary">Tambah</button>
+                <button type="submit" class="btn btn-primary">Update</button>
                 <a href="index.asp"><button type="button" class="btn btn-danger">kembali</button></a>
             </div>
         </div>

@@ -20,9 +20,15 @@
         </div>
     </div>
     <form action="sat_u.asp?id=<%= id %>" method="post" id="formsat" >
-        <input type="hidden" class="form-control" id="id" name="id" value="<%= satuan("sat_id") %>" required>
+        
         <div class="row d-flex justify-content-center">
             <div class="col-lg-5 mb-3 mt-3">
+                <label for="id" class="form-label">ID</label>
+                <input type="text" class="form-control" id="id" name="id" value="<%= satuan("sat_id") %>" readonly required>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center">
+            <div class="col-lg-5 mb-3">
                 <label for="nama" class="form-label">Nama</label>
                 <input type="hidden" class="form-control" id="oldnama" name="oldnama" maxlength="20" autocomplete="off" value="<%= satuan("sat_nama") %>" required>
                 <input type="text" class="form-control" id="nama" name="nama" maxlength="20" autocomplete="off" value="<%= satuan("sat_nama") %>" required>

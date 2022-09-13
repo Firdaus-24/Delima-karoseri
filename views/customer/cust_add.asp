@@ -1,6 +1,13 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_customer.asp"-->
 <% 
+    set data_cmd =  Server.CreateObject ("ADODB.Command")
+    data_cmd.ActiveConnection = mm_delima_string
+
+    data_cmd.commandText = "SELECT Cat_ID,Cat_Name FROM GL_M_CategoryItem WHERE Cat_AKtifYN = 'Y' ORDER BY Cat_Name"
+
+    set data = data_cmd.execute
+
     call header("Form Customer")
 %>
 <!--#include file="../../navbar.asp"-->
@@ -15,13 +22,13 @@
         <div class="mb-3 row">
             <label for="tgl" class="col-sm-2 col-form-label offset-sm-1">Tanggal</label>
             <div class="col-sm-3">
-                <input type="date" class="form-control" id="tgl" name="tgl" autocomplete="off" autofocus required>
+                <input type="text" class="form-control" id="tgl" name="tgl" autocomplete="off" value="<%= date() %>" onfocus="(this.type = 'date')" required>
             </div>
         </div>
         <div class="mb-3 row">
             <label for="nama" class="col-sm-2 col-form-label offset-sm-1">Nama</label>
             <div class="col-sm-8">
-                <input type="text" class="form-control" id="nama" name="nama" autocomplete="off" maxlength="150" required>
+                <input type="text" class="form-control" id="nama" name="nama" autocomplete="off" autofocus maxlength="150" required>
             </div>
         </div>
         <div class="mb-3 row">
@@ -46,6 +53,20 @@
             <label for="phone2" class="col-sm-2 col-form-label offset-sm-1">Phone 2</label>
             <div class="col-sm-8">
                 <input type="tel" class="form-control" id="phone2" name="phone2" maxlength="15" autocomplete="off">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="kdakun" class="col-sm-2 col-form-label offset-sm-1">Kode Akun</label>
+            <div class="col-sm-8">
+                <select class="form-select" aria-label="Default select example" id="kdakun" name="kdakun" required>
+                    <option value="">Pilih</option>
+                    <% do while not data.eof %>
+                    <option value="<%= data("cat_id") %>"><%= data("cat_Name") %></option>
+                    <% 
+                    data.movenext
+                    loop
+                    %>
+                </select>
             </div>
         </div>
         <div class="row">

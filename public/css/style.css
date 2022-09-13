@@ -180,6 +180,12 @@ hr {
   .table tr:nth-child(1){
     white-space: nowrap;
   }
+
+  /* labelID */
+  .labelId h3{
+    font-weight: 700;
+    color:rgb(12,182,17);
+  }
 /* fortable data */
 @media (max-width:801px){
     .table{
