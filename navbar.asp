@@ -128,6 +128,9 @@
               <li>
                 <a class="link-name" href="<%= url %>views/finance/catitem.asp">Kategori Item</a>
               </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/finance/appmemo.asp">Approve Memo</a>
+              </li>
             </ul>
           <!-- hr/ga -->
           <li class="nav-text">

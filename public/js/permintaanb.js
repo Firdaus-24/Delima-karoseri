@@ -40,21 +40,37 @@ $(document).ready(function(){
         })
     })
 
-    // function detail permintaan barang
-    $(".btnmdludpbarang").click(function(){
-        let id = $(this).attr('data')
-        $.get("../../ajax/detailPermintaanBarang.asp?id="+ id, function(data){
-            let x = data.split(",")
-            $('#nbrg').val(x[0])
-            $('#dbrgnama').val(x[1])
-            $('#dspect').val(x[2])
-            $('#dqtty').val(x[3])
-            $('#dharga').val(x[4])
-            $('#dsatuan').val(x[5])
-            $('#dket').val(x[6])
-            $('#dbrg').val(x[8])
-        });
+    // get nama barang by vendor
+    $("#cpbarang").keyup(function(){
+        let nama = $("#cpbarang").val()
+        let cabang = $("#pbcabang").val()
+        $.ajax({
+            method: "POST",
+            url: "../../ajax/getbrgvendor.asp",
+            data: { nama, cabang }
+        }).done(function( msg ) {
+            $(".contentdetailpbrg").html(msg)
+        });  
+        
     })
+
+
+
+    // function detail permintaan barang
+    // $(".btnmdludpbarang").click(function(){
+    //     let id = $(this).attr('data')
+    //     $.get("../../ajax/detailPermintaanBarang.asp?id="+ id, function(data){
+    //         let x = data.split(",")
+    //         $('#nbrg').val(x[0])
+    //         $('#dbrgnama').val(x[1])
+    //         $('#dspect').val(x[2])
+    //         $('#dqtty').val(x[3])
+    //         $('#dharga').val(x[4])
+    //         $('#dsatuan').val(x[5])
+    //         $('#dket').val(x[6])
+    //         $('#dbrg').val(x[8])
+    //     });
+    // })
 
     // aktifasi header permintaan barang
     $('.btn-aktifpbarang').click(function(e){

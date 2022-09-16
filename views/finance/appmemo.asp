@@ -12,11 +12,11 @@
     set agen_cmd =  Server.CreateObject ("ADODB.Command")
     agen_cmd.ActiveConnection = mm_delima_string
     ' filter agen
-    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'Y' AND DLK_T_Memo_H.memoApproveYN1 = 'N' AND NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
     set agendata = agen_cmd.execute
 
-    ' filter kebutuhan
-    agen_cmd.commandText = "SELECT dbo.DLK_M_Departement.DepID, dbo.DLK_M_Departement.DepNama FROM dbo.DLK_T_Memo_H LEFT OUTER JOIN dbo.DLK_M_Departement ON dbo.DLK_T_Memo_H.memoDepID = dbo.DLK_M_Departement.DepID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'Y' GROUP BY dbo.DLK_M_Departement.DepID, dbo.DLK_M_Departement.DepNama"
+    ' filter departement
+    agen_cmd.commandText = "SELECT dbo.DLK_M_Departement.DepID, dbo.DLK_M_Departement.DepNama FROM dbo.DLK_T_Memo_H LEFT OUTER JOIN dbo.DLK_M_Departement ON dbo.DLK_T_Memo_H.memoDepID = dbo.DLK_M_Departement.DepID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'Y' AND DLK_T_Memo_H.memoApproveYN1 = 'N' AND NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) GROUP BY dbo.DLK_M_Departement.DepID, dbo.DLK_M_Departement.DepNama"
     set kebData = agen_cmd.execute
 
     set conn = Server.CreateObject("ADODB.Connection")
@@ -52,7 +52,7 @@
     end if
 
     ' query seach 
-    strquery = "SELECT DLK_T_Memo_H.*, DLK_M_Departement.DepNama, DLK_M_Divisi.DivNama, GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN DLK_M_departement ON DLK_T_Memo_H.MemoDepID = DLK_M_Departement.DepID LEFT OUTER JOIN DLK_M_Divisi ON DLK_T_Memo_H.memoDivID = DLK_M_Divisi.DivID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = LEFT(GLB_M_Agen.AgenID,3) WHERE NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) AND (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN1 = 'Y') "& filterAgen &" "& filterKeb &" "& filtertgl &""
+    strquery = "SELECT DLK_T_Memo_H.*, DLK_M_Departement.DepNama, DLK_M_Divisi.DivNama, GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN DLK_M_departement ON DLK_T_Memo_H.MemoDepID = DLK_M_Departement.DepID LEFT OUTER JOIN DLK_M_Divisi ON DLK_T_Memo_H.memoDivID = DLK_M_Divisi.DivID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = LEFT(GLB_M_Agen.AgenID,3) WHERE NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) AND (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN1 <> 'Y') "& filterAgen &" "& filterKeb &" "& filtertgl &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
@@ -93,16 +93,16 @@
     loop
 
 
-    call header("PURCHASE ORDER") 
+    call header("APROVE MEMO PERMINTAAN") 
 %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row">
         <div class="col-lg-12 mb-3 mt-3 text-center">
-            <h3>PURCHES ORDER MEMO</h3> 
+            <h3>APPROVE MEMO PERMINTAAN BARANG</h3> 
         </div>
     </div>
-    <form action="index.asp" method="post">
+    <form action="appmemo.asp" method="post">
         <div class="row">
             <div class="col-lg-3 mb-3">
                 <label for="Agen">Cabang</label>
@@ -117,7 +117,7 @@
                 </select>
             </div>
             <div class="col-lg-3 mb-3">
-                <label for="keb">Kebutuhan</label>
+                <label for="keb">Departement</label>
                 <select class="form-select" aria-label="Default select example" name="keb" id="keb">
                     <option value="">Pilih</option>
                     <% do while not kebData.eof %>
@@ -182,7 +182,7 @@
                         </td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="purc_add.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-primary">Process</a>
+                                <a href="#" class="btn badge text-bg-primary modalSendEmailMemo" data-id="<%= rs("memoID") %>" data-bs-toggle="modal" data-bs-target="#modalSendEmail">Process</a>
                             </div>
                         </td>
                     </tr>
@@ -193,6 +193,7 @@
                     lastrecord = 1
                     end if
                     loop
+                    ' rs.movefirst
                     rs.close
                     %>
                 </tbody>
@@ -213,7 +214,7 @@
                         end if
                         if requestrecords <> 0 then 
                     %>
-                        <a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Prev </a>
+                        <a class="page-link prev" href="appmemo.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Prev </a>
                     <% else %>
                         <p class="page-link prev-p">&#x25C4; Prev </p>
                     <% end if %>
@@ -231,9 +232,9 @@
                         end if
                         if Cint(page) = pagelistcounter then
                         %>
-                            <a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal bg-primary text-light" href="appmemo.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
                         <%else%>
-                            <a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal" href="appmemo.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
                         <%
                         end if
                         pagelist = pagelist + recordsonpage
@@ -249,7 +250,7 @@
                         end if
                         %>
                         <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                            <a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
+                            <a class="page-link next" href="appmemo.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
                         <% else %>
                             <p class="page-link next-p">Next &#x25BA;</p>
                         <% end if %>
@@ -259,6 +260,41 @@
         </div>
     </div>
 </div>
-
+<!-- Modal -->
+<div class="modal fade" id="modalSendEmail" tabindex="-1" aria-labelledby="modalSendEmailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modalSendEmailLabel">Approve Memo</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form action="sendemail.asp" method="post" onsubmit="validasiForm()">
+                <input type="hidden" id="idappmemo" name="idappmemo" class="form-control" required>
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <label for="custEmail" class="col-form-label">Email TO</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="email" id="custEmail" name="custEmail" class="form-control" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <label for="subject" class="col-form-label">Subject</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="text" id="subject" name="subject" class="form-control" required>
+                    </div>
+                </div>
+        </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Send</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
 
 <% call footer() %>

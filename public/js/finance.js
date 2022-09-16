@@ -46,4 +46,10 @@ $(document).ready(function(){
         })
     })
 
+    // send email
+    $(".modalSendEmailMemo").click(function(){
+        let id = $(this).attr('data-id')
+        $("#idappmemo").val(id)
+    })
+
 })

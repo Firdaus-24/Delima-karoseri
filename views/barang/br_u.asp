@@ -77,6 +77,12 @@
             </div>
         </div>
         <div class="mb-3 row">
+            <label for="minstok" class="col-sm-2 col-form-label offset-sm-1">Stok Minimal</label>
+            <div class="col-sm-2">
+                <input type="number" class="form-control" id="minstok" name="minstok" autocomplete="off" value="<%= barang("Brg_Minstok") %>" required>
+            </div>
+        </div>
+        <div class="mb-3 row">
             <label for="stok" class="col-sm-2 col-form-label offset-sm-1">Stok</label>
             <div class="col-sm-8">
                 <div class="form-check form-check-inline">

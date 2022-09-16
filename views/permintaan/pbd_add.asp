@@ -13,7 +13,7 @@
     data_cmd.commandText = "SELECT sat_Nama, sat_ID FROM DLK_M_satuanBarang WHERE sat_AktifYN = 'Y' ORDER BY sat_Nama ASC"
     set psatuan = data_cmd.execute    
     ' get all barang
-    data_cmd.commandText = "SELECT Brg_ID, Brg_Nama FROM DLK_M_Barang WHERE left(Brg_Id,3) = '"& dataH("memoAgenID") &"' AND Brg_AktifYN = 'Y' ORDER BY Brg_Nama ASC"
+    data_cmd.commandText = "SELECT dbo.DLK_M_Barang.Brg_Id, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama FROM dbo.DLK_M_Barang LEFT OUTER JOIN dbo.DLK_T_VendorD ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_VendorD.Dven_BrgID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.JenisID WHERE (dbo.DLK_T_VendorD.Dven_BrgID <> '') AND (dbo.DLK_M_Barang.Brg_AktifYN = 'Y') AND (left(dbo.DLK_M_Barang.Brg_Id,3) = '"& dataH("memoAgenID") &"') GROUP BY dbo.DLK_M_Barang.Brg_Id, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama ORDER BY Brg_Nama ASC"
     set barang = data_cmd.execute
 %>
 <% call header("Detail Permintaan Barang") %>
@@ -157,23 +157,47 @@
       </div>
     <form action="pbd_add.asp?id=<%= id %>" method="post">
         <input type="hidden" name="memoid" id="memoid" value="<%= id %>">
+        <input type="hidden" name="pbcabang" id="pbcabang" value="<%= dataH("memoAgenID") %>">
       <div class="modal-body">
-         <div class="row">
+        <div class="row">
             <div class="col-sm-3">
-                <label for="brg" class="col-form-label">Jenis Barang</label>
+                <label for="cpbarang" class="col-form-label">Cari Barang</label>
             </div>
             <div class="col-sm-9 mb-3">
-                <select class="form-select" aria-label="Default select example" name="brg" id="brg"> 
-                    <option value="">Pilih</option>
-                <% do while not barang.eof %>
-                    <option value="<%= barang("Brg_ID") %>"><%= barang("Brg_Nama") %></option>
-                <% 
-                barang.movenext
-                loop
-                %>
-                </select>
+                <input type="text" id="cpbarang" class="form-control" name="cpbarang">
             </div>
         </div>
+        <!-- table barang -->
+        <div class="row">
+            <div class="col-sm mb-4 overflow-auto" style="height:15rem;">
+                <table class="table">
+                    <thead class="bg-secondary text-light" style="position: sticky;top: 0;">
+                        <tr>
+                            <th scope="col">Kode</th>
+                            <th scope="col">Nama</th>
+                            <th scope="col">Pilih</th>
+                        </tr>
+                    </thead>
+                    <tbody  class="contentdetailpbrg">
+                        <% do while not barang.eof %>
+                        <tr>
+                            <th scope="row"><%= barang("kategoriNama")&"-"& barang("jenisNama") %></th>
+                            <td><%= barang("brg_nama") %></td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="brg" id="brg" value="<%= barang("Brg_ID") %>" required>
+                                </div>
+                            </td>
+                        </tr>
+                        <% 
+                        barang.movenext
+                        loop
+                        %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- end table -->
          <div class="row">
             <div class="col-sm-3">
                 <label for="spect" class="col-form-label">Sepesification</label>

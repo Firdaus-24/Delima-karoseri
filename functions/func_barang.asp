@@ -5,6 +5,7 @@ sub tambahBarang()
     kategori = trim(Request.Form("kategori"))
     jenis = trim(Request.Form("jenis"))
     tgl = trim(Request.Form("tgl"))
+    minstok = trim(Request.Form("minstok"))
     jual = trim(Request.Form("jual"))
     stok = trim(Request.Form("stok"))
 
@@ -15,7 +16,7 @@ sub tambahBarang()
     set data = data_cmd.execute
 
     if data.eof then
-        call query("exec sp_AddDLK_M_Barang '"& agen &"','"& nama &"', '"& tgl &"', '"& jenis &"','"& kategori &"','"& stok &"','"& jual &"',''")
+        call query("exec sp_AddDLK_M_Barang '"& agen &"','"& nama &"', '"& tgl &"', '"& jenis &"','"& kategori &"','"& stok &"','"& jual &"','', "& minstok &"")
         value = 1 'case untuk insert data
     else
         value = 2 'case jika gagal insert 
@@ -28,6 +29,7 @@ sub updateBarang()
     kategori = trim(Request.Form("kategori"))
     jenis = trim(Request.Form("jenis"))
     tgl = trim(Request.Form("tgl"))
+    minstok = trim(Request.Form("minstok"))
     jual = trim(Request.Form("jual"))
     stok = trim(Request.Form("stok"))
 
@@ -38,7 +40,7 @@ sub updateBarang()
     set data = data_cmd.execute
 
     if not data.eof then
-        call query("UPDATE DLK_M_Barang SET Brg_Nama = '"& nama &"', KategoriId = '"& kategori &"', JenisID = '"& jenis &"', Brg_tanggal = '"& tgl &"', Brg_StokYN = '"& stok &"', Brg_jualYN = '"& jual &"' WHERE Brg_ID = '"& id &"'")
+        call query("UPDATE DLK_M_Barang SET Brg_Nama = '"& nama &"', KategoriId = '"& kategori &"', JenisID = '"& jenis &"', Brg_tanggal = '"& tgl &"', Brg_StokYN = '"& stok &"', Brg_jualYN = '"& jual &"', Brg_minstok = "& minstok &" WHERE Brg_ID = '"& id &"'")
         value = 1 'case untuk insert data
     else
         value = 2 'case jika gagal insert 
