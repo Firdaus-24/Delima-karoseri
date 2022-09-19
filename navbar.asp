@@ -115,6 +115,9 @@
               <li>
                 <a class="link-name" href="<%= url %>views/purces/purcesDetail.asp">Purchase Detail</a>
               </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/purces/uprice.asp">Update Harga Memo</a>
+              </li>
             </ul>
           <!-- finance -->
           <li class="nav-text">

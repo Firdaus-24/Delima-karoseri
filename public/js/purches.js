@@ -1,5 +1,4 @@
 $(function(){
-
     let qttypo 
     let hargapo 
     // set value untuk disc1 dan disc2 jika kosong
@@ -149,5 +148,23 @@ $(function(){
         })
     })
 
+    // update harga memo
+    $(".modalUpdateHarga").click(function(){
+        let dataID = $(this).attr("data-iddetail")
+        $.ajax({
+            method: "POST",
+            url: "../../ajax/getDetailPermintaan.asp",
+            data: { id:dataID }
+        }).done(function( msg ) {
+            $("#memoiddetail").val(msg[0].MEMOID.toString())
+            $("#brgUMemo").val(msg[0].BARANGNAMA.toString())
+            $("#spectUMemo").val(msg[0].SPECT.toString())
+            $("#qttyUMemo").val(msg[0].QTTY.toString())
+            $("#satuanUMemo").val(msg[0].SATUANNAMA.toString())
+            $("#ketUMemo").val(msg[0].KETERANGAN.toString())
+            $("#hargaumemo").val(msg[0].HARGA.toString())
+        });
+        
+    })
 
 });
