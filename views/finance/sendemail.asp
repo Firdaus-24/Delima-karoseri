@@ -7,7 +7,7 @@
     set data_cmd = Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT dbo.DLK_T_Memo_H.memoID, dbo.DLK_T_Memo_H.memoTgl, dbo.DLK_T_Memo_H.memoApproveYN, dbo.DLK_T_Memo_H.memoKeterangan, dbo.DLK_T_Memo_H.memoAktifYN, dbo.DLK_T_Memo_H.memoApproveYN1,dbo.DLK_T_Memo_D.memoID AS Expr1, dbo.DLK_T_Memo_D.memoSpect, dbo.DLK_T_Memo_D.memoQtty, dbo.DLK_T_Memo_D.memoKeterangan AS ket2, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_Divisi.DivNama,dbo.DLK_M_Departement.DepNama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_Memo_H INNER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_Memo_D.memoItem = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_Memo_D.memoSatuan = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.DLK_M_Departement ON dbo.DLK_T_Memo_H.memoDepID = dbo.DLK_M_Departement.DepID LEFT OUTER JOIN dbo.DLK_M_Divisi ON dbo.DLK_T_Memo_H.memoDivID = dbo.DLK_M_Divisi.DivId LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_Memo_H.memoAgenID = dbo.GLB_M_Agen.AgenID WHERE (dbo.DLK_T_Memo_H.memoID = '"& id &"') AND (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN1 <> 'Y') ORDER BY dbo.DLK_M_Barang.Brg_Nama"
+    data_cmd.commandText = "SELECT dbo.DLK_T_Memo_H.memoID, dbo.DLK_T_Memo_H.memoTgl, dbo.DLK_T_Memo_H.memoApproveYN, dbo.DLK_T_Memo_H.memoKeterangan, dbo.DLK_T_Memo_H.memoAktifYN, dbo.DLK_T_Memo_H.memoApproveYN1,dbo.DLK_T_Memo_D.memoID AS Expr1, dbo.DLK_T_Memo_D.memoSpect, dbo.DLK_T_Memo_D.memoQtty, dbo.DLK_T_Memo_D.memoKeterangan AS ket2,dbo.DLK_T_Memo_D.memoHarga, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_Divisi.DivNama,dbo.DLK_M_Departement.DepNama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_Memo_H INNER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_Memo_D.memoItem = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_Memo_D.memoSatuan = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.DLK_M_Departement ON dbo.DLK_T_Memo_H.memoDepID = dbo.DLK_M_Departement.DepID LEFT OUTER JOIN dbo.DLK_M_Divisi ON dbo.DLK_T_Memo_H.memoDivID = dbo.DLK_M_Divisi.DivId LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_Memo_H.memoAgenID = dbo.GLB_M_Agen.AgenID WHERE (dbo.DLK_T_Memo_H.memoID = '"& id &"') AND (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN1 <> 'Y') ORDER BY dbo.DLK_M_Barang.Brg_Nama"
     ' response.write data_cmd.commandText
     set data = data_cmd.execute
 
@@ -22,7 +22,8 @@
                     "<td style='border:1px solid black'>"& data("memoSpect")&"</td>"&_
                     "<td style='border:1px solid black'>"& data("memoQtty")&"</td>"&_
                     "<td style='border:1px solid black'>"& data("Sat_Nama")&"</td>"&_
-                    "<td style='border:1px solid black'>"& data("memoKeterangan")&"</td>"&_
+                    "<td style='border:1px solid black'>"& replace(formatCurrency(data("memoHarga")),"$","Rp.")&"</td>"&_
+                    "<td style='border:1px solid black'>"& data("ket2")&"</td>"&_
                     "</tr>"
     data.movenext
     loop
@@ -76,6 +77,7 @@
                 "<th style='border:1px solid black'>Spesification</th>"&_
                 "<th style='border:1px solid black'>Quantity</th>"&_
                 "<th style='border:1px solid black'>Satuan</th>"&_
+                "<th style='border:1px solid black'>Harga</th>"&_
                 "<th style='border:1px solid black'>Keterangan</th>"&_
             "</tr>"&_
                 tabledata &_

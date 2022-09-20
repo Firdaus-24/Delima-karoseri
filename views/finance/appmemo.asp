@@ -165,7 +165,7 @@
                     recordcounter = recordcounter + 1
 
                     ' cek data detail
-                    agen_cmd.commandText = "SELECT memoID FROM DLK_T_Memo_D WHERE Left(memoID,17) = '"& rs("memoID") &"'"
+                    agen_cmd.commandText = "SELECT memoID FROM DLK_T_Memo_D WHERE Left(memoID,17) = '"& rs("memoID") &"' AND memoHarga <> 0 "
                     set ddetail = agen_cmd.execute
                     %>
                     <tr>
@@ -173,7 +173,7 @@
                         <td>
                             <%= left(rs("memoID"),4) %>/<%=mid(rs("memoId"),5,3) %>-<% call getAgen(mid(rs("memoID"),8,3),"") %>/<%= mid(rs("memoID"),11,4) %>/<%= right(rs("memoID"),3) %>
                         </td>
-                        <td><%= rs("memoTgl") %></td>
+                        <td><%= Cdate(rs("memoTgl")) %></td>
                         <td><%= rs("AgenName") %></td>
                         <td><%= rs("DivNama") %></td>
                         <td><%= rs("DepNama")%></td>
@@ -181,9 +181,11 @@
                             <%if rs("memoAktifYN") = "Y" then %>Aktif <% else %>Off <% end if %>
                         </td>
                         <td class="text-center">
+                            <% if not ddetail.eof then %>
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <a href="#" class="btn badge text-bg-primary modalSendEmailMemo" data-id="<%= rs("memoID") %>" data-bs-toggle="modal" data-bs-target="#modalSendEmail">Process</a>
                             </div>
+                            <% end if %>
                         </td>
                     </tr>
                     <% 

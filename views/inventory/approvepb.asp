@@ -172,7 +172,7 @@
                         <td>
                             <%= left(rs("memoID"),4) %>/<%= mid(rs("memoId"),5,3) %>-<% call getAgen(mid(rs("memoID"),8,3),"") %>/<%= mid(rs("memoID"),11,4) %>/<%= right(rs("memoID"),3) %>
                         </td>
-                        <td><%= rs("memoTgl") %></td>
+                        <td><%= Cdate(rs("memoTgl")) %></td>
                         <td><% call getAgen(rs("memoAgenID"),"p") %></td>
                         <td><% call getDivisi(rs("memoDivID")) %></td>
                         <td><%= rs("DepNama") %></td>
