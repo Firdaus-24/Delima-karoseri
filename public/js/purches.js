@@ -8,100 +8,21 @@ $(function(){
     if(!$('input[name=disc2]').val()){
         $('input[name=disc2]').val(0)
     }
-    // cekbox 
-    $(".ckpo").on("click", function() {
-        let tpo = 0
-        var data = [];
-        $("table > tbody > tr").each(function (i, val) {
-            var $tr = $(this);
-            if ($tr.find(".ckpo").is(":checked")) {
-                data.push({
-                    item: $tr.find("#item").val(),
-                    qtty: $tr.find("#qtty").val(),
-                    harga: $tr.find("#hargapo").val(),
-                    satuan: $tr.find("#satuan").val(),
-                    disc1: $tr.find("#disc1").val(),
-                    disc2: $tr.find("#disc2").val(),
-                    total: $tr.find("#hargapo").val() * $tr.find("#qtty").val()
-                });
-                // tpo = tpo + data[i].total            
-            }
-        });      
-        $("#valitem").val(data.map(el=>el.item).toString())
-        $("#valqtty").val(data.map(el=>el.qtty).toString())
-        $("#valharga").val(data.map(el=>el.harga).toString())
-        $("#valsatuan").val(data.map(el=>el.satuan).toString())
-        $("#valdisc1").val(data.map(el=>el.disc1).toString())
-        $("#valdisc2").val(data.map(el=>el.disc2).toString())
-        // $("#thargapo").val(tpo)
+
+    // get value radio po form tambah
+    $('#formaddpo input').on('change', function() {
+        let ckpobrg = $('input[name=ckbrgpo]:checked', '#formaddpo').val().split(",")
+        const myArray = ckpobrg[1]
+        
+        $("#hargapo").val(parseFloat(myArray.replace(/,/g, "")).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
     });
-
-    // validasi tambah pruchase
-    $('#formpur').submit(function(e) {
-        // let tdana = Number($('#dana_tpo').val().replace(/[^0-9\.]+/g, ""))
-        // let thargapo = Number($('#thargapo').val())
-        let form = this;
+    // get value radio po form update
+    $('#formupdatepo input').on('change', function() {
+        let ckpobrg = $('input[name=ckbrgpo]:checked', '#formupdatepo').val().split(",")
+        const myArray = ckpobrg[1]
         
-        e.preventDefault(); // <--- prevent form from submitting
-      
-        // checkbox
-        if ($('.ckpo').filter(':checked').length < 1) {
-            swal("Pilih Salah Satu Barang");
-            return false;
-        }else{
-            // if(tdana < thargapo){
-            //     swal("Permintaan PO Melebihi Batas");
-            // }else{
-                swal({
-                    title: "APAKAH ANDA SUDAH YAKIN??",
-                    text: "Purchase Order",
-                    icon: "warning",
-                    buttons: [
-                    'No',
-                    'Yes'
-                    ],
-                    dangerMode: true,
-                }).then(function(isConfirm) {
-                    if (isConfirm) {
-                        form.submit(); // <--- submit form programmatically
-                    } else {
-                    swal("Form gagal di kirim");
-                    }
-                })  
-            // }
-        }
-    })
-
-    // validasi tambah pruchase
-    $('#formpur1').submit(function(e) {
-
-        let form = this;
-        
-        e.preventDefault(); // <--- prevent form from submitting
-      
-        // checkbox
-        // if ($('.ckpo').filter(':checked').length < 1) {
-        //     swal("Pilih Salah Satu Barang");
-        //     return false;
-        // }else{
-            swal({
-                title: "APAKAH ANDA SUDAH YAKIN??",
-                text: "Purchase Order",
-                icon: "warning",
-                buttons: [
-                'No',
-                'Yes'
-                ],
-                dangerMode: true,
-            }).then(function(isConfirm) {
-                if (isConfirm) {
-                    form.submit(); // <--- submit form programmatically
-                } else {
-                swal("Form gagal di kirim");
-                }
-            })
-        // }
-    })
+        $("#hargaupo").val(parseFloat(myArray.replace(/,/g, "")).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
+    });
 
     // aktifasi pruchase header
     $('.btn-purce1').click(function(e){
@@ -163,6 +84,26 @@ $(function(){
             $("#satuanUMemo").val(msg[0].SATUANNAMA.toString())
             $("#ketUMemo").val(msg[0].KETERANGAN.toString())
             $("#hargaumemo").val(msg[0].HARGA.toString())
+        });
+        
+    })
+
+    // getdata id memo
+    $("#agenPotoMemo").change(function(){
+        let cabang = $("#agenPotoMemo").val()
+        let request = $.ajax({
+            url: "../../ajax/getMemoHeader.asp",
+            method: "POST",
+            data: { cabang },
+            dataType: "html"
+        });
+        
+        request.done(function( msg ) {
+            $(".tampilPoTomemo").html(msg)
+        });
+        
+        request.fail(function( jqXHR, textStatus ) {
+            alert( "Request failed: " + textStatus );
         });
         
     })

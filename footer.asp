@@ -22,4 +22,5 @@
   <script src="../../public/js/inventory.js"></script>
   <script src="../../public/js/jbarang.js"></script>
   <script src="../../public/js/outgoing.js"></script>
+  <script src="../../public/js/script.js"></script>
 </html>

@@ -11,6 +11,10 @@
     data_cmd.commandText = "SELECT dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_ID FROM dbo.DLK_T_OrPemH LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_OrPemH.OPH_venID = dbo.DLK_M_Vendor.Ven_ID WHERE DLK_T_OrPemH.OPH_AktifYN = 'Y' GROUP BY dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_ID ORDER BY Ven_Nama ASC"
     set vendata = data_cmd.execute
 
+    ' get agen by memo
+    data_cmd.commandText = "SELECT GLB_M_Agen.AgenID, GLB_M_Agen.AgenName FROM dbo.DLK_T_memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE DLK_T_memo_H.memoAktifYN = 'Y' AND memoApproveYN = 'Y' AND memoApproveYN1 = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    set agenmemo = data_cmd.execute
+
     agen = trim(Request.Form("agen"))
     vendor = trim(Request.Form("vendor"))
     metpem = trim(Request.Form("metpem"))
@@ -106,13 +110,14 @@
             <h3>DETAIL PURCHASE ORDER</h3>
         </div>  
     </div>
-    <!-- 
     <div class="row">
         <div class="col-lg-12 mb-3">
-            <a href="purc_ad.asp" class="btn btn-primary">Tambah</a>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalMemoToPO">
+                Tambah
+            </button>
         </div>
     </div>
-     -->
     <form action="purcesDetail.asp" method="post">
         <div class="row">
             <div class="col-lg-4 mb-3">
@@ -175,7 +180,6 @@
                     <th>Tanggal JT</th>
                     <th>Diskon</th>
                     <th>PPn</th>
-                    <th>Pembayaran</th>
                     <th>Keterangan</th>
                     <th class="text-center">Aksi</th>
                 </thead>
@@ -203,7 +207,6 @@
                         </td>
                         <td><%= rs("OPH_DiskonAll") %></td>
                         <td><%= rs("OPH_PPn") %></td>
-                        <td><% call getmetpem(rs("OPH_MetPem")) %></td>
                         <td><%= rs("OPH_Keterangan") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
@@ -291,6 +294,50 @@
         </div>
     </div>
 </div>
-
+<!-- Modal -->
+<div class="modal fade" id="modalMemoToPO" tabindex="-1" aria-labelledby="modalMemoToPOLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modalMemoToPOLabel">Nomor Memo</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form action="purces_add.asp" method="post" id="getmemo" onsubmit="validasiForm(this,event,'Proses Purchase Order','warning')">
+            <div class="row">
+                <div class="col-sm-3 mb-3">
+                    <label>Cabang</label>
+                </div>
+                <div class="col-sm-9 mb-3">
+                    <select class="form-select" aria-label="Default select example" name="agenPotoMemo" id="agenPotoMemo" required>
+                        <option value="">Pilih</option>
+                        <% do while not agenmemo.eof %>
+                        <option value="<%= agenmemo("agenID") %>"><%= agenmemo("agenName") %></option>
+                        <% 
+                        agenmemo.movenext
+                        loop
+                        %>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3 mb-3">
+                    <label>No Memo</label>
+                </div>
+                <div class="col-sm-9 mb-3 tampilPoTomemo">
+                    <select class="form-select" aria-label="Default select example" disabled="disabled">
+                        <option selected>Pilih Cabang Dahulu</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <% call footer() %>

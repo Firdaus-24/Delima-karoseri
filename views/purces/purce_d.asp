@@ -23,10 +23,17 @@
         <div class="col-lg-6">
             <table class="table" style="border:transparent;">
                 <tr>
-                    <th>No</th>
+                    <th>No PO</th>
                     <th>:</th>
                     <td>
                         <%= left(data("OPH_ID"),2) %>-<% call getAgen(mid(data("OPH_ID"),3,3),"") %>/<%= mid(data("OPH_ID"),6,4) %>/<%= right(data("OPH_ID"),4) %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>No Memo</th>
+                    <th>:</th>
+                    <td>
+                        <%= left(data("OPH_memoID"),4) %>/<%=mid(data("OPH_memoId"),5,3) %>-<% call getAgen(mid(data("OPH_memoID"),8,3),"") %>/<%= mid(data("OPH_memoID"),11,4) %>/<%= right(data("OPH_memoID"),3) %>
                     </td>
                 </tr>
                 <tr>
@@ -181,7 +188,6 @@
                     <tr>
                         <th colspan="7">Total Pembayaran</th>
                         <th><%= replace(formatCurrency(realgrantotal),"$","") %></th>
-                        <th></th>
                     </tr>
                 </tbody>
             </table>
