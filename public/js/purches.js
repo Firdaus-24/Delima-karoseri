@@ -1,6 +1,4 @@
 $(function(){
-    let qttypo 
-    let hargapo 
     // set value untuk disc1 dan disc2 jika kosong
     if (!$('input[name=disc1]').val()){
         $('input[name=disc1]').val(0)

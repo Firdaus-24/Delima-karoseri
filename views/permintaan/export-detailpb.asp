@@ -52,7 +52,7 @@
 </style>
     <div class="row gambar">
          <div class="col ">
-            <img src="../../public/img/delimalogo.png" alt="delimalogo">
+            <img src="<%= url %>/public/img/delimalogo.png" alt="delimalogo">
         </div>
     </div>
     <table width="100%" style="font-size:16px">

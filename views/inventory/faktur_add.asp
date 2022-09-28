@@ -1,6 +1,5 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_Faktur.asp"-->
-<!--#include file="../../functions/func_metpem.asp"-->
 <% 
     id = trim(Request.QueryString("id"))
 
@@ -8,14 +7,10 @@
     data_cmd.ActiveConnection = mm_delima_string
     
     ' get data
-    data_cmd.commandText = "SELECT dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_AgenID, dbo.DLK_T_OrPemH.OPH_Date, dbo.DLK_T_OrPemH.OPH_venID, dbo.DLK_T_OrPemH.OPH_JTDate, dbo.DLK_T_OrPemH.OPH_Keterangan,dbo.DLK_T_OrPemH.OPH_DiskonAll, dbo.DLK_T_OrPemH.OPH_PPn, dbo.DLK_T_OrPemH.OPH_AktifYN, dbo.DLK_T_OrPemH.OPH_MetPem, dbo.DLK_T_OrPemD.OPD_OPHID,dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Disc1, dbo.DLK_T_OrPemD.OPD_JenisSat, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_Disc2, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_OrPemH LEFT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID,13) LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrPemD.OPD_Item = DLK_M_Barang.Brg_ID where DLK_T_OrPemH.OPH_ID = '"& id &"' AND DLK_T_OrPemH.OPH_AktifYN = 'Y'"
+    data_cmd.commandText = "SELECT dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_AgenID, dbo.DLK_T_OrPemH.OPH_Date, dbo.DLK_T_OrPemH.OPH_venID, dbo.DLK_T_OrPemH.OPH_JTDate, dbo.DLK_T_OrPemH.OPH_Keterangan,dbo.DLK_T_OrPemH.OPH_DiskonAll, dbo.DLK_T_OrPemH.OPH_PPn, dbo.DLK_T_OrPemH.OPH_AktifYN, dbo.DLK_T_OrPemD.OPD_OPHID,dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Disc1, dbo.DLK_T_OrPemD.OPD_JenisSat, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_Disc2, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_OrPemH LEFT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID,13) LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrPemD.OPD_Item = DLK_M_Barang.Brg_ID where DLK_T_OrPemH.OPH_ID = '"& id &"' AND DLK_T_OrPemH.OPH_AktifYN = 'Y'"
 
     set data = data_cmd.execute
 
-   
-    ' ' agen
-    ' data_cmd.commandText = "SELECT AgenName, AgenID FROM GLB_M_Agen WHERE AgenAktifYN = 'Y' ORDER BY AgenName ASC"
-    ' set agen = data_cmd.execute
     ' vendor
     data_cmd.commandText = "SELECT ven_Nama, Ven_ID FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y' ORDER BY ven_Nama ASC"
     set vendor = data_cmd.execute
@@ -32,10 +27,11 @@
     <form action="faktur_add.asp?id=<%= id %>" method="post" id="formfaktur">
         <div class="row">
             <div class="col-lg-2 mb-3">
-                <label for="ophid" class="col-form-label">P.O ID</label>
+                <label for="ophid" class="col-form-label">No P.O</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="text" id="ophid" name="ophid" class="form-control" value="<%= data("OPH_ID") %>" readonly>
+                <input type="hidden" id="ophid" name="ophid" class="form-control" value="<%= data("OPH_ID") %>" readonly>
+                <input type="text" id="lophid" name="lophid" class="form-control" value="<%= left(data("OPH_ID"),2) %>-<% call getAgen(mid(data("OPH_ID"),3,3),"") %>/<%= mid(data("OPH_ID"),6,4) %>/<%= right(data("OPH_ID"),4) %>" readonly>
             </div>
             <div class="col-lg-2 mb-3">
                 <label for="agen" class="col-form-label">Cabang / Agen</label>
@@ -75,51 +71,12 @@
                 </select>
             </div>
             <div class="col-lg-2 mb-3">
-                <label for="ppn" class="col-form-label">PPn</label>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <input type="number" id="ppn" name="ppn" class="form-control" value="<%= data("OPH_ppn") %>">
-            </div>
-        </div>
-        <div class="row align-items-center">
-            <div class="col-lg-2 mb-3">
-                <label for="metpem" class="col-form-label">Metode Pembayaran</label>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <select class="form-select" aria-label="Default select example" id="metpem" name="metpem" required>
-                    <option value="<%= data("OPH_MetPem") %>"><% call getmetpem(data("OPH_MetPem")) %></option>
-                    <option value="1">Transfer</option>
-                    <option value="2">Cash</option>
-                    <option value="3">PayLater</option>
-                </select>
-            </div>
-            <div class="col-lg-2 mb-3">
-                <label for="diskon" class="col-form-label">Diskon All</label>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <input type="number" id="diskon" name="diskon" class="form-control" value="<%= data("OPH_Diskonall") %>">
-            </div>
-        </div>
-        <div class="row align-items-center">
-            <div class="col-lg-2 mb-3">
                 <label for="keterangan" class="col-form-label">Keterangan</label>
             </div>
             <div class="col-lg-4 mb-3">
                 <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" value="<%= data("OPH_Keterangan") %>" autocomplete="off">
             </div>
-            <div class="col-lg-2 mb-3">
-                <label for="typebelanja" class="col-form-label">Type belanja</label>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <select class="form-select" aria-label="Default select example" id="typebelanja" name="typebelanja" required>
-                    <option value="">Pilih</option>
-                    <option value="1">Harian</option>
-                    <option value="2">Mingguan</option>
-                    <option value="3">Tahunan</option>
-                </select>
-            </div>
         </div>
-        
         
         <div class="row">
             <div class="col-lg-12 text-center">

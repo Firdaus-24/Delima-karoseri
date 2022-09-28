@@ -4,7 +4,7 @@
     data_cmd.ActiveConnection = mm_delima_string
 
     ' get data puchaseOrder
-    data_cmd.commandTExt = "SELECT dbo.DLK_T_OrPemH.OPH_ID FROM dbo.DLK_T_OrPemH WHERE OPH_AktifYN = 'Y' AND (SELECT IPH_OPHID FROM DLK_T_InvPemH WHERE IPH_AktifYN = 'Y' AND IPH_OPHID = OPH_ID)IS NULL ORDER BY dbo.DLK_T_OrPemH.OPH_ID DESC "
+    data_cmd.commandText = "SELECT dbo.DLK_T_OrPemH.OPH_ID FROM dbo.DLK_T_OrPemH WHERE OPH_AktifYN = 'Y' AND (SELECT IPH_OPHID FROM DLK_T_InvPemH WHERE IPH_AktifYN = 'Y' AND IPH_OPHID = OPH_ID)IS NULL ORDER BY dbo.DLK_T_OrPemH.OPH_ID DESC"
     set getpo = data_cmd.execute
 
     ' filter agen
@@ -92,13 +92,13 @@
         end if	
     loop
 
-    call header("Incomming")
+    call header("Invoices Reserve")
 %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row">
         <div class="col-lg-12 mb-3 mt-3 text-center">
-            <h3>TRANSAKSI FAKTUR PEMBELIAN</h3>
+            <h3>INVOICES RESERVE</h3>
         </div>
     </div>
     <div class="row">
@@ -106,7 +106,7 @@
             <a href="faktur_add.asp" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#carimemo">Tambah</a>
         </div>
     </div>
-    <form action="incomming.asp" method="post">
+    <form action="invoReserve.asp" method="post">
         <div class="row">
             <div class="col-lg-4 mb-3">
                 <label for="Agen">Cabang</label>
@@ -154,10 +154,13 @@
                     <th>No</th>
                     <th>FakturID</th>
                     <th>Cabang</th>
+                    <th>Vendor</th>
                     <th>Tanggal</th>
                     <th>Tanggal JT</th>
-                    <th>Vendor</th>
+                    <th>Diskon All</th>
+                    <th>PPN</th>
                     <th>Keterangan</th>
+                    <th>Status</th>
                     <th class="text-center">Aksi</th>
                 </thead>
                 <tbody>
@@ -167,13 +170,16 @@
                     recordcounter = requestrecords
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
-
-                    data_cmd.commandTExt = "SELECT IPD_IphID FROM DLK_T_InvPemD WHERE LEFT(IPD_IphID,13) = '"& rs("IPH_ID") &"'"
+                    ' cek detail barang
+                    data_cmd.commandTExt = "SELECT IPD_IphID, IPD_Harga FROM DLK_T_InvPemD WHERE LEFT(IPD_IphID,13) = '"& rs("IPH_ID") &"'"
                     set p = data_cmd.execute
+                    ' cek harga yang masih 0
+                    data_cmd.commandTExt = "SELECT IPD_IphID, IPD_Harga FROM DLK_T_InvPemD WHERE LEFT(IPD_IphID,13) = '"& rs("IPH_ID") &"' AND IPD_Harga = 0"
+                    set ckharga = data_cmd.execute
                     %>
                         <tr><TH><%= recordcounter %></TH>
                         <th><%= rs("IPH_ID") %></th>
-                        <td><%= rs("AgenNAme")%></td>
+                        <td><%= rs("AgenName") %></td>
                         <td><%= Cdate(rs("IPH_Date")) %></td>
                         <td>
                             <% if rs("IPH_JTDate") <> "1900-01-01" then %>
@@ -181,15 +187,25 @@
                             <% end if %>
                         </td>
                         <td><%= rs("Ven_Nama") %></td>
+                        <td><%= rs("IPH_DiskonAll") %></td>
+                        <td><%= rs("IPH_PPN") %></td>
                         <td><%= rs("IPH_Keterangan") %></td>
+                        <!-- cek harga yang 0 -->
+                        <% if not ckharga.eof then %>
+                            <th>Waiting</th>
+                        <% elseIf p.eof then %>
+                            <td class="text-center">-</td>
+                        <% else %>
+                            <th class="text-success">Done</th>
+                        <% end if %>
+
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <% if not p.eof then %>
-                                    <a href="detailFaktur.asp?id=<%= rs("IPH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
-                                <% end if %>
-                                <a href="faktur_u.asp?id=<%= rs("IPH_ID") %>" class="btn badge text-bg-primary" >Update</a>
-                                <% if p.eof then %>
-                                    <a href="aktifh.asp?id=<%= rs("IPH_ID") %>" class="btn badge text-bg-danger btn-fakturh">Delete</a>
+                                    <a href="detailInvo.asp?id=<%= rs("IPH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
+                                    <a href="inv_u.asp?id=<%= rs("IPH_ID") %>" class="btn badge text-bg-primary" >Update</a>
+                                <% else %>
+                                    -
                                 <% end if %>
                             </div>
                         </td>
@@ -222,7 +238,7 @@
                         end if
                         if requestrecords <> 0 then 
                     %>
-                        <a class="page-link prev" href="incomming.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Prev </a>
+                        <a class="page-link prev" href="invoReserve.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Prev </a>
                     <% else %>
                         <p class="page-link prev-p">&#x25C4; Prev </p>
                     <% end if %>
@@ -240,9 +256,9 @@
                         end if
                         if Cint(page) = pagelistcounter then
                         %>
-                            <a class="page-link hal bg-primary text-light" href="incomming.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal bg-primary text-light" href="invoReserve.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
                         <%else%>
-                            <a class="page-link hal" href="incomming.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal" href="invoReserve.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
                         <%
                         end if
                         pagelist = pagelist + recordsonpage
@@ -258,7 +274,7 @@
                         end if
                         %>
                         <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                            <a class="page-link next" href="incomming.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
+                            <a class="page-link next" href="invoReserve.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
                         <% else %>
                             <p class="page-link next-p">Next &#x25BA;</p>
                         <% end if %>

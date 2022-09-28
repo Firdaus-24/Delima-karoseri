@@ -10,13 +10,13 @@
     set data = data_cmd.execute
 
     
-    call header("Detail Faktur Barang")
+    call header("Detail Invoices Reserve")
 %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row">
         <div class="col-lg-12 mt-3 text-center">
-            <h3>DETAIL FAKTUR BARANG</h3>
+            <h3>DETAIL INVOICES RESERVE</h3>
         </div>
     </div>
     <div class="row">
@@ -81,10 +81,10 @@
     <div class="row">
         <div class="d-flex mb-3">
             <div class="me-auto p-2">
-                <button type="button" class="btn btn-secondary" onClick="window.open('export-XlsFaktur.asp?id=<%=id%>','_self')">EXPORT</button>
+                <button type="button" class="btn btn-secondary" onClick="window.open('export-Xlsdetailinvo.asp?id=<%=id%>','_self')">EXPORT</button>
             </div>
             <div class="p-2">
-                <a href="incomming.asp" type="button" class="btn btn-danger">Kembali</a>
+                <a href="invoReserve.asp" type="button" class="btn btn-danger">Kembali</a>
             </div>
         </div>
     </div>
@@ -93,35 +93,38 @@
             <table class="table table-hover">
                 <thead class="bg-secondary text-light">
                     <tr>
-                        <th scope="col">Item</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Satuan</th>
-                        <th scope="col">Rak</th>
+                        <th>Item</th>
+                        <th>Quantty</th>
+                        <th>Harga</th>
+                        <th>Satuan Barang</th>
+                        <th>Disc1</th>
+                        <th>Disc2</th>
+                        <th>Jumlah</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% 
-                    ' grantotal = 0
+                    grantotal = 0
                     do while not data.eof 
                     ' cek total harga 
-                    ' jml = data("IPD_QtySatuan") * data("IPD_Harga")
-                    ' ' cek diskon peritem
-                    ' if data("IPD_Disc1") <> 0 and data("IPD_Disc2") <> 0  then
-                    '     dis1 = (data("IPD_Disc1")/100) * data("IPD_Harga")
-                    '     dis2 = (data("IPD_Disc2")/100) * data("IPD_Harga")
-                    ' elseif data("IPD_Disc1") <> 0 then
-                    '     dis1 = (data("IPD_Disc1")/100) * data("IPD_Harga")
-                    ' elseIf data("IPD_Disc2") <> 0 then
-                    '     dis2 = (data("IPD_Disc2")/100) * data("IPD_Harga")
-                    ' else    
-                    '     dis1 = 0
-                    '     dis2 = 0
-                    ' end if
-                    ' ' total dikon peritem
-                    ' hargadiskon = data("IPD_Harga") - dis1 - dis2
-                    ' realharga = hargadiskon * data("IPD_QtySatuan")  
+                    jml = data("IPD_QtySatuan") * data("IPD_Harga")
+                    ' cek diskon peritem
+                    if data("IPD_Disc1") <> 0 and data("IPD_Disc2") <> 0  then
+                        dis1 = (data("IPD_Disc1")/100) * data("IPD_Harga")
+                        dis2 = (data("IPD_Disc2")/100) * data("IPD_Harga")
+                    elseif data("IPD_Disc1") <> 0 then
+                        dis1 = (data("IPD_Disc1")/100) * data("IPD_Harga")
+                    elseIf data("IPD_Disc2") <> 0 then
+                        dis2 = (data("IPD_Disc2")/100) * data("IPD_Harga")
+                    else    
+                        dis1 = 0
+                        dis2 = 0
+                    end if
+                    ' total dikon peritem
+                    hargadiskon = data("IPD_Harga") - dis1 - dis2
+                    realharga = hargadiskon * data("IPD_QtySatuan")  
 
-                    ' grantotal = grantotal + realharga
+                    grantotal = grantotal + realharga
                     %>
                         <tr>
                             <td>
@@ -131,44 +134,59 @@
                                 <%= data("IPD_QtySatuan") %>
                             </td>
                             <td>
+                                <%= replace(formatCurrency(data("IPD_Harga")),"$","") %>
+                            </td>
+                            <td>
                                 <%= data("Sat_Nama") %>
                             </td>
                             <td>
-                                <%= data("Rak_Nama") %>
+                                <%= data("IPD_Disc1") %>%
+                            </td>
+                            <td>
+                                <%= data("IPD_Disc2") %>%
+                            </td>
+                            <td>
+                                <%= replace(formatCurrency(realharga),"$","") %>
                             </td>
                         </tr>
                     <% 
                     data.movenext
                     loop
-                    ' data.movefirst
-                    ' ' cek diskonall
-                    ' if data("IPH_diskonall") <> 0 OR data("IPH_Diskonall") <> "" then
-                    '     diskonall = (data("IPH_Diskonall")/100) * grantotal
-                    ' else
-                    '     diskonall = 0
-                    ' end if
+                    data.movefirst
+                    ' cek diskonall
+                    if data("IPH_diskonall") <> 0 OR data("IPH_Diskonall") <> "" then
+                        diskonall = (data("IPH_Diskonall")/100) * grantotal
+                    else
+                        diskonall = 0
+                    end if
 
-                    ' ' hitung ppn
-                    ' if data("IPH_ppn") <> 0 OR data("IPH_ppn") <> "" then
-                    '     ppn = (data("IPH_ppn")/100) * grantotal
-                    ' else
-                    '     ppn = 0
-                    ' end if
-                    ' realgrantotal = (grantotal - diskonall) + ppn
+                    ' hitung ppn
+                    if data("IPH_ppn") <> 0 OR data("IPH_ppn") <> "" then
+                        ppn = (data("IPH_ppn")/100) * grantotal
+                    else
+                        ppn = 0
+                    end if
+                    realgrantotal = (grantotal - diskonall) + ppn
                     %>
-                    <!-- 
+                    <tr>
+                        <th colspan="5">Diskon All</th>
+                        <th><%= data("IPH_Diskonall") %>%</th>
+                        <th><%= replace(formatCurrency(Round(diskonall)),"$","") %></th>
+                    </tr>
+                    <tr>
+                        <th colspan="5">PPN</th>
+                        <th><%= data("IPH_PPN") %>%</th>
+                        <th><%= replace(formatCurrency(Round(ppn)),"$","") %></th>
+                    </tr>
                     <tr>
                         <th colspan="6">Total Pembayaran</th>
-                        <th><%'= replace(formatCurrency(realgrantotal),"$","") %></th>
+                        <th><%= replace(formatCurrency(Round(realgrantotal)),"$","") %></th>
                     </tr>
-                     -->
                 </tbody>
             </table>
         </div>
     </div>
 </div>  
-
-
 
 <% 
     call footer()
