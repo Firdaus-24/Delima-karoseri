@@ -19,3 +19,24 @@ function validasiForm(data, e, te, ic){
         }
     })  
 }
+
+function deleteItem(e,tex){
+    e.preventDefault(); // <--- prevent click
+    
+    swal({
+        title: "YAKIN UNTUK DI HAPUS??",
+        text: tex,
+        icon: "warning",
+        buttons: [
+            'No',
+            'Yes'
+        ],
+        dangerMode: true,
+    }).then(function(isConfirm) {
+        if (isConfirm) {
+            window.location.href = e.target.href // <--- submit form programmatically
+        } else {
+            swal("Request gagal di kirim");
+        }
+    })
+}

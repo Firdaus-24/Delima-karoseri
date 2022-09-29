@@ -97,7 +97,7 @@
     <div class="row">
         <div class="d-flex mb-3">
             <div class="me-auto p-2">
-                <button type="button" class="btn btn-secondary" onClick="window.open('export-detailpb.asp?id=<%=id%>')" class="btn btn-danger">Export</button>
+                <button type="button" class="btn btn-secondary" onClick="window.open('export-detailpb.asp?id=<%=id%>')" class="btn btn-secondary">Export</button>
             </div>
             <div class="p-2">
                 <a href="index.asp" class="btn btn-danger">Kembali</a>

@@ -93,11 +93,19 @@
             <a href="#"><i class="bi bi-check2-all"></i> QR/QC</a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
-          <!-- engenering -->
+          <!-- engineering -->
           <li class="nav-text">
-            <a href="#"><i class="bi bi-easel3"></i> Enginering</a>
+            <a href="#" onclick="toggle('sublist-engineering')"><i class="bi bi-easel3"></i> Engineering</a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
+            <ul class="sub-menu" id="sublist-engineering">
+              <li>
+                <a class="link-name" href="<%= url %>views/engineering/">Engineering</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/engineering/produksi.asp">Produksi</a>
+              </li>
+            </ul>
           <!-- ppic -->
           <li class="nav-text">
             <a href="#"><i class="bi bi-layers"></i> PPIC/Prod Dev</a>

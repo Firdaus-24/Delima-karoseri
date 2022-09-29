@@ -16,7 +16,7 @@
     <table>
         <tr rowspan="3">
             <td colspan="4">
-                <img src="../../public/img/delimapanjang.png" alt="delimapanjang"  width="500" height="70">
+                <img src="<%= url %>/public/img/delimapanjang.png" alt="delimapanjang"  width="500" height="70">
             </td>
             <td colspan="2">
                 JL.Raya Pemda (kaum pandak) No.17 <br>

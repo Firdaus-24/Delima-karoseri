@@ -12,7 +12,7 @@ sub tambahBarang()
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_M_Barang WHERE Brg_Nama = '"& nama &"' AND KategoriId = '"&  kategori &"' AND JenisID = '"& jenis &"' AND Brg_tanggal = '"& tgl &"'"
+    data_cmd.commandText = "SELECT * FROM DLK_M_Barang WHERE Brg_Nama = '"& nama &"' AND KategoriId = '"&  kategori &"' AND JenisID = '"& jenis &"'"
     set data = data_cmd.execute
 
     if data.eof then

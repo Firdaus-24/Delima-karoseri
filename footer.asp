@@ -23,4 +23,5 @@
   <script src="../../public/js/jbarang.js"></script>
   <script src="../../public/js/outgoing.js"></script>
   <script src="../../public/js/script.js"></script>
+  <script src="../../public/js/produksi.js"></script>
 </html>

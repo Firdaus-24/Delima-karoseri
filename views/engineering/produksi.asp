@@ -4,18 +4,11 @@
     data_cmd.ActiveConnection = mm_delima_string
 
     ' filter agen
-    data_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_OrPemH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_OrPemH.OPH_AgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_OrPemH.OPH_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    data_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_ProductH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_ProductH.PDAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_ProductH.PDAktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
     set agendata = data_cmd.execute
-    ' filter agen
-    data_cmd.commandText = "SELECT dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_ID FROM dbo.DLK_T_OrPemH LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_OrPemH.OPH_venID = dbo.DLK_M_Vendor.Ven_ID WHERE DLK_T_OrPemH.OPH_AktifYN = 'Y' GROUP BY dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_ID ORDER BY Ven_Nama ASC"
-    set vendata = data_cmd.execute
-
-    ' get agen by memo
-    data_cmd.commandText = "SELECT GLB_M_Agen.AgenID, GLB_M_Agen.AgenName FROM dbo.DLK_T_memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE DLK_T_memo_H.memoAktifYN = 'Y' AND memoApproveYN = 'Y' AND memoApproveYN1 = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
-    set agenmemo = data_cmd.execute
 
     agen = trim(Request.Form("agen"))
-    vendor = trim(Request.Form("vendor"))
+    nama = Ucase(trim(Request.Form("nama")))
     tgla = trim(Request.Form("tgla"))
     tgle = trim(Request.Form("tgle"))
 
@@ -32,31 +25,31 @@
     end if
     
     if agen <> "" then
-        filterAgen = "AND DLK_T_OrPemH.OPH_AgenID = '"& agen &"'"
+        filterAgen = "AND DLK_T_ProductH.PDAgenID = '"& agen &"'"
     else
         filterAgen = ""
     end if
 
-    if vendor <> "" then
-        filtervendor = "AND dbo.DLK_T_OrPemH.OPH_VenID = '"& vendor &"'"
+    if nama <> "" then
+        filternama = "AND dbo.DLK_M_Barang.Brg_nama LIKE '%"& nama &"%'"
     else
-        filtervendor = ""
+        filternama = ""
     end if
 
     if tgla <> "" AND tgle <> "" then
-        filtertgl = "AND dbo.DLK_T_OrPemH.OPH_Date BETWEEN '"& tgla &"' AND '"& tgle &"'"
+        filtertgl = "AND dbo.DLK_T_ProductH.PDDate BETWEEN '"& tgla &"' AND '"& tgle &"'"
     elseIf tgla <> "" AND tgle = "" then
-        filtertgl = "AND dbo.DLK_T_OrPemH.OPH_Date = '"& tgla &"'"
+        filtertgl = "AND dbo.DLK_T_ProductH.PDDate = '"& tgla &"'"
     else 
         filtertgl = ""
     end if
 
     ' query seach 
-    strquery = "SELECT * FROM DLK_T_OrPemH WHERE OPH_AktifYN = 'Y' "& filterAgen &"  "& filtervendor &" "& filtertgl &""
+    strquery = "SELECT DLK_T_ProductH.*, DLK_M_Barang.Brg_Nama, GLB_M_Agen.AgenName FROM DLK_T_ProductH LEFT OUTER JOIN DLK_M_Barang ON DLK_T_ProductH.PDBrgID = DLK_M_Barang.Brg_ID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_ProductH.PDAgenID = GLB_M_Agen.AgenID WHERE PDAktifYN = 'Y' "& filterAgen &" "& filternama &" "& filtertgl &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
-    orderBy = " ORDER BY OPH_Date DESC"
+    orderBy = " ORDER BY PDDAte DESC"
     set rs = Server.CreateObject("ADODB.Recordset")
     sqlawal = strquery
 
@@ -92,26 +85,29 @@
         end if	
     loop
 
-    call header("Purchase Detail") 
+    call header("Master Produksi") 
 %>
 
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row">
         <div class="col-lg-12 mb-3 mt-3 text-center">
-            <h3>DETAIL PURCHASE ORDER</h3>
+            <h3>MASTER PRODUKSI</h3>
         </div>  
     </div>
     <div class="row">
         <div class="col-lg-12 mb-3">
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalMemoToPO">
+            <button type="button" class="btn btn-primary" onclick="window.location.href='product_add.asp'">
                 Tambah
             </button>
         </div>
     </div>
-    <form action="purcesDetail.asp" method="post">
+    <form action="produksi.asp" method="post">
         <div class="row">
+            <div class="col-lg-4 mb-3">
+                <label for="nama">Nama</label>
+                <input type="text" class="form-control" name="nama" id="nama" autocomplete="off">
+            </div>
             <div class="col-lg-4 mb-3">
                 <label for="Agen">Cabang</label>
                 <select class="form-select" aria-label="Default select example" name="agen" id="agen">
@@ -120,18 +116,6 @@
                     <option value="<%= agendata("agenID") %>"><%= agendata("agenNAme") %></option>
                     <% 
                     agendata.movenext
-                    loop
-                    %>
-                </select>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <label for="vendor">Vendor</label>
-                <select class="form-select" aria-label="Default select example" name="vendor" id="vendor">
-                    <option value="">Pilih</option>
-                    <% do while not vendata.eof %>
-                    <option value="<%= vendata("ven_id") %>"><%= vendata("ven_nama") %></option>
-                    <% 
-                    vendata.movenext
                     loop
                     %>
                 </select>
@@ -156,14 +140,11 @@
             <table class="table table-hover">
                 <thead class="bg-secondary text-light">
                     <th>No</th>
-                    <th>OrderID</th>
-                    <th>Cabang</th>
+                    <th>ID Product</th>
+                    <th>Nama</th>
                     <th>Tanggal</th>
-                    <th>Vendor</th>
-                    <th>Tanggal JT</th>
-                    <th>Diskon</th>
-                    <th>PPn</th>
-                    <th>Keterangan</th>
+                    <th>Cabang</th>
+                    <th>Aktif Y/N</th>
                     <th class="text-center">Aksi</th>
                 </thead>
                 <tbody>
@@ -174,31 +155,27 @@
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
 
-                    data_cmd.commandText = "SELECT OPD_OPHID FROM DLK_T_OrPemD WHERE LEFT(OPD_OPHID,13) = '"& rs("OPH_ID") &"'"
+                    data_cmd.commandText = "SELECT PDDPDID FROM DLK_T_ProductD WHERE LEFT(PDDPDID,12) = '"& rs("PDID") &"'"
 
                     set ddata = data_cmd.execute
                     %>
                         <tr><TH><%= recordcounter %></TH>
-                        <th><%= rs("OPH_ID") %></th>
-                        <td><% call getAgen(rs("OPH_AgenID"),"P") %></td>
-                        <td><%= Cdate(rs("OPH_Date")) %></td>
-                        <td><% call getVendor(rs("OPH_VenID")) %></td>
+                        <th><%= rs("PDID") %></th>
+                        <td><%= rs("Brg_Nama") %></td>
+                        <td><%= Cdate(rs("PDDate")) %></td>
+                        <td><%= rs("agenName") %></td>
                         <td>
-                            <% if rs("OPH_JTDate") <> "1900-01-01" then %>
-                            <%= Cdate(rs("OPH_JTDate")) %>
+                            <%if rs("PDAktifYN") = "Y" then %>
+                                Aktif
                             <% end if %>
                         </td>
-                        <td><%= rs("OPH_DiskonAll") %></td>
-                        <td><%= rs("OPH_PPn") %></td>
-                        <td><%= rs("OPH_Keterangan") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
+                                <a href="product_u.asp?id=<%= rs("PDID") %>" class="btn badge text-bg-primary" >Update</a>
                                 <% if not ddata.eof then %>
-                                <a href="purce_d.asp?id=<%= rs("OPH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
-                                <% end if %>
-                                <a href="purc_u.asp?id=<%= rs("OPH_ID") %>" class="btn badge text-bg-primary" >Update</a>
-                                <% if ddata.eof then %>
-                                <a href="aktifh.asp?id=<%= rs("OPH_ID") %>" class="btn badge text-bg-danger btn-purce1">Delete</a>
+                                <a href="detailProduct.asp?id=<%= rs("PDID") %>" class="btn badge text-light bg-warning">Detail</a>
+                                <% else %>
+                                <a href="aktifproh.asp?id=<%= rs("PDID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'delete master produksi')">Delete</a>
                                 <% end if %>
                             </div>
                         </td>
@@ -231,7 +208,7 @@
                         end if
                         if requestrecords <> 0 then 
                     %>
-                        <a class="page-link prev" href="purcesDetail.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Prev </a>
+                        <a class="page-link prev" href="produksi.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Prev </a>
                     <% else %>
                         <p class="page-link prev-p">&#x25C4; Prev </p>
                     <% end if %>
@@ -249,9 +226,9 @@
                         end if
                         if Cint(page) = pagelistcounter then
                         %>
-                            <a class="page-link hal bg-primary text-light" href="purcesDetail.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal bg-primary text-light" href="produksi.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
                         <%else%>
-                            <a class="page-link hal" href="purcesDetail.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal" href="produksi.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
                         <%
                         end if
                         pagelist = pagelist + recordsonpage
@@ -267,58 +244,13 @@
                         end if
                         %>
                         <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                            <a class="page-link next" href="purcesDetail.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
+                            <a class="page-link next" href="produksi.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
                         <% else %>
                             <p class="page-link next-p">Next &#x25BA;</p>
                         <% end if %>
                     </li>	
                 </ul>
             </nav> 
-        </div>
-    </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="modalMemoToPO" tabindex="-1" aria-labelledby="modalMemoToPOLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="modalMemoToPOLabel">Nomor Memo</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <form action="purces_add.asp" method="post" id="getmemo" onsubmit="validasiForm(this,event,'Proses Purchase Order','warning')">
-            <div class="row">
-                <div class="col-sm-3 mb-3">
-                    <label>Cabang</label>
-                </div>
-                <div class="col-sm-9 mb-3">
-                    <select class="form-select" aria-label="Default select example" name="agenPotoMemo" id="agenPotoMemo" required>
-                        <option value="">Pilih</option>
-                        <% do while not agenmemo.eof %>
-                        <option value="<%= agenmemo("agenID") %>"><%= agenmemo("agenName") %></option>
-                        <% 
-                        agenmemo.movenext
-                        loop
-                        %>
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-3 mb-3">
-                    <label>No Memo</label>
-                </div>
-                <div class="col-sm-9 mb-3 tampilPoTomemo">
-                    <select class="form-select" aria-label="Default select example" disabled="disabled">
-                        <option selected>Pilih Cabang Dahulu</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Save</button>
-        </div>
-            </form>
         </div>
     </div>
 </div>
