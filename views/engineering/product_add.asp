@@ -69,6 +69,28 @@
             </select>
         </div>
     </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <label for="capacityday" class="col-form-label">Capacity Day</label>
+        </div>
+        <div class="col-sm-4 mb-3 capacityday">
+            <input type="number" class="form-control" name="capacityday" id="capacityday" required>
+        </div>
+        <div class="col-sm-2">
+            <label for="capacitymonth" class="col-form-label">Capacity Month</label>
+        </div>
+        <div class="col-sm-4 mb-3">
+            <input type="number" class="form-control" name="capacitymonth" id="capacitymonth" required>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <label for="keterangan" class="col-form-label">Keterangan</label>
+        </div>
+        <div class="col-sm-10 mb-3 keterangan">
+            <input type="text" class="form-control" name="keterangan" id="keterangan" maxlength="50" autocomplete="off" required>
+        </div>
+    </div>
     <!-- end button -->
     <div class="row">
         <div class="col-lg-12 text-center">

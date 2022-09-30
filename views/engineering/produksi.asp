@@ -92,7 +92,7 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-12 mb-3 mt-3 text-center">
-            <h3>MASTER PRODUKSI</h3>
+            <h3>MASTER PRODUKSI (B.O.M)</h3>
         </div>  
     </div>
     <div class="row">
@@ -144,7 +144,8 @@
                     <th>Nama</th>
                     <th>Tanggal</th>
                     <th>Cabang</th>
-                    <th>Aktif Y/N</th>
+                    <th>Capacity Day</th>
+                    <th>Capacity Month</th>
                     <th class="text-center">Aksi</th>
                 </thead>
                 <tbody>
@@ -164,11 +165,8 @@
                         <td><%= rs("Brg_Nama") %></td>
                         <td><%= Cdate(rs("PDDate")) %></td>
                         <td><%= rs("agenName") %></td>
-                        <td>
-                            <%if rs("PDAktifYN") = "Y" then %>
-                                Aktif
-                            <% end if %>
-                        </td>
+                        <td><%= rs("PDCapacityDay") %></td>
+                        <td><%= rs("PDCapacityMonth") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <a href="product_u.asp?id=<%= rs("PDID") %>" class="btn badge text-bg-primary" >Update</a>

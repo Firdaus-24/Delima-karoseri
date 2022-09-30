@@ -4,6 +4,9 @@ sub tambahProduksiH()
     cabang = trim(Request.Form("cabang"))
     tgl = trim(Request.Form("tgl"))
     kdakun = trim(Request.Form("kdakun"))
+    capacityday = trim(Request.Form("capacityday"))
+    capacitymonth = trim(Request.Form("capacitymonth"))
+    keterangan = trim(Request.Form("keterangan"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
@@ -13,7 +16,7 @@ sub tambahProduksiH()
     set data = data_cmd.execute
 
     if data.eof then
-        data_cmd.commandText = "exec SP_AddDLK_T_ProductH '"& barang &"', '"& tgl &"', '"& cabang &"', '"& kdakun &"'"
+        data_cmd.commandText = "exec SP_AddDLK_T_ProductH '"& barang &"', '"& tgl &"', '"& cabang &"', '"& kdakun &"', "& capacityday &", "& capacitymonth &", '"& keterangan &"'"
 
         set p = data_cmd.execute
 

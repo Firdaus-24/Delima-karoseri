@@ -103,8 +103,30 @@
             <td>
                 Kode Akun
             </td>
-            <td>
+            <td colspan="2">
                 : <%= data("cat_name") %>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Capacity Day
+            </td>
+            <td>
+                : <%= data("PDCapacityDay") %>
+            </td>
+            <td>
+                Capacity Month
+            </td>
+            <td colspan="2">
+                : <%= data("PDCapacitymonth") %>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Keterangan
+            </td>
+            <td colspan="4">
+                : <%= data("PDKeterangan") %>
             </td>
         </tr>
         <tr>
