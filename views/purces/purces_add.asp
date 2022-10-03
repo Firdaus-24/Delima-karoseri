@@ -94,7 +94,7 @@
         </div>
         <div class="row">
             <div class="col-lg-12 text-center mb-3">
-                <a href="index.asp" type="button" class="btn btn-danger">Kembali</a>
+                <a href="purcesDetail.asp" type="button" class="btn btn-danger">Kembali</a>
                 <button type="submit" class="btn btn-primary">Save</button>
             </div>
         </div>

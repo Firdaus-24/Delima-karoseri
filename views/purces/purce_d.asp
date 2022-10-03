@@ -119,15 +119,18 @@
 
                     grantotal = grantotal + realharga
 
-                    strid = data("OPD_OPHID")&","& data("OPD_Item") &","& data("OPD_QtySatuan") &","&  data("OPD_JenisSat") &","& data("OPD_Harga") &","& data("OPD_Disc1") &","& data("OPD_Disc2")   
-
                     ' cek status pembelian
-                    data_cmd.commandText = "SELECT memoqtty FROM DLK_T_Memo_D WHERE left(memoId,17) = '"& data("OPH_MemoID") &"' AND memoitem = '"& data("OPD_Item") &"'"
+                    data_cmd.commandText = "SELECT SUM(dbo.DLK_T_OrPemD.OPD_QtySatuan) AS qtty FROM dbo.DLK_T_OrPemD LEFT OUTER JOIN dbo.DLK_T_OrPemH ON LEFT(dbo.DLK_T_OrPemD.OPD_OPHID, 13) = dbo.DLK_T_OrPemH.OPH_ID WHERE (dbo.DLK_T_OrPemH.OPH_MemoID = '"& data("OPH_MemoID") &"') AND (dbo.DLK_T_OrPemH.OPH_AktifYN = 'Y') AND (dbo.DLK_T_OrPemD.OPD_Item = '"& data("OPD_Item") &"')"
                     ' response.write data_cmd.commandText & "<br>"
-                    set qtymemo = data_cmd.execute
+                    set qtypo = data_cmd.execute
 
-                    if not qtymemo.eof then
-                        angkastatus = qtymemo("memoqtty") - data("OPD_QtySatuan")
+                    ' cek order by memo
+                    data_cmd.commandText = "SELECT memoQtty FROM DLK_T_Memo_D WHERE LEFT(memoID,17) = '"& data("OPH_MemoID") &"' AND memoItem = '"& data("OPD_Item") &"'"
+
+                    set qttymemo = data_cmd.execute
+                   
+                    if not qtypo.eof then
+                        angkastatus = qttymemo("memoqtty") - qtypo("qtty")
                         if angkastatus > 0 then
                             ckstatus = "-"&angkastatus
                         elseIf angkastatus = 0 then

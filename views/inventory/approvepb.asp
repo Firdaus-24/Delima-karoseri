@@ -51,7 +51,7 @@
         filtertgl = ""
     end if
     ' query seach 
-    strquery = "SELECT DLK_T_Memo_H.*, DLK_M_Departement.DepNama FROM DLK_T_Memo_H LEFT OUTER JOIN DLK_M_Departement ON DLK_T_Memo_H.MemoDepID = DLK_M_Departement.DepID WHERE MemoAktifYN = 'Y' AND memoApproveYN = 'N' "& filterAgen &" "& filterKeb &" "& filtertgl &""
+    strquery = "SELECT DLK_T_Memo_H.*, DLK_M_Departement.DepNama FROM DLK_T_Memo_H LEFT OUTER JOIN DLK_M_Departement ON DLK_T_Memo_H.MemoDepID = DLK_M_Departement.DepID WHERE MemoAktifYN = 'Y' AND memoApproveYN = 'N' AND memoPermintaan = 0 "& filterAgen &" "& filterKeb &" "& filtertgl &""
 
     ' untuk data paggination
     page = Request.QueryString("page")
@@ -99,7 +99,7 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-12 mt-3 mb-3 text-center">
-            <h3>DAFTAR PERMINTAAN BARANG</h3>
+            <h3>DAFTAR MEMO PERMINTAAN BARANG</h3>
         </div>
     </div>
     <form action="approvepb.asp" method="post">

@@ -46,7 +46,7 @@
                 <label for="tgl" class="col-form-label">Tanggal</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="text" id="tgl" name="tgl" class="form-control" value="<%= date() %>" required>
+                <input type="text" id="tgl" name="tgl" class="form-control" value="<%= date() %>" onfocus="(this.type='date')" required>
             </div>
             <div class="col-lg-2 mb-3">
                 <label for="tgljt" class="col-form-label">Tanggal Jatuh Tempo</label>

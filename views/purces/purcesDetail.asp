@@ -11,7 +11,7 @@
     set vendata = data_cmd.execute
 
     ' get agen by memo
-    data_cmd.commandText = "SELECT GLB_M_Agen.AgenID, GLB_M_Agen.AgenName FROM dbo.DLK_T_memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE DLK_T_memo_H.memoAktifYN = 'Y' AND memoApproveYN = 'Y' AND memoApproveYN1 = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    data_cmd.commandText = "SELECT GLB_M_Agen.AgenID, GLB_M_Agen.AgenName FROM dbo.DLK_T_memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE DLK_T_memo_H.memoAktifYN = 'Y' AND memoApproveYN = 'Y' AND memoApproveYN1 = 'Y' AND (dbo.DLK_T_Memo_H.memopermintaan = 1 ) GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
     set agenmemo = data_cmd.execute
 
     agen = trim(Request.Form("agen"))

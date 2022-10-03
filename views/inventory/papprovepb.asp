@@ -11,7 +11,7 @@
     set data = data_cmd.execute
 
     if not data.eof then
-        call query("UPDATE DLK_T_Memo_H SET memoApproveYN = 'Y' WHERE memoID = '"& id &"'")
+        call query("UPDATE DLK_T_Memo_H SET memoApproveYN = 'Y', memoPermintaan = 1 WHERE memoID = '"& id &"'")
         value = 1
     else
         value = 2
