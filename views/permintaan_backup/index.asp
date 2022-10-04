@@ -1,8 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
     agen = trim(Request.Form("agen"))
-    dep = trim(Request.Form("dep"))
-    div = trim(Request.Form("div"))
+    keb = trim(Request.Form("keb"))
     tgla = trim(Request.Form("tgla"))
     tgle = trim(Request.Form("tgle"))
 
@@ -10,11 +9,10 @@
     set agen_cmd =  Server.CreateObject ("ADODB.Command")
     agen_cmd.ActiveConnection = mm_delima_string
     ' filter agen
-    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_OrjulH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_OrjulH.OJH_AgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_OrjulH.OJH_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
     set agendata = agen_cmd.execute
-
-    ' filter departemen
-    agen_cmd.commandText = "SELECT dbo.DLK_M_Departement.DepID, dbo.DLK_M_Departement.DepNama FROM dbo.DLK_M_Departement INNER JOIN dbo.DLK_T_OrjulH ON dbo.DLK_M_Departement.DepID = dbo.DLK_T_OrjulH.OJH_DepID WHERE dbo.DLK_T_OrjulH.OJH_AktifYN = 'Y' GROUP BY dbo.DLK_M_Departement.DepID, dbo.DLK_M_Departement.DepNama"
+    ' filter kebutuhan
+    agen_cmd.commandText = "SELECT dbo.DLK_M_Departement.DepID, dbo.DLK_M_Departement.DepNama FROM dbo.DLK_M_Departement INNER JOIN dbo.DLK_T_Memo_H ON dbo.DLK_M_Departement.DepID = dbo.DLK_T_Memo_H.memoDepID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y' GROUP BY dbo.DLK_M_Departement.DepID, dbo.DLK_M_Departement.DepNama"
     set DepData = agen_cmd.execute
 
     set conn = Server.CreateObject("ADODB.Connection")
@@ -30,31 +28,31 @@
     end if
     
     if agen <> "" then
-        filterAgen = "AND OJH_AgenID = '"& agen &"'"
+        filterAgen = "AND memoAgenID = '"& agen &"'"
     else
         filterAgen = ""
     end if
 
-    if dep <> "" then
-        filterdep = "AND OJH_DepID = '"& dep &"'"
+    if keb <> "" then
+        filterKeb = "AND memoDepID = '"& keb &"'"
     else
-        filterdep = ""
+        filterKeb = ""
     end if
 
     if tgla <> "" AND tgle <> "" then
-        filtertgl = "AND OJH_tgl BETWEEN '"& tgla &"' AND '"& tgle &"'"
+        filtertgl = "AND memotgl BETWEEN '"& tgla &"' AND '"& tgle &"'"
     elseIf tgla <> "" AND tgle = "" then
-        filtertgl = "AND OJH_tgl = '"& tgla &"'"
+        filtertgl = "AND memotgl = '"& tgla &"'"
     else 
         filtertgl = ""
     end if
     ' query seach 
-    strquery = "SELECT DLK_T_OrjulH.*, GLB_M_Agen.AgenName, DLK_M_Divisi.DivNama, DLK_M_Departement.DepNama FROM DLK_T_OrjulH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_OrjulH.OJH_AgenID = LEFT(GLB_M_Agen.AgenID,3) LEFT OUTER JOIN DLK_M_Divisi ON DLK_T_OrjulH.OJH_DivID = DLK_M_Divisi.divID LEFT OUTER JOIN DLK_M_Departement ON DLK_T_OrjulH.OJH_DepID = DLK_M_Departement.DepID WHERE OJH_AktifYN = 'Y' "& filterAgen &" "& filterdep &" "& filtertgl &""
+    strquery = "SELECT DLK_T_Memo_H.*, GLB_M_Agen.AgenName, DLK_M_Divisi.DivNama, DLK_M_Departement.DepNama FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = LEFT(GLB_M_Agen.AgenID,3) LEFT OUTER JOIN DLK_M_Divisi ON DLK_T_Memo_H.memoDivid = DLK_M_Divisi.divID LEFT OUTER JOIN DLK_M_Departement ON DLK_T_Memo_H.MemoDepID = DLK_M_Departement.DepID WHERE MemoAktifYN = 'Y' "& filterAgen &" "& filterKeb &" "& filtertgl &""
 
     ' untuk data paggination
     page = Request.QueryString("page")
 
-    orderBy = " order by OJH_Date DESC"
+    orderBy = " order by memoTgl DESC"
     set rs = Server.CreateObject("ADODB.Recordset")
     sqlawal = strquery
 
@@ -101,7 +99,7 @@
     </div>
     <div class="row">
         <div class="col-lg-2 mb-3">
-            <a href="permintaan_add.asp" class="btn btn-primary">Tambah</a>
+            <a href="pb_add.asp" class="btn btn-primary">Tambah</a>
         </div>
     </div>
     <form action="index.asp" method="post">
@@ -119,8 +117,8 @@
                 </select>
             </div>
             <div class="col-lg-3 mb-3">
-                <label for="dep">Departement</label>
-                <select class="form-select" aria-label="Default select example" name="dep" id="dep">
+                <label for="keb">Kebutuhan</label>
+                <select class="form-select" aria-label="Default select example" name="keb" id="keb">
                     <option value="">Pilih</option>
                     <% do while not DepData.eof %>
                     <option value="<%= DepData("DepID") %>"><%= DepData("DepNama") %></option>
@@ -149,7 +147,7 @@
                 <thead class="bg-secondary text-light">
                     <tr>
                     <th scope="col">No</th>
-                    <th scope="col">No Permintaan</th>
+                    <th scope="col">No Memo</th>
                     <th scope="col">Tanggal</th>
                     <th scope="col">Cabang</th>
                     <th scope="col">Divisi</th>
@@ -167,28 +165,30 @@
                     recordcounter = recordcounter + 1
 
                     ' cek data detail
-                    agen_cmd.commandText = "SELECT OJD_OJHID FROM DLK_T_OrjulD WHERE Left(OJD_OJHID,13) = '"& rs("OJH_ID") &"'"
+                    agen_cmd.commandText = "SELECT memoID FROM DLK_T_Memo_D WHERE Left(memoID,17) = '"& rs("memoID") &"'"
                     set ddetail = agen_cmd.execute
                     %>
                     <tr>
                         <th scope="row"><%= recordcounter %></th>
                         <td>
-                            <%= rs("OJH_ID") %>
+                            <%= left(rs("memoID"),4) %>/<%=mid(rs("memoId"),5,3) %>-<% call getAgen(mid(rs("memoID"),8,3),"") %>/<%= mid(rs("memoID"),11,4) %>/<%= right(rs("memoID"),3) %>
                         </td>
-                        <td><%= Cdate(rs("OJH_Date")) %></td>
+                        <td><%= Cdate(rs("memoTgl")) %></td>
                         <td><%= rs("AgenName") %></td>
                         <td><%= rs("DivNama") %></td>
                         <td><%= rs("DepNama")%></td>
                         <td>
-                            <%if rs("OJH_AktifYN") = "Y" then %>Aktif <% else %>Off <% end if %>
+                            <%if rs("memoAktifYN") = "Y" then %>Aktif <% else %>Off <% end if %>
                         </td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="detailPermintaan.asp?id=<%= rs("OJH_ID") %>" class="btn badge text-bg-warning">Detail</a>
-                                <a href="permintaan_u.asp?id=<%= rs("OJH_ID") %>" class="btn badge btn-primary btn-sm">Update</a>
+                                <a href="detailpb.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-warning">Detail</a>
+                            <% if rs("memoApproveYN") = "N" AND rs("memoApproveYN1") = "N" then %>
+                                <a href="pb_u.asp?id=<%= rs("memoID") %>" class="btn badge btn-primary btn-sm">Update</a>
                                 <% if ddetail.eof then%>
-                                <a href="haktif.asp?id=<%= rs("OJH_ID") %>" class="btn badge text-bg-danger btn-aktifpbarang">delete</a>
+                                <a href="haktif.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-danger btn-aktifpbarang">delete</a>
                                 <% end if %>
+                            <% end if %>
                             </div>
                         </td>
                     </tr>

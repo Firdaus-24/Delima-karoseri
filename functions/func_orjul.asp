@@ -1,20 +1,22 @@
 <% 
-    sub tambahOrjul()
+    sub tambahOrjulH()
         agen = trim(Request.Form("agen"))
         tgl = trim(Request.Form("tgl"))
-        div = trim(Request.Form("div"))
+        divisi = trim(Request.Form("divisi"))
         departement = trim(Request.Form("departement"))
+        kebutuhan = Cint(trim(Request.Form("kebutuhan")))
+        produk = trim(Request.Form("produk"))
         keterangan = trim(Request.Form("keterangan"))
 
         set data_cmd =  Server.CreateObject ("ADODB.Command")
         data_cmd.ActiveConnection = mm_delima_string
 
-        data_cmd.commandText = "SELECT * FROM DLK_T_OrJulH WHERE OJH_AgenID = '"& agen &"' AND OJH_Date = '"& tgl &"' AND OJH_divID = '"& div &"' AND OJH_depID = '"& departement &"' AND OJH_Keterangan = '"& keterangan &"' AND OJH_AktifYN = 'Y'"
+        data_cmd.commandText = "SELECT * FROM DLK_T_OrJulH WHERE OJH_AgenID = '"& agen &"' AND OJH_Date = '"& tgl &"' AND OJH_divID = '"& divisi &"' AND OJH_depID = '"& departement &"' AND OJH_Kebutuhan = "& kebutuhan &" AND OJH_PDID = '"& produk &"' AND OJH_Keterangan = '"& keterangan &"' AND OJH_AktifYN = 'Y'"
         ' response.write data_cmd.commandText & "<br>"
         set data = data_cmd.execute
 
         if data.eof then
-            data_cmd.commandText = "exec sp_AddDLK_T_OrJulH '"& agen &"', '"& tgl &"', '"& div &"', '"& departement &"', '"& keterangan &"'"
+            data_cmd.commandText = "exec sp_AddDLK_T_OrJulH '"& agen &"','"& tgl &"', '"& divisi &"', '"& departement &"', '"& keterangan &"', '"& produk &"', "& kebutuhan &""
             ' response.write data_cmd.commandText & "<br>"
             set p = data_cmd.execute
 
@@ -25,48 +27,46 @@
         end if
         
         if value = 1 then
-            call alert("ORDER PENJUALAN", "berhasil di tambahkan", "success","orjuld_add.asp?id="&id) 
+            call alert("PERMINTAAN BARANG", "berhasil di tambahkan", "success","permintaand_add.asp?id="&id) 
         elseif value = 2 then
-            call alert("ORDER PENJUALAN", "sudah terdaftar", "warning","orjuld_add.asp?id="&id)
+            call alert("PERMINTAAN BARANG", "sudah terdaftar", "warning","permintaand_add.asp?id="&id)
         else
             value = 0
         end if
 
     end sub
 
-    sub detailOrjul()
-        agen = trim(Request.Form("agen"))
-        ckdorjul = trim(Request.Form("ckdorjul"))
-        qtyorjul = trim(Request.Form("qtyorjul"))
+    sub tambahOrjulD()
+        ojhid = trim(Request.Form("ojhid"))
+        brg = trim(Request.Form("brg"))
+        qtty = trim(Request.Form("qtty"))
         satuan = trim(Request.Form("satuan"))
         nol = "000"
         
-        arydata = Split(ckdorjul, ",")
-
         set data_cmd =  Server.CreateObject ("ADODB.Command")
         data_cmd.ActiveConnection = mm_delima_string
 
-        data_cmd.commandText = "SELECT * FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& trim(arydata(0)) &"' AND OJD_item = '"& trim(arydata(1)) &"'"
+        data_cmd.commandText = "SELECT * FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID, 13) = '"& ojhid &"' AND OJD_item = '"& brg &"'"
         ' response.write data_cmd.commandText & "<br>"
         set orjul = data_cmd.execute
 
         if orjul.eof then
-            data_cmd.commandText = "SELECT TOP 1 (right(OJD_OJHID,3)) + 1 AS urut FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& trim(arydata(0)) &"' ORDER BY OJD_OJHID DESC"
+            data_cmd.commandText = "SELECT TOP 1 (right(OJD_OJHID,3)) + 1 AS urut FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& ojhid &"' ORDER BY OJD_OJHID DESC"
 
             set a = data_cmd.execute
 
             if a.eof then
-                data_cmd.commandText = "SELECT (COUNT(OJD_OJHID)) + 1 AS urut FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& trim(arydata(0)) &"'"
+                data_cmd.commandText = "SELECT (COUNT(OJD_OJHID)) + 1 AS urut FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& ojhid &"'"
 
                 set p = data_cmd.execute
 
-                iddetail = trim(arydata(0)) & right(nol & p("urut"),3)
+                iddetail = ojhid & right(nol & p("urut"),3)
 
-                call query ("INSERT INTO DLK_T_OrjulD (OJD_OJHID,OJD_Item,OJD_QtySatuan,OJD_JenisSat) VALUES ('"& iddetail &"', '"& trim(arydata(1)) &"', "& qtyorjul &",'"& satuan &"')")
+                call query ("INSERT INTO DLK_T_OrjulD (OJD_OJHID, OJD_Item,OJD_Qtysatuan, OJD_JenisSat) VALUES ('"& iddetail &"','"& brg &"', "& qtty &",'"& satuan &"')")
             else
-                iddetail = trim(arydata(0)) & right(nol & a("urut"),3)
+                iddetail = ojhid & right(nol & a("urut"),3)
 
-                call query("INSERT INTO DLK_T_OrjulD (OJD_OJHID,OJD_Item,OJD_QtySatuan,OJD_JenisSat) VALUES ('"& iddetail &"', '"& trim(arydata(1)) &"',"& qtyorjul &", '"& satuan &"')")
+                call query("INSERT INTO DLK_T_OrjulD (OJD_OJHID,OJD_Item,OJD_Qtysatuan,OJD_JenisSat) VALUES ('"& iddetail &"', '"& brg &"',"& qtty &", '"& satuan &"')")
 
             end if
             value = 1 'case untuk insert data
@@ -75,46 +75,45 @@
         end if
 
         if value = 1 then
-            call alert("ORDER DETAIL PENJUALAN", "berhasil di tambahkan", "success","orjuld_add.asp?id="&trim(arydata(0))) 
+            call alert("PERMINTAAN DETAIL BARANG", "berhasil di tambahkan", "success","permintaand_add.asp?id="&ojhid) 
         elseif value = 2 then
-            call alert("ORDER DETAIL PENJUALAN", "sudah terdaftar", "warning","orjuld_add.asp?id="&trim(arydata(0)))
+            call alert("PERMINTAAN DETAIL BARANG", "sudah terdaftar", "warning","permintaand_add.asp?id="&ojhid)
         else
             value = 0
         end if
     end sub
 
     sub updatedetailOrjul()
-        ckdorjul = trim(Request.Form("ckdorjul"))
-        qtyorjul = trim(Request.Form("qtyorjul"))
+        ojhid = trim(Request.Form("ojhid"))
+        brg = trim(Request.Form("brg"))
+        qtty = trim(Request.Form("qtty"))
         satuan = trim(Request.Form("satuan"))
         nol = "000"
         
-        arydata = Split(ckdorjul, ",")
-
         set data_cmd =  Server.CreateObject ("ADODB.Command")
         data_cmd.ActiveConnection = mm_delima_string
 
-        data_cmd.commandText = "SELECT * FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& trim(arydata(0)) &"' AND OJD_item = '"& trim(arydata(1)) &"'"
+        data_cmd.commandText = "SELECT * FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID, 13) = '"& ojhid &"' AND OJD_item = '"& brg &"'"
         ' response.write data_cmd.commandText & "<br>"
         set orjul = data_cmd.execute
 
         if orjul.eof then
-            data_cmd.commandText = "SELECT TOP 1 (right(OJD_OJHID,3)) + 1 AS urut FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& trim(arydata(0)) &"' ORDER BY OJD_OJHID DESC"
+            data_cmd.commandText = "SELECT TOP 1 (right(OJD_OJHID,3)) + 1 AS urut FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& ojhid &"' ORDER BY OJD_OJHID DESC"
 
             set a = data_cmd.execute
 
             if a.eof then
-                data_cmd.commandText = "SELECT (COUNT(OJD_OJHID)) + 1 AS urut FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& trim(arydata(0)) &"'"
+                data_cmd.commandText = "SELECT (COUNT(OJD_OJHID)) + 1 AS urut FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& ojhid &"'"
 
                 set p = data_cmd.execute
 
-                iddetail = trim(arydata(0)) & right(nol & p("urut"),3)
+                iddetail = ojhid & right(nol & p("urut"),3)
 
-                call query ("INSERT INTO DLK_T_OrjulD (OJD_OJHID,OJD_Item,OJD_QtySatuan,OJD_JenisSat) VALUES ('"& iddetail &"', '"& trim(arydata(1)) &"', "& qtyorjul &",'"& satuan &"')")
+                call query ("INSERT INTO DLK_T_OrjulD (OJD_OJHID, OJD_Item,OJD_Qtysatuan, OJD_JenisSat) VALUES ('"& iddetail &"','"& brg &"', "& qtty &",'"& satuan &"')")
             else
-                iddetail = trim(arydata(0)) & right(nol & a("urut"),3)
+                iddetail = ojhid & right(nol & a("urut"),3)
 
-                call query("INSERT INTO DLK_T_OrjulD (OJD_OJHID,OJD_Item,OJD_QtySatuan,OJD_JenisSat) VALUES ('"& iddetail &"', '"& trim(arydata(1)) &"',"& qtyorjul &", '"& satuan &"')")
+                call query("INSERT INTO DLK_T_OrjulD (OJD_OJHID,OJD_Item,OJD_Qtysatuan,OJD_JenisSat) VALUES ('"& iddetail &"', '"& brg &"',"& qtty &", '"& satuan &"')")
 
             end if
             value = 1 'case untuk insert data
@@ -123,9 +122,9 @@
         end if
 
         if value = 1 then
-            call alert("ORDER DETAIL PENJUALAN", "berhasil di tambahkan", "success","orjul_u.asp?id="&trim(arydata(0))) 
+            call alert("PERMINTAAN DETAIL BARANG", "berhasil di tambahkan", "success","permintaan_u.asp?id="&ojhid) 
         elseif value = 2 then
-            call alert("ORDER DETAIL PENJUALAN", "sudah terdaftar", "warning","orjul_u.asp?id="&trim(arydata(0)))
+            call alert("PERMINTAAN DETAIL BARANG", "sudah terdaftar", "warning","permintaan_u.asp?id="&ojhid)
         else
             value = 0
         end if
