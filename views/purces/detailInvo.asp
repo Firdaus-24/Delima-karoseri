@@ -29,50 +29,42 @@
             <table class="table" style="border:transparent;">
                 <tr>
                     <th>No P.O</th>
-                    <th>:</th>
                     <td>
-                        <%= left(data("IPH_OPHID"),2) %>-<% call getAgen(mid(data("IPH_OPHID"),3,3),"") %>/<%= mid(data("IPH_OPHID"),6,4) %>/<%= right(data("IPH_OPHID"),4) %>
+                        : <%= left(data("IPH_OPHID"),2) %>-<% call getAgen(mid(data("IPH_OPHID"),3,3),"") %>/<%= mid(data("IPH_OPHID"),6,4) %>/<%= right(data("IPH_OPHID"),4) %>
                     </td>
                     <th>Cabang / Agen</th>
-                    <th>:</th>
                     <td>
-                        <%= data("AgenName") %>
+                        : <%= data("AgenName") %>
                     </td>
                 </tr>
                 <tr>
                     <th>Tanggal</th>
-                    <th>:</th>
                     <td>
-                        <%= Cdate(data("IPH_Date")) %>
+                        : <%= Cdate(data("IPH_Date")) %>
                     </td>
                     <th>Tanggal JT</th>
-                    <th>:</th>
                     <td>
-                        <%= Cdate(data("IPH_JTDate")) %>
+                        : <% if Cdate(data("IPH_JTDate")) <> Cdate("01/01/1900") then%><%= Cdate(data("IPH_JTDate")) %> <% end if %>
                     </td>
                 </tr>
                 <tr>
                     <th>Vendor</th>
-                    <th>:</th>
                     <td>
-                        <%= data("Ven_Nama") %>
+                        : <%= data("Ven_Nama") %>
                     </td>
                     <th>Phone</th>
-                    <th>:</th>
                     <td>
-                        <%= data("Ven_Phone") %>
+                        : <%= data("Ven_Phone") %>
                     </td>
                 </tr>
                 <tr>
                     <th>Email</th>
-                    <th>:</th>
                     <td>
-                        <%= data("Ven_Email") %>
+                        : <%= data("Ven_Email") %>
                     </td>
                     <th>Keterangan</th>
-                    <th>:</th>
                     <td>
-                        <%= data("IPH_Keterangan") %>
+                        : <%= data("IPH_Keterangan") %>
                     </td>
                 </tr>
             </table>

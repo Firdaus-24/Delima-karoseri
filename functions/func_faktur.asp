@@ -5,9 +5,9 @@
         tgl = trim(Request.Form("tgl"))
         vendor = trim(Request.Form("vendor"))
         tgljt = trim(Request.Form("tgljt"))
-        diskon = 0
+        diskon = trim(Request.Form("diskonall"))
         keterangan = trim(Request.Form("keterangan"))
-        ppn = 0
+        ppn = trim(Request.Form("ppn"))
 
         set data_cmd =  Server.CreateObject ("ADODB.Command")
         data_cmd.ActiveConnection = mm_delima_string

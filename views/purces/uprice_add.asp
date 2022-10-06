@@ -5,88 +5,74 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT DLK_T_Memo_H.*, DLK_M_Departement.DepNama FROM DLK_T_Memo_H LEFT OUTER JOIN DLK_M_Departement ON DLK_T_Memo_H.memoDepID = DLK_M_Departement.DepID WHERE memoID = '"& id &"' and memoAktifYN = 'Y'"
+    data_cmd.commandText = "SELECT DLK_T_Memo_H.*, DLK_M_Departement.DepNama, GLB_M_Agen.AgenName, DLK_M_Divisi.DivNama FROM DLK_T_Memo_H LEFT OUTER JOIN DLK_M_Departement ON DLK_T_Memo_H.memoDepID = DLK_M_Departement.DepID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Divisi ON DLK_T_Memo_H.memoDivID = DLK_M_Divisi.divID WHERE memoID = '"& id &"' and memoAktifYN = 'Y'"
     ' response.write data_cmd.commandText
     set dataH = data_cmd.execute
-    ' get satuan
-    ' data_cmd.commandText = "SELECT sat_Nama, sat_ID FROM DLK_M_satuanBarang WHERE sat_AktifYN = 'Y' ORDER BY sat_Nama ASC"
-    ' set psatuan = data_cmd.execute    
-    ' get all barang
-    ' data_cmd.commandText = "SELECT dbo.DLK_M_Barang.Brg_Id, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama FROM dbo.DLK_M_Barang LEFT OUTER JOIN dbo.DLK_T_VendorD ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_VendorD.Dven_BrgID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.JenisID WHERE (dbo.DLK_T_VendorD.Dven_BrgID <> '') AND (dbo.DLK_M_Barang.Brg_AktifYN = 'Y') AND (left(dbo.DLK_M_Barang.Brg_Id,3) = '"& dataH("memoAgenID") &"') GROUP BY dbo.DLK_M_Barang.Brg_Id, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama ORDER BY Brg_Nama ASC"
-    ' set barang = data_cmd.execute
+   
+   ' cek kebutuhan
+    if dataH("memoKebutuhan") = 0 then
+        kebutuhan = "Produksi"
+    elseif dataH("memoKebutuhan") = 1 then
+        kebutuhan = "Khusus"
+    elseif dataH("memoKebutuhan") = 2 then
+        kebutuhan = "Umum"
+    else
+        kebutuhan = "Sendiri"
+    end if
 %>
 <% call header("UPDATE HARGA BARANG") %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row">
-        <div class="col-lg-12 mt-3 mb-3 text-center">
+        <div class="col-lg-12 mt-3 text-center">
             <h3>UPDATE HARGA PERMINTAAN BARANG</h3>
         </div>  
     </div> 
-    <div class="row mb-3">
-        <div class="col-sm-6">
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label class="col-form-label">Nomor :</label>
-                </div>
-                <div class="col-auto">
-                    <label>
-                        <b>
-                            <%= left(dataH("memoID"),4) %>/<%= mid(dataH("memoId"),5,3) %>-<% call getAgen(mid(dataH("memoID"),8,3),"") %>/<%= mid(dataH("memoID"),11,4) %>/<%= right(dataH("memoID"),3) %>
-                        </b>
-                    </label>
-                </div>
-            </div>
+    <div class="row">
+        <div class="col-lg-12 mb-3 text-center labelId">
+            <h3><%= left(dataH("memoID"),4) %>/<%= mid(dataH("memoId"),5,3) %>-<% call getAgen(mid(dataH("memoID"),8,3),"") %>/<%= mid(dataH("memoID"),11,4) %>/<%= right(dataH("memoID"),3) %></h3>
+        </div>  
+    </div> 
+    <div class="row">
+        <div class="col-sm-2">
+            <label for="tgl" class="col-form-label">Tanggal</label>
         </div>
-        <div class="col-sm-6">
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label class="col-form-label">Cabang :</label>
-                </div>
-                <div class="col-auto">
-                    <% call getAgen(dataH("memoAgenID"),"p") %>
-                </div>
-            </div>
+        <div class="col-sm-4 mb-3">
+            <input type="text" id="tgl" class="form-control" name="tgl" value="<%= Cdate(dataH("memoTgl")) %>" readonly>
         </div>
-        <div class="col-sm-6">
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label class="col-form-label">Hari :</label>
-                </div>
-                <div class="col-auto">
-                    <label><%= weekdayname(weekday(dataH("memoTgl"))) %></label>
-                </div>
-            </div>
+        <div class="col-sm-2">
+            <label for="agen" class="col-form-label">Cabang / Agen</label>
         </div>
-        <div class="col-sm-6">
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label class="col-form-label">Departement :</label>
-                </div>
-                <div class="col-auto">
-                    <label><%= dataH("DepNama")%></label>
-                </div>
-            </div>
+        <div class="col-sm-4 mb-3">
+            <input type="text" id="agen" class="form-control" name="agen" value="<%= dataH("agenNAme") %>" readonly>
         </div>
-        <div class="col-sm-6">
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label class="col-form-label">Tanggal :</label>
-                </div>
-                <div class="col-auto">
-                    <label><%= Cdate(dataH("memoTgl")) %></label>
-                </div>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <label for="divisi" class="col-form-label">Divisi</label>
         </div>
-        <div class="col-sm-6">
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label class="col-form-label">Divisi :</label>
-                </div>
-                <div class="col-auto">
-                    <label><% call getDivisi(dataH("memoDivID")) %></label>
-                </div>
-            </div>
+        <div class="col-sm-4 mb-3">
+            <input type="text" id="divisi" class="form-control" name="divisi" value="<%= dataH("divNama") %>" readonly>
+        </div>
+        <div class="col-sm-2">
+            <label for="departement" class="col-form-label">Departement</label>
+        </div>
+        <div class="col-sm-4">
+            <input type="text" id="departement" class="form-control" name="departement" value="<%= dataH("depnama") %>" readonly>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <label for="kebutuhan" class="col-form-label">Kebutuhan</label>
+        </div>
+        <div class="col-sm-4 mb-3">
+            <input type="text" id="kebutuhan" class="form-control" name="kebutuhan" value="<%= kebutuhan %>" readonly>
+        </div>
+        <div class="col-sm-2">
+            <label for="keterangan" class="col-form-label">Keterangan</label>
+        </div>
+        <div class="col-sm-4 mb-3">
+            <input type="text" id="keterangan" class="form-control" name="keterangan" maxlength="50" autocomplete="off" value="<%= dataH("memoKeterangan") %>" readonly>
         </div>
     </div>
     <div class="row">
@@ -156,7 +142,7 @@
         <h5 class="modal-title" id="modalUpdateHargaLabel">Rincian Barang</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-    <form action="uprice_add.asp?id=<%= id %>" method="post">
+    <form action="uprice_add.asp?id=<%= id %>" method="post" id="Uprice" onsubmit="validasiForm(this,event,'Update Harga Permintaan Anggaran Inventori','warning')">
         <input type="hidden" name="memoiddetail" id="memoiddetail">
       <div class="modal-body">
          <div class="row">

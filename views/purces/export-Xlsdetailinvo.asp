@@ -16,6 +16,9 @@
     call header("Detail Invoices Reserve")
 %>
 <style>
+    body{
+        padding:10px;
+    }
     .gambar{
         width:80px;
         height:80px;
@@ -26,6 +29,16 @@
         position:absolute;
         width:100px;
         height:50px;
+    }
+    #cdetail > * > tr > *  {
+        border: 1px solid black;
+        padding:5px;
+    }
+
+    #cdetail{
+        width:100%;
+        font-size:12px;
+        border-collapse: collapse;
     }
 </style>
     <div class="row gambar">
@@ -50,7 +63,7 @@
             </td>
         </tr>
     </table>
-    <table style="text-align:left;width:100%;">
+    <table style="text-align:left;width:100%;font-size:12px">
         <tr>
             <th>No P.O</th>
             <td>
@@ -68,7 +81,7 @@
             </td>
             <th>Tanggal JT</th>
             <td>
-                : <%= Cdate(data("IPH_JTDate")) %>
+                : <% if Cdate(data("IPH_JTDate")) <> Cdate("01/01/1900") then %><%= Cdate(data("IPH_JTDate")) %> <% end if %>
             </td>
         </tr>
         <tr>
@@ -97,8 +110,8 @@
             </td>
         </tr>
     </table>
-    <table style="text-align:left;width:100%;">
-        <thead                          >
+    <table style="text-align:left;width:100%;" id="cdetail">
+        <thead>
             <tr>
                 <th>Item</th>
                 <th>Quantty</th>

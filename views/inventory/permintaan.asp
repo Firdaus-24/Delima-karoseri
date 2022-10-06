@@ -1,23 +1,21 @@
 <!--#include file="../../init.asp"-->
 <% 
     agen = trim(Request.Form("agen"))
-    keb = trim(Request.Form("keb"))
+    dep = trim(Request.Form("dep"))
+    div = trim(Request.Form("div"))
     tgla = trim(Request.Form("tgla"))
     tgle = trim(Request.Form("tgle"))
-
-    ' query data  
-    set data_cmd =  Server.CreateObject ("ADODB.Command")
-    data_cmd.ActiveConnection = mm_delima_string
 
     ' query cabang  
     set agen_cmd =  Server.CreateObject ("ADODB.Command")
     agen_cmd.ActiveConnection = mm_delima_string
     ' filter agen
-    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'N' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_OrjulH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_OrjulH.OJH_AgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_OrjulH.OJH_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
     set agendata = agen_cmd.execute
-    ' filter kebutuhan
-    agen_cmd.commandText = "SELECT dbo.DLK_M_Departement.DepID, dbo.DLK_M_Departement.DepNama FROM dbo.DLK_M_Departement INNER JOIN dbo.DLK_T_Memo_H ON dbo.DLK_M_Departement.DepID = dbo.DLK_T_Memo_H.memoDepID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y'  AND DLK_T_Memo_H.memoApproveYN = 'N' GROUP BY dbo.DLK_M_Departement.DepID, dbo.DLK_M_Departement.DepNama"
-    set kebData = agen_cmd.execute
+
+    ' filter departemen
+    agen_cmd.commandText = "SELECT dbo.DLK_M_Departement.DepID, dbo.DLK_M_Departement.DepNama FROM dbo.DLK_M_Departement INNER JOIN dbo.DLK_T_OrjulH ON dbo.DLK_M_Departement.DepID = dbo.DLK_T_OrjulH.OJH_DepID WHERE dbo.DLK_T_OrjulH.OJH_AktifYN = 'Y' GROUP BY dbo.DLK_M_Departement.DepID, dbo.DLK_M_Departement.DepNama"
+    set DepData = agen_cmd.execute
 
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
@@ -32,31 +30,31 @@
     end if
     
     if agen <> "" then
-        filterAgen = "AND memoAgenID = '"& agen &"'"
+        filterAgen = "AND OJH_AgenID = '"& agen &"'"
     else
         filterAgen = ""
     end if
 
-    if keb <> "" then
-        filterKeb = "AND memoDepID = '"& keb &"'"
+    if dep <> "" then
+        filterdep = "AND OJH_DepID = '"& dep &"'"
     else
-        filterKeb = ""
+        filterdep = ""
     end if
 
     if tgla <> "" AND tgle <> "" then
-        filtertgl = "AND memotgl BETWEEN '"& tgla &"' AND '"& tgle &"'"
+        filtertgl = "AND OJH_tgl BETWEEN '"& tgla &"' AND '"& tgle &"'"
     elseIf tgla <> "" AND tgle = "" then
-        filtertgl = "AND memotgl = '"& tgla &"'"
+        filtertgl = "AND OJH_tgl = '"& tgla &"'"
     else 
         filtertgl = ""
     end if
     ' query seach 
-    strquery = "SELECT DLK_T_Memo_H.*, DLK_M_Departement.DepNama FROM DLK_T_Memo_H LEFT OUTER JOIN DLK_M_Departement ON DLK_T_Memo_H.MemoDepID = DLK_M_Departement.DepID WHERE MemoAktifYN = 'Y' AND memoApproveYN = 'N' AND memoPermintaan = 0 "& filterAgen &" "& filterKeb &" "& filtertgl &""
+    strquery = "SELECT DLK_T_OrjulH.*, GLB_M_Agen.AgenName, DLK_M_Divisi.DivNama, DLK_M_Departement.DepNama FROM DLK_T_OrjulH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_OrjulH.OJH_AgenID = LEFT(GLB_M_Agen.AgenID,3) LEFT OUTER JOIN DLK_M_Divisi ON DLK_T_OrjulH.OJH_DivID = DLK_M_Divisi.divID LEFT OUTER JOIN DLK_M_Departement ON DLK_T_OrjulH.OJH_DepID = DLK_M_Departement.DepID WHERE OJH_AktifYN = 'Y' "& filterAgen &" "& filterdep &" "& filtertgl &""
 
     ' untuk data paggination
     page = Request.QueryString("page")
 
-    orderBy = " order by memoTgl DESC"
+    orderBy = " order by OJH_Date DESC"
     set rs = Server.CreateObject("ADODB.Recordset")
     sqlawal = strquery
 
@@ -92,17 +90,16 @@
         end if	
     loop
 
-
-    call header("Approve Permintaan Barang") 
-%>
+    call header("Daftar Permintaan Barang")
+%>    
 <!--#include file="../../navbar.asp"-->
 <div class="container">
-    <div class="row">
-        <div class="col-lg-12 mt-3 mb-3 text-center">
-            <h3>DAFTAR MEMO PERMINTAAN BARANG</h3>
+    <div class="row mt-3 mb-3 text-center">
+        <div class="col-lg-12">
+            <h3>DAFTAR PERMINTAAN BARANG</h3>
         </div>
     </div>
-    <form action="approvepb.asp" method="post">
+    <form action="permintaan.asp" method="post">
         <div class="row">
             <div class="col-lg-3 mb-3">
                 <label for="Agen">Cabang</label>
@@ -117,13 +114,13 @@
                 </select>
             </div>
             <div class="col-lg-3 mb-3">
-                <label for="keb">Kebutuhan</label>
-                <select class="form-select" aria-label="Default select example" name="keb" id="keb">
+                <label for="dep">Departement</label>
+                <select class="form-select" aria-label="Default select example" name="dep" id="dep">
                     <option value="">Pilih</option>
-                    <% do while not kebData.eof %>
-                    <option value="<%= kebData("DEpID") %>"><%= kebData("DepNama") %></option>
+                    <% do while not DepData.eof %>
+                    <option value="<%= DepData("DepID") %>"><%= DepData("DepNama") %></option>
                     <% 
-                    kebData.movenext
+                    DepData.movenext
                     loop
                     %>
                 </select>
@@ -147,7 +144,7 @@
                 <thead class="bg-secondary text-light">
                     <tr>
                     <th scope="col">No</th>
-                    <th scope="col">No Memo</th>
+                    <th scope="col">No Permintaan</th>
                     <th scope="col">Tanggal</th>
                     <th scope="col">Cabang</th>
                     <th scope="col">Divisi</th>
@@ -164,25 +161,22 @@
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
 
-                    data_cmd.commandText = "SELECT ISNULL(SUM(ISNULL(dbo.DLK_T_Memo_D.memoHarga,0) * ISNULL(dbo.DLK_T_Memo_D.memoQtty,0)),0) AS tharga FROM dbo.DLK_T_Memo_H INNER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) WHERE (dbo.DLK_T_Memo_H.memoID = '"& rs("memoID") &"') AND DLK_T_Memo_H.memoAktifYN = 'Y'"
-                    ' set ddata = data_cmd.execute
                     %>
                     <tr>
                         <th scope="row"><%= recordcounter %></th>
+                        <th>
+                            <%= rs("OJH_ID") %>
+                        </th>
+                        <td><%= Cdate(rs("OJH_Date")) %></td>
+                        <td><%= rs("AgenName") %></td>
+                        <td><%= rs("DivNama") %></td>
+                        <td><%= rs("DepNama")%></td>
                         <td>
-                            <%= left(rs("memoID"),4) %>/<%= mid(rs("memoId"),5,3) %>-<% call getAgen(mid(rs("memoID"),8,3),"") %>/<%= mid(rs("memoID"),11,4) %>/<%= right(rs("memoID"),3) %>
-                        </td>
-                        <td><%= Cdate(rs("memoTgl")) %></td>
-                        <td><% call getAgen(rs("memoAgenID"),"p") %></td>
-                        <td><% call getDivisi(rs("memoDivID")) %></td>
-                        <td><%= rs("DepNama") %></td>
-                        <td>
-                            <%if rs("memoAktifYN") = "Y" then %>Aktif <% else %>Off <% end if %>
+                            <%if rs("OJH_AktifYN") = "Y" then %>Aktif <% else %>Off <% end if %>
                         </td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="papprovepb.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-primary btnApprovepb">Approve</a>
-                                <a href="dapprovepb.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-danger">Detail</a>
+                                <a href="detailPermintaan.asp?id=<%= rs("OJH_ID") %>" class="btn badge text-bg-warning">Detail</a>
                             </div>
                         </td>
                     </tr>
@@ -213,7 +207,7 @@
                         end if
                         if requestrecords <> 0 then 
                     %>
-                        <a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Prev </a>
+                        <a class="page-link prev" href="permintaan.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Prev </a>
                     <% else %>
                         <p class="page-link prev-p">&#x25C4; Prev </p>
                     <% end if %>
@@ -231,9 +225,9 @@
                         end if
                         if Cint(page) = pagelistcounter then
                         %>
-                            <a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal bg-primary text-light" href="permintaan.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
                         <%else%>
-                            <a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal" href="permintaan.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
                         <%
                         end if
                         pagelist = pagelist + recordsonpage
@@ -249,7 +243,7 @@
                         end if
                         %>
                         <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                            <a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
+                            <a class="page-link next" href="permintaan.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
                         <% else %>
                             <p class="page-link next-p">Next &#x25BA;</p>
                         <% end if %>

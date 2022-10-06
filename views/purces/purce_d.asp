@@ -5,18 +5,27 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_ppn, dbo.DLK_T_OrPemH.OPH_diskonall, dbo.DLK_T_OrPemH.OPH_memoId, dbo.DLK_T_OrPemD.OPD_OPHID, dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_JenisSat, dbo.DLK_T_OrPemD.OPD_Disc1,dbo.DLK_T_OrPemD.OPD_Disc2, dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_phone, DLK_M_Vendor.ven_Email, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_OrPemH RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID,13) LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_OrPemH.OPH_venID = dbo.DLK_M_Vendor.Ven_ID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrPemD.OPD_Item = DLK_M_Barang.Brg_ID WHERE dbo.DLK_T_OrPemH.OPH_ID = '"& id &"' AND dbo.DLK_T_OrPemH.OPH_AktifYN = 'Y' GROUP BY dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_ppn, dbo.DLK_T_OrPemH.OPH_diskonall,dbo.DLK_T_OrPemH.OPH_memoId, dbo.DLK_T_OrPemD.OPD_OPHID, dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_JenisSat,dbo.DLK_T_OrPemD.OPD_Disc1, dbo.DLK_T_OrPemD.OPD_Disc2,dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_phone, DLK_M_Vendor.ven_Email,DLK_M_Barang.Brg_Nama"
+    data_cmd.commandText = "SELECT dbo.DLK_M_Vendor.Ven_Nama, dbo.GLB_M_Agen.AgenName, dbo.DLK_T_OrPemH.*, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_phone, dbo.DLK_M_Vendor.Ven_Email FROM dbo.DLK_T_OrPemH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_OrPemH.OPH_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_OrPemH.OPH_venID = dbo.DLK_M_Vendor.Ven_ID WHERE dbo.DLK_T_OrPemH.OPH_ID = '"& id &"' AND dbo.DLK_T_OrPemH.OPH_AktifYN = 'Y'"
+    ' data_cmd.commandText = "SELECT dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_ppn, dbo.DLK_T_OrPemH.OPH_diskonall, dbo.DLK_T_OrPemH.OPH_memoId, dbo.DLK_T_OrPemD.OPD_OPHID, dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_JenisSat, dbo.DLK_T_OrPemD.OPD_Disc1,dbo.DLK_T_OrPemD.OPD_Disc2, dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_phone, DLK_M_Vendor.ven_Email, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_OrPemH RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID,13) LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_OrPemH.OPH_venID = dbo.DLK_M_Vendor.Ven_ID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrPemD.OPD_Item = DLK_M_Barang.Brg_ID WHERE dbo.DLK_T_OrPemH.OPH_ID = '"& id &"' AND dbo.DLK_T_OrPemH.OPH_AktifYN = 'Y' GROUP BY dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_ppn, dbo.DLK_T_OrPemH.OPH_diskonall,dbo.DLK_T_OrPemH.OPH_memoId, dbo.DLK_T_OrPemD.OPD_OPHID, dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_JenisSat,dbo.DLK_T_OrPemD.OPD_Disc1, dbo.DLK_T_OrPemD.OPD_Disc2,dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_phone, DLK_M_Vendor.ven_Email,DLK_M_Barang.Brg_Nama"
 
     set data = data_cmd.execute
 
-    
+    data_cmd.commandText = "SELECT dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_T_OrPemD.*, dbo.DLK_M_Barang.Brg_Id FROM dbo.DLK_T_OrPemD LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_OrPemD.OPD_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_OrPemD.OPD_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID WHERE LEFT(dbo.DLK_T_OrPemD.OPD_OPHID,13) = '"& data("OPH_ID") &"' ORDER BY Brg_Nama ASC"
+
+    set ddata = data_cmd.execute
+
     call header("Detail Barang PO")
 %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row">
-        <div class="col-lg-12 mb-3 mt-3 text-center">
-            <h3>PURCHASE ORDER</h3>
+        <div class="col-lg-12 mt-3 text-center">
+            <h3>DETAIL PURCHASE ORDER</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 mb-3 text-center labelId">
+            <h3><%= id %></h3>
         </div>
     </div>
     <div class="row">
@@ -73,10 +82,17 @@
                 </tr>
             </table>
         </div>
-        <div class="col-6 mb-3">
-            <div class="btn-group float-end p-0" role="group" aria-label="Basic example">
-                <a href="purcesDetail.asp" type="button" class="btn btn-primary">Kembali</a>
-                <button type="button" class="btn btn-secondary" onClick="window.open('export-XlsPurchase.asp?id=<%=id%>','_self')">EXPORT</button>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="d-flex mb-3">
+                <div class="me-auto p-2">
+                    <button type="button" class="btn btn-secondary" onClick="window.open('export-XlsPurchase.asp?id=<%=id%>','_self')">EXPORT</button>
+                </div>
+                <div class="p-2">
+                    <a href="purcesDetail.asp" type="button" class="btn btn-primary">Kembali</a>
+                </div>
             </div>
         </div>
     </div>
@@ -98,39 +114,34 @@
                 <tbody>
                     <% 
                     grantotal = 0
-                    do while not data.eof 
+                    do while not ddata.eof 
                     ' cek total harga 
-                    jml = data("OPD_QtySatuan") * data("OPD_Harga")
+                    jml = ddata("OPD_QtySatuan") * ddata("OPD_Harga")
                     ' cek diskon peritem
-                    if data("OPD_Disc1") <> 0 and data("OPD_Disc2") <> 0  then
-                        dis1 = (data("OPD_Disc1")/100) * data("OPD_Harga")
-                        dis2 = (data("OPD_Disc2")/100) * data("OPD_Harga")
-                    elseif data("OPD_Disc1") <> 0 then
-                        dis1 = (data("OPD_Disc1")/100) * data("OPD_Harga")
-                    elseIf data("OPD_Disc2") <> 0 then
-                        dis2 = (data("OPD_Disc2")/100) * data("OPD_Harga")
+                    if ddata("OPD_Disc1") <> 0 and ddata("OPD_Disc2") <> 0  then
+                        dis1 = (ddata("OPD_Disc1")/100) * ddata("OPD_Harga")
+                        dis2 = (ddata("OPD_Disc2")/100) * ddata("OPD_Harga")
+                    elseif ddata("OPD_Disc1") <> 0 then
+                        dis1 = (ddata("OPD_Disc1")/100) * ddata("OPD_Harga")
+                    elseIf ddata("OPD_Disc2") <> 0 then
+                        dis2 = (ddata("OPD_Disc2")/100) * ddata("OPD_Harga")
                     else    
                         dis1 = 0
                         dis2 = 0
                     end if
                     ' total dikon peritem
-                    hargadiskon = data("OPD_Harga") - dis1 - dis2
-                    realharga = hargadiskon * data("OPD_QtySatuan")  
+                    hargadiskon = (ddata("OPD_Harga") - dis1) - dis2
+                    realharga = hargadiskon * ddata("OPD_QtySatuan")  
 
                     grantotal = grantotal + realharga
 
-                    ' cek status pembelian
-                    data_cmd.commandText = "SELECT SUM(dbo.DLK_T_OrPemD.OPD_QtySatuan) AS qtty FROM dbo.DLK_T_OrPemD LEFT OUTER JOIN dbo.DLK_T_OrPemH ON LEFT(dbo.DLK_T_OrPemD.OPD_OPHID, 13) = dbo.DLK_T_OrPemH.OPH_ID WHERE (dbo.DLK_T_OrPemH.OPH_MemoID = '"& data("OPH_MemoID") &"') AND (dbo.DLK_T_OrPemH.OPH_AktifYN = 'Y') AND (dbo.DLK_T_OrPemD.OPD_Item = '"& data("OPD_Item") &"')"
-                    ' response.write data_cmd.commandText & "<br>"
-                    set qtypo = data_cmd.execute
-
                     ' cek order by memo
-                    data_cmd.commandText = "SELECT memoQtty FROM DLK_T_Memo_D WHERE LEFT(memoID,17) = '"& data("OPH_MemoID") &"' AND memoItem = '"& data("OPD_Item") &"'"
+                    data_cmd.commandText = "SELECT memoQtty FROM DLK_T_Memo_D WHERE LEFT(memoID,17) = '"& data("OPH_MemoID") &"' AND memoItem = '"& ddata("OPD_Item") &"'"
 
                     set qttymemo = data_cmd.execute
                    
-                    if not qtypo.eof then
-                        angkastatus = qttymemo("memoqtty") - qtypo("qtty")
+                    if not qttymemo.eof then
+                        angkastatus = qttymemo("memoqtty") - ddata("OPD_QtySatuan")
                         if angkastatus > 0 then
                             ckstatus = "-"&angkastatus
                         elseIf angkastatus = 0 then
@@ -145,22 +156,22 @@
                     %>
                         <tr>
                             <td>
-                                <%= data("Brg_Nama") %>
+                                <%= ddata("Brg_Nama") %>
                             </td>
                             <td>
-                                <%= data("OPD_QtySatuan") %>
+                                <%= ddata("OPD_QtySatuan") %>
                             </td>
                             <td>
-                                <% call getSatBerat(data("OPD_JenisSat")) %>
+                                <% call getSatBerat(ddata("OPD_JenisSat")) %>
                             </td>
                             <td>
-                                <%= replace(formatCurrency(data("OPD_Harga")),"$","") %>
+                                <%= replace(formatCurrency(ddata("OPD_Harga")),"$","") %>
                             </td>
                             <td>
-                                <%= data("OPD_disc1") %>%
+                                <%= ddata("OPD_disc1") %>%
                             </td>
                             <td>
-                                <%= data("OPD_disc2") %>%
+                                <%= ddata("OPD_disc2") %>%
                             </td>
                             <td>
                                 <%= ckstatus %>
@@ -170,9 +181,8 @@
                             </td>
                         </tr>
                     <% 
-                    data.movenext
+                    ddata.movenext
                     loop
-                    data.movefirst
                     ' cek diskonall
                     if data("OPH_diskonall") <> 0 OR data("OPH_Diskonall") <> "" then
                         diskonall = (data("OPH_Diskonall")/100) * grantotal

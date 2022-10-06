@@ -8,69 +8,121 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_ppn, dbo.DLK_T_OrPemH.OPH_diskonall, dbo.DLK_T_OrPemH.OPH_memoId, dbo.DLK_T_OrPemD.OPD_OPHID, dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_JenisSat, dbo.DLK_T_OrPemD.OPD_Disc1,dbo.DLK_T_OrPemD.OPD_Disc2, dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_phone, DLK_M_Vendor.ven_Email, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_OrPemH RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID,13) LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_OrPemH.OPH_venID = dbo.DLK_M_Vendor.Ven_ID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrPemD.OPD_Item = DLK_M_Barang.Brg_ID WHERE dbo.DLK_T_OrPemH.OPH_ID = '"& id &"' AND dbo.DLK_T_OrPemH.OPH_AktifYN = 'Y' GROUP BY dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_ppn, dbo.DLK_T_OrPemH.OPH_diskonall,dbo.DLK_T_OrPemH.OPH_memoId, dbo.DLK_T_OrPemD.OPD_OPHID, dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_JenisSat,dbo.DLK_T_OrPemD.OPD_Disc1, dbo.DLK_T_OrPemD.OPD_Disc2,dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_phone, DLK_M_Vendor.ven_Email,DLK_M_Barang.Brg_Nama"
+    data_cmd.commandText = "SELECT dbo.DLK_M_Vendor.Ven_Nama, dbo.GLB_M_Agen.AgenName, dbo.DLK_T_OrPemH.*, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_phone, dbo.DLK_M_Vendor.Ven_Email FROM dbo.DLK_T_OrPemH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_OrPemH.OPH_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_OrPemH.OPH_venID = dbo.DLK_M_Vendor.Ven_ID WHERE dbo.DLK_T_OrPemH.OPH_ID = '"& id &"' AND dbo.DLK_T_OrPemH.OPH_AktifYN = 'Y' " 
 
     set data = data_cmd.execute
+
+    data_cmd.commandText = "SELECT dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_T_OrPemD.*, dbo.DLK_M_Barang.Brg_Id FROM dbo.DLK_T_OrPemD LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_OrPemD.OPD_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_OrPemD.OPD_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID WHERE LEFT(dbo.DLK_T_OrPemD.OPD_OPHID,13) = '"& data("OPH_ID") &"' ORDER BY Brg_Nama ASC"
+
+    set ddata = data_cmd.execute
 
     call header("Purcase Order")
     
 %>
-    <table>
-        <tr rowspan="3">
-            <td colspan="4">
-                <img src="../../public/img/delimapanjang.png" alt="delimapanjang"  width="500" height="70">
-            </td>
-            <td colspan="2">
-                JL.Raya Pemda (kaum pandak) No.17 <br>
-                Karadenan Cibinong-Bogor 16913 <br>
-                Telp.0251-8655385 <br>
-                Email : Dakotakaroseriindonesia01@gmail.com<br>
-            </td>
-        </tr>
+<style>
+    body{
+        padding:10px;
+    }
+    .gambar{
+        height: 100px;
+        width: 100%;
+    }
+    .gambar img{
+        width: 100%;
+        height: 100px;
+        object-fit: contain;
+    }
+    #cdetail > * > tr > *  {
+        border: 1px solid black;
+        padding:5px;
+    }
+
+    #cdetail{
+        width:100%;
+        font-size:12px;
+        border-collapse: collapse;
+    }
+    #cdetail2 > * > tr > *  {
+        border: 1px solid black;
+        padding:5px;
+    }
+
+    #cdetail2{
+        width:30%;
+        font-size:12px;
+        border-collapse: collapse;
+        text-align: center;
+        right:10px;
+        position:absolute;
+    }
+</style>
+    <div class="row gambar">
+        <div class="col">
+            <img src="<%= url %>/public/img/PT.png" alt="delimalogo">
+        </div>
+    </div>
+    <table width="100%" style="font-size:12px">
         <tr>
-            <th colspan="6"><hr></th>
+            <td>
+                &nbsp
+            </td>
         </tr>
         <tr>
             <td>No</td>
-            <td>:</td>
             <td>
-                <%= left(data("OPH_ID"),2) %>-<% call getAgen(mid(data("OPH_ID"),3,3),"") %>/<%= mid(data("OPH_ID"),6,4) %>/<%= right(data("OPH_ID"),4) %>
+                : <%= left(data("OPH_ID"),2) %>-<% call getAgen(mid(data("OPH_ID"),3,3),"") %>/<%= mid(data("OPH_ID"),6,4) %>/<%= right(data("OPH_ID"),4) %>
+            </td>
+            <td>Cabang</td>
+            <td>
+                : <%= data("agenName") %>
             </td>
         </tr>
         <tr>
             <td>No Memo</td>
-            <td>:</td>
             <td>
-                <%= left(data("OPH_memoID"),4) %>/<%=mid(data("OPH_memoId"),5,3) %>-<% call getAgen(mid(data("OPH_memoID"),8,3),"") %>/<%= mid(data("OPH_memoID"),11,4) %>/<%= right(data("OPH_memoID"),3) %>
+                : <%= left(data("OPH_memoID"),4) %>/<%=mid(data("OPH_memoId"),5,3) %>-<% call getAgen(mid(data("OPH_memoID"),8,3),"") %>/<%= mid(data("OPH_memoID"),11,4) %>/<%= right(data("OPH_memoID"),3) %>
+            </td>
+            <td>Tanggal</td>
+            <td>
+                : <%= Cdate(data("OPH_Date")) %>
             </td>
         </tr>
         <tr>
             <td>Vendor</td>
-            <td>:</td>
             <td>
-                <%= data("Ven_Nama") %>
+                : <%= data("Ven_Nama") %>
+            </td>
+            <td>Tanggal Jatuh Tempo</td>
+            <td>
+                : <% if Cdate(data("OPH_JTDate")) <> Cdate("01/01/1900") then%><%= Cdate(data("OPH_JTDate")) %><% end if %>
             </td>
         </tr>
         <tr>
             <td>Phone</td>
-            <td>:</td>
             <td>
-                <%= data("Ven_Phone") %>
+                : <%= data("Ven_Phone") %>
+            </td>
+            <td>Keterangan</td>
+            <td>
+                : <%= data("OPH_Keterangan") %>
             </td>
         </tr>
         <tr>
             <td>Email</td>
-            <td>:</td>
             <td>
-                <%= data("Ven_Email") %>
+                : <%= data("Ven_Email") %>
             </td>
         </tr>
         <tr>
-            <td colspan="6" style="text-align:center;margin-top:5px;margin-bottom:5px;">
-                <h3>PURCHASE ORDER</h3>
+            <td>&nbsp</td>
+        </tr>
+         <tr>
+            <td colspan="7" style="text-align:center;margin-top:5px;margin-bottom:5px;">
+                <h4>PURCHASE ORDER</h4>
             </td>
         </tr>
-
+    </table>
+    <table width="100%" style="font-size:12px" id="cdetail">
         <tr>
             <th scope="col">No</th>
             <th scope="col">Item</th>
@@ -83,34 +135,40 @@
         <% 
         no = 0
         grantotal = 0
-        do while not data.eof 
+        do while not ddata.eof 
         no = no +1
         ' cek total harga 
-        jml = data("OPD_QtySatuan") * data("OPD_Harga")
+        jml = ddata("OPD_QtySatuan") * ddata("OPD_Harga")
         ' cek diskon peritem
-        if data("OPD_Disc1") <> 0 and data("OPD_Disc2") <> 0  then
-            dis1 = (data("OPD_Disc1")/100) * data("OPD_Harga")
-            dis2 = (data("OPD_Disc2")/100) * data("OPD_Harga")
-        elseif data("OPD_Disc1") <> 0 then
-            dis1 = (data("OPD_Disc1")/100) * data("OPD_Harga")
-        elseIf data("OPD_Disc2") <> 0 then
-            dis2 = (data("OPD_Disc2")/100) * data("OPD_Harga")
+        if ddata("OPD_Disc1") <> 0 and ddata("OPD_Disc2") <> 0  then
+            dis1 = (ddata("OPD_Disc1")/100) * ddata("OPD_Harga")
+            dis2 = (ddata("OPD_Disc2")/100) * ddata("OPD_Harga")
+        elseif ddata("OPD_Disc1") <> 0 then
+            dis1 = (ddata("OPD_Disc1")/100) * ddata("OPD_Harga")
+        elseIf ddata("OPD_Disc2") <> 0 then
+            dis2 = (ddata("OPD_Disc2")/100) * ddata("OPD_Harga")
         else    
             dis1 = 0
             dis2 = 0
         end if
         ' total dikon peritem
-        hargadiskon = data("OPD_Harga") - dis1 - dis2
-        realharga = hargadiskon * data("OPD_QtySatuan")  
+        hargadiskon = ddata("OPD_Harga") - dis1 - dis2
+        realharga = hargadiskon * ddata("OPD_QtySatuan")  
 
         grantotal = grantotal + realharga
 
         ' cek status pembelian
-        data_cmd.commandText = "SELECT memoqtty FROM DLK_T_Memo_D WHERE left(memoId,17) = '"& data("OPH_MemoID") &"' AND memoitem = '"& data("OPD_Item") &"' AND memosatuan = '"& data("OPD_JenisSat") &"'"
+        data_cmd.commandText = "SELECT memoqtty FROM DLK_T_Memo_D WHERE left(memoId,17) = '"& data("OPH_MemoID") &"' AND memoitem = '"& ddata("OPD_Item") &"'"
         ' response.write data_cmd.commandText & "<br>"
-        set qtymemo = data_cmd.execute
+        set p = data_cmd.execute
 
-        angkastatus = qtymemo("memoqtty") - data("OPD_QtySatuan")
+        if not p.eof then
+            qtymemo = p("memoqtty")
+        else    
+            qtymemo = 0 
+        end if
+
+        angkastatus = qtymemo - ddata("OPD_QtySatuan")
         if angkastatus > 0 then
             ckstatus = "-"&angkastatus
         elseIf angkastatus < 0 then
@@ -124,16 +182,16 @@
                     <%= no %>
                 </td>
                 <td>
-                    <%= data("Brg_Nama") %>
+                    <%= ddata("Brg_Nama") %>
                 </td>
                 <td>
-                    <%= data("OPD_QtySatuan") %>
+                    <%= ddata("OPD_QtySatuan") %>
                 </td>
                 <td>
-                    <% call getSatBerat(data("OPD_JenisSat")) %>
+                    <% call getSatBerat(ddata("OPD_JenisSat")) %>
                 </td>
                 <td>
-                    <%= replace(formatCurrency(data("OPD_Harga")),"$","") %>
+                    <%= replace(formatCurrency(ddata("OPD_Harga")),"$","") %>
                 </td>
                 <td>
                     <%= ckstatus%>
@@ -143,37 +201,37 @@
                 </td>
             </tr>
         <% 
-        data.movenext
+        ddata.movenext
         loop
-        data.movefirst
         ' cek diskonall
         if data("OPH_diskonall") <> 0 OR data("OPH_Diskonall") <> "" then
-            diskonall = (data("OPH_Diskonall")/100) * grantotal
+            diskonall = Round((data("OPH_Diskonall")/100) * grantotal)
         else
             diskonall = 0
         end if
 
         ' hitung ppn
         if data("OPH_ppn") <> 0 OR data("OPH_ppn") <> "" then
-            ppn = (data("OPH_ppn")/100) * grantotal
+            ppn = Round((data("OPH_ppn")/100) * grantotal)
         else
             ppn = 0
         end if
         realgrantotal = (grantotal - diskonall) + ppn
         %>
+        
         <tr>
-            <th colspan="5">Total Pembayaran</th>
-            <th><%= replace(formatCurrency(realgrantotal),"$","") %></th>
-        </tr>
-        <tr>
-            <th>ppn</th>
-            <td>:</td>
-            <th><%= data("OPH_PPN") %>%</th>
-        </tr>
-        <tr>
-            <th>Diskon All</th>
-            <td>:</td>
+            <th colspan="5">Diskon All</th>
             <th><%= data("OPH_Diskonall") %>%</th>
+            <th><%= replace(formatCurrency(diskonall),"$","") %></th>
+        </tr>
+        <tr>
+            <th colspan="5">ppn</th>
+            <th><%= data("OPH_PPN") %>%</th>
+            <th><%= replace(formatCurrency(ppn),"$","") %></th>
+        </tr>
+        <tr>
+            <th colspan="6">Total Pembayaran</th>
+            <th><%= replace(formatCurrency(realgrantotal),"$","") %></th>
         </tr>
     </table>
 <% 

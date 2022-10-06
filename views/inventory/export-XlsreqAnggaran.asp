@@ -9,8 +9,19 @@
     data_cmd.commandText = "SELECT DLK_T_Memo_H.*, DLK_M_Departement.DepNama FROM DLK_T_Memo_H LEFT OUTER JOIN DLK_M_Departement ON DLK_T_Memo_H.memoDepID = DLK_M_Departement.DepID WHERE memoID = '"& id &"' and memoAktifYN = 'Y'"
     ' response.write data_cmd.commandText
     set dataH = data_cmd.execute
+
+    ' cek kebutuhan
+    if dataH("memoKebutuhan") = 0 then
+        kebutuhan = "Produksi"
+    elseif dataH("memoKebutuhan") = 1 then
+        kebutuhan = "Khusus"
+    elseif dataH("memoKebutuhan") = 2 then
+        kebutuhan = "Umum"
+    else
+        kebutuhan = "Sendiri"
+    end if
 %>
-<% call header("Detail Permintaan Barang") %>
+<% call header("Detail Permintaan Anggaran Inventory") %>
 <style>
     body{
         padding:10px;
@@ -58,7 +69,7 @@
     <table width="100%" style="font-size:16px">
         <tbody>
         <tr>
-            <td align="center">DETAIL PERMINTAAN BARANG</td>
+            <td align="center">DETAIL PERMINTAAN ANGGARAN INVENTORY</td>
         </tr> 
         <tr>
             <td>&nbsp</td>
@@ -116,6 +127,26 @@
             <td align="left">
                 <% call getDivisi(dataH("memoDivID")) %>
             </td>
+        </tr>
+        <tr>
+            <td width="6%"> 
+                Kebutuhan
+            </td>
+            <td width="10px"> 
+                :
+            </td>
+            <td> 
+                <%= kebutuhan %>
+            </td>
+            <td width="6%"> 
+                Note
+            </td>
+            <td width="10px"> 
+                :
+            </td>
+            <td> 
+                <%= dataH("memoketerangan") %>
+            </td>
         </tr> 
         <tr>
             <td>&nbsp</td>
@@ -131,7 +162,6 @@
                 <th>Quantity</th>
                 <th>Satuan</th>
                 <th>Keterangan</th>
-                <th class="text-center">Status</th>
             </tr>
             <% 
             data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY memoItem ASC"
@@ -149,41 +179,13 @@
                     <td><%= dataD("memoQtty") %></td>
                     <td><% call getSatBerat(dataD("memoSatuan")) %></td>
                     <td>
-                            <%= dataD("memoKeterangan") %>
-                    </td>
-                    <td  class="text-center">
-                        <% if dataH("memoApproveYN") = "Y" then %>
-                            <b style="color:green">Done</b>
-                        <% else %>
-                            -
-                        <% end if %>
+                        <%= dataD("memoKeterangan") %>
                     </td>
                 </tr>
             <% 
             dataD.movenext
             loop
             %>
-        </tbody>
-    </table>
-    <table width="100%" style="font-size:12px">
-        <tbody>
-            <tr>
-                <td>
-                    &nbsp
-                </td>
-            </tr>
-            <tr>
-                <td width="6%"> 
-                    Note
-                </td>
-                <td width="10px"> 
-                    :
-                </td>
-                <td> 
-                    <%= dataH("memoketerangan") %>
-                </td>
-            </tr>
-            
         </tbody>
     </table>
     <table width="50%" style="font-size:20px;">

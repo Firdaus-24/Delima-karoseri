@@ -80,7 +80,7 @@
                 <label for="diskon" class="col-form-label">Diskon All</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="number" id="diskon" name="diskon" class="form-control" value="<%= data("IPH_Diskonall") %>">
+                <input type="number" id="diskon" name="diskon" class="form-control" value="<%= data("IPH_Diskonall") %>" readonly>
             </div>
         </div>
         <div class="row">
@@ -94,7 +94,7 @@
                 <label for="ppn" class="col-form-label">PPn</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="number" id="ppn" name="ppn" class="form-control" value="<%= data("IPH_ppn") %>">
+                <input type="number" id="ppn" name="ppn" class="form-control" value="<%= data("IPH_ppn") %>" readonly>
             </div>
         </div>
         <!-- detail barang -->
@@ -133,7 +133,7 @@
                                 <%= ddata("IPD_QtySatuan") %>
                             </td>
                             <td>
-                                <input type="text" id="harga" name="harga" class="form-control " value="<%= ddata("IPD_Harga") %>">
+                                <input type="text" id="harga" name="harga" class="form-control " value="<%= ddata("IPD_Harga") %>" autocomplete="off">
                             </td>
                             <td>
                                 <%= ddata("Sat_Nama") %>

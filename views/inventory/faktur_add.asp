@@ -25,6 +25,8 @@
         </div>
     </div>
     <form action="faktur_add.asp?id=<%= id %>" method="post" id="formfaktur">
+        <input type="hidden" name="ppn" id="ppn" value="<%= data("OPH_PPn") %>">
+        <input type="hidden" name="diskonall" id="diskonall" value="<%= data("OPH_diskonall") %>">
         <div class="row">
             <div class="col-lg-2 mb-3">
                 <label for="ophid" class="col-form-label">No P.O</label>

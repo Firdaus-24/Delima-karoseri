@@ -88,21 +88,21 @@
         end if	
     loop
 
-    call header("Permintaan Barang")
+    call header("Permintaan Anggaran")
 %>    
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row mt-3 mb-3 text-center">
         <div class="col-lg-12">
-            <h3>FORM PERMINTAAN BARANG</h3>
+            <h3>PERMINTAAN ANGGARAN INVENTORY</h3>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-2 mb-3">
-            <a href="pb_add.asp" class="btn btn-primary">Tambah</a>
+            <a href="reqAnggaran_add.asp" class="btn btn-primary">Tambah</a>
         </div>
     </div>
-    <form action="index.asp" method="post">
+    <form action="reqAnggaran.asp" method="post">
         <div class="row">
             <div class="col-lg-3 mb-3">
                 <label for="Agen">Cabang</label>
@@ -182,11 +182,11 @@
                         </td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="detailpb.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-warning">Detail</a>
-                            <% if rs("memoApproveYN") = "N" AND rs("memoApproveYN1") = "N" then %>
-                                <a href="pb_u.asp?id=<%= rs("memoID") %>" class="btn badge btn-primary btn-sm">Update</a>
+                                <a href="detailAnggaran.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-warning">Detail</a>
+                            <% if rs("memoApproveYN") = "N" then %>
+                                <a href="reqAnggaran_u.asp?id=<%= rs("memoID") %>" class="btn badge btn-primary btn-sm">Update</a>
                                 <% if ddetail.eof then%>
-                                <a href="haktif.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-danger btn-aktifpbarang">delete</a>
+                                <a href="reqAktifH.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'Header Permintaan Anggaran')">delete</a>
                                 <% end if %>
                             <% end if %>
                             </div>
@@ -219,7 +219,7 @@
                         end if
                         if requestrecords <> 0 then 
                     %>
-                        <a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Prev </a>
+                        <a class="page-link prev" href="reqAnggaran.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Prev </a>
                     <% else %>
                         <p class="page-link prev-p">&#x25C4; Prev </p>
                     <% end if %>
@@ -237,9 +237,9 @@
                         end if
                         if Cint(page) = pagelistcounter then
                         %>
-                            <a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal bg-primary text-light" href="reqAnggaran.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
                         <%else%>
-                            <a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal" href="reqAnggaran.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
                         <%
                         end if
                         pagelist = pagelist + recordsonpage
@@ -255,7 +255,7 @@
                         end if
                         %>
                         <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                            <a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
+                            <a class="page-link next" href="reqAnggaran.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
                         <% else %>
                             <p class="page-link next-p">Next &#x25BA;</p>
                         <% end if %>

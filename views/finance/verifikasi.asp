@@ -10,7 +10,7 @@
     set data = data_cmd.execute
 
     if not data.eof then
-        data_cmd.commandText = "UPDATE DLK_T_Memo_H SET memoApproveYN1 = 'Y' WHERE memoID = '"& id &"'"
+        data_cmd.commandText = "UPDATE DLK_T_Memo_H SET memoApproveYN = 'Y' WHERE memoID = '"& id &"'"
         data_cmd.execute
     end if
 

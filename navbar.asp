@@ -54,13 +54,13 @@
           </li>
             <ul class="sub-menu" id="sublist-inventory">
               <li>
-                <a class="link-name" href="<%= url %>views/inventory/approvepb.asp">Approve Permintaan</a>
+                <a class="link-name" href="<%= url %>views/inventory/reqAnggaran.asp">Anggaran Permintaan</a>
               </li>
               <li>
                 <a class="link-name" href="<%= url %>views/inventory/incomming.asp">Incomming</a>
               </li>
               <li>
-                <a class="link-name" href="<%= url %>views/inventory/outgoing.asp">Order Jual</a>
+                <a class="link-name" href="<%= url %>views/inventory/permintaan.asp">Permintaan Barang</a>
               </li>
               <li>
                 <a class="link-name" href="<%= url %>views/inventory/jbarang.asp">Penjualan</a>
@@ -129,6 +129,9 @@
               <li>
                 <a class="link-name" href="<%= url %>views/purces/invoReserve.asp">Invoices Reserve</a>
               </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/purces/invPOmin.asp">Barang Kurang</a>
+              </li>
             </ul>
           <!-- finance -->
           <li class="nav-text">
@@ -143,7 +146,7 @@
                 <a class="link-name" href="<%= url %>views/finance/catitem.asp">Kategori Item</a>
               </li>
               <li>
-                <a class="link-name" href="<%= url %>views/finance/appmemo.asp">Approve Memo</a>
+                <a class="link-name" href="<%= url %>views/finance/appmemo.asp">Approve Memo Inventory</a>
               </li>
             </ul>
           <!-- hr/ga -->

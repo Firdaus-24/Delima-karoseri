@@ -6,7 +6,7 @@
     data_cmd.ActiveConnection = mm_delima_string
     
     ' filter po by memo
-    data_cmd.commandText = "SELECT SUM(dbo.DLK_T_Memo_D.memoQtty) AS minta, dbo.DLK_T_Memo_H.memoID, DLK_T_Memo_H.memoTgl FROM dbo.DLK_T_Memo_D LEFT OUTER JOIN dbo.DLK_T_Memo_H ON LEFT(dbo.DLK_T_Memo_D.memoID, 17) = dbo.DLK_T_Memo_H.memoID WHERE (dbo.DLK_T_Memo_H.memoAgenID = '"& cabang &"') AND (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN1 = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN = 'Y') AND (dbo.DLK_T_Memo_H.memoPermintaan = 1 ) GROUP BY dbo.DLK_T_Memo_H.memoID, DLK_T_Memo_H.memoTgl ORDER BY DLK_T_Memo_H.memoTgl"
+    data_cmd.commandText = "SELECT SUM(dbo.DLK_T_Memo_D.memoQtty) AS minta, dbo.DLK_T_Memo_H.memoID, DLK_T_Memo_H.memoTgl FROM dbo.DLK_T_Memo_D LEFT OUTER JOIN dbo.DLK_T_Memo_H ON LEFT(dbo.DLK_T_Memo_D.memoID, 17) = dbo.DLK_T_Memo_H.memoID WHERE (dbo.DLK_T_Memo_H.memoAgenID = '"& cabang &"') AND (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN = 'Y') GROUP BY dbo.DLK_T_Memo_H.memoID, DLK_T_Memo_H.memoTgl ORDER BY DLK_T_Memo_H.memoTgl"
     ' response.write data_cmd.commandText & "<br>"
     set datamemo = data_cmd.execute
 %>

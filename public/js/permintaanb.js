@@ -16,30 +16,6 @@ $(document).ready(function(){
             });
         }
     })
-    // validasi tambah
-    $('#formpbarang').submit(function(e) {
-        let form = this;        
-        
-        e.preventDefault(); // <--- prevent form from submitting
-      
-        swal({
-            title: "APAKAH ANDA SUDAH YAKIN??",
-            text: "form permintaan barang",
-            icon: "warning",
-            buttons: [
-              'No',
-              'Yes'
-            ],
-            dangerMode: true,
-        }).then(function(isConfirm) {
-            if (isConfirm) {
-                form.submit(); // <--- submit form programmatically
-            } else {
-              swal("Form gagal di kirim");
-            }
-        })
-    })
-
     // get nama barang by vendor
     $("#cpbarang").keyup(function(){
         let nama = $("#cpbarang").val()

@@ -1,5 +1,4 @@
 <!--#include file="../../init.asp"-->
-<!--#include file="../../functions/func_metpem.asp"-->
 <% 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
