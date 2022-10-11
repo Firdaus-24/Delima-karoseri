@@ -54,13 +54,16 @@
           </li>
             <ul class="sub-menu" id="sublist-inventory">
               <li>
+                <a class="link-name" href="<%= url %>views/inventory/permintaan.asp">Permintaan Barang</a>
+              </li>
+              <li>
                 <a class="link-name" href="<%= url %>views/inventory/reqAnggaran.asp">Anggaran Permintaan</a>
               </li>
               <li>
-                <a class="link-name" href="<%= url %>views/inventory/incomming.asp">Incomming</a>
+                <a class="link-name" href="<%= url %>views/inventory/POMin.asp">Permintaan Kurang</a>
               </li>
               <li>
-                <a class="link-name" href="<%= url %>views/inventory/permintaan.asp">Permintaan Barang</a>
+                <a class="link-name" href="<%= url %>views/inventory/incomming.asp">Incomming</a>
               </li>
               <li>
                 <a class="link-name" href="<%= url %>views/inventory/jbarang.asp">Penjualan</a>

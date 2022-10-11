@@ -43,7 +43,7 @@ sub tambahdetailVendor()
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_T_VendorD WHERE LEFT(DVen_VenID,9) = '"& id &"' AND DVen_BrgID = '"&  ckdvendor &"'"
+    data_cmd.commandText = "SELECT * FROM DLK_T_VendorD WHERE LEFT(DVen_VenID,9) = '"& id &"' AND DVen_BrgID = '"&  ckdvendor &"' AND Dven_Spesification = '"&spesification&"' AND Dven_Harga = '"& harga &"'"
     set data = data_cmd.execute
 
     if data.eof then
@@ -89,7 +89,7 @@ sub updateVendor()
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_T_VendorD WHERE LEFT(DVen_VenID,9) = '"& id &"' AND DVen_BrgID = '"&  ckdvendor &"'"
+    data_cmd.commandText = "SELECT * FROM DLK_T_VendorD WHERE LEFT(DVen_VenID,9) = '"& id &"' AND DVen_BrgID = '"&  ckdvendor &"' AND Dven_Spesification = '"&spesification&"' AND Dven_Harga = '"& harga &"'"
     set data = data_cmd.execute
 
     if data.eof then

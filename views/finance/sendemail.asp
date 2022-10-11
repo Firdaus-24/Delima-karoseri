@@ -27,16 +27,19 @@
     total = 0
     do while not data.eof
     no = no + 1
-    total = total + data("memoHarga")
+    tharga = data("memoHarga") * data("memoQtty")
+    total = total + tharga
         tabledata = tabledata &"<tr style='border:1px solid black'>"&_
                     "<th style='border:1px solid black'>"& no&"</th>"&_
                     "<td style='border:1px solid black'>"& data("Brg_Nama")&"</td>"&_
                     "<td style='border:1px solid black'>"& data("memoSpect")&"</td>"&_
                     "<td style='border:1px solid black'>"& data("memoQtty")&"</td>"&_
                     "<td style='border:1px solid black'>"& data("Sat_Nama")&"</td>"&_
-                    "<td style='border:1px solid black'>"& data("ket2")&"</td>"&_
                     "<td style='border:1px solid black'>"& replace(formatCurrency(data("memoHarga")),"$","Rp.")&"</td>"&_
+                    "<td style='border:1px solid black'>"& data("ket2")&"</td>"&_
+                    "<td style='border:1px solid black'>"& replace(formatCurrency(tharga),"$","Rp.")&"</td>"&_
                     "</tr>"
+    response.flush
     data.movenext
     loop
     data.movefirst
@@ -89,12 +92,13 @@
                 "<th style='border:1px solid black'>Spesification</th>"&_
                 "<th style='border:1px solid black'>Quantity</th>"&_
                 "<th style='border:1px solid black'>Satuan</th>"&_
-                "<th style='border:1px solid black'>Keterangan</th>"&_
                 "<th style='border:1px solid black'>Harga</th>"&_
+                "<th style='border:1px solid black'>Keterangan</th>"&_
+                "<th style='border:1px solid black'>Total</th>"&_
             "</tr>"&_
                 tabledata &_
             "<tr style='border:1px solid black'>"&_
-                "<th style='border:1px solid black' colspan='6'>Total</th>"&_
+                "<th style='border:1px solid black' colspan='7'>Grand Total</th>"&_
                 "<th style='border:1px solid black'>"&replace(formatCurrency(total),"$","Rp.")&"</th>"&_
             "</tr>"&_
         "</tbody>"&_

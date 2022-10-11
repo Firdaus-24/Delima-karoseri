@@ -129,7 +129,8 @@
             <th scope="col">Quantity</th>
             <th scope="col">Satuan</th>
             <th scope="col">Harga</th>
-            <th scope="col">Status</th>
+            <th scope="col">Diskon1</th>
+            <th scope="col">Diskon2</th>
             <th scope="col">Jumlah</th>
         </tr>
         <% 
@@ -157,25 +158,6 @@
 
         grantotal = grantotal + realharga
 
-        ' cek status pembelian
-        data_cmd.commandText = "SELECT memoqtty FROM DLK_T_Memo_D WHERE left(memoId,17) = '"& data("OPH_MemoID") &"' AND memoitem = '"& ddata("OPD_Item") &"'"
-        ' response.write data_cmd.commandText & "<br>"
-        set p = data_cmd.execute
-
-        if not p.eof then
-            qtymemo = p("memoqtty")
-        else    
-            qtymemo = 0 
-        end if
-
-        angkastatus = qtymemo - ddata("OPD_QtySatuan")
-        if angkastatus > 0 then
-            ckstatus = "-"&angkastatus
-        elseIf angkastatus < 0 then
-            ckstatus = "OverPO"
-        else
-            ckstatus = "Done"
-        end if
         %>
             <tr>
                 <td>
@@ -194,7 +176,10 @@
                     <%= replace(formatCurrency(ddata("OPD_Harga")),"$","") %>
                 </td>
                 <td>
-                    <%= ckstatus%>
+                    <%= ddata("OPD_Disc1") %>%
+                </td>
+                <td>
+                    <%= ddata("OPD_Disc2") %>%
                 </td>
                 <td>
                     <%= replace(formatCurrency(realharga),"$","") %>
@@ -220,17 +205,17 @@
         %>
         
         <tr>
-            <th colspan="5">Diskon All</th>
+            <th colspan="6">Diskon All</th>
             <th><%= data("OPH_Diskonall") %>%</th>
             <th><%= replace(formatCurrency(diskonall),"$","") %></th>
         </tr>
         <tr>
-            <th colspan="5">ppn</th>
+            <th colspan="6">ppn</th>
             <th><%= data("OPH_PPN") %>%</th>
             <th><%= replace(formatCurrency(ppn),"$","") %></th>
         </tr>
         <tr>
-            <th colspan="6">Total Pembayaran</th>
+            <th colspan="7">Total Pembayaran</th>
             <th><%= replace(formatCurrency(realgrantotal),"$","") %></th>
         </tr>
     </table>

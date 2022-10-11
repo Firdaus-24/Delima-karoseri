@@ -54,7 +54,7 @@
                 <label for="tgljt" class="col-form-label">Tanggal Jatuh Tempo</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="text" id="tgljt" name="tgljt" class="form-control" <% if data("OPH_JTDAte") <> "1900-01-01"  then%> value="<%= data("OPH_JTDate") %>" <% end if %> onfocus="(this.type='date')">
+                <input type="text" id="tgljt" name="tgljt" class="form-control" <% if data("OPH_JTDAte") <> "1900-01-01"  then%> value="<%= Cdate(data("OPH_JTDate")) %>" <% end if %> onfocus="(this.type='date')">
             </div>
         </div>
         <div class="row align-items-center">

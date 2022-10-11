@@ -3,21 +3,15 @@
    set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    ' ' get data puchaseOrder
-    ' data_cmd.commandText = "SELECT dbo.DLK_T_OrPemH.OPH_ID FROM dbo.DLK_T_OrPemH WHERE OPH_AktifYN = 'Y' AND (SELECT IPH_OPHID FROM DLK_T_InvPemH WHERE IPH_AktifYN = 'Y' AND IPH_OPHID = OPH_ID)IS NULL ORDER BY dbo.DLK_T_OrPemH.OPH_ID DESC"
-    ' set getpo = data_cmd.execute
+    ' filter agen
+    data_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_InvPemH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_InvPemH.IPH_AgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_InvPemH.IPH_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    set agendata = data_cmd.execute
+    ' filter vendor
+    data_cmd.commandText = "SELECT dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_ID FROM dbo.DLK_T_InvPemH LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_InvPemH.IPH_venID = dbo.DLK_M_Vendor.Ven_ID WHERE DLK_T_InvPemH.IPH_AktifYN = 'Y' GROUP BY dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_ID ORDER BY Ven_Nama ASC"
+    set vendata = data_cmd.execute
 
-    ' ' filter agen
-    ' data_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_InvPemH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_InvPemH.IPH_AgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_InvPemH.IPH_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
-    ' set agendata = data_cmd.execute
-    ' ' filter vendor
-    ' data_cmd.commandText = "SELECT dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_ID FROM dbo.DLK_T_InvPemH LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_InvPemH.IPH_venID = dbo.DLK_M_Vendor.Ven_ID WHERE DLK_T_InvPemH.IPH_AktifYN = 'Y' GROUP BY dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_ID ORDER BY Ven_Nama ASC"
-    ' set vendata = data_cmd.execute
-
-    ' agen = trim(Request.Form("agen"))
-    ' vendor = trim(Request.Form("vendor"))
-    ' tgla = trim(Request.Form("tgla"))
-    ' tgle = trim(Request.Form("tgle"))
+    agen = trim(Request.Form("agen"))
+    vendor = trim(Request.Form("vendor"))
 
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
@@ -31,29 +25,21 @@
         angka = Request.form("urut") + 1
     end if
     
-    ' if agen <> "" then
-    '     filterAgen = "AND DLK_T_InvPemH.IPH_AgenID = '"& agen &"'"
-    ' else
-    '     filterAgen = ""
-    ' end if
+    if agen <> "" then
+        filterAgen = "AND DLK_T_InvPemH.IPH_AgenID = '"& agen &"'"
+    else
+        filterAgen = ""
+    end if
 
-    ' if vendor <> "" then
-    '     filtervendor = "AND dbo.DLK_T_InvPemH.IPH_VenID = '"& vendor &"'"
-    ' else
-    '     filtervendor = ""
-    ' end if
-
-    ' if tgla <> "" AND tgle <> "" then
-    '     filtertgl = "AND dbo.DLK_T_InvPemH.IPH_Date BETWEEN '"& tgla &"' AND '"& tgle &"'"
-    ' elseIf tgla <> "" AND tgle = "" then
-    '     filtertgl = "AND dbo.DLK_T_InvPemH.IPH_Date = '"& tgla &"'"
-    ' else 
-    '     filtertgl = ""
-    ' end if
+    if vendor <> "" then
+        filtervendor = "AND dbo.DLK_T_InvPemH.IPH_VenID = '"& vendor &"'"
+    else
+        filtervendor = ""
+    end if
 
     ' query seach 
     strquery = "SELECT dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_AgenId, dbo.DLK_T_InvPemH.IPH_OphId, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_VenId, dbo.DLK_T_InvPemH.IPH_JTDate, dbo.DLK_T_InvPemH.IPH_Keterangan, dbo.DLK_T_InvPemH.IPH_DiskonAll, dbo.DLK_T_InvPemH.IPH_Ppn, GLB_M_Agen.AgenNAme, DLK_M_Vendor.Ven_Nama, SUM(dbo.DLK_T_InvPemD.IPD_QtySatuan) AS beli FROM dbo.DLK_T_InvPemD RIGHT OUTER JOIN dbo.DLK_T_InvPemH ON LEFT(dbo.DLK_T_InvPemD.IPD_IphID, 13) = dbo.DLK_T_InvPemH.IPH_ID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_InvPemH.IPH_AgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Vendor ON DLK_T_InvPemH.IPH_VenID = DLK_M_vendor.Ven_ID WHERE dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y' GROUP BY dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_AgenId, dbo.DLK_T_InvPemH.IPH_OphId, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_VenId, dbo.DLK_T_InvPemH.IPH_JTDate, dbo.DLK_T_InvPemH.IPH_Keterangan, dbo.DLK_T_InvPemH.IPH_DiskonAll, dbo.DLK_T_InvPemH.IPH_Ppn,GLB_M_Agen.AgenNAme, DLK_M_Vendor.Ven_Nama HAVING (SUM(isnull(dbo.DLK_T_InvPemD.IPD_QtySatuan,0)) < (SELECT SUM(ISNULL(dbo.DLK_T_OrPemD.OPD_QtySatuan,0)) AS pesen FROM dbo.DLK_T_OrPemH RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID, 13) WHERE OPH_ID = dbo.DLK_T_InvPemH.IPH_OphId AND OPH_AktifYN = 'Y' GROUP BY dbo.DLK_T_OrPemH.OPH_ID))"
-    ' "& filterAgen &"  "& filtervendor &" "& filtermetpem &" "& filtertgl &"
+    ' "& filterAgen &"  "& filtervendor &" 
     ' untuk data paggination
     page = Request.QueryString("page")
 
@@ -98,10 +84,41 @@
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row">
-        <div class="col-lg-12 mt-3 text-center">
+        <div class="col-lg-12 mt-3 mb-3 text-center">
             <h3>DAFTAR BARANG BELUM DATANG</h3>
         </div>
     </div>
+    <form action="invPOmin.asp" method="post">
+        <div class="row">
+            <div class="col-lg-4 mb-3">
+                <label for="Agen">Cabang</label>
+                <select class="form-select" aria-label="Default select example" name="agen" id="agen">
+                    <option value="">Pilih</option>
+                    <% do while not agendata.eof %>
+                    <option value="<%= agendata("agenID") %>"><%= agendata("agenNAme") %></option>
+                    <% 
+                    agendata.movenext
+                    loop
+                    %>
+                </select>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <label for="vendor">Vendor</label>
+                <select class="form-select" aria-label="Default select example" name="vendor" id="vendor">
+                    <option value="">Pilih</option>
+                    <% do while not vendata.eof %>
+                    <option value="<%= vendata("ven_id") %>"><%= vendata("ven_nama") %></option>
+                    <% 
+                    vendata.movenext
+                    loop
+                    %>
+                </select>
+            </div>
+            <div class="col-lg-2 mt-4 mb-3">
+                <button type="submit" class="btn btn-primary">Cari</button>
+            </div>
+        </div>
+    </form>
     <div class="row">
         <div class="col-lg-12">
             <table class="table table-hover">

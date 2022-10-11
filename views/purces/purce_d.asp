@@ -107,7 +107,6 @@
                         <th scope="col">Harga</th>
                         <th scope="col">Diskon1</th>
                         <th scope="col">Diskon2</th>
-                        <th scope="col">Status</th>
                         <th scope="col">Jumlah</th>
                     </tr>
                 </thead>
@@ -135,24 +134,6 @@
 
                     grantotal = grantotal + realharga
 
-                    ' cek order by memo
-                    data_cmd.commandText = "SELECT memoQtty FROM DLK_T_Memo_D WHERE LEFT(memoID,17) = '"& data("OPH_MemoID") &"' AND memoItem = '"& ddata("OPD_Item") &"'"
-
-                    set qttymemo = data_cmd.execute
-                   
-                    if not qttymemo.eof then
-                        angkastatus = qttymemo("memoqtty") - ddata("OPD_QtySatuan")
-                        if angkastatus > 0 then
-                            ckstatus = "-"&angkastatus
-                        elseIf angkastatus = 0 then
-                            ckstatus = "Done"
-                        else
-                            ckstatus = "OverPO"
-                        end if
-                    else
-                        ckstatus = "-"
-                    end if
-
                     %>
                         <tr>
                             <td>
@@ -172,9 +153,6 @@
                             </td>
                             <td>
                                 <%= ddata("OPD_disc2") %>%
-                            </td>
-                            <td>
-                                <%= ckstatus %>
                             </td>
                             <td>
                                 <%= replace(formatCurrency(realharga),"$","") %>
@@ -199,7 +177,7 @@
                     realgrantotal = (grantotal - diskonall) + ppn
                     %>
                     <tr>
-                        <th colspan="7">Total Pembayaran</th>
+                        <th colspan="6">Total Pembayaran</th>
                         <th><%= replace(formatCurrency(realgrantotal),"$","") %></th>
                     </tr>
                 </tbody>
