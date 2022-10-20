@@ -25,12 +25,17 @@
         labelpd = ""
     end if
 
+    ' ' get data stok
+    ' data_cmd.commandTExt = "SELECT dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id, SUM(ISNULL(dbo.DLK_T_InvPemD.IPD_QtySatuan, 0) - ISNULL(dbo.DLK_T_InvJulD.IJD_QtySatuan, 0)) AS stok FROM dbo.DLK_T_InvJulD RIGHT OUTER JOIN dbo.DLK_T_InvPemD ON dbo.DLK_T_InvJulD.IJD_IPDIPHID = dbo.DLK_T_InvPemD.IPD_IphID LEFT OUTER JOIN dbo.DLK_T_InvPemH ON LEFT(dbo.DLK_T_InvPemD.IPD_IphID, 13) = dbo.DLK_T_InvPemH.IPH_ID LEFT OUTER JOIN dbo.DLK_M_Barang INNER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId INNER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID ON dbo.DLK_T_InvPemD.IPD_Item = dbo.DLK_M_Barang.Brg_Id WHERE  (dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y') AND (dbo.DLK_T_InvPemH.IPH_AgenId = '"& data("IJH_AgenID") &"') GROUP BY dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id ORDER BY dbo.DLK_M_Barang.Brg_Nama"
+    ' ' response.write data_cmd.commandText & "<br>"
+    ' set getstok = data_cmd.execute
+
     ' satuan
     data_cmd.commandText = "SELECT sat_Nama, sat_ID FROM DLK_M_satuanBarang WHERE sat_AktifYN = 'Y' ORDER BY sat_Nama ASC"
 
     set psatuan = data_cmd.execute
 
-    call header("Faktur Barang")
+    call header("Update Faktur Barang")
 %>
 <!--#include file="../../navbar.asp"-->
 <style>
@@ -99,20 +104,6 @@
         </div>
         <div class="col-sm-4">
             <input type="text" class="form-control" <% if data("IJH_JTDate") <> "1900-01-01" then %> value="<%= data("IJH_JTDate") %>" <% end if %> readonly>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-sm-2">
-            <label>Diskon All</label>
-        </div>
-        <div class="col-sm-4">
-            <input type="text" class="form-control" value="<%= data("IJH_DiskonAll") %>" readonly>
-        </div>
-        <div class="col-sm-2">
-            <label>Ppn</label>
-        </div>
-        <div class="col-sm-4">
-            <input type="text" class="form-control" value="<%= data("IJH_PPN") %>" readonly>
         </div>
     </div>
     <div class="row mb-3">
@@ -194,7 +185,7 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="aktifjdbarang.asp?id=<%= ddata("IJD_IJHID") %>&p=jbarangd_add" class="btn badge text-bg-danger btn-fakturd">Delete</a>
+                                <a href="aktifjdbarang.asp?id=<%= ddata("IJD_IJHID") %>&p=jbarang_u" class="btn badge text-bg-danger btn-fakturd">Delete</a>
                             </td>
                         </tr>
                     <% 
@@ -229,7 +220,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-        <form action="jbarangd_add.asp?id=<%= id %>" method="post" id="rincianjual">
+        <form action="jbarang_u.asp?id=<%= id %>" method="post" id="rincianjual">
             <input type="hidden" name="id" id="id" value="<%= data("IJH_ID") %>">
             <input type="hidden" name="ccbgjual" id="ccbgjual" value="<%= data("IJH_AgenID") %>">
             <div class="row">
@@ -296,7 +287,7 @@
 
 <% 
     if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
-        call tambahDetailPenjualan()
+        call updatePenjualan()
     end if
     call footer()
 %>

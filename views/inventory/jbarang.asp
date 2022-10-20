@@ -4,20 +4,20 @@
     data_cmd.ActiveConnection = mm_delima_string
 
     ' get data puchaseOrder
-    data_cmd.commandText = "SELECT dbo.DLK_T_OrJulH.OJH_ID FROM dbo.DLK_T_InvJulH RIGHT OUTER JOIN dbo.DLK_T_OrJulH ON dbo.DLK_T_InvJulH.IJH_OJHId = dbo.DLK_T_OrJulH.OJH_ID WHERE (dbo.DLK_T_InvJulH.IJH_OJHId IS NULL) AND dbo.DLK_T_OrJulH.OJH_aktifYN = 'Y' ORDER BY dbo.DLK_T_OrJulH.OJH_ID DESC"
+    data_cmd.commandText = "SELECT dbo.DLK_T_OrJulH.OJH_ID FROM dbo.DLK_T_InvJulH RIGHT OUTER JOIN dbo.DLK_T_OrJulH ON dbo.DLK_T_InvJulH.IJH_OJHId = dbo.DLK_T_OrJulH.OJH_ID WHERE ((dbo.DLK_T_InvJulH.IJH_OJHId IS NULL) OR IJH_AKtifyn = 'N') AND dbo.DLK_T_OrJulH.OJH_aktifYN = 'Y' GROUP BY dbo.DLK_T_OrJulH.OJH_ID ORDER BY dbo.DLK_T_OrJulH.OJH_ID DESC"
     set getpo = data_cmd.execute
 
     ' filter agen
     data_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_InvJulH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_InvJulH.IJH_AgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_InvJulH.IJH_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
     set agendata = data_cmd.execute
 
-    ' filter customer
-    data_cmd.commandText = "SELECT dbo.DLK_M_Customer.custNama, dbo.DLK_M_Customer.custID FROM dbo.DLK_T_InvJulH LEFT OUTER JOIN dbo.DLK_M_Customer ON dbo.DLK_T_InvJulH.IJH_custID = dbo.DLK_M_Customer.custID WHERE DLK_T_InvJulH.IJH_AktifYN = 'Y' GROUP BY dbo.DLK_M_Customer.custNama, dbo.DLK_M_Customer.custID ORDER BY custNama ASC"
+    ' filter produksi
+    data_cmd.commandText = "SELECT dbo.DLK_T_ProductH.PDID, dbo.DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_InvJulH LEFT OUTER JOIN dbo.DLK_T_ProductH ON dbo.DLK_T_InvJulH.IJH_PDID = dbo.DLK_T_ProductH.PDID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_ProductH.PDBrgID = DLK_M_Barang.Brg_ID WHERE DLK_T_InvJulH.IJH_AktifYN = 'Y' AND DLK_T_InvJulH.IJH_PDID <> '' GROUP BY dbo.DLK_T_ProductH.PDID, dbo.DLK_M_Barang.Brg_Nama ORDER BY PDID ASC"
+    ' response.write data_cmd.commandText & "<br>"
     set custdata = data_cmd.execute
 
     agen = trim(Request.Form("agen"))
-    customer = trim(Request.Form("customer"))
-    metpem = trim(Request.Form("metpem"))
+    produksi = trim(Request.Form("produksi"))
     tgla = trim(Request.Form("tgla"))
     tgle = trim(Request.Form("tgle"))
 
@@ -39,16 +39,10 @@
         filterAgen = ""
     end if
 
-    if vendor <> "" then
-        filtervendor = "AND dbo.DLK_T_InvJulH.IJH_VenID = '"& vendor &"'"
+    if produksi <> "" then
+        filterproduksi = "AND dbo.DLK_T_InvJulH.IJH_PDID = '"& produksi &"'"
     else
-        filtervendor = ""
-    end if
-
-    if metpem <> "" then
-        filtermetpem = "AND dbo.DLK_T_InvJulH.IJH_metpem = '"& metpem &"'"
-    else
-        filtermetpem = ""
+        filterproduksi = ""
     end if
 
     if tgla <> "" AND tgle <> "" then
@@ -60,7 +54,7 @@
     end if
 
     ' query seach 
-    strquery = "SELECT * FROM DLK_T_InvJulH WHERE IJH_AktifYN = 'Y' "& filterAgen &"  "& filtervendor &" "& filtermetpem &" "& filtertgl &""
+    strquery = "SELECT DLK_T_InvJulH.*, GLB_M_Agen.AGenName FROM DLK_T_InvJulH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_InvJulH.IJH_AgenID = GLB_M_Agen.AgenID WHERE IJH_AktifYN = 'Y' "& filterAgen &"  "& filtervendor &" "& filtermetpem &" "& filtertgl &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
@@ -100,13 +94,13 @@
         end if	
     loop
 
-    call header("Penjualan Barang")
+    call header("Pengeluaran Barang")
 %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row">
         <div class="col-lg-12 mb-3 mt-3 text-center">
-            <h3>TRANSAKSI FAKTUR PENJUALAN</h3>
+            <h3>TRANSAKSI PENGELUARAN BARANG INVENTORY</h3>
         </div>
     </div>
     <div class="row">
@@ -129,24 +123,15 @@
                 </select>
             </div>
             <div class="col-lg-4 mb-3">
-                <label for="customer">Customer</label>
-                <select class="form-select" aria-label="Default select example" name="customer" id="customer">
+                <label for="produksi">Produksi</label>
+                <select class="form-select" aria-label="Default select example" name="produksi" id="produksi">
                     <option value="">Pilih</option>
                     <% do while not custdata.eof %>
-                    <option value="<%= custdata("custid") %>"><%= custdata("custnama") %></option>
+                    <option value="<%= custdata("PDID") %>"><%= custdata("Brg_Nama") %></option>
                     <% 
                     custdata.movenext
                     loop
                     %>
-                </select>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <label for="metpem">Pembayaran</label>
-                <select class="form-select" aria-label="Default select example" name="metpem" id="metpem">
-                    <option value="">Pilih</option>
-                    <option value="1">Transfer</option>
-                    <option value="2">Cash</option>
-                    <option value="3">PayLater</option>
                 </select>
             </div>
         </div>
@@ -172,11 +157,10 @@
                     <th>FakturID</th>
                     <th>Cabang</th>
                     <th>Tanggal</th>
-                    <th>Customer</th>
+                    <th>No Produksi</th>
                     <th>Tanggal JT</th>
                     <th>Diskon</th>
                     <th>PPn</th>
-                    <th>Pembayaran</th>
                     <th>Keterangan</th>
                     <th class="text-center">Aksi</th>
                 </thead>
@@ -193,9 +177,9 @@
                     %>
                         <tr><TH><%= recordcounter %></TH>
                         <th><%= rs("IJH_ID") %></th>
-                        <td><% call getAgen(rs("IJH_AgenID"),"P") %></td>
+                        <td><%= rs("agenName") %></td>
                         <td><%= Cdate(rs("IJH_Date")) %></td>
-                        <td><%= rs("IJH_custID") %></td>
+                        <td><%= rs("IJH_PDID") %></td>
                         <td>
                             <% if rs("IJH_JTDate") <> "1900-01-01" then %>
                             <%= Cdate(rs("IJH_JTDate")) %>
@@ -203,15 +187,16 @@
                         </td>
                         <td><%= rs("IJH_DiskonAll") %></td>
                         <td><%= rs("IJH_PPn") %></td>
-                        <td><% call getmetpem(rs("IJH_MetPem")) %></td>
                         <td><%= rs("IJH_Keterangan") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="detailFaktur.asp?id=<%= rs("IJH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
-                                <a href="faktur_u.asp?id=<%= rs("IJH_ID") %>" class="btn badge text-bg-primary" >Update</a>
+                                <% if not p.eof then %>
+                                <a href="detailjbarang.asp?id=<%= rs("IJH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
+                                <% end if %>
+                                <a href="jbarang_u.asp?id=<%= rs("IJH_ID") %>" class="btn badge text-bg-primary" >Update</a>
 
                                 <% if p.eof then %>
-                                <a href="aktifh.asp?id=<%= rs("IJH_ID") %>" class="btn badge text-bg-danger btn-fakturh">Delete</a>
+                                <a href="aktifjhbarang.asp?id=<%= rs("IJH_ID") %>" class="btn badge text-bg-danger btn-fakturh">Delete</a>
                                 <% end if %>
                             </div>
                         </td>

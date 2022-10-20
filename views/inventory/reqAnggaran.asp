@@ -152,7 +152,7 @@
                     <th scope="col">Cabang</th>
                     <th scope="col">Divisi</th>
                     <th scope="col">Departement</th>
-                    <th scope="col">Aktif</th>
+                    <th scope="col">Approve</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -178,7 +178,15 @@
                         <td><%= rs("DivNama") %></td>
                         <td><%= rs("DepNama")%></td>
                         <td>
-                            <%if rs("memoAktifYN") = "Y" then %>Aktif <% else %>Off <% end if %>
+                            <%if rs("memoApproveYN") = "Y" then %>
+                            <b class="text-success">
+                                Done
+                            </b>
+                            <% else %>
+                            <b>
+                                Waiting
+                            </b>
+                            <% end if %>
                         </td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">

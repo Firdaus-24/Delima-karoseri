@@ -4,10 +4,6 @@
         p = Request.QueryString("p")
         strid = left(id,13)
 
-        if p = "" then
-                p = "detailFaktur"
-        end if
-        
         call header("aktif")
  %>
 <!--#include file="../../navbar.asp"-->

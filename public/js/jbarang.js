@@ -1,39 +1,39 @@
 $(function(){
-    // validasi tambah header Penjualan
-    $('#formPenjualanH').submit(function(e) {
-
-    let form = this;
-    
-    e.preventDefault(); // <--- prevent form from submitting
-    
-        swal({
-            title: "APAKAH ANDA SUDAH YAKIN??",
-            text: "Penjualan",
-            icon: "warning",
-            buttons: [
-            'No',
-            'Yes'
-            ],
-            dangerMode: true,
-        }).then(function(isConfirm) {
-            if (isConfirm) {
-                form.submit(); // <--- submit form programmatically
-            } else {
-            swal("Form gagal di kirim");
-            }
-        })
+    // content tbody
+    $(".contentdetailjbarang").html(function(){
+        let cabang = $("#ccbgjual").val()
+        $.ajax({
+            method: "POST",
+            url: "../../ajax/getallPembelian.asp",
+            data: {  cabang }
+        }).done(function( msg ) {
+            $(".loaderjual img").hide()
+            $(".contentdetailjbarang").html(msg)
+        });  
     })
 
-    // get stok barang
-    $("input[name='ckpenjualan']").click(function(){
-        const str =  $("input[name='ckpenjualan']:checked").val()
-        const pieces = str.split(/[\s,]+/)
-        const last = pieces[pieces.length - 1]
+    // cari barang pembelian
+    $("#cbrgjual").keyup(function(){
+        $(".loaderjual img").show()
+        let nama = $("#cbrgjual").val().toUpperCase()
+        let cabang = $("#ccbgjual").val()
+
+        // if(nama.length > 0){
+            $.ajax({
+                method: "POST",
+                url: "../../ajax/getallPembelian.asp",
+                data: { nama, cabang }
+            }).done(function( msg ) {
+                console.log(msg);
+                
+                $(".loaderjual img").hide()
+                $(".contentdetailjbarang").html(msg)
+            });  
+        // }else{
+        //     $(".loaderjual img").hide()
+        // }
         
-        $("#jqty").val(last)       
-        $("#qtyjual").val('')
     })
-
     // tambah detail penjualan
     $('#rincianjual').submit(function(e) {
         let form = this;
@@ -64,50 +64,9 @@ $(function(){
             })
         }
     })
-
-    // aktifasi header orjul
-    // aktifasi header orjul
-    // $('.btn-orjual').click(function(e){
-        
-    //     e.preventDefault(); // <--- prevent click
-        
-    //     swal({
-    //         title: "YAKIN UNTUK DI HAPUS??",
-    //         text: "Delete Order Penjualan",
-    //         icon: "warning",
-    //         buttons: [
-    //           'No',
-    //           'Yes'
-    //         ],
-    //         dangerMode: true,
-    //     }).then(function(isConfirm) {
-    //         if (isConfirm) {
-    //             window.location.href = e.target.href // <--- submit form programmatically
-    //         } else {
-    //           swal("Request gagal di kirim");
-    //         }
-    //     })
-    // })
-    // // aktifasi detail orjul
-    // $('.btn-aktiforjuld').click(function(e){
-        
-    //     e.preventDefault(); // <--- prevent click
-        
-    //     swal({
-    //         title: "YAKIN UNTUK DI HAPUS??",
-    //         text: "Delete Detail Order Penjualan",
-    //         icon: "warning",
-    //         buttons: [
-    //           'No',
-    //           'Yes'
-    //         ],
-    //         dangerMode: true,
-    //     }).then(function(isConfirm) {
-    //         if (isConfirm) {
-    //             window.location.href = e.target.href // <--- submit form programmatically
-    //         } else {
-    //           swal("Request gagal di kirim");
-    //         }
-    //     })
-    // })
 })
+
+function getStokjbarang(e){
+    $("#jqty").val(e)       
+    $("#qtyjual").val('')
+}

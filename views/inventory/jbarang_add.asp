@@ -7,24 +7,51 @@
     data_cmd.ActiveConnection = mm_delima_string
     
     ' get data
-    data_cmd.commandText = "SELECT dbo.DLK_T_OrJulH.OJH_ID, dbo.DLK_T_OrJulH.OJH_AgenID, dbo.DLK_T_OrJulH.OJH_Date, dbo.DLK_T_OrJulH.OJH_DivID, dbo.DLK_T_OrJulH.OJH_Keterangan, dbo.DLK_T_OrJulH.OJH_AktifYN, dbo.DLK_T_OrJulD.OJD_OJHID,dbo.DLK_T_OrJulD.OJD_Item, dbo.DLK_T_OrJulD.OJD_QtySatuan, dbo.DLK_T_OrJulD.OJD_JenisSat, DLK_M_Barang.Brg_Nama, DLK_M_Divisi.divNama FROM dbo.DLK_T_OrJulH LEFT OUTER JOIN dbo.DLK_T_OrJulD ON dbo.DLK_T_OrJulH.OJH_ID = LEFT(dbo.DLK_T_OrJulD.OJD_OJHID,13) LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrJulD.OJD_Item = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Divisi ON DLK_T_OrJulH.OJH_divID = DLK_M_Divisi.divID where DLK_T_OrJulH.OJH_ID = '"& id &"' AND DLK_T_OrJulH.OJH_AktifYN = 'Y'"
+    data_cmd.commandText = "SELECT dbo.DLK_T_OrJulH.*, dbo.GLB_M_Agen.AgenName, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_OrJulH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_OrjulH.OJH_AgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_T_ProductH ON DLK_T_OrjulH.OJH_PDID = DLK_T_ProductH.PDID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_ProductH.PDbrgID = DLK_M_Barang.Brg_ID where DLK_T_OrJulH.OJH_ID = '"& id &"' AND DLK_T_OrJulH.OJH_AktifYN = 'Y'"
 
     set data = data_cmd.execute
 
-    ' customer
-    data_cmd.commandText = "SELECT custNama, custID FROM DLK_M_customer WHERE custAktifYN = 'Y' ORDER BY custNama ASC"
-    set customer = data_cmd.execute
+    if not data.eof then
+        if data("OJH_PDID") <> "" then
+            pdid = data("OJH_PDID")
+            labelpd = data("OJH_PDID") &" | "& data("Brg_Nama")
+        else
+            pdid = ""
+            labelpd = ""
+        end if
+    end if
+
+    ' cek kebutuhan
+    if data("OJH_Kebutuhan") = 0 then
+        kebutuhan = "Produksi"
+    elseif data("OJH_Kebutuhan") = 1 then
+        kebutuhan = "Khusus"
+    elseif data("OJH_Kebutuhan") = 2 then
+        kebutuhan = "Umum"
+    else
+        kebutuhan = "Sendiri"
+    end if
+
+
+    ' produksi
+    data_cmd.commandText = "SELECT PDBrgID, PDID, Brg_Nama FROM DLK_T_ProductH LEFT OUTER JOIN DLK_M_Barang ON DLK_T_ProductH.PDBrgID = DLK_M_Barang.Brg_ID WHERE PDAktifYN = 'Y' ORDER BY Brg_Nama ASC"
+    set produksi = data_cmd.execute
 
     call header("Faktur Hutang")
 %>
 <!--#include file="../../navbar.asp"--> 
 <div class="container">
     <div class="row">
-        <div class="col-lg-12 mb-3 mt-3 text-center">
+        <div class="col-lg-12 mt-3 text-center">
             <h3>FORM TAMBAH FAKTUR PENJUALAN</h3>
         </div>
     </div>
-    <form action="jbarang_add.asp?id=<%= id %>" method="post" id="formPenjualanH">
+    <div class="row">
+        <div class="col-lg-12 mb-3 text-center labelId">
+            <h3><%= id %></h3>
+        </div>
+    </div>
+    <form action="jbarang_add.asp?id=<%= id %>" method="post" id="formPenjualanH" onsubmit="validasiForm(this,event,'Outgoing Prosess','warning')">
         <div class="row">
             <div class="col-lg-2 mb-3">
                 <label for="ojhid" class="col-form-label">No Permintaan</label>
@@ -51,70 +78,45 @@
                 <label for="tgljt" class="col-form-label">Tanggal Jatuh Tempo</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="text" id="tgljt" name="tgljt" class="form-control">
+                <input type="date" id="tgljt" name="tgljt" class="form-control">
             </div>
         </div>
         <div class="row align-items-center">
             <div class="col-lg-2 mb-3">
-                <label for="customer" class="col-form-label">customer</label>
+                <label for="produksi" class="col-form-label">No Produksi</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <select class="form-select" aria-label="Default select example" id="customer" name="customer" required>
-                    <option value="">Pilih</option>
-                    <% do while not customer.eof %>
-                    <option value="<%= customer("custID") %>"><%= customer("custNama") %></option>
+                <select class="form-select" aria-label="Default select example" id="produksi" name="produksi" <% if data("OJH_PDID") <> "" then %> required <% end if %>>
+                    <option value="<%= pdid %>"><%= labelpd %></option>
+                    <% do while not produksi.eof %>
+                    <option value="<%= produksi("PDID") %>"><%= produksi("PDID") &" | "& produksi("Brg_Nama") %></option>
                     <% 
-                    customer.movenext
+                    produksi.movenext
                     loop
                     %>
                 </select>
             </div>
             <div class="col-lg-2 mb-3">
-                <label for="ppn" class="col-form-label">PPn</label>
+                <label for="kebutuhan" class="col-form-label">Kebutuhan</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="number" id="ppn" name="ppn" class="form-control">
-            </div>
-        </div>
-        <div class="row align-items-center">
-            <div class="col-lg-2 mb-3">
-                <label for="metpem" class="col-form-label">Metode Pembayaran</label>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <select class="form-select" aria-label="Default select example" id="metpem" name="metpem" required>
-                    <option value="">Pilih</option>
-                    <option value="1">Transfer</option>
-                    <option value="2">Cash</option>
-                    <option value="3">PayLater</option>
+                <select class="form-select" aria-label="Default select example" id="kebutuhan" name="kebutuhan" required>
+                    <option value="<%= data("OJH_Kebutuhan") %>"><%= kebutuhan %></option>
+                    <option value="0">Produksi</option>
+                    <option value="1">Khusus</option>
+                    <option value="2">Umum</option>
+                    <option value="3">Sendiri</option>
                 </select>
-            </div>
-            <div class="col-lg-2 mb-3">
-                <label for="diskon" class="col-form-label">Diskon All</label>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <input type="number" id="diskon" name="diskon" class="form-control">
             </div>
         </div>
         <div class="row align-items-center">
             <div class="col-lg-2 mb-3">
                 <label for="keterangan" class="col-form-label">Keterangan</label>
             </div>
-            <div class="col-lg-4 mb-3">
-                <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" value="<%= data("OJH_Keterangan") %>" autocomplete="off">
-            </div>
-            <div class="col-lg-2 mb-3">
-                <label for="typejual" class="col-form-label">Type Pejualan</label>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <select class="form-select" aria-label="Default select example" id="typejual" name="typejual" required>
-                    <option value="">Pilih</option>
-                    <option value="1">Harian</option>
-                    <option value="2">Bulanan</option>
-                    <option value="3">Tahunan</option>
-                </select>
+            <div class="col-lg-10 mb-3">
+                <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" autocomplete="off">
             </div>
         </div>
-        
         
         <div class="row">
             <div class="col-lg-12 text-center">

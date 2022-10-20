@@ -66,7 +66,7 @@
                 <a class="link-name" href="<%= url %>views/inventory/incomming.asp">Incomming</a>
               </li>
               <li>
-                <a class="link-name" href="<%= url %>views/inventory/jbarang.asp">Penjualan</a>
+                <a class="link-name" href="<%= url %>views/inventory/jbarang.asp">Outgouing</a>
               </li>
             </ul>
           <!-- repair -->

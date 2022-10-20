@@ -31,7 +31,7 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-12 mt-3 text-center">
-            <h3>DETAIL PERTMINTAAN</h3>
+            <h3>DETAIL PERMINTAAN B.O.M</h3>
         </div>
     </div>
     <div class="row">
