@@ -24,8 +24,6 @@ $(function(){
                 url: "../../ajax/getallPembelian.asp",
                 data: { nama, cabang }
             }).done(function( msg ) {
-                console.log(msg);
-                
                 $(".loaderjual img").hide()
                 $(".contentdetailjbarang").html(msg)
             });  
