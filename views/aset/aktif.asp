@@ -5,7 +5,7 @@
  %>
 <!--#include file="../../navbar.asp"-->
 <%      
-        call query("UPDATE DLK_M_JenisBarang SET JenisaktifYN = 'N' WHERE JenisId = '"& id &"'")
-        call alert("JENIS BARANG DENGAN ID "&id&" ", "berhasil non aktifkan", "success","index.asp") 
+        call query("UPDATE DLK_T_AsetH SET asetaktifYN = 'N' WHERE asetId = '"& id &"'")
+        call alert("ASET BARANG DENGAN ID "&id&" ", "berhasil non aktifkan", "success","index.asp") 
 call footer() 
 %>

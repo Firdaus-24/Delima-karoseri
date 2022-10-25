@@ -92,7 +92,7 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-12 mb-3 mt-3 text-center">
-            <h3>MASTER PRODUKSI (B.O.M)</h3>
+            <h3>MASTER PRODUKSI </h3>
         </div>  
     </div>
     <div class="row">

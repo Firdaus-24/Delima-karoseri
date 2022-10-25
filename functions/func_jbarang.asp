@@ -57,7 +57,6 @@
         ' response.write data_cmd.commandText & "<br>"
         set datastok = data_cmd.execute
 
-        angka = 0
         if orjul.eof then
             do while not datastok.eof
             ' cek data barang keluar 

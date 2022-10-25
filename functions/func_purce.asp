@@ -111,7 +111,9 @@ sub updateInvoice()
     dharga = split(harga,",")
     ddisc1 = split(disc1,",")
     ddisc2 = split(disc2,",")
-   
+
+    
+
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
@@ -121,14 +123,14 @@ sub updateInvoice()
 
     if not data.eof then
         call query("UPDATE DLK_T_InvPemH SET IPH_JTDate = '"& tgljt &"', IPH_DiskonAll = "& diskon &", IPH_PPn = "& ppn &", IPH_Keterangan = '"& keterangan &"' where IPH_ID = '"& iphid &"'")
-        
-        for i = 0 to ubound(did)
-            data_cmd.commandText = "SELECT * FROM DLK_T_InvPemD WHERE IPD_IPHID = '"& trim(did(i)) &"'"
+
+        for m = 0 to Ubound(did)
+            data_cmd.commandText = "SELECT * FROM DLK_T_InvPemD WHERE IPD_IPHID = '"& trim(did(m)) &"'"
 
             set detaildata = data_cmd.execute
             
             if not detaildata.eof then
-                call query("UPDATE DLK_T_InvPemD SET IPD_Harga = '"& trim(dharga(i)) &"', IPD_Disc1 = "& trim(ddisc1(i)) &", IPD_Disc2 = "& trim(ddisc2(i)) &" WHERE IPD_IPHID = '"& detaildata("IPD_IPHID") &"'")
+                call query("UPDATE DLK_T_InvPemD SET IPD_Harga = '"& trim(dharga(m)) &"', IPD_Disc1 = "& trim(ddisc1(m)) &", IPD_Disc2 = "& trim(ddisc2(m)) &" WHERE IPD_IPHID = '"& detaildata("IPD_IPHID") &"'")
             end if
         next    
         value = 1 'case untuk insert data
