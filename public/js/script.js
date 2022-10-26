@@ -40,3 +40,8 @@ function deleteItem(e,tex){
         }
     })
 }
+
+function printIt(url) {
+    var wnd = window.open(url);
+    wnd.print();
+}

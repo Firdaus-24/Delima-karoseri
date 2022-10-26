@@ -11,7 +11,7 @@ sub tambahAsetH()
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_T_AsetH WHERE AsetAgenID = '"& cabang &"' AND AsetdivID = '"& divisi &"' AND AsetDepID = '"& departement &"' AND AsetUpdateTime = '"& tgl &"' AND AsetPjawab = '"& pJawab &"' AND AsetKeterangan = '"& keterangan &"' AND AsetAktifYN = 'Y'"
+    data_cmd.commandText = "SELECT * FROM DLK_T_AsetH WHERE AsetAgenID = '"& cabang &"' AND AsetdivID = '"& divisi &"' AND AsetDepID = '"& departement &"' AND AsetPjawab = '"& pJawab &"' AND AsetKeterangan = '"& keterangan &"' AND AsetAktifYN = 'Y'"
     set data = data_cmd.execute
 
     if data.eof then

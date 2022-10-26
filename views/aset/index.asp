@@ -219,9 +219,12 @@
                         <td><%= rs("AsetKeterangan") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
+                                <% if not detailaset.eof then %>
+                                <button class="btn badge bg-warning" onclick="printIt('print.asp?id=<%= rs("AsetId") %>')">print</button>
+                                <% end if %>
                                 <a href="aset_u.asp?id=<%= rs("AsetId") %>" class="btn badge text-bg-primary">update</a>
                                 <% if detailaset.eof then %>
-                                <a href="aktif.asp?id=<%= rs("AsetId") %>" class="btn badge text-bg-danger btn-aktifkat">delete</a>
+                                <a href="aktif.asp?id=<%= rs("AsetId") %>" class="btn badge bg-danger" onclick="deleteItem(event,'delete master aset')">delete</a>
                                 <% end if %>
                             </div>
                         </td>
