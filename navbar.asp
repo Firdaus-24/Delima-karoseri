@@ -54,19 +54,22 @@
           </li>
             <ul class="sub-menu" id="sublist-inventory">
               <li>
-                <a class="link-name" href="<%= url %>views/inventory/permintaan.asp">Permintaan Barang</a>
-              </li>
-              <li>
                 <a class="link-name" href="<%= url %>views/inventory/reqAnggaran.asp">Anggaran Permintaan</a>
-              </li>
-              <li>
-                <a class="link-name" href="<%= url %>views/inventory/POMin.asp">Permintaan Kurang</a>
               </li>
               <li>
                 <a class="link-name" href="<%= url %>views/inventory/incomming.asp">Incomming</a>
               </li>
               <li>
+                <a class="link-name" href="<%= url %>views/klaim/index.asp">Klaim Barang</a>
+              </li>
+              <li>
                 <a class="link-name" href="<%= url %>views/inventory/jbarang.asp">Outgoing</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/inventory/permintaan.asp">Permintaan Barang</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/inventory/POMin.asp">Permintaan Kurang</a>
               </li>
             </ul>
           <!-- repair -->
@@ -76,19 +79,7 @@
           </li>
             <ul class="sub-menu" id="sublist-repair">
               <li>
-                <a class="link-name" href="<%= url %>views/inventory/">Inventory</a>
-              </li>
-              <li>
-                <a href="<%= url %>views/Rak/">Master Rak</a>
-              </li>
-              <li>
-                <a href="<%= url %>views/satbarang/">Master Satuan Barang</a>
-              </li>
-              <li>
-                <a href="<%= url %>views/kodeBarang/">Master Kode Barang</a>
-              </li>
-              <li>
-                <a href="<%= url %>views/vendor/">Master Vandor</a>
+                <a class="link-name" href="<%= url %>views/repair/">reparir</a>
               </li>
             </ul>
           <!-- qc -->
@@ -143,13 +134,13 @@
           </li>
             <ul class="sub-menu" id="sublist-finance">
               <li>
+                <a class="link-name" href="<%= url %>views/finance/appmemo.asp">Approve Memo</a>
+              </li>
+              <li>
                 <a class="link-name" href="<%= url %>views/finance/index.asp">Finance</a>
               </li>
               <li>
                 <a class="link-name" href="<%= url %>views/finance/catitem.asp">Kategori Item</a>
-              </li>
-              <li>
-                <a class="link-name" href="<%= url %>views/finance/appmemo.asp">Approve Memo Inventory</a>
               </li>
             </ul>
           <!-- hr/ga -->

@@ -26,4 +26,5 @@
   <script src="../../public/js/produksi.js"></script>
   <script src="../../public/js/orjul.js"></script>
   <script src="../../public/js/aset.js"></script>
+  <script src="../../public/js/delbarang.js"></script>
 </html>
