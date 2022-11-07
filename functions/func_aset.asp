@@ -58,10 +58,25 @@ sub tambahAsetD()
         data_cmd.commandTExt = "SELECT SUM(dbo.DLK_T_AsetD.AD_QtySatuan) as aset, dbo.DLK_T_AsetD.AD_Item, dbo.DLK_T_AsetD.AD_IPDIPHID FROM DLK_T_AsetD LEFT OUTER JOIN DLK_T_AsetH ON LEFT(DLK_T_AsetD.AD_AsetID,10) = DLK_T_AsetH.AsetID WHERE (dbo.DLK_T_ASetH.AsetagenID = '"&data("AsetAgenID")&"') AND (dbo.DLK_T_ASetH.AsetAktifYN = 'Y') AND (dbo.DLK_T_AsetD.AD_IPDIPHID = '"& getstok("IPD_IphID") &"') GROUP BY dbo.DLK_T_AsetD.AD_Item, dbo.DLK_T_AsetD.AD_IPDIPHID"
 
         set asetmaster = data_cmd.execute
-
+        
         if not asetmaster.eof then
-            stok = Cint(getstok("IPD_QtySatuan")) - Cint(asetmaster("aset"))
+            jaset = asetmaster("aset")
+        else
+            jaset = 0
+        end if
 
+        ' get delete barang
+        data_cmd.commandTExt = "SELECT DB_IPDIPHID, DB_Date, ISNULL(SUM(DB_QtySatuan),0) AS tklaim FROM dbo.DLK_T_DelBarang WHERE DB_AktifYN = 'Y' AND DB_IPDIPHID = '"& getstok("IPD_IPHID") &"' AND DB_AgenID = '"& data("AsetAgenID") &"' GROUP BY DB_IPDIPHID, DB_Date ORDER BY DB_Date ASC"
+        ' response.write data_cmd.commandText & "<br>"
+        set klaim = data_cmd.execute
+
+        if not klaim.eof then
+            tklaim = klaim("tklaim")
+        else
+            tklaim = 0
+        end if
+
+            stok = Cint(getstok("IPD_QtySatuan")) - Cint(jaset) - Cint(tklaim)
             if stok > 0 then
                 if Cint(stok) > Cint(qty) then 
                     tharga = Round(getstok("IPD_Harga") + (getstok("IPD_Harga") * getstok("IPH_PPN") / 100))
@@ -77,21 +92,7 @@ sub tambahAsetD()
                     qty = qty - stok 
                 end if
             end if
-        else
-            if Cint(qty) > Cint(getstok("IPD_Qtysatuan")) then 
-                tharga = Round(getstok("IPD_Harga") + (getstok("IPD_Harga") * getstok("IPH_PPN") / 100))
-
-                call query ("INSERT INTO DLK_T_AsetD (AD_AsetID, AD_IPDIPHID, AD_Item, AD_QtySatuan, AD_Harga, AD_JenisSat, AD_RakID) VALUES('"& ddata("id") &"', '"& getstok("IPD_IPHID") &"', '"& getstok("IPD_Item") &"', '"& getstok("IPD_Qtysatuan") &"', '"& tharga &"','"& satuan &"', '"& getstok("IPD_RakID") &"')")
-
-                qty = Cint(qty) - Cint(getstok("IPD_Qtysatuan"))
-            else
-                tharga = Round(getstok("IPD_Harga") + (getstok("IPD_Harga") * getstok("IPH_PPN") / 100))
-                
-                call query ("INSERT INTO DLK_T_AsetD (AD_AsetID, AD_IPDIPHID, AD_Item, AD_QtySatuan, AD_Harga, AD_JenisSat, AD_RakID) VALUES('"& ddata("id") &"', '"& getstok("IPD_IPHID") &"', '"& getstok("IPD_Item") &"', '"& Cint(qty) &"', '"& tharga &"','"& satuan &"', '"& getstok("IPD_RakID") &"')")
-                
-                qty = 0
-            end if
-        end if
+        
         if qty <= 0 then
             exit do
         end if
@@ -138,8 +139,24 @@ sub updateAset()
         set asetmaster = data_cmd.execute
 
         if not asetmaster.eof then
-            stok = Cint(getstok("IPD_QtySatuan")) - Cint(asetmaster("aset"))
+            jaset = masteraset("aset")
+        else    
+            jaset = 0
+        end if
 
+        ' get delete barang
+        data_cmd.commandTExt = "SELECT DB_IPDIPHID, DB_Date, ISNULL(SUM(DB_QtySatuan),0) AS tklaim FROM dbo.DLK_T_DelBarang WHERE DB_AktifYN = 'Y' AND DB_IPDIPHID = '"& getstok("IPD_IPHID") &"' AND DB_AgenID = '"& data("AsetAgenID") &"' GROUP BY DB_IPDIPHID, DB_Date ORDER BY DB_Date ASC"
+        ' response.write data_cmd.commandText & "<br>"
+        set klaim = data_cmd.execute
+
+        if not klaim.eof then
+            tklaim = klaim("tklaim")
+        else
+            tklaim = 0
+        end if
+
+        stok = Cint(getstok("IPD_QtySatuan")) - Cint(jaset) - Cint(tklaim)
+        
             if stok > 0 then
                 if Cint(stok) > Cint(qty) then 
                     tharga = Round(getstok("IPD_Harga") + (getstok("IPD_Harga") * getstok("IPH_PPN") / 100))
@@ -155,22 +172,8 @@ sub updateAset()
                     qty = qty - stok 
                 end if
             end if
-        else
-            if Cint(qty) > Cint(getstok("IPD_Qtysatuan")) then 
-                tharga = Round(getstok("IPD_Harga") + (getstok("IPD_Harga") * getstok("IPH_PPN") / 100))
-
-                call query ("INSERT INTO DLK_T_AsetD (AD_AsetID, AD_IPDIPHID, AD_Item, AD_QtySatuan, AD_Harga, AD_JenisSat, AD_RakID) VALUES('"& ddata("id") &"', '"& getstok("IPD_IPHID") &"', '"& getstok("IPD_Item") &"', '"& getstok("IPD_Qtysatuan") &"', '"& tharga &"','"& satuan &"', '"& getstok("IPD_RakID") &"')")
-
-                qty = Cint(qty) - Cint(getstok("IPD_Qtysatuan"))
-            else
-                tharga = Round(getstok("IPD_Harga") + (getstok("IPD_Harga") * getstok("IPH_PPN") / 100))
-                
-                call query ("INSERT INTO DLK_T_AsetD (AD_AsetID, AD_IPDIPHID, AD_Item, AD_QtySatuan, AD_Harga, AD_JenisSat, AD_RakID) VALUES('"& ddata("id") &"', '"& getstok("IPD_IPHID") &"', '"& getstok("IPD_Item") &"', '"& Cint(qty) &"', '"& tharga &"','"& satuan &"', '"& getstok("IPD_RakID") &"')")
-                
-                qty = 0
-            end if
-        end if
-        if qty <= 0 then
+        
+        if qty < 0 then
             exit do
         end if
         getstok.movenext

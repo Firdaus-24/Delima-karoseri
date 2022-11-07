@@ -19,18 +19,29 @@
         <% 
         do while not data.eof 
         
-        ' get penjualan 
-        data_cmd.commandTExt = "SELECT ISNULL(SUM(dbo.DLK_T_AsetD.AD_QtySatuan), 0) AS jual, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id FROM dbo.DLK_T_AsetD LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_AsetD.AD_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_T_AsetH ON LEFT(dbo.DLK_T_AsetD.AD_AsetID, 10) = dbo.DLK_T_AsetH.AsetID GROUP BY dbo.DLK_T_AsetH.AsetagenID, dbo.DLK_T_AsetH.AsetAktifYN, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id HAVING (dbo.DLK_M_Barang.Brg_Id = '"& data("brg_ID") &"') AND (dbo.DLK_T_AsetH.AsetagenID = '"& cabang &"') AND (dbo.DLK_T_AsetH.AsetAktifYN = 'Y') "
+        ' get klaim 
+        data_cmd.commandTExt = "SELECT ISNULL(SUM(DB_QtySatuan),0) as klaim, DB_Item FROM DLK_T_DelBarang WHERE DB_Item = '"& data("brg_ID") &"' AND DB_AgenID = '"& cabang &"' AND DB_AktifYN = 'Y' GROUP BY DB_Item"
 
-        set jual = data_cmd.execute
+        set klaim = data_cmd.execute
 
-        if not jual.eof then
-            stokjual = Cint(jual("jual"))
+        if not klaim.eof then
+            stokklaim = Cint(klaim("klaim"))
         else
-            stokjual = 0 
+            stokklaim = 0 
         end if
 
-        realstok = Cint(data("stok")) - stokjual
+        ' cek aset 
+        data_cmd.commandTExt = "SELECT ISNULL(SUM(dbo.DLK_T_AsetD.AD_Qtysatuan), 0) AS aset, dbo.DLK_T_AsetD.AD_Item FROM dbo.DLK_T_AsetH RIGHT OUTER JOIN dbo.DLK_T_AsetD ON dbo.DLK_T_AsetH.AsetId = LEFT(dbo.DLK_T_AsetD.AD_AsetID, 10) GROUP BY dbo.DLK_T_AsetH.AsetAktifYN, dbo.DLK_T_AsetH.AsetAgenID, dbo.DLK_T_AsetD.AD_Item HAVING (dbo.DLK_T_AsetH.AsetAktifYN = 'Y') AND (dbo.DLK_T_AsetH.AsetAgenID = '"& cabang &"') AND (dbo.DLK_T_AsetD.AD_Item = '"& data("brg_ID") &"')"
+        ' response.write data_cmd.commandText & "<br>"
+        set ckaset = data_cmd.execute
+
+        if not ckaset.eof then 
+            aset = Cint(ckaset("aset"))
+        else
+            aset = 0
+        end if
+
+        realstok = Cint(data("stok")) - stokklaim - aset
         %>
         <tr>
             <th scope="row">

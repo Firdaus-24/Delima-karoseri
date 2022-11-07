@@ -4,8 +4,9 @@
     data_cmd.ActiveConnection = mm_delima_string
 
     ' get data puchaseOrder
-    data_cmd.commandTExt = "SELECT dbo.DLK_T_OrPemH.OPH_ID FROM dbo.DLK_T_OrPemH WHERE OPH_AktifYN = 'Y' AND (SELECT IPH_OPHID FROM DLK_T_InvPemH WHERE IPH_AktifYN = 'Y' AND IPH_OPHID = OPH_ID)IS NULL ORDER BY dbo.DLK_T_OrPemH.OPH_ID DESC "
-    set getpo = data_cmd.execute
+    ' data_cmd.commandTExt = "SELECT dbo.DLK_T_OrPemH.OPH_ID FROM dbo.DLK_T_OrPemH WHERE OPH_AktifYN = 'Y' AND (SELECT IPH_OPHID FROM DLK_T_InvPemH WHERE IPH_AktifYN = 'Y' AND IPH_OPHID = OPH_ID)IS NULL ORDER BY dbo.DLK_T_OrPemH.OPH_ID DESC "
+
+    ' set getpo = data_cmd.execute
 
     ' filter agen
     data_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_InvPemH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_InvPemH.IPH_AgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_InvPemH.IPH_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
@@ -103,7 +104,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12 mb-3">
-            <a href="faktur_add.asp" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#carimemo">Tambah</a>
+            <a href="faktur_add.asp" class="btn btn-primary ">Tambah</a>
         </div>
     </div>
     <form action="incomming.asp" method="post">
@@ -268,36 +269,5 @@
         </div>
     </div>
 </div>  
-
-<!-- Modal -->
-<div class="modal fade" id="carimemo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="carimemoLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="carimemoLabel">Cari Puchase Order</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form action="faktur_add.asp" method="get">
-            <select class="form-select" aria-label="Default select example" id="id" name="id" required>
-                <option value="">Pilih</option>
-                <% do while not getpo.eof %>
-                <option value="<%= getpo("OPH_ID") %>">
-                    <%= left(getpo("OPH_ID"),2) %>-<% call getAgen(mid(getpo("OPH_ID"),3,3),"") %>/<%= mid(getpo("OPH_ID"),6,4) %>/<%= right(getpo("OPH_ID"),4) %>
-                </option>
-                <% 
-                getpo.movenext
-                loop 
-                %>
-            </select>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Save</button>
-      </div>
-        </form>
-    </div>
-  </div>
-</div>
 <% call footer() %>
 

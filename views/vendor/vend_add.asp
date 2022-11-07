@@ -126,7 +126,7 @@
                         <label for="keybrgvendor" class="col-form-label">Cari Kategori</label>
                     </div>  
                     <div class="col-sm-8">
-                        <input type="text" id="keybrgvendor" name="keybrgvendor" class="form-control">
+                        <input type="text" id="keybrgvendor" name="keybrgvendor" class="form-control" autocomplete="off">
                         <input type="hidden" id="venagenID" name="venagenID" class="form-control" value="<%= left(data("Ven_ID"),3) %>">
                     </div>
                 </div>
@@ -135,7 +135,7 @@
                         <label for="keybrgjnsvendor" class="col-form-label">Cari Jenis</label>
                     </div>  
                     <div class="col-sm-8">
-                        <input type="text" id="keybrgjnsvendor" name="keybrgjnsvendor" class="form-control">
+                        <input type="text" id="keybrgjnsvendor" name="keybrgjnsvendor" class="form-control" autocomplete="off">
                     </div>
                 </div>
                 <div class="row">

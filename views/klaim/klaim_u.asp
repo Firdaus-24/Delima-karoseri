@@ -8,9 +8,7 @@
     data_cmd.ActiveConnection = mm_delima_string
     ' get master data
     data_cmd.CommandText = "SELECT dbo.DLK_T_DelBarang.DB_Acc2, dbo.DLK_M_WebLogin.UserName, DLK_M_WebLogin_1.UserName AS acc2, dbo.DLK_T_DelBarang.DB_Acc1, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_T_DelBarang.DB_IPDIPHID, dbo.DLK_T_DelBarang.DB_QtySatuan, dbo.DLK_T_DelBarang.DB_JenisSat, dbo.DLK_M_Barang.Brg_Nama, dbo.GLB_M_Agen.AgenName, dbo.DLK_T_DelBarang.DB_ID, dbo.DLK_T_DelBarang.DB_Date, dbo.DLK_T_DelBarang.DB_Keterangan, dbo.DLK_T_DelBarang.DB_AktifYN, dbo.DLK_T_DelBarang.DB_AgenID, dbo.DLK_T_DelBarang.DB_Item FROM dbo.GLB_M_Agen RIGHT OUTER JOIN dbo.DLK_T_DelBarang ON dbo.GLB_M_Agen.AgenID = dbo.DLK_T_DelBarang.DB_AgenID LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_DelBarang.DB_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_DelBarang.DB_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.DLK_M_WebLogin AS DLK_M_WebLogin_1 ON dbo.DLK_T_DelBarang.DB_Acc2 = DLK_M_WebLogin_1.UserID LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_DelBarang.DB_Acc1 = dbo.DLK_M_WebLogin.UserID WHERE (dbo.DLK_T_DelBarang.DB_AktifYN = 'Y') AND (dbo.DLK_T_DelBarang.DB_ID = '"& id &"')"
-
     set data = data_cmd.execute
-
     ' get cabang
     data_cmd.CommandText = "SELECT AgenID, AgenName FROM GLB_M_Agen WHERE AgenAktifYN = 'Y' ORDER BY AgenName ASC"
 
@@ -28,12 +26,12 @@
     ' set stok
     ' get pembelian 
     data_cmd.commandTExt = "SELECT ISNULL(SUM(dbo.DLK_T_InvPemD.IPD_QtySatuan),0) AS jbeli, dbo.DLK_T_InvPemD.IPD_Item, dbo.DLK_T_InvPemD.IPD_IphID FROM dbo.DLK_T_InvPemH RIGHT OUTER JOIN dbo.DLK_T_InvPemD ON dbo.DLK_T_InvPemH.IPH_ID = LEFT(dbo.DLK_T_InvPemD.IPD_IphID, 13) GROUP BY dbo.DLK_T_InvPemH.IPH_AgenId, dbo.DLK_T_InvPemH.IPH_AktifYN, dbo.DLK_T_InvPemD.IPD_Item, dbo.DLK_T_InvPemD.IPD_IphID HAVING (dbo.DLK_T_InvPemH.IPH_AgenId = '"& data("DB_AgenID") &"') AND (dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y') AND (dbo.DLK_T_InvPemD.IPD_Item = '"& data("DB_Item") &"')"
-
+    ' response.write data_cmd.commandText & "<br>"
     set jbeli = data_cmd.execute
 
-    ' get penjualan
+    ' get penjualan 
     data_cmd.commandTExt = "SELECT ISNULL(SUM(dbo.DLK_T_InvJulD.IJD_QtySatuan),0) AS jjual, dbo.DLK_T_InvJulD.IJD_IJHID, dbo.DLK_T_InvJulD.IJD_Item FROM dbo.DLK_T_InvJulH RIGHT OUTER JOIN dbo.DLK_T_InvJulD ON dbo.DLK_T_InvJulH.IJH_ID = LEFT(dbo.DLK_T_InvJulD.IJD_IJHID, 13) GROUP BY dbo.DLK_T_InvJulD.IJD_IPDIPHID, dbo.DLK_T_InvJulH.IJH_agenID, dbo.DLK_T_InvJulH.IJH_AktifYN, dbo.DLK_T_InvJulD.IJD_IJHID, dbo.DLK_T_InvJulD.IJD_Item HAVING (dbo.DLK_T_InvJulH.IJH_AktifYN = 'Y') AND (dbo.DLK_T_InvJulH.IJH_agenID = '"& data("DB_AgenID") &"') AND (dbo.DLK_T_InvJulD.IJD_Item = '"& data("DB_Item") &"')"
-
+    ' response.write data_cmd.commandText & "<br>"
     set jjual = data_cmd.execute
 
     if not jjual.eof then
@@ -52,6 +50,7 @@
     else
         klaim = 0
     end if
+
     tstok = Cint(jbeli("jbeli")) - jual - klaim
 
     call header("Form Update Barang Rusak")

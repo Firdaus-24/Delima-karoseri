@@ -80,7 +80,7 @@
                 <label for="diskon" class="col-form-label">Diskon All</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="number" id="diskon" name="diskon" class="form-control" value="<%= data("IPH_Diskonall") %>" readonly>
+                <input type="number" id="diskon" name="diskon" class="form-control" value="<%= data("IPH_Diskonall") %>">
             </div>
         </div>
         <div class="row">
@@ -94,7 +94,7 @@
                 <label for="ppn" class="col-form-label">PPn</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="number" id="ppn" name="ppn" class="form-control" value="<%= data("IPH_ppn") %>" readonly>
+                <input type="number" id="ppn" name="ppn" class="form-control" value="<%= data("IPH_ppn") %>">
             </div>
         </div>
         <!-- detail barang -->

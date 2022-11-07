@@ -131,9 +131,13 @@
                     set getbeli = data_cmd.execute
 
                     ' get penjualan
-                    data_cmd.commandText = "SELECT dbo.DLK_T_InvJulD.IJD_Item, ISNULL(dbo.DLK_T_InvJulD.IJD_QtySatuan, 0) AS jual FROM  dbo.DLK_T_InvJulH RIGHT OUTER JOIN dbo.DLK_T_InvJulD ON dbo.DLK_T_InvJulH.IJH_ID = LEFT(dbo.DLK_T_InvJulD.IJD_IJHID, 13) WHERE dbo.DLK_T_InvJulH.IJH_AktifYN = 'Y' AND dbo.DLK_T_InvJulH.IJH_AgenID = '"& data("OJH_AgenID") &"' AND dbo.DLK_T_InvJulD.IJD_Item = '"& ddata("OJD_Item") &"' GROUP BY dbo.DLK_T_InvJulD.IJD_Item, ISNULL(dbo.DLK_T_InvJulD.IJD_QtySatuan, 0)"
+                    data_cmd.commandText = "SELECT dbo.DLK_T_InvJulD.IJD_Item, ISNULL(SUM(dbo.DLK_T_InvJulD.IJD_QtySatuan), 0) AS jual FROM  dbo.DLK_T_InvJulH RIGHT OUTER JOIN dbo.DLK_T_InvJulD ON dbo.DLK_T_InvJulH.IJH_ID = LEFT(dbo.DLK_T_InvJulD.IJD_IJHID, 13) WHERE dbo.DLK_T_InvJulH.IJH_AktifYN = 'Y' AND dbo.DLK_T_InvJulH.IJH_AgenID = '"& data("OJH_AgenID") &"' AND dbo.DLK_T_InvJulD.IJD_Item = '"& ddata("OJD_Item") &"' GROUP BY dbo.DLK_T_InvJulD.IJD_Item, ISNULL(dbo.DLK_T_InvJulD.IJD_QtySatuan, 0)"
 
                     set getjual = data_cmd.execute
+
+                    ' get klaim barang
+                    data_cmd.commandTExt = "SELECT ISNULL(SUM(DB_QtySatuan),0) AS klaim,DB_Item FROM DLK_T_DelBarang WHERE DB_Item = '"& ddata("OJD_Item") &"' AND DB_AktifYN = 'Y' GROUP BY DB_Item "
+                    set klaim = data_cmd.execute
 
                     if not getbeli.eof then
                         tbeli = getbeli("beli")
@@ -147,7 +151,12 @@
                         tjual = 0
                     end if
 
-                    stok = tbeli - tjual
+                    if not klaim.eof then
+                        jklaim = klaim("Klaim")
+                    else
+                        jklaim = 0
+                    end if
+                    stok = tbeli - tjual - jklaim
 
                     if stok = 0  then
                         strketerangan = "Stok Kosong"

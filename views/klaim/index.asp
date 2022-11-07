@@ -148,7 +148,7 @@
     </form>
     <div class="row">
         <div class="col-lg-12">
-            <table class="table" style="font-size:14px;display:block;overflow:auto;border-color:#fff;">
+            <table class="table" style="display:block;overflow:auto;border-color:#fff;">
                 <thead class="bg-secondary text-light">
                     <tr>
                     <th scope="col">ID</th>
@@ -226,7 +226,9 @@
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <button class="btn badge bg-warning" onclick="printIt('print.asp?id=<%= rs("DB_ID") %>')">print</button>
-                                <a href="klaim_u.asp?id=<%= rs("DB_ID") %>" class="btn badge text-bg-primary">update</a>
+                                <!-- 
+                                <a href="klaim_u.asp?id=<%'= rs("DB_ID") %>" class="btn badge text-bg-primary">update</a>
+                                 -->
                                 <a href="aktif.asp?id=<%= rs("DB_ID") %>" class="btn badge bg-danger" onclick="deleteItem(event,'delete barang')">delete</a>
                             </div>
                         </td>

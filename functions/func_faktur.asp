@@ -5,19 +5,20 @@
         tgl = trim(Request.Form("tgl"))
         vendor = trim(Request.Form("vendor"))
         tgljt = trim(Request.Form("tgljt"))
-        diskon = trim(Request.Form("diskonall"))
         keterangan = trim(Request.Form("keterangan"))
-        ppn = trim(Request.Form("ppn"))
+        produksi = trim(Request.Form("produksi"))
+        ' diskon = trim(Request.Form("diskonall"))
+        ' ppn = trim(Request.Form("ppn"))
 
         set data_cmd =  Server.CreateObject ("ADODB.Command")
         data_cmd.ActiveConnection = mm_delima_string
 
-        data_cmd.commandText = "SELECT * FROM DLK_T_invPemH WHERE IPH_OPHID = '"& ophid &"' AND IPH_AgenID = '"& agen &"' AND IPH_Date = '"& tgl &"' AND IPH_VenID = '"& vendor &"' AND IPH_JTDate = '"& tgljt &"' AND IPH_DiskonAll = '"& diskon &"' AND IPH_PPn = "& ppn &" AND IPH_AktifYN = 'Y'"
+        data_cmd.commandText = "SELECT * FROM DLK_T_invPemH WHERE IPH_OPHID = '"& ophid &"' AND IPH_AgenID = '"& agen &"' AND IPH_Date = '"& tgl &"' AND IPH_VenID = '"& vendor &"' AND IPH_JTDate = '"& tgljt &"' AND IPH_AktifYN = 'Y'"
         ' response.write data_cmd.commandText & "<br>"
         set data = data_cmd.execute
 
         if data.eof then
-            data_cmd.commandText = "exec sp_AddDLK_T_invPemH '"& agen &"', '"& ophid &"','"& tgl &"', '"& vendor &"', '"& tgljt &"', '"& keterangan &"', "& diskon &", "& ppn &""
+            data_cmd.commandText = "exec sp_AddDLK_T_invPemH '"& agen &"', '"& ophid &"','"& tgl &"', '"& vendor &"', '"& tgljt &"', '"& keterangan &"', 0, 0, '"& produksi &"'"
             ' response.write data_cmd.commandText & "<br>"
             set p = data_cmd.execute
 

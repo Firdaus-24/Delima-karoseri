@@ -29,7 +29,18 @@
         stokjual = 0 
     end if
 
-    realstok = Cint(data("stok")) - stokjual
+    ' get klaim barang
+    data_cmd.commandTExt = "SELECT ISNULL(SUM(DB_Qtysatuan),0) AS klaim, DB_Item FROM DLK_T_DelBarang WHERE DB_Item = '"& data("brg_ID") &"' AND DB_AktifYN = 'Y' GROUP BY DB_Item"
+
+    set klaim = data_cmd.execute
+
+    if not klaim.eof then
+        jklaim = klaim("klaim")
+    else
+        jklaim = 0
+    end if
+
+    realstok = Cint(data("stok")) - stokjual - Cint(jklaim)
     %>
     <tr>
         <th scope="row">
