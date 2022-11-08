@@ -125,6 +125,7 @@
     </div>
     <div class="row">
         <div class="d-flex mb-3">
+            <!--  -->
             <div class="me-auto p-2">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modaljuald">
                     Tambah Rincian

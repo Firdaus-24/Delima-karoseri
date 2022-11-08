@@ -6,7 +6,6 @@
         vendor = trim(Request.Form("vendor"))
         tgljt = trim(Request.Form("tgljt"))
         keterangan = trim(Request.Form("keterangan"))
-        produksi = trim(Request.Form("produksi"))
         ' diskon = trim(Request.Form("diskonall"))
         ' ppn = trim(Request.Form("ppn"))
 
@@ -18,7 +17,7 @@
         set data = data_cmd.execute
 
         if data.eof then
-            data_cmd.commandText = "exec sp_AddDLK_T_invPemH '"& agen &"', '"& ophid &"','"& tgl &"', '"& vendor &"', '"& tgljt &"', '"& keterangan &"', 0, 0, '"& produksi &"'"
+            data_cmd.commandText = "exec sp_AddDLK_T_invPemH '"& agen &"', '"& ophid &"','"& tgl &"', '"& vendor &"', '"& tgljt &"', '"& keterangan &"', 0, 0"
             ' response.write data_cmd.commandText & "<br>"
             set p = data_cmd.execute
 

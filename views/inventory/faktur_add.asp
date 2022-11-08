@@ -45,6 +45,7 @@
                     %>
                 </select>
             </div>
+            <!-- 
             <div class="col-lg-2 mb-3">
                 <label for="produksi" class="col-form-label">Produksi</label>
             </div>
@@ -58,6 +59,7 @@
                     <label class="form-check-label" for="Y">No</label>
                 </div>
             </div>
+             -->
         </div>
         <div class="row align-items-center">
             <div class="col-lg-2 mb-3">

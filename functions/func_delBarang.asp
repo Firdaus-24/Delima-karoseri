@@ -43,18 +43,18 @@ sub tambahDelbarang()
         end if
 
         ' cek aset 
-        data_cmd.commandTExt = "SELECT ISNULL(SUM(AD_QtySatuan),0) AS taset FROM dbo.DLK_T_AsetD LEFT OUTER JOIN DLK_T_AsetH ON LEFT(DLK_T_AsetD.AD_AsetID,10) = DLK_T_AsetH.ASetID WHERE asetAktifYN = 'Y' AND AD_IPDIPHID = '"& pembelian("IPD_IPHID") &"' AND asetAgenID = '"& delcabang &"' GROUP BY AD_IPDIPHID"
-        ' response.write data_cmd.commandText & "<br>"
-        set aset = data_cmd.execute
+        ' data_cmd.commandTExt = "SELECT ISNULL(SUM(AD_QtySatuan),0) AS taset FROM dbo.DLK_T_AsetD LEFT OUTER JOIN DLK_T_AsetH ON LEFT(DLK_T_AsetD.AD_AsetID,10) = DLK_T_AsetH.ASetID WHERE asetAktifYN = 'Y' AND AD_IPDIPHID = '"& pembelian("IPD_IPHID") &"' AND asetAgenID = '"& delcabang &"' GROUP BY AD_IPDIPHID"
+        ' ' response.write data_cmd.commandText & "<br>"
+        ' set aset = data_cmd.execute
 
-        if not aset.eof then
-            taset = aset("taset")
-        else 
-            taset = 0
-        end if
+        ' if not aset.eof then
+        '     taset = aset("taset")
+        ' else 
+        '     taset = 0
+        ' end if
 
 
-        angka = Cint(pembelian("IPD_Qtysatuan")) - CInt(jual) - Cint(tklaim) - Cint(taset) 
+        angka = Cint(pembelian("IPD_Qtysatuan")) - CInt(jual) - Cint(tklaim) 
         
         
         if angka > 0 then
@@ -140,17 +140,17 @@ sub updateDelbarang()
         end if
 
         ' cek aset 
-        data_cmd.commandTExt = "SELECT ISNULL(SUM(AD_QtySatuan),0) AS taset FROM dbo.DLK_T_AsetD LEFT OUTER JOIN DLK_T_AsetH ON LEFT(DLK_T_AsetD.AD_AsetID,10) = DLK_T_AsetH.ASetID WHERE asetAktifYN = 'Y' AND AD_IPDIPHID = '"& pembelian("IPD_IPHID") &"' AND asetAgenID = '"& delcabang &"' GROUP BY AD_IPDIPHID"
-        ' response.write data_cmd.commandText & "<br>"
-        set aset = data_cmd.execute
+        ' data_cmd.commandTExt = "SELECT ISNULL(SUM(AD_QtySatuan),0) AS taset FROM dbo.DLK_T_AsetD LEFT OUTER JOIN DLK_T_AsetH ON LEFT(DLK_T_AsetD.AD_AsetID,10) = DLK_T_AsetH.ASetID WHERE asetAktifYN = 'Y' AND AD_IPDIPHID = '"& pembelian("IPD_IPHID") &"' AND asetAgenID = '"& delcabang &"' GROUP BY AD_IPDIPHID"
+        ' ' response.write data_cmd.commandText & "<br>"
+        ' set aset = data_cmd.execute
 
-        if not aset.eof then
-            taset = aset("taset")
-        else 
-            taset = 0
-        end if
+        ' if not aset.eof then
+        '     taset = aset("taset")
+        ' else 
+        '     taset = 0
+        ' end if
 
-        angka = Cint(pembelian("IPD_Qtysatuan")) - CInt(jual) - Cint(tklaim) - Cint(taset)
+        angka = Cint(pembelian("IPD_Qtysatuan")) - CInt(jual) - Cint(tklaim) 
            
         if Cint(angka) > 0 then
             disc1 = (pembelian("IPD_Harga") * pembelian("IPD_Disc1")) / 100

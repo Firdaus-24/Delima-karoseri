@@ -142,6 +142,9 @@
               <li>
                 <a class="link-name" href="<%= url %>views/finance/catitem.asp">Kategori Item</a>
               </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/finance/mutasiStok.asp">Mutasi Stok Barang</a>
+              </li>
             </ul>
           <!-- hr/ga -->
           <li class="nav-text">

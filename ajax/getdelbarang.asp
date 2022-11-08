@@ -48,9 +48,9 @@
     set klaim = data_cmd.execute
 
     ' get aset
-    data_cmd.commandText = "SELECT AD_item, ISNULL(SUM(AD_QtySatuan),0) AS taset FROM dbo.DLK_T_AsetD LEFT OUTER JOIN DLK_T_AsetH ON LEFT(DLK_T_AsetD.AD_AsetID,10) = DLK_T_ASetH.AsetID WHERE (asetAktifYN = 'Y') AND (AD_Item = '"& data("brg_ID") &"') AND AsetAgenID = '"& cabang &"' GROUP BY AD_item, AsetAgenID, AsetAktifYN"
-    ' response.write data_cmd.commandText & "<br>"
-    set aset = data_cmd.execute
+    ' data_cmd.commandText = "SELECT AD_item, ISNULL(SUM(AD_QtySatuan),0) AS taset FROM dbo.DLK_T_AsetD LEFT OUTER JOIN DLK_T_AsetH ON LEFT(DLK_T_AsetD.AD_AsetID,10) = DLK_T_ASetH.AsetID WHERE (asetAktifYN = 'Y') AND (AD_Item = '"& data("brg_ID") &"') AND AsetAgenID = '"& cabang &"' GROUP BY AD_item, AsetAgenID, AsetAktifYN"
+    ' ' response.write data_cmd.commandText & "<br>"
+    ' set aset = data_cmd.execute
 
     if not jual.eof then
         stokjual = Cint(jual("jual"))
@@ -64,12 +64,7 @@
         tklaim = 0
     end if
 
-    if not aset.eof then
-        taset = Cint(aset("taset"))
-    else
-        taset = 0
-    end if
-    realstok = Cint(data("stok")) - stokjual - tklaim - taset
+    realstok = Cint(data("stok")) - stokjual - tklaim 
     
     if realstok > 0 then
     %>
