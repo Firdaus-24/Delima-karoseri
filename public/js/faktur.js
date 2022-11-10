@@ -69,5 +69,20 @@ $(function(){
         })
     })
 
-
+    // get po by cabang
+    $("#fakturagen").change(function(){
+        let cabang = $("#fakturagen").val()
+        if(!cabang){
+            $(".lpolama").show()
+        }else{
+            $(".lpolama").hide()
+            $.ajax({
+                method: "POST",
+                url: "../../ajax/getnopotofaktur.asp",
+                data: { cabang }
+            }).done(function( msg ) {
+                $(".lpobaru").html(msg)
+            });
+        }        
+    })
 });

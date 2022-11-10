@@ -45,3 +45,9 @@ function printIt(url) {
     var wnd = window.open(url);
     wnd.print();
 }
+
+function generateQrcode(urlId){
+    let finalURL ='https://chart.googleapis.com/chart?cht=qr&chl=' + htmlEncode(urlId) + '&chs=160x160&chld=L|0'
+
+    return finalURL 
+}

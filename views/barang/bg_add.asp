@@ -79,6 +79,17 @@
             </div>
         </div>
         <div class="mb-3 row">
+            <label for="typebrg" class="col-sm-2 col-form-label offset-sm-1">Type Barang</label>
+            <div class="col-sm-2">
+                <select class="form-select" aria-label="Default select example" name="typebrg" id="typebrg" required>
+                    <option value="">Pilih</option>
+                    <option value="P">Produksi</option>
+                    <option value="S">Sub Part</option>
+                    <option value="L">Low Material</option>
+                </select>
+            </div>
+        </div>
+        <div class="mb-3 row">
             <label for="minstok" class="col-sm-2 col-form-label offset-sm-1">Stok Minimal</label>
             <div class="col-sm-2">
                 <input type="number" class="form-control" id="minstok" name="minstok" autocomplete="off" maxlength="30" required>

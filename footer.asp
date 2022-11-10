@@ -27,4 +27,5 @@
   <script src="../../public/js/orjul.js"></script>
   <script src="../../public/js/aset.js"></script>
   <script src="../../public/js/delbarang.js"></script>
+  <script src="../../public/js/returnBarang.js"></script>
 </html>
