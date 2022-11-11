@@ -10,12 +10,12 @@
     set data = data_cmd.execute
 
     ' getdata detail
-    data_cmd.commandText = "SELECT DLK_T_VendorD.*, DLK_M_Barang.Brg_Nama FROM DLK_T_VendorD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_VendorD.Dven_BrgID = DLK_M_Barang.Brg_ID WHERE LEFT(Dven_Venid,9) = '"& data("Ven_ID") &"'"
+    data_cmd.commandText = "SELECT DLK_T_VendorD.*, DLK_M_Barang.Brg_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama FROM DLK_T_VendorD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_VendorD.Dven_BrgID = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE LEFT(Dven_Venid,9) = '"& data("Ven_ID") &"'"
 
     set ddata = data_cmd.execute
 
     ' get data barang
-    data_cmd.commandText = "SELECT DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_ID, DLK_M_Barang.JenisID, DLK_M_Barang.KategoriID, DLK_M_JenisBarang.JenisNama, DLK_M_Kategori.KategoriNama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.JenisID WHERE Brg_AktifYN = 'Y' AND LEFT(Brg_ID,3) = '"& left(data("Ven_ID"),3) &"' ORDER BY Brg_Nama ASC"
+    data_cmd.commandText = "SELECT DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_ID, DLK_M_Barang.JenisID, DLK_M_Barang.KategoriID, DLK_M_JenisBarang.JenisNama, DLK_M_Kategori.KategoriNama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.JenisID WHERE Brg_AktifYN = 'Y' AND LEFT(Brg_ID,3) = '"& left(data("Ven_ID"),3) &"' AND Brg_Type != '' ORDER BY Brg_Nama ASC"
     set barang = data_cmd.execute
 
     call header("Detail Barang Vendor")
@@ -84,6 +84,7 @@
                 <thead class="bg-secondary text-light" style="position: sticky;top: 0;">
                     <tr>
                         <th scope="col">ID</th>
+                        <th scope="col">Kode</th>
                         <th scope="col">Nama</th>
                         <th scope="col">Spesification</th>
                         <th scope="col">Harga</th>
@@ -95,6 +96,9 @@
                     %>
                     <tr>
                         <th scope="row"><%= ddata("Dven_Venid") %></th>
+                        <td>
+                            <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
+                        </td>
                         <td>
                             <%= ddata("Brg_Nama") %>
                         </td>

@@ -103,6 +103,7 @@
                 <thead class="bg-secondary text-light">
                     <tr>
                         <th scope="col">No</th>
+                        <th scope="col">Kode</th>
                         <th scope="col">Item</th>
                         <th scope="col">Spesification</th>
                         <th scope="col">Quantity</th>
@@ -113,7 +114,7 @@
                 </thead>
                 <tbody>
                     <% 
-                    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_Id FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY memoItem ASC"
+                    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY memoItem ASC"
                     ' response.write data_cmd.commandText
                     set dataD = data_cmd.execute
 
@@ -123,6 +124,9 @@
                     %>
                         <tr>
                             <th scope="row"><%= dataD("memoID") %></th>
+                            <td>
+                                <%= dataD("KategoriNama") &"-"& dataD("jenisNama") %>
+                            </td>
                             <td><%= dataD("Brg_Nama") %></td>
                             <td><%= dataD("memoSpect") %></td>
                             <td><%= dataD("memoQtty") %></td>

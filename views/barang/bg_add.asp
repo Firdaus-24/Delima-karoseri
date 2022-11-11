@@ -13,6 +13,11 @@
     data_cmd.commandText = "SELECT JenisID, JenisNama FROM DLK_M_JenisBarang where JenisAktifYN = 'Y' ORDER BY JenisNama ASC"
     set Jenis = data_cmd.execute
 
+    ' type barang
+    data_cmd.commandText = "SELECT T_ID,T_Nama FROM DLK_M_TypeBarang WHERE T_AktifYN = 'Y' ORDER BY T_Nama ASC"
+
+    set typeBarang = data_cmd.execute
+
     call header("Form Barang")
 %>
 <!--#include file="../../navbar.asp"-->
@@ -83,9 +88,12 @@
             <div class="col-sm-2">
                 <select class="form-select" aria-label="Default select example" name="typebrg" id="typebrg" required>
                     <option value="">Pilih</option>
-                    <option value="P">Produksi</option>
-                    <option value="S">Sub Part</option>
-                    <option value="L">Low Material</option>
+                    <% do while not typebarang.eof %>
+                    <option value="<%= typebarang("T_ID") %>"><%= typebarang("T_NAma") %></option>
+                    <% 
+                    typebarang.movenext
+                    loop
+                    %>
                 </select>
             </div>
         </div>

@@ -1,26 +1,14 @@
 <!--#include file="../../init.asp"-->
-<!--#include file="../../functions/func_barang.asp"-->
 <% 
-    nama = Ucase(trim(Request.Form("nama")))
-    kat = trim(Request.Form("kategori"))
-    jen = trim(Request.Form("jenis"))
-    pagen = trim(Request.Form("pagen"))
-
     set data_cmd =  Server.CreateObject ("ADODB.Command")
-    data_cmd.ActiveConnection = MM_Delima_string
+    data_cmd.ActiveConnection = mm_delima_string
 
-    ' kategori
-    data_cmd.CommandText = "SELECT DLK_M_Kategori.KategoriId, DLK_M_Kategori.KategoriNama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID WHERE DLK_M_Barang.Brg_AktifYN = 'Y' GROUP BY DLK_M_Kategori.KategoriId, DLK_M_Kategori.KategoriNama ORDER BY DLK_M_Kategori.KategoriNama ASC"
+    data_cmd.commandText = "SELECT userID, username FROM DLK_M_TypeBarang LEFT OUTER JOIN DLK_M_WebLogin ON DLK_M_TypeBarang.T_UpdateID = DLK_M_Weblogin.username WHERE T_AktifYN = 'Y' AND T_UpdateID != '' GROUP BY userID, username ORDER BY Username ASC"
 
-    set fkategori = data_cmd.execute
-    ' jenis
-    data_cmd.CommandText = "SELECT DLK_M_jenisBarang.jenisId, DLK_M_jenisBarang.jenisNama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_jenisBarang ON DLK_M_Barang.jenisID = DLK_M_jenisBarang.jenisID WHERE DLK_M_Barang.Brg_AktifYN = 'Y' GROUP BY DLK_M_jenisBarang.jenisId, DLK_M_jenisBarang.jenisNama ORDER BY DLK_M_jenisBarang.jenisNama ASC"
+    set puser = data_cmd.execute
 
-    set fjenis = data_cmd.execute
-
-    data_cmd.CommandText = "SELECT AgenID, AgenName FROM DLK_M_Barang LEFT OUTER JOIN GLB_M_Agen ON LEFT(DLK_M_BArang.Brg_ID,3) = GLB_M_Agen.AgenID WHERE BRg_AktifYN = 'Y' GROUP BY AgenID, AgenName ORDER BY AgenName ASC"
-
-    set agen =data_cmd.execute
+    nama = trim(Request.Form("nama"))
+    user = trim(Request.Form("user"))
 
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
@@ -35,24 +23,20 @@
     end if
 
     ' query seach 
-    if nama <> "" then
-        filterNama = " AND UPPER(Brg_Nama) LIKE '%"& nama &"%' "
+    if nama <> "" and user <> "" then
+        strquery = "SELECT * FROM DLK_M_TypeBarang WHERE T_AktifYN = 'Y' AND T_Nama LIKE '%"& nama &"%' AND T_UPdateID = '"& user &"'"
+    elseif nama <> "" then
+        strquery = "SELECT * FROM DLK_M_TypeBarang WHERE T_AktifYN = 'Y' AND T_Nama LIKE '%"& nama &"%'"
+    elseif user <> "" then
+        strquery = "SELECT * FROM DLK_M_TypeBarang WHERE T_AktifYN = 'Y' AND T_updateID LIKE '%"& user &"%'"
+    else
+        strquery = "SELECT * FROM DLK_M_TypeBarang WHERE T_AktifYN = 'Y'"
     end if
-    if kat <> "" then
-        filterKat = " AND KategoriId = '"& kat &"'"
-    end if
-    if jen <> "" then
-        filterJen = " AND jenisID = '"& jen &"'"
-    end if
-    if pagen <> "" then
-        filterAgen = " AND LEFT(Brg_ID,3) = '"& pagen &"'"
-    end if
-    ' real query
-    strquery = "SELECT DLK_M_Barang.*, DLK_M_TypeBarang.T_Nama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_TypeBarang ON DLK_M_Barang.Brg_Type = DLK_M_TypeBarang.T_ID WHERE Brg_AktifYN = 'Y' "& filterNama &""& filterKat &""& filterJen &" "& filterAgen &""
+
     ' untuk data paggination
     page = Request.QueryString("page")
 
-    orderBy = " order by Brg_Nama ASC"
+    orderBy = " order by T_ID ASC"
     set rs = Server.CreateObject("ADODB.Recordset")
     sqlawal = strquery
 
@@ -88,80 +72,55 @@
         end if	
     loop
 
-    call header("Master Barang") 
+    call header("Type Barang") 
 
 %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row mt-3">
         <div class="col-lg-12 text-center">
-            <h3>MASTER BARANG</h3>
+            <h3>MASTER TYPE BARANG</h3>
         </div>
     </div>
     <div class="row mt-3 mb-3">
         <div class="col-lg-2">
             <!-- Button trigger modal -->
-            <a href="bg_Add.asp" class="btn btn-primary tbarang">
+            <button type="button" class="btn btn-primary" onclick="window.location.href='type_ad.asp'">
                 Tambah
-            </a>
+            </button>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg mb-3">
-        <form action="index.asp" method="post">
-            <input type="text" class="form-control" name="nama" id="nama" autocomplete="off" placeholder="cari nama barang">
+    <form action="index.asp" method="post">
+        <div class="row">
+            <div class="col-lg-4 mb-3">
+                <input type="text" class="form-control" name="nama" id="nama" autocomplete="off" placeholder="cari nama">
+            </div>
+            <div class="col-lg-4 mb-3">
+                <select class="form-select" aria-label="Default select example">
+                    <option value="">Pilih</option>
+                    <% do while not puser.eof %>
+                    <option value="<%= puser("username") %>"><%= puser("username") %></option>
+                    <% 
+                    puser.movenext
+                    loop
+                    %>
+                </select>
+            </div>
+            <div class="col-lg mb-3">
+                <button type="submit" class="btn btn-primary">Cari</button>
+            </div>
         </div>
-        <div class="col-lg-3 mb-3">
-            <select class="form-select" aria-label="Default select example" name="pagen" id="pagen">
-                <option value="">Pilih Cabang / Agen</option>
-                <% do while not agen.eof %>
-                <option value="<%= agen("AgenID") %>"><%= agen("AgenName") %></option>
-                <% 
-                agen.movenext
-                loop
-                %>
-            </select>
-        </div>
-        <div class="col-lg mb-3">
-            <select class="form-select" aria-label="Default select example" name="kategori" id="kategori">
-                <option value="">Pilih kategori</option>
-                <% do while not fkategori.eof %>
-                <option value="<%= fkategori("KategoriID") %>"><%= fkategori("KategoriNama") %></option>
-                <% 
-                fkategori.movenext
-                loop
-                %>
-            </select>
-        </div>
-        <div class="col-lg mb-3">
-            <select class="form-select" aria-label="Default select example" name="jenis" id="jenis">
-                <option value="">Pilih Jenis</option>
-                <% do while not fjenis.eof %>
-                <option value="<%= fjenis("jenisID") %>"><%= fjenis("jenisNama") %></option>
-                <% 
-                fjenis.movenext
-                loop
-                %>
-            </select>
-        </div>
-        <div class="col-lg mb-3">
-            <button type="submit" class="btn btn-primary">Cari</button>
-        </form>
-        </div>
-    </div>
+    </form>
     <div class="row">
         <div class="col-lg-12">
             <table class="table">
                 <thead class="bg-secondary text-light">
                     <tr>
+                    <th scope="col">Id</th>
                     <th scope="col">Nama</th>
-                    <th scope="col">Tanggal</th>
-                    <th scope="col">Kategori</th>
-                    <th scope="col">Jenis</th>
-                    <th scope="col" class="text-center">Stok</th>
-                    <th scope="col" class="text-center">Jual</th>
-                    <th scope="col" >Type</th>
-                    <th scope="col" >Aktif</th>
+                    <th scope="col">UpdateId</th>
+                    <th scope="col">Keterangan</th>
+                    <th scope="col">Aktif</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -174,22 +133,15 @@
                     recordcounter = recordcounter + 1
                     %>
                     <tr>
-                        <td><%= rs("Brg_Nama") %></td>
-                        <td><%= rs("Brg_Tanggal") %></td>
-                        <td><% call getKategori(rs("KategoriID")) %></td>
-                        <td><% call getJenis(rs("JenisID")) %></td>
-                        <td class="text-center">
-                            <%if rs("Brg_StokYN") = "Y" then %><i class="bi bi-file-earmark-check"></i><% else %><i class="bi bi-file-earmark-excel"></i><% end if %>
-                        </td>
-                        <td class="text-center">
-                            <%if rs("Brg_JualYN") = "Y" then %><i class="bi bi-file-earmark-check"></i><% else %><i class="bi bi-file-earmark-excel"></i><% end if %>
-                        </td>
-                        <td><%= rs("T_Nama")%></td>
-                        <td><%if rs("Brg_AktifYN") = "Y" then%>Aktif <% end if %></td>
+                        <th scope="row"><%= rs("T_Id") %> </th>
+                        <td><%= rs( "T_Nama") %></td>
+                        <td><%= rs("T_UpdateId") %></td>
+                        <td><%= rs("T_Keterangan") %></td>
+                        <td><%if rs("T_AktifYN") = "Y" then%>Aktif <% end if %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="br_u.asp?id=<%= rs("brg_id") %>" class="btn badge text-bg-primary">update</a> 
-                                <a href="aktif.asp?id=<%= rs("brg_id") %>" class="btn badge text-bg-danger btn-aktifbrg">delete</a>
+                                <a href="type_u.asp?id=<%= rs("T_Id") %>" class="btn badge text-bg-primary">update</a> 
+                                <a href="aktif.asp?id=<%= rs("T_Id") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'MASTER TYPE BARANG')">delete</a>
                             </div>
                         </td>
                     </tr>
@@ -266,4 +218,5 @@
         </div>
     </div>
 </div>
-<% call footer()%>
+
+<% call footer() %>

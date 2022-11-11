@@ -114,6 +114,7 @@
                 <thead class="bg-secondary text-light" style="white-space: nowrap;">
                     <tr>
                         <th>ID</th>
+                        <th>Kode</th>
                         <th>Item</th>
                         <th>Quantty</th>
                         <th>Satuan</th>
@@ -125,7 +126,7 @@
                 </thead>
                 <tbody>
                     <% 
-                    data_cmd.commandText = "SELECT dbo.DLK_T_OrPemD.*, dbo.DLK_M_Barang.Brg_Nama,dbo.DLK_M_SatuanBarang.Sat_Nama FROM dbo.DLK_T_OrPemD LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_OrPemD.OPD_Item = dbo.DLK_M_Barang.Brg_ID LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_OrPemD.OPD_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID WHERE LEFT(DLK_T_OrPemD.OPD_OPHID,13) = '"& data("OPH_ID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
+                    data_cmd.commandText = "SELECT dbo.DLK_T_OrPemD.*, dbo.DLK_M_Barang.Brg_Nama,dbo.DLK_M_SatuanBarang.Sat_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama FROM dbo.DLK_T_OrPemD LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_OrPemD.OPD_Item = dbo.DLK_M_Barang.Brg_ID LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_OrPemD.OPD_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE LEFT(DLK_T_OrPemD.OPD_OPHID,13) = '"& data("OPH_ID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
 
                     set ddata = data_cmd.execute
                     do while not ddata.eof 
@@ -134,6 +135,9 @@
                     <tr>
                         <th>
                             <%= ddata("OPD_OPHID") %>
+                        </th>
+                        <th>
+                            <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
                         </th>
                         <td>
                             <%= ddata("Brg_Nama")%>

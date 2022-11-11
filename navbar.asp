@@ -29,10 +29,13 @@
                 <a href="<%= url %>views/Barang/">Master Barang</a>
               </li>
               <li>
-                <a href="<%= url %>views/kategori/">Master Kategori</a>
+                <a href="<%= url %>views/customer/">Master Customer</a>
               </li>
               <li>
                 <a href="<%= url %>views/jenis/">Master jenis</a>
+              </li>
+              <li>
+                <a href="<%= url %>views/kategori/">Master Kategori</a>
               </li>
               <li>
                 <a href="<%= url %>views/Rak/">Master Rak</a>
@@ -41,10 +44,10 @@
                 <a href="<%= url %>views/satbarang/">Master Satuan Barang</a>
               </li>
               <li>
-                <a href="<%= url %>views/vendor/">Master Vandor</a>
+                <a href="<%= url %>views/type/">Master Type Barang</a>
               </li>
               <li>
-                <a href="<%= url %>views/customer/">Master Customer</a>
+                <a href="<%= url %>views/vendor/">Master Vandor</a>
               </li>
             </ul>
           <!-- inventory -->

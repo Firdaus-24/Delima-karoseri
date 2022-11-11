@@ -12,7 +12,7 @@
     set data = data_cmd.execute
 
     ' get data detail
-    data_cmd.commandText = "SELECT dbo.DLK_T_OrPemD.*, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID FROM dbo.DLK_M_SatuanBarang RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_M_SatuanBarang.Sat_ID = dbo.DLK_T_OrPemD.OPD_JenisSat LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_OrPemD.OPD_Item = dbo.DLK_M_Barang.Brg_Id WHERE LEFT(dbo.DLK_T_OrPemD.OPD_OPHID,13) = '"& data("OPH_ID") &"' ORDER BY Brg_Nama ASC"
+    data_cmd.commandText = "SELECT dbo.DLK_T_OrPemD.*, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama FROM dbo.DLK_M_SatuanBarang RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_M_SatuanBarang.Sat_ID = dbo.DLK_T_OrPemD.OPD_JenisSat LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_OrPemD.OPD_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE LEFT(dbo.DLK_T_OrPemD.OPD_OPHID,13) = '"& data("OPH_ID") &"' ORDER BY Brg_Nama ASC"
 
     set ddata = data_cmd.execute
 
@@ -79,7 +79,7 @@
             <label for="tgljt" class="col-form-label">Tanggal Jatuh Tempo</label>
         </div>
         <div class="col-lg-4 mb-3">
-            <input type="date" id="tgljt" name="tgljt" value="<%= cdate(data("OPH_JTDate")) %>" class="form-control" readonly>
+            <input type="text" id="tgljt" name="tgljt" <% if cdate(data("OPH_JTDate")) <> Cdate("01/01/1900") then %> value="<%= cdate(data("OPH_JTDate")) %>" <% end if %> class="form-control" readonly>
         </div>
     </div>
     <div class="row align-items-center">
@@ -115,6 +115,7 @@
                 <thead class="bg-secondary text-light">
                     <tr>
                         <th scope="col">ID</th>
+                        <th scope="col">Kode</th>
                         <th scope="col">Item</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Satuan</th>
@@ -153,6 +154,9 @@
                         <tr>
                             <th>
                                 <%= ddata("OPD_OPHID") %>
+                            </th>
+                            <th>
+                                <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
                             </th>
                             <td>
                                 <%= ddata("Brg_Nama") %>

@@ -98,6 +98,7 @@
                 <thead class="bg-secondary text-light">
                     <tr>
                         <th scope="col">ID</th>
+                        <th scope="col">Kode</th>
                         <th scope="col">Item</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Satuan</th>
@@ -109,7 +110,7 @@
                     <% 
                     grantotal = 0  
 
-                    data_cmd.commandText = "SELECT DLK_T_InvPemD.*, DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_ID, DLK_M_Rak.Rak_Nama, DLK_M_SatuanBarang.Sat_Nama FROM DLK_T_InvPemD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_InvPemD.IPD_Item = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Rak ON DLK_T_InvPemD.IPD_RakID = DLK_M_Rak.Rak_ID LEFT OUTER JOIN DLK_M_SatuanBarang ON DLK_T_InvPemD.IPD_JenisSat = DLK_M_SatuanBarang.Sat_ID WHERE LEFT(IPD_IPHID,13) = '"& data("IPH_ID") &"'ORDER BY DLK_M_Barang.Brg_Nama ASC "
+                    data_cmd.commandText = "SELECT DLK_T_InvPemD.*, DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_ID, DLK_M_Rak.Rak_Nama, DLK_M_SatuanBarang.Sat_Nama,DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama FROM DLK_T_InvPemD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_InvPemD.IPD_Item = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Rak ON DLK_T_InvPemD.IPD_RakID = DLK_M_Rak.Rak_ID LEFT OUTER JOIN DLK_M_SatuanBarang ON DLK_T_InvPemD.IPD_JenisSat = DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE LEFT(IPD_IPHID,13) = '"& data("IPH_ID") &"'ORDER BY DLK_M_Barang.Brg_Nama ASC "
 
                     set ddata = data_cmd.execute
                     do while not ddata.eof 
@@ -136,6 +137,9 @@
                         <tr>
                             <th>
                                 <%= ddata("IPD_IPHID") %>
+                            </th>
+                            <th>
+                                <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
                             </th>
                             <td>
                                 <%= ddata("Brg_Nama") %>

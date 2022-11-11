@@ -6,7 +6,7 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT dbo.DLK_T_Memo_H.MemoID, dbo.DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, GLB_M_agen.AgenID, GLB_M_Agen.AgenName FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.Memoitem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_T_Memo_H ON LEFT(DLK_T_Memo_D.memoID,17) = DLK_T_Memo_H.memoID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE LEFT(dbo.DLK_T_Memo_D.memoID,17) = '"& id &"' AND dbo.DLK_T_Memo_H.MemoID = '"& id &"' AND DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'Y'"
+    data_cmd.commandText = "SELECT dbo.DLK_T_Memo_H.MemoID, dbo.DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, GLB_M_agen.AgenID, GLB_M_Agen.AgenName, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.Memoitem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_T_Memo_H ON LEFT(DLK_T_Memo_D.memoID,17) = DLK_T_Memo_H.memoID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE LEFT(dbo.DLK_T_Memo_D.memoID,17) = '"& id &"' AND dbo.DLK_T_Memo_H.MemoID = '"& id &"' AND DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'Y'"
     ' response.write data_cmd.commandText & "<br>"
     set data = data_cmd.execute
 
@@ -109,6 +109,7 @@
             <table class="table table-hover">
                 <thead class="bg-secondary text-light" style="white-space: nowrap;">
                     <tr>
+                        <th>Kode</th>
                         <th>Item</th>
                         <th>Specification</th>
                         <th>Quantty</th>
@@ -119,11 +120,9 @@
                 <tbody>
                     <% do while not data.eof %>
                     <tr>
-                        <!-- 
-                        <td class="text-center">
-                            <input class="form-check-input ckpo" type="checkbox" value="" id="ckpo">
-                        </td>
-                            -->
+                        <th>
+                            <%= data("KategoriNama") &"-"& data("jenisNama") %>
+                        </th>
                         <td>
                             <%= data("Brg_Nama")%>
                         </td>
@@ -179,7 +178,7 @@
                     %>
                     <tr class="bg-success p-2 text-dark bg-opacity-25">
                         <td colspan="3">
-                            <%= data("Brg_Nama")%>
+                            <%= "<b>"&data("KategoriNama") &"-"& data("jenisNama") &"</b> | "& data("Brg_Nama") %>
                         </td>
                     </tr>
                     <% do while not datavendor.eof %>

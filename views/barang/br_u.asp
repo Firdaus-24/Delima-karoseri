@@ -6,17 +6,19 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
     ' get data by id
-    data_cmd.commandText = "SELECT DLK_M_Barang.* FROM DLK_M_Barang WHERE Brg_ID = '"& id &"' AND Brg_AktifYN = 'Y'"
+    data_cmd.commandText = "SELECT DLK_M_Barang.*, DLK_M_typeBarang.T_Nama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_TYpeBarang ON DLK_M_Barang.Brg_Type = DLK_M_TypeBarang.T_ID WHERE Brg_ID = '"& id &"' AND Brg_AktifYN = 'Y'"
     set barang = data_cmd.execute
-    ' cabang
-    data_cmd.commandText = "SELECT AgenID, AgenNAme FROM GLB_M_Agen where AgenAktifYN = 'Y' ORDER BY AgenName ASC"
-    set agen = data_cmd.execute
     ' kategori
     data_cmd.commandText = "SELECT KategoriId, KategoriNama FROM DLK_M_Kategori where KategoriAktifYN = 'Y' ORDER BY KategoriNama ASC"
     set pkategori = data_cmd.execute
     ' Jenis
     data_cmd.commandText = "SELECT JenisID, JenisNama FROM DLK_M_JenisBarang where JenisAktifYN = 'Y' ORDER BY JenisNama ASC"
     set pJenis = data_cmd.execute
+
+    ' type barang
+    data_cmd.commandText = "SELECT T_ID, T_Nama FROM DLK_M_TypeBarang WHERE T_AktifYN = 'Y' ORDER BY T_Nama ASC"
+
+    set typebarang = data_cmd.execute
     
     call header("Form Barang")
 %>
@@ -81,19 +83,14 @@
             <div class="col-sm-2">
                 <select class="form-select" aria-label="Default select example" name="typebrg" id="typebrg" required>
                     <option value="<%= barang("Brg_Type") %>">
-                        <% if barang("Brg_Type") = "P" then%>
-                            Produksi
-                        <% elseIf barang("Brg_Type") = "S" then%>
-                            Sub Part
-                        <% elseIf barang("Brg_Type") = "L" then %>
-                            Low Material
-                        <% else %>
-                            Pilih ulang
-                        <% end if %>
+                        <%= barang("T_Nama") %>
                     </option>
-                    <option value="P">Produksi</option>
-                    <option value="S">Sub Part</option>
-                    <option value="L">Low Material</option>
+                    <% do while not typebarang.eof %>
+                    <option value="<%= typebarang("T_ID") %>"><%= typebarang("T_Nama") %></option>
+                    <% 
+                    typebarang.movenext
+                    loop
+                    %>
                 </select>
             </div>
         </div>
