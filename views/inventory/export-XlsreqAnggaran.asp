@@ -61,6 +61,7 @@
         position:absolute;
     }
 </style>
+<body onload="window.print()">
     <div class="row gambar">
          <div class="col ">
             <img src="<%= url %>/public/img/delimalogo.png" alt="delimalogo">
@@ -238,6 +239,7 @@
             </tr>
         </tbody>
     </table>
+</body>
 <% 
     call footer()
 %>

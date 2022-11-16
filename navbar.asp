@@ -124,6 +124,9 @@
                 <a class="link-name" href="<%= url %>views/purces/uprice.asp">Update Harga Memo</a>
               </li>
               <li>
+                <a class="link-name" href="<%= url %>views/faktur/">Faktur Terhutang</a>
+              </li>
+              <li>
                 <a class="link-name" href="<%= url %>views/returnBarang/">Return Barang</a>
               </li>
               <li>

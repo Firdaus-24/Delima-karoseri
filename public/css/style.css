@@ -186,6 +186,16 @@ hr {
     font-weight: 700;
     color:rgb(12,182,17);
   }
+    .footer {
+        clear: both;
+        position: fixed;
+        left: 0;
+        bottom: 10px;
+        width: 100%;
+        /* background-color: red; */
+        /* color: white; */
+        text-align: center;
+    }
 /* fortable data */
 @media (max-width:801px){
     .table{

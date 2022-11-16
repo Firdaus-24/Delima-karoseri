@@ -7,6 +7,7 @@
     <!-- bootstrap plugin -->
     <link href="../../public/css/bootstrap.min.css" rel="stylesheet" />
     <script src="../../public/js/bootstrap.bundle.min.js"></script>
+    <script src="../../public/js/JsBarcode.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css"/>
     <!-- sweet alert -->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -14,3 +15,4 @@
     <link href="../../public/css/style.css" rel="stylesheet" />
     <link href="../../public/css/cabang.css" rel="stylesheet" />
     <link href="../../public/css/purchase.css" rel="stylesheet" />
+  </head>

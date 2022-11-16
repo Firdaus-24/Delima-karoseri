@@ -181,7 +181,7 @@
                     realgrantotal = (grantotal - diskonall) + ppn
                     %>
                     <tr>
-                        <th colspan="6">Total Pembayaran</th>
+                        <th colspan="7">Total Pembayaran</th>
                         <th><%= replace(formatCurrency(realgrantotal),"$","") %></th>
                     </tr>
                 </tbody>

@@ -25,6 +25,11 @@
 
     call header("Faktur Terhutang")
 %>
+<script>
+    function getHarga(harga){
+        $("#hargainv").val(formatRupiah(harga))
+    }   
+</script>
 <style>
     .tableufaktur .form-control{
         padding-top:0;
@@ -99,7 +104,7 @@
                     <button type="button" class="btn btn-primary btn-modalPemD" data-bs-toggle="modal" data-bs-target="#modalPemD">Tambah Rincian</button>
                 </div>
                 <div class="p-2">
-                    <a href="incomming.asp" class="btn btn-danger">Kembali</a>
+                    <a href="index.asp" class="btn btn-danger">Kembali</a>
                 </div>
             </div>
         </div>
@@ -111,16 +116,19 @@
                 <thead class="bg-secondary text-light" style="white-space: nowrap;">
                     <tr>
                         <th>ID</th>
+                        <th>Kode</th>
                         <th>Item</th>
                         <th>Quantty</th>
                         <th>Satuan Barang</th>
-                        <th>Rak</th>
+                        <th>Harga</th>
+                        <th>Disc1</th>
+                        <th>Disc2</th>
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     <%
-                    data_cmd.commandTExt = "SELECT DLK_T_InvPemD.*, DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_ID, DLK_M_Rak.Rak_Nama, DLK_M_SatuanBarang.Sat_Nama FROM DLK_T_InvPemD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_InvPemD.IPD_Item = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Rak ON DLK_T_InvPemD.IPD_RakID = DLK_M_Rak.Rak_ID LEFT OUTER JOIN DLK_M_SatuanBarang ON DLK_T_InvPemD.IPD_JenisSat = DLK_M_SatuanBarang.Sat_ID WHERE LEFT(IPD_IPHID,13) = '"& data("IPH_ID") &"'ORDER BY DLK_M_Barang.Brg_Nama ASC "
+                    data_cmd.commandTExt = "SELECT DLK_T_InvPemD.*, DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_ID,DLK_M_SatuanBarang.Sat_Nama,DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama FROM DLK_T_InvPemD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_InvPemD.IPD_Item = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_SatuanBarang ON DLK_T_InvPemD.IPD_JenisSat = DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE LEFT(IPD_IPHID,13) = '"& data("IPH_ID") &"'ORDER BY DLK_M_Barang.Brg_Nama ASC"
 
                     set ddata = data_cmd.execute
                     do while not ddata.eof %>
@@ -128,6 +136,9 @@
                         <th>
                             <%= ddata("IPD_IPHID") %>
                         </th>
+                        <td>
+                            <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
+                        </td>
                         <td>
                             <%= ddata("Brg_Nama")%>
                         </td>
@@ -138,7 +149,13 @@
                             <%= ddata("Sat_Nama") %>
                         </td>
                         <td>
-                            <%= ddata("Rak_Nama") %>
+                            <%= replace(formatCurrency(ddata("IPD_Harga")),"$","") %>
+                        </td>
+                        <td>
+                            <%= ddata("IPD_Disc1") %>
+                        </td>
+                        <td>
+                            <%= ddata("IPD_Disc2") %>
                         </td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
@@ -163,7 +180,7 @@
         <h5 class="modal-title" id="modalPemDLabel">Rincian Barang</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-    <form action="faktur_u.asp?id=<%= id %>" method="post" id="fakturd" onsubmit="validasiForm(this,event,'Proses Incomming','warning')">
+    <form action="faktur_u.asp?id=<%= id %>" method="post" id="fakturd" onsubmit="validasiForm(this,event,'Proses Faktur Terhutang','warning')">
     <input type="hidden" name="iphid" id="iphid" value="<%= id %>">
       <div class="modal-body">
         <!-- table barang -->
@@ -186,7 +203,7 @@
                             <td><%= barang("Dven_Spesification") %></td>
                             <td>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="ckinv" id="ckinv" value="<%= barang("Dven_BrgID") %>" required>
+                                    <input class="form-check-input" type="radio" name="ckinv" id="ckinv" onclick="getHarga('<%= barang("Dven_Harga")%>')" value="<%= barang("Dven_BrgID") %>" required>
                                 </div>
                             </td>
                         </tr>
@@ -199,7 +216,14 @@
             </div>
         </div>
         <!-- end table -->
-        <input type="hidden" id="hargainv" class="form-control" name="hargainv" autocomplete="off" value="0" required>
+        <div class="row">
+            <div class="col-sm-3">
+                <label for="harga" class="col-form-label">Harga</label>
+            </div>
+            <div class="col-sm-6 mb-3">
+                <input type="text" id="hargainv" class="form-control" name="hargainv" autocomplete="off" readonly required>
+            </div>
+        </div>
         <div class="row">
             <div class="col-sm-3">
                 <label for="qtty" class="col-form-label">Quantity</label>
@@ -226,24 +250,20 @@
         </div>
         <div class="row">
             <div class="col-sm-3">
-                <label for="rak" class="col-form-label">Rak</label>
+                <label for="disc1" class="col-form-label">Dics 1</label>
             </div>
             <div class="col-sm-6 mb-3">
-                <select class="form-select" aria-label="Default select example" name="rak" id="rak" required> 
-                    <option value="">Pilih</option>
-                    <% do while not prak.eof %>
-                    <option value="<%= prak("Rak_ID") %>"><%= prak("Rak_nama") %></option>
-                    <%  
-                    prak.movenext
-                    loop
-                    %>
-                </select>
+                <input type="number" id="disc1" name="disc1" autocomplete="off" class="form-control" required>
             </div>
         </div>
-        <input type="hidden" id="disc1" name="disc1" value="0" autocomplete="off" class="form-control" required>
-
-        <input type="hidden" id="disc2" name="disc2" value="0" autocomplete="off" class="form-control" required>
-
+        <div class="row">
+            <div class="col-sm-3">
+                <label for="disc2" class="col-form-label">Dics 2</label>
+            </div>
+            <div class="col-sm-6 mb-3">
+                <input type="number" id="disc2" name="disc2" autocomplete="off" class="form-control" required>
+            </div>
+        </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="submit" class="btn btn-primary">Save</button>

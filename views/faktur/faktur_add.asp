@@ -106,7 +106,7 @@
         </div>        
         <div class="row">
             <div class="col-lg-12 text-center">
-                <a href="incomming.asp" type="button" class="btn btn-danger">Kembali</a>
+                <a href="index.asp" type="button" class="btn btn-danger">Kembali</a>
                 <button type="submit" class="btn btn-primary">Save</button>
             </div>
         </div>
