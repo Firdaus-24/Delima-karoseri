@@ -44,9 +44,20 @@
         font-size:12px;
         border-collapse: collapse;
     }
+    .footer article{
+        font-size:10px;
+    }
     @page {
-        size: auto;   /* auto is the initial value */
-        margin: 0mm;  /* this affects the margin in the printer settings */
+        size: A4;
+        /* margin: 0; */
+    }
+    @media print {
+        html, body {
+            width: 210mm;
+            height: 200mm;
+            margin:0 auto;
+        }
+        /* ... the rest of the rules ... */
     }
 </style>
 <body onload="window.print()">
@@ -161,7 +172,7 @@
                 <td>
                     <%= ddata("IPD_Disc2") %>
                 </td>
-                <td>
+                <td align="right">
                     <%= replace(formatCurrency(ddata("IPD_Harga")),"$","") %>
                 </td>
             </tr>
@@ -186,21 +197,21 @@
         %>
         <tr>
             <th colspan="5">ppn</th>
-            <th><%= data("IPH_PPN") %>%</th>
-            <th><%= replace(formatCurrency(ppn),"$","") %>%</th>
+            <td><%= data("IPH_PPN") %>%</td>
+            <td align="right"><%= replace(formatCurrency(ppn),"$","") %></td>
         </tr>
         <tr>
             <th colspan="5">Diskon All</th>
-            <th><%= data("IPH_Diskonall") %>%</th>
-            <th><%= replace(formatCurrency(diskonall),"$","") %>%</th>
+            <td><%= data("IPH_Diskonall") %>%</td>
+            <td align="right"><%= replace(formatCurrency(diskonall),"$","") %></td>
         </tr>
         <tr>
             <th colspan="6">Total Pembayaran</th>
-            <th><%= replace(formatCurrency(realgrantotal),"$","") %></th>
+            <td align="right"><%= replace(formatCurrency(realgrantotal),"$","") %></td>
         </tr>
     </table>
     <div class="footer">
-        <img src="https://chart.googleapis.com/chart?cht=qr&chl=<%= id %>&chs=160x160&chld=L|0" /></br>
+        <img src="https://chart.googleapis.com/chart?cht=qr&chl=<%= id %>&chs=160x160&chld=L|0" width="60"/></br>
         <article>
             <p>
                 PT.Delima Karoseri Indonesia

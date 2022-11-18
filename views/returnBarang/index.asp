@@ -1,6 +1,22 @@
 <!--#include file="../../init.asp"-->
 <% 
-    set conn = Server.CreateObject("ADODB.Connection")
+    set data_cmd =  Server.CreateObject ("ADODB.Command")   
+    data_cmd.ActiveConnection = mm_delima_string    
+    ' filter agen
+    data_cmd.commandText = "SELECT AgenID, AgenName FROM DLK_T_ReturnBarangH LEFT OUTER JOIN  GLB_M_Agen ON DLK_T_ReturnBarangH.RB_agenID = GLB_M_Agen.AgenID WHERE RB_aktifYN = 'Y' GROUP BY AgenID, AgenName ORDER BY AgenName ASC"
+
+    set agendata = data_cmd.execute
+    ' filter vendor
+    data_cmd.commandText = "SELECT Ven_ID, Ven_Nama FROM DLK_T_ReturnBarangH LEFT OUTER JOIN  DLK_M_Vendor ON DLK_T_ReturnBarangH.RB_Venid = DLK_M_Vendor.Ven_ID WHERE RB_aktifYN = 'Y' GROUP BY Ven_ID, Ven_Nama ORDER BY Ven_Nama ASC"
+
+    set vendordata = data_cmd.execute
+   
+    agen = trim(Request.Form("agen"))
+    vendor = trim(Request.Form("vendor"))
+    tgla = trim(Request.Form("tgla"))
+    tgle = trim(Request.Form("tgle"))
+
+   set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
 
     dim recordsonpage, requestrecords, allrecords, hiddenrecords, showrecords, lastrecord, recordconter, pagelist, pagelistcounter, sqlawal
@@ -13,16 +29,27 @@
     end if
 
     ' query seach 
-    ' if agen <> "" and nama <> "" then
-    '     strquery = "SELECT * FROM DLK_M_Rak WHERE Rak_AktifYN = 'Y' AND left(Rak_id,3) = '"& agen &"' AND Rak_Nama LIKE '%"& nama &"%'"
-    ' elseif agen <> "" then
-    '     strquery = "SELECT * FROM DLK_M_Rak WHERE Rak_AktifYN = 'Y' AND left(Rak_id,3) = '"& agen &"'"
-    ' elseif nama <> "" then
-    '     strquery = "SELECT * FROM DLK_M_Rak WHERE Rak_AktifYN = 'Y' AND Rak_Nama LIKE '%"& nama &"%'"
-    ' else
-    '     strquery = "SELECT * FROM DLK_M_Rak WHERE Rak_AktifYN = 'Y'"
-    ' end if
-        strquery = "SELECT DLK_T_ReturnBarangH.*, GLB_M_Agen.AgenNAme, DLK_M_Vendor.Ven_Nama FROM DLK_T_ReturnBarangH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_ReturnBarangH.RB_AgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Vendor ON DLK_T_ReturnBarangH.RB_VenID = DLK_M_Vendor.Ven_ID WHERE RB_AktifYN = 'Y' "
+    if agen <> "" then
+        filterAgen = "AND DLK_T_ReturnBarangH.RB_AgenID = '"& agen &"'"
+    else
+        filterAgen = ""
+    end if
+
+    if vendor <> "" then
+        filtervendor = "AND dbo.DLK_T_ReturnBarangH.RB_VenID = '"& vendor &"'"
+    else
+        filtervendor = ""
+    end if
+
+    if tgla <> "" AND tgle <> "" then
+        filtertgl = "AND dbo.DLK_T_ReturnBarangH.RB_Date BETWEEN '"& tgla &"' AND '"& tgle &"'"
+    elseIf tgla <> "" AND tgle = "" then
+        filtertgl = "AND dbo.DLK_T_ReturnBarangH.RB_Date = '"& tgla &"'"
+    else 
+        filtertgl = ""
+    end if
+
+    strquery = "SELECT DLK_T_ReturnBarangH.*, GLB_M_Agen.AgenNAme, DLK_M_Vendor.Ven_Nama FROM DLK_T_ReturnBarangH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_ReturnBarangH.RB_AgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Vendor ON DLK_T_ReturnBarangH.RB_VenID = DLK_M_Vendor.Ven_ID WHERE RB_AktifYN = 'Y' "& filterAgen &" "& filtervendor &" "& filtertgl &""
 
     ' untuk data paggination
     page = Request.QueryString("page")
@@ -39,6 +66,7 @@
     allrecords = 0
     do until rs.EOF
         allrecords = allrecords + 1
+        response.flush
         rs.movenext
     loop
     ' if offset is zero then the first page will be loaded
@@ -57,6 +85,7 @@
     hiddenrecords = requestrecords
     do until hiddenrecords = 0 OR rs.EOF
         hiddenrecords = hiddenrecords - 1
+        response.flush
         rs.movenext
         if rs.EOF then
         lastrecord = 1
@@ -77,6 +106,49 @@
             <a href="rb_add.asp" class="btn btn-primary">Tambah</a>
         </div>
     </div>
+    <form action="index.asp" method="post">
+    <div class="row">
+        <div class="col-lg-4 mb-3">
+            <label>Agen / Cabang</label>
+            <select class="form-select" aria-label="Default select example" name="agen" id="agen">
+                <option value="">Pilih</option>
+                <% do while not agendata.eof %>
+                <option value="<%= agendata("agenID") %>"><%= agendata("agenNAme") %></option>
+                <% 
+                response.flush
+                agendata.movenext
+                loop
+                %>
+            </select>
+         </div>
+        <div class="col-lg-4 mb-3">
+            <label>Vendor</label>
+            <select class="form-select" aria-label="Default select example" name="vendor" id="vendor">
+                <option value="">Pilih</option>
+                <% do while not vendordata.eof %>
+                <option value="<%= vendordata("Ven_ID") %>"><%= vendordata("Ven_Nama") %></option>
+                <% 
+                response.flush
+                vendordata.movenext
+                loop
+                %>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 mb-3">
+            <label>Tanggal awal</label>
+            <input type="date" class="form-control" name="tgla" id="tgla" autocomplete="off">
+         </div>
+        <div class="col-lg-4 mb-3">
+            <label>Tanggal akhir</label>
+            <input type="date" class="form-control" name="tgle" id="tgle" autocomplete="off">
+         </div>
+         <div class="col-lg mb-3 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary">Cari</button>
+        </div>
+    </div>
+    </form>
     <div class="row">
         <div class="col-lg-12">
             <table class="table">
@@ -97,6 +169,11 @@
                     recordcounter = requestrecords
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
+
+                    ' cek data detail
+                    data_cmd.commandText = "SELECT TOP 1 RBD_RBID FROM DLK_T_ReturnBarangD WHERE LEFT(RBD_RBID,12) = '"& rs("RB_ID") &"'"
+
+                    set detail = data_cmd.execute
                     %>
                     <tr>
                         <th scope="row"><%= recordcounter %> </th>
@@ -106,12 +183,17 @@
                         <td><%= rs("RB_Keterangan") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="ra_u.asp?id=<%= rs("RB_ID") %>" class="btn badge text-bg-primary">update</a>
-                                <a href="aktif.asp?id=<%= rs("RB_ID") %>" class="btn badge text-bg-danger btn-aktifrak">delete</a>
+                                <a href="rb_u.asp?id=<%= rs("RB_ID") %>" class="btn badge text-bg-primary">update</a>
+                                <% if detail.eof then %>
+                                <a href="aktif.asp?id=<%= rs("RB_ID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'RETURN BARANG HEADER')">delete</a>
+                                <% else %>
+                                <a href="detail.asp?id=<%= rs("RB_ID") %>" class="btn badge text-bg-warning">detail</a>
+                                <% end if %>    
                             </div>
                         </td>
                     </tr>
                     <% 
+                    response.flush
                     showrecords = showrecords - 1
                     rs.movenext
                     if rs.EOF then

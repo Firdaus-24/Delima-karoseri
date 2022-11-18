@@ -17,7 +17,7 @@
             <h3>FORM RETURN BARANG PEMBELIAN</h3>
         </div>
     </div>
-    <form action="rb_add.asp" method="post" id="formReturnBarang">
+    <form action="rb_add.asp" method="post" id="formReturnBarang" onsubmit="validasiForm(this,event,'RETURN BARANG','warning')">
         <div class="row">
             <div class="col-sm-2">
                 <label for="cabang" class="col-form-label">Cabang / Agen</label>

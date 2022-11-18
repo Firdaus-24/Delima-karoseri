@@ -19,14 +19,14 @@
 
     ' set brgVendor = data_cmd.execute
 
-    call header("Detail Return Barang")
+    call header("Update Return Barang")
 %>
-    <meta http-equiv="refresh" content="10" /> <!-- auto relog page -->
+   <meta http-equiv="refresh" content="10" /> <!-- auto relog page -->
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row">
         <div class="col-lg-12 mt-3 text-center">
-            <h3>DETAIL RETURN BARANG</h3>
+            <h3>UPDATE RETURN BARANG</h3>
         </div>  
     </div>
     <div class="row">
@@ -105,9 +105,9 @@
                         </td>
                         <td><%= detail("RBD_PPN") %></td>
                         <td><%= detail("RBD_Disc1") %></td>
-                        <td><%= detail("RBD_Disc2") %></td>
+                        <td><%= detail("RBD_Disc2") %></td> 
                         <td class="text-center">
-                            <a href="aktifd.asp?id=<%= detail("RBD_RBID") %>&p=rbd_add" class="btn badge text-bg-danger" onclick="deleteItem(event, 'DETAIL RETURN BARANG')">delete</a>
+                           <a href="aktifd.asp?id=<%= detail("RBD_RBID") %>&p=rb_u" class="btn badge text-bg-danger" onclick="deleteItem(event, 'DETAIL RETURN BARANG')">delete</a>
                         </td>
                     </tr>
                     <% 
