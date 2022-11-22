@@ -176,7 +176,7 @@
                             <td>
                                 <%= ddata("OPD_disc2") %>%
                             </td>
-                            <td>
+                            <td align="right">
                                 <%= replace(formatCurrency(realharga),"$","") %>
                             </td>
                         </tr>
@@ -199,8 +199,8 @@
                     realgrantotal = (grantotal - diskonall) + ppn
                     %>
                     <tr>
-                        <th colspan="7">Total Pembayaran</th>
-                        <th><%= replace(formatCurrency(Round(realgrantotal)),"$","") %></th>
+                        <th colspan="8">Total Pembayaran</th>
+                        <td align="right"><%= replace(formatCurrency(Round(realgrantotal)),"$","") %></td>
                     </tr>
                 </tbody>
             </table>

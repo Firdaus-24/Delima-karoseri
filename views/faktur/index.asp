@@ -145,6 +145,9 @@
             </div>
             <div class="col-lg-2 mt-4 mb-3">
                 <button type="submit" class="btn btn-primary">Cari</button>
+                <% if tgla <> "" OR tgle <> "" OR agen <> "" OR vendor <> "" then %>    
+                <button type="button" class="btn btn-secondary" onclick="window.location.href='export_t_buy.asp?la=<%=tgla%>&le=<%=tgle%>&en=<%=agen%>&or=<%=vendor%>'">Export</button>
+                <% end if %>
             </div>
         </div>
     </form>

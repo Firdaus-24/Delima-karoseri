@@ -1,22 +1,24 @@
-<!--#include file="../../init.asp"-->
+<!--#include file="../Connections/cargo.asp"-->
+<!--#include file="../url.asp"-->
 <% 
-    set data_cmd =  Server.CreateObject ("ADODB.Command")   
-    data_cmd.ActiveConnection = mm_delima_string    
-    ' filter agen
-    data_cmd.commandText = "SELECT AgenID, AgenName FROM DLK_T_ReturnBarangH LEFT OUTER JOIN  GLB_M_Agen ON DLK_T_ReturnBarangH.RB_agenID = GLB_M_Agen.AgenID WHERE RB_aktifYN = 'Y' GROUP BY AgenID, AgenName ORDER BY AgenName ASC"
+    nama = trim(Request.Form("nama"))
+    pagen = trim(Request.Form("pagen"))
 
-    set agendata = data_cmd.execute
-    ' filter vendor
-    data_cmd.commandText = "SELECT Ven_ID, Ven_Nama FROM DLK_T_ReturnBarangH LEFT OUTER JOIN  DLK_M_Vendor ON DLK_T_ReturnBarangH.RB_Venid = DLK_M_Vendor.Ven_ID WHERE RB_aktifYN = 'Y' GROUP BY Ven_ID, Ven_Nama ORDER BY Ven_Nama ASC"
+    set data_cmd =  Server.CreateObject ("ADODB.Command")
+    data_cmd.ActiveConnection = mm_delima_string
 
-    set vendordata = data_cmd.execute
-   
-    agen = trim(Request.Form("agen"))
-    vendor = trim(Request.Form("vendor"))
-    tgla = trim(Request.Form("tgla"))
-    tgle = trim(Request.Form("tgle"))
+    data_cmd.CommandText = "SELECT AgenID, AgenName FROM DLK_M_WebLogin LEFT OUTER JOIN GLB_M_Agen ON DLK_M_Weblogin.serverID = GLB_M_Agen.AgenID WHERE UserAktifYN = 'Y' GROUP BY AgenID, AgenName ORDER BY AgenNAme ASC"
 
-   set conn = Server.CreateObject("ADODB.Connection")
+    set agen = data_cmd.execute
+
+    set data_cmd =  Server.CreateObject ("ADODB.Command")
+    data_cmd.ActiveConnection = mm_delima_string
+
+    data_cmd.CommandText = "SELECT * FROM DLK_M_webLogin WHERE UserAktifYN = 'Y' ORDER BY Username asc"
+
+    set data = data_cmd.execute   
+
+    set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
 
     dim recordsonpage, requestrecords, allrecords, hiddenrecords, showrecords, lastrecord, recordconter, pagelist, pagelistcounter, sqlawal
@@ -28,33 +30,24 @@
         angka = Request.form("urut") + 1
     end if
 
-    ' query seach 
-    if agen <> "" then
-        filterAgen = "AND DLK_T_ReturnBarangH.RB_AgenID = '"& agen &"'"
-    else
-        filterAgen = ""
-    end if
-
-    if vendor <> "" then
-        filtervendor = "AND dbo.DLK_T_ReturnBarangH.RB_VenID = '"& vendor &"'"
-    else
-        filtervendor = ""
-    end if
-
-    if tgla <> "" AND tgle <> "" then
-        filtertgl = "AND dbo.DLK_T_ReturnBarangH.RB_Date BETWEEN '"& tgla &"' AND '"& tgle &"'"
-    elseIf tgla <> "" AND tgle = "" then
-        filtertgl = "AND dbo.DLK_T_ReturnBarangH.RB_Date = '"& tgla &"'"
+    if pagen <> "" then 
+       filterpagen = " AND DLK_M_webLogin.serverID = '"& pagen &"'"
     else 
-        filtertgl = ""
+       filterpagen = ""
     end if
 
-    strquery = "SELECT DLK_T_ReturnBarangH.*, GLB_M_Agen.AgenNAme, DLK_M_Vendor.Ven_Nama FROM DLK_T_ReturnBarangH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_ReturnBarangH.RB_AgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Vendor ON DLK_T_ReturnBarangH.RB_VenID = DLK_M_Vendor.Ven_ID WHERE RB_AktifYN = 'Y' "& filterAgen &" "& filtervendor &" "& filtertgl &""
+    if nama <> "" then 
+       filternama = " AND DLK_M_webLogin.username LIKE '%"& nama &"%'"
+    else 
+       filternama = ""
+    end if
 
+    ' query seach 
+    strquery = "SELECT DLK_M_webLogin.*, GLB_M_Agen.AgenName FROM DLK_M_webLogin LEFT OUTER JOIN GLB_M_Agen ON DLK_M_Weblogin.serverID = GLB_M_Agen.AgenID WHERE UserAktifYN = 'Y' "& filterpagen &" "& filternama &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
-    orderBy = " ORDER BY RB_Date DESC   "
+    orderBy = " ORDER BY Username asc"
     set rs = Server.CreateObject("ADODB.Recordset")
     sqlawal = strquery
 
@@ -66,7 +59,6 @@
     allrecords = 0
     do until rs.EOF
         allrecords = allrecords + 1
-        response.flush
         rs.movenext
     loop
     ' if offset is zero then the first page will be loaded
@@ -85,81 +77,58 @@
     hiddenrecords = requestrecords
     do until hiddenrecords = 0 OR rs.EOF
         hiddenrecords = hiddenrecords - 1
-        response.flush
         rs.movenext
         if rs.EOF then
         lastrecord = 1
         end if	
     loop
-
-    call header("Return Barang")
+    server.Execute("../header.asp")
+    response.write "<title>Hak Kases</title><body>"
 %>
-<!--#include file="../../navbar.asp"-->
+<!--#include file="../navbar.asp"-->
 <div class="container">
+   <div class="row">
+      <div class="col-sm-12 text-center mt-3 mb-3">
+         <h3>HAKAKSES USERS</h3>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm mb-3">
+         <button type="button" class="btn btn-primary" onclick="window.location.href='akses_add.asp'">Tambah</button>
+      </div>
+   </div>
+   <form action="index.asp" method="post">
     <div class="row">
-        <div class="col-lg-12 text-center mt-3 mb-3">
-            <h3>RETURN BARANG PEMBELIAN</h3>
+        <div class="col-sm mb-3">
+            <input type="text" class="form-control" name="nama" id="nama" autocomplete="off" placeholder="cari nama user">
         </div>
-    </div>
-    <div class="row mt-3 mb-3">
-        <div class="col-lg-2">
-            <a href="rb_add.asp" class="btn btn-primary">Tambah</a>
-        </div>
-    </div>
-    <form action="index.asp" method="post">
-    <div class="row">
-        <div class="col-lg-4 mb-3">
-            <label>Agen / Cabang</label>
-            <select class="form-select" aria-label="Default select example" name="agen" id="agen">
-                <option value="">Pilih</option>
-                <% do while not agendata.eof %>
-                <option value="<%= agendata("agenID") %>"><%= agendata("agenNAme") %></option>
+        <div class="col-sm mb-3">
+            <select class="form-select" aria-label="Default select example" name="pagen" id="pagen">
+                <option value="">Pilih Cabang / Agen</option>
+                <% do while not agen.eof %>
+                <option value="<%= agen("AgenID") %>"><%= agen("AgenName") %></option>
                 <% 
-                response.flush
-                agendata.movenext
-                loop
-                %>
-            </select>
-         </div>
-        <div class="col-lg-4 mb-3">
-            <label>Vendor</label>
-            <select class="form-select" aria-label="Default select example" name="vendor" id="vendor">
-                <option value="">Pilih</option>
-                <% do while not vendordata.eof %>
-                <option value="<%= vendordata("Ven_ID") %>"><%= vendordata("Ven_Nama") %></option>
-                <% 
-                response.flush
-                vendordata.movenext
+                agen.movenext
                 loop
                 %>
             </select>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-4 mb-3">
-            <label>Tanggal awal</label>
-            <input type="date" class="form-control" name="tgla" id="tgla" autocomplete="off">
-         </div>
-        <div class="col-lg-4 mb-3">
-            <label>Tanggal akhir</label>
-            <input type="date" class="form-control" name="tgle" id="tgle" autocomplete="off">
-         </div>
-         <div class="col-lg mb-3 d-flex align-items-end">
+        <div class="col-sm mb-3">
             <button type="submit" class="btn btn-primary">Cari</button>
-            <button type="button" class="btn btn-secondary" onClick="window.open('export-XlsReturnBarang_1.asp?la=<%=tgla%>&le=<%=tgle%>&en=<%=agen%>&or=<%=vendor%>','_self')">Export</button>
         </div>
     </div>
     </form>
-    <div class="row">
+   <div class="row">
         <div class="col-lg-12">
             <table class="table">
                 <thead class="bg-secondary text-light">
                     <tr>
                     <th scope="col">No</th>
-                    <th scope="col">Tanggal</th>
-                    <th scope="col">Cabang</th>
-                    <th scope="col">Vendor</th>
-                    <th scope="col">Keterangan</th>
+                    <th scope="col">UserID</th>
+                    <th scope="col">UserName</th>
+                    <th scope="col">ServerID</th>
+                    <th scope="col">Last Login</th>
+                    <th scope="col" class="text-center">Aktif</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -171,30 +140,22 @@
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
 
-                    ' cek data detail
-                    data_cmd.commandText = "SELECT TOP 1 RBD_RBID FROM DLK_T_ReturnBarangD WHERE LEFT(RBD_RBID,12) = '"& rs("RB_ID") &"'"
-
-                    set detail = data_cmd.execute
                     %>
                     <tr>
-                        <th scope="row"><%= recordcounter %> </th>
-                        <td><%= Cdate(rs("RB_Date")) %></td>
-                        <td><%= rs("AgenNAme") %></td>
-                        <td><%= rs("Ven_Nama") %></td>
-                        <td><%= rs("RB_Keterangan") %></td>
+                        <th scope="row"><%= recordcounter %></th>
+                        <td><%= rs("UserID") %></td>
+                        <td><%= rs("username") %></td>
+                        <td><%= rs("agenName") %></td>
+                        <td><%= rs("lastLogin") %></td>
+                        <td class="text-center text-success"><% if rs("useraktifYN") = "Y" then %>ON<% end if %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="rb_u.asp?id=<%= rs("RB_ID") %>" class="btn badge text-bg-primary">update</a>
-                                <% if detail.eof then %>
-                                <a href="aktif.asp?id=<%= rs("RB_ID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'RETURN BARANG HEADER')">delete</a>
-                                <% else %>
-                                <a href="detail.asp?id=<%= rs("RB_ID") %>" class="btn badge text-bg-warning">detail</a>
-                                <% end if %>    
+                                <a href="pakses_add.asp?id=<%= rs("userid") %>" class="btn badge text-bg-primary">update</a>
+                                <a href="aktif.asp?id=<%= rs("userid") %>" class="btn badge bg-danger" onclick="deleteItem(event,'delete user')">delete</a>
                             </div>
                         </td>
                     </tr>
                     <% 
-                    response.flush
                     showrecords = showrecords - 1
                     rs.movenext
                     if rs.EOF then
@@ -202,7 +163,7 @@
                     end if
                     loop
                     rs.close
-                     %>
+                    %>
                 </tbody>
             </table>
         </div>
@@ -267,4 +228,7 @@
         </div>
     </div>
 </div>
-<% call footer() %>
+</body>
+<% 
+   server.execute("../footer.asp")
+%>
