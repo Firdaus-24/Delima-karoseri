@@ -696,11 +696,16 @@
    </div>
 </div> 
 <script>
-function updateRights(user,serverID,app){
+function updateRights(u,s,p){   
+   let user = u
+   let serverID = s
+   let app = p
+
    $.ajax({
-      method: "POST",
+      method: "post",
       url: "getApps.asp",
       data: { user, serverID, app }
+   }).done(function(ms){console.log(ms);
    })
 }
 </script>

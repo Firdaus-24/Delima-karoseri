@@ -1,22 +1,26 @@
-<!--#include file="../Connections/cargo.asp"-->
+<!--#include file="../init.asp"-->
 <% 
-   user = Request.form("user")
-   serverid = Request.form("serverID")
-   app = Request.form("app")
+   user = trim(Request.form("user"))
+   serverID = trim(Request.form("serverID"))
+   app = trim(Request.form("app"))
 
-   set rs = Server.CreateObject("ADODB.Command")
-   rs.activeConnection = MM_Delima_string
+   set p = Server.CreateObject("ADODB.Command")
+   p.activeConnection = MM_Delima_string
 
-   rs.commandText = "SELECT appIDRights FROM DLK_M_AppRight WHERE (Username = '"& user &"') AND (ServerID = '"& serverid &"') AND appIDRights = '"& app &"' "
-   set chekexist = rs.execute
+   set data_cmd = Server.CreateObject("ADODB.Command")
+   data_cmd.activeConnection = MM_Delima_string
+
+   data_cmd.commandText = "SELECT appIDRights FROM DLK_M_AppRight WHERE (Username = '"& user &"') AND (ServerID = '"& serverID &"') AND appIDRights = '"& app &"' "  
+   ' response.write data_cmd.commandText & "<br>"
+   set chekexist = data_cmd.execute
 
    if chekexist.eof then
-      rs.commandText = "INSERT INTO DLK_M_AppRight (Username, ServerID, appIDRights ) VALUES ('"& user &"', '"& serverid &"', '"& app &"')"
-      ' Response.Write rs.com
-      rs.execute
+      p.commandText = "INSERT INTO DLK_M_AppRight (Username, ServerID, appIDRights ) VALUES ('"& user &"', '"& serverID &"', '"& app &"')"
+      ' Response.Write p.commandText 
+      p.execute
    else
-      rs.commandText = "DELETE FROM DLK_M_AppRight WHERE (Username = '"& user &"') AND (ServerID = '"& serverid &"') AND appIDRights = '"& app &"' "
-      rs.execute
+      p.commandText = "DELETE FROM DLK_M_AppRight WHERE (Username = '"& user &"') AND (ServerID = '"& serverID &"') AND appIDRights = '"& app &"' "
+      p.execute
    end if
 
 %>

@@ -194,17 +194,20 @@
             <a href="#" onclick="toggle('sublist-report')"><i class="bi bi-book"></i> Report</a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
-             <ul class="sub-menu" id="sublist-report">
-              <li>
-                <a class="link-name" href="<%= url %>views/report/R_stok.asp">Stok Barang</a>
-              </li>
-              <li>
-                <a class="link-name" href="<%= url %>views/report/R_cekin.asp">Barang Masuk</a>
-              </li>
-              <li>
-                <a class="link-name" href="<%= url %>views/report/R_cekout.asp">Barang Keluar</a>
-              </li>
+            <ul class="sub-menu" id="sublist-report">
+            <li>
+              <a class="link-name" href="<%= url %>views/report/R_stok.asp">Stok Barang</a>
+            </li>
+            <li>
+              <a class="link-name" href="<%= url %>views/report/R_cekin.asp">Barang Masuk</a>
+            </li>
+            <li>
+              <a class="link-name" href="<%= url %>views/report/R_cekout.asp">Barang Keluar</a>
+            </li>
             </ul>
+          <li class="nav-text">
+            <a href="\logout.asp"><i class="bi bi-box-arrow-in-left"></i> Log Out</a>
+          </li>
         </div>
       </ul>
     </nav>
