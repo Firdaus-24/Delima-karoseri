@@ -1,4 +1,4 @@
-<!--#include file="../../init.asp"-->
+<!--#include file="../../Connections/cargo.asp"-->
 <% 
    id = LEFT(trim(Request.queryString("id")),16) 
 

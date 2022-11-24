@@ -38,7 +38,7 @@
             Response.redirect ("dashboard.asp")
          end if
    else
-      call alert("ERROR", "data yang anda masukan salah!", "error","login.asp") 
+      call alert("ERROR", "data yang anda masukan salah! atau tidak terdaftar", "error","login.asp") 
    end if
 
    call footer()

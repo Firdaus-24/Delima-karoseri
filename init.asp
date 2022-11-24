@@ -1,7 +1,9 @@
 <!--#include file="url.asp"-->
 <% 
+   ' Session.Timeout=1
+   ' Server.ScriptTimeout=5
    if session("username") = "" then
-      Response.Redirect(url&"login.asp")
+      Response.Redirect(url&"logout.asp")
    end if
 %>
 <!--#include file="Connections/cargo.asp"-->

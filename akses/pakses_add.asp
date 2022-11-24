@@ -691,6 +691,57 @@
                   </div>
                </div>
             </div>
+            <!-- ANDROUD / HONEYWELL -->
+            <div class="accordion-item">
+               <h2 class="accordion-header" id="flush-4">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse4" aria-expanded="false" aria-controls="flush-collapse4">
+                  <i class="bi bi-phone" style="padding:10px;"></i>
+                   ANDROID APP
+                  </button>
+               </h2>
+               <div id="flush-collapse4" class="accordion-collapse collapse" aria-labelledby="flush-4" data-bs-parent="#accordionFlushExample">
+                  <div class="accordion-body">
+                     <ul>
+                        <li id="ckHeaderAkses">
+                           <%
+                           data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HW01'"
+
+                           set app = data_cmd.execute
+                           %>
+                           <input class="form-check-input" type="checkbox" name="HW01" id="HW01" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HW01');" >
+                           <label for="HW01">Inventory</label>
+                        </li>
+                        <li id="ckHeaderAkses">
+                           <%
+                           data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HW02'"
+
+                           set app = data_cmd.execute
+                           %>
+                           <input class="form-check-input" type="checkbox" name="HW02" id="HW02" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HW02');" >
+                           <label for="HW02">Produksi</label>
+                        </li>
+                        <li id="ckHeaderAkses">
+                           <%
+                           data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HW03'"
+
+                           set app = data_cmd.execute
+                           %>
+                           <input class="form-check-input" type="checkbox" name="HW03" id="HW03" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HW03');" >
+                           <label for="HW03">Purchase</label>
+                        </li>
+                        <li id="ckHeaderAkses">
+                           <%
+                           data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HW04'"
+
+                           set app = data_cmd.execute
+                           %>
+                           <input class="form-check-input" type="checkbox" name="HW04" id="HW04" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HW04');" >
+                           <label for="HW04">Engeneering</label>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
          </div>         
       </div>
    </div>
