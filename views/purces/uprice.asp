@@ -52,7 +52,7 @@
     end if
 
     ' query seach 
-    strquery = "SELECT DLK_T_Memo_H.*, DLK_M_Departement.DepNama, DLK_M_Divisi.DivNama, GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN DLK_M_departement ON DLK_T_Memo_H.MemoDepID = DLK_M_Departement.DepID LEFT OUTER JOIN DLK_M_Divisi ON DLK_T_Memo_H.memoDivID = DLK_M_Divisi.DivID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = LEFT(GLB_M_Agen.AgenID,3) WHERE NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) AND (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN = 'N') "& filterAgen &" "& filterKeb &" "& filtertgl &""
+    strquery = "SELECT DLK_T_Memo_H.*, DLK_M_Departement.DepNama, DLK_M_Divisi.DivNama, GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN DLK_M_departement ON DLK_T_Memo_H.MemoDepID = DLK_M_Departement.DepID LEFT OUTER JOIN DLK_M_Divisi ON DLK_T_Memo_H.memoDivID = DLK_M_Divisi.DivID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = LEFT(GLB_M_Agen.AgenID,3) WHERE NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) AND (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') "& filterAgen &" "& filterKeb &" "& filtertgl &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
@@ -93,13 +93,13 @@
     loop
 
 
-    call header("UPDATE PERMINTAAN ANGGARAN") 
+    call header("UPDATE MEMO ANGGARAN") 
 %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row">
         <div class="col-lg-12 mb-3 mt-3 text-center">
-            <h3>UPDATE HARGA PERMINTAAN ANGGARAN INVENTORY</h3> 
+            <h3>UPDATE HARGA MEMO ANGGARAN</h3> 
         </div>
     </div>
     <form action="uprice.asp" method="post">
@@ -152,7 +152,7 @@
                     <th scope="col">Cabang</th>
                     <th scope="col">Divisi</th>
                     <th scope="col">Departement</th>
-                    <th scope="col">Aktif</th>
+                    <th scope="col">Approve</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -165,7 +165,7 @@
                     recordcounter = recordcounter + 1
 
                     ' cek data detail
-                    agen_cmd.commandText = "SELECT memoID FROM DLK_T_Memo_D WHERE Left(memoID,17) = '"& rs("memoID") &"'"
+                    agen_cmd.commandText = "SELECT MemoHarga FROM DLK_T_Memo_D WHERE Left(memoID,17) = '"& rs("memoID") &"' AND MemoHarga = 0 OR MemoHarga = ''"
                     set ddetail = agen_cmd.execute
                     %>
                     <tr>
@@ -178,7 +178,11 @@
                         <td><%= rs("DivNama") %></td>
                         <td><%= rs("DepNama")%></td>
                         <td>
-                            <%if rs("memoAktifYN") = "Y" then %>Aktif <% else %>Off <% end if %>
+                            <%if rs("memoApproveYN") = "Y" then %>
+                                <span class="text-success">Done</span>
+                            <% else %>
+                                <span class="text-dark">Waiting</span> 
+                            <% end if %>
                         </td>
                         <td class="text-center">
                             <% if not ddetail.eof then %>

@@ -152,7 +152,7 @@
                     <th scope="col">Cabang</th>
                     <th scope="col">Divisi</th>
                     <th scope="col">Departement</th>
-                    <th scope="col">Approve</th>
+                    <th scope="col">Prosess</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -167,6 +167,10 @@
                     ' cek data detail
                     agen_cmd.commandText = "SELECT memoID FROM DLK_T_Memo_D WHERE Left(memoID,17) = '"& rs("memoID") &"'"
                     set ddetail = agen_cmd.execute
+
+                    ' cek pembuatan po 
+                    agen_cmd.commandText = "SELECT OPH_MemoID FROM DLK_T_OrPemH WHERE OPH_memoID = '"& rs("memoID") &"'"
+                    set orderpo = agen_cmd.execute
                     %>
                     <tr>
                         <th scope="row"><%= recordcounter %></th>
@@ -178,7 +182,7 @@
                         <td><%= rs("DivNama") %></td>
                         <td><%= rs("DepNama")%></td>
                         <td>
-                            <%if rs("memoApproveYN") = "Y" then %>
+                            <%if not orderpo.eof then %>
                             <b class="text-success">
                                 Done
                             </b>

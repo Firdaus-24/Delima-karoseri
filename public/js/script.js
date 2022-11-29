@@ -41,6 +41,27 @@ function deleteItem(e,tex){
     })
 }
 
+function ApproveYN(e,title, tex,icon){
+    e.preventDefault(); // <--- prevent click
+    
+    swal({
+        title: title,
+        text: tex,
+        icon: icon,
+        buttons: [
+            'No',
+            'Yes'
+        ],
+        dangerMode: true,
+    }).then(function(isConfirm) {
+        if (isConfirm) {
+            window.location.href = e.target.href // <--- submit form programmatically
+        } else {
+            swal("Request gagal di kirim");
+        }
+    })
+}
+
 function printIt(url) {
     var wnd = window.open(url);
     wnd.print();

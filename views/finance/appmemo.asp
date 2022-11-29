@@ -12,11 +12,11 @@
     set agen_cmd =  Server.CreateObject ("ADODB.Command")
     agen_cmd.ActiveConnection = mm_delima_string
     ' filter agen
-    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'N' AND NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' AND NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
     set agendata = agen_cmd.execute
 
     ' filter departement
-    agen_cmd.commandText = "SELECT dbo.DLK_M_Departement.DepID, dbo.DLK_M_Departement.DepNama FROM dbo.DLK_T_Memo_H LEFT OUTER JOIN dbo.DLK_M_Departement ON dbo.DLK_T_Memo_H.memoDepID = dbo.DLK_M_Departement.DepID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'N' AND NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) GROUP BY dbo.DLK_M_Departement.DepID, dbo.DLK_M_Departement.DepNama"
+    agen_cmd.commandText = "SELECT dbo.DLK_M_Departement.DepID, dbo.DLK_M_Departement.DepNama FROM dbo.DLK_T_Memo_H LEFT OUTER JOIN dbo.DLK_M_Departement ON dbo.DLK_T_Memo_H.memoDepID = dbo.DLK_M_Departement.DepID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y' AND NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) GROUP BY dbo.DLK_M_Departement.DepID, dbo.DLK_M_Departement.DepNama"
     set kebData = agen_cmd.execute
 
     set conn = Server.CreateObject("ADODB.Connection")
@@ -52,7 +52,7 @@
     end if
 
     ' query seach 
-    strquery = "SELECT DLK_T_Memo_H.*, DLK_M_Departement.DepNama, DLK_M_Divisi.DivNama, GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN DLK_M_departement ON DLK_T_Memo_H.MemoDepID = DLK_M_Departement.DepID LEFT OUTER JOIN DLK_M_Divisi ON DLK_T_Memo_H.memoDivID = DLK_M_Divisi.DivID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = LEFT(GLB_M_Agen.AgenID,3) WHERE NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) AND (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN = 'N') "& filterAgen &" "& filterKeb &" "& filtertgl &""
+    strquery = "SELECT DLK_T_Memo_H.*, DLK_M_Departement.DepNama, DLK_M_Divisi.DivNama, GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN DLK_M_departement ON DLK_T_Memo_H.MemoDepID = DLK_M_Departement.DepID LEFT OUTER JOIN DLK_M_Divisi ON DLK_T_Memo_H.memoDivID = DLK_M_Divisi.DivID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = LEFT(GLB_M_Agen.AgenID,3) WHERE (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') "& filterAgen &" "& filterKeb &" "& filtertgl &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
@@ -152,7 +152,6 @@
                     <th scope="col">Cabang</th>
                     <th scope="col">Divisi</th>
                     <th scope="col">Departement</th>
-                    <th scope="col">Aktif</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -165,26 +164,33 @@
                     recordcounter = recordcounter + 1
 
                     ' cek data detail
-                    agen_cmd.commandText = "SELECT memoID FROM DLK_T_Memo_D WHERE Left(memoID,17) = '"& rs("memoID") &"' AND memoHarga <> 0 "
+                    agen_cmd.commandText = "SELECT memoID, memoHarga FROM DLK_T_Memo_D WHERE Left(memoID,17) = '"& rs("memoID") &"' AND memoHarga = 0 "
+                    ' response.write agen_cmd.commandTExt & "<br>"
                     set ddetail = agen_cmd.execute
                     %>
                     <tr>
                         <th scope="row"><%= recordcounter %></th>
                         <td>
+                            <a href="DetailMemo.asp?id=<%= rs("memoID") %>" class="btn btn-outline-primary p-1">
                             <%= left(rs("memoID"),4) %>/<%=mid(rs("memoId"),5,3) %>-<% call getAgen(mid(rs("memoID"),8,3),"") %>/<%= mid(rs("memoID"),11,4) %>/<%= right(rs("memoID"),3) %>
+                            </a>
                         </td>
                         <td><%= Cdate(rs("memoTgl")) %></td>
                         <td><%= rs("AgenName") %></td>
                         <td><%= rs("DivNama") %></td>
                         <td><%= rs("DepNama")%></td>
-                        <td>
-                            <%if rs("memoAktifYN") = "Y" then %>Aktif <% else %>Off <% end if %>
-                        </td>
                         <td class="text-center">
                             <% if not ddetail.eof then %>
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="#" class="btn badge text-bg-primary modalSendEmailMemo" data-id="<%= rs("memoID") %>" data-bs-toggle="modal" data-bs-target="#modalSendEmail">Process</a>
-                            </div>
+                                Call Purchase
+                            <% else %>  
+                                <% if rs("memoApproveYN") = "Y" then %>
+                                    -
+                                <% else %>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <a href="#" class="btn badge text-bg-primary modalSendEmailMemo" data-id="<%= rs("memoID") %>" data-bs-toggle="modal" data-bs-target="#modalSendEmail">Email</a>
+                                        <a href="appPmemo.asp?id=<%= rs("memoID") %>" onclick="return ApproveYN(event, 'YAKIN UNTUK DI PROSES', 'Proses ini hanya bisa di lakukan satu kali !!', 'warning')" class="btn badge text-bg-danger">Approve</a>
+                                    </div>
+                                <% end if %>    
                             <% end if %>
                         </td>
                     </tr>

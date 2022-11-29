@@ -60,7 +60,7 @@
                 <a class="link-name" href="<%= url %>views/inventory/reqAnggaran.asp">Anggaran Permintaan</a>
               </li>
               <li>
-                <a class="link-name" href="<%= url %>views/inventory/incomming.asp">Incomming</a>
+                <a class="link-name" href="<%= url %>views/incoming/index.asp">Incomming</a>
               </li>
               <li>
                 <a class="link-name" href="<%= url %>views/klaim/index.asp">Klaim Barang</a>
