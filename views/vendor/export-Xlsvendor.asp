@@ -8,63 +8,58 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_M_Vendor WHERE Ven_ID = '"& id &"' AND Ven_AktifYN = 'Y'"
+    data_cmd.commandText = "SELECT DLK_M_Vendor.*, ISNULL(GL_M_Bank.Bank_Name,'') as bank FROM DLK_M_Vendor LEFT OUTER JOIN GL_M_Bank ON DLK_M_Vendor.Ven_BankID = GL_M_Bank.Bank_ID WHERE Ven_ID = '"& id &"' AND Ven_AktifYN = 'Y'"
     set data = data_cmd.execute
 
+    ' cek type transaksi
+    if data("Ven_TypeTransaksi") = "1" then
+        strtype = "CBD"
+    elseIF data("Ven_TypeTransaksi") = "2" then
+        strtype = "COD"
+    elseIF data("Ven_TypeTransaksi") = "3" then
+        strtype = "TOP"
+    else
+        strtype = ""
+    end if
+
     ' getdata detail
-    data_cmd.commandText = "SELECT DLK_T_VendorD.*, DLK_M_Barang.Brg_Nama FROM DLK_T_VendorD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_VendorD.Dven_BrgID = DLK_M_Barang.Brg_ID WHERE LEFT(Dven_Venid,9) = '"& data("Ven_ID") &"'"
+    data_cmd.commandText = "SELECT DLK_T_VendorD.*, DLK_M_Barang.Brg_Nama, DLK_M_JenisBarang.JenisNama, DLK_M_Kategori.KategoriNama FROM DLK_T_VendorD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_VendorD.Dven_BrgID = DLK_M_Barang.Brg_ID INNER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID INNER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.JenisID WHERE LEFT(Dven_Venid,9) = '"& data("Ven_ID") &"'"
 
-    set ddata = data_cmd.execute
-
-    ' get data barang
-    data_cmd.commandText = "SELECT DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_ID, DLK_M_Barang.JenisID, DLK_M_Barang.KategoriID, DLK_M_JenisBarang.JenisNama, DLK_M_Kategori.KategoriNama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.JenisID WHERE Brg_AktifYN = 'Y' AND LEFT(Brg_ID,3) = '"& left(data("Ven_ID"),3) &"' ORDER BY Brg_Nama ASC"
     set barang = data_cmd.execute
 
     call header("Media Print")
 %>
-<style>
-    .tbl1 tr:nth-child(1){
-        text-align: center;
-    }
-    #tbl2{
-        border-collapse: collapse;
-        border: 1px solid black;
-    }
-    #tbl2 > * > tr > *  {
-        border: 1px solid black;
-        padding:5px;
-    }
-</style>
 <table class="tbl1">
     <tr>
         <th colspan="4">DETAIL BARANG VENDOR</th>
     </tr>
     <tr>
-        <th>&nbsp</th>
+        <th colspan="4"><%= data("Ven_ID") %></th>
     </tr>
     <tr>
-        <th>ID</th>
-        <td><%= ": "&data("Ven_ID") %></td>
+        <th colspan="4">&nbsp</th>
     </tr>
     <tr>
-        <th>Nama</th>
-        <td><%= ": "&data("Ven_Nama") %></td>
+        <th style="text-align:left">Nama</th>
+        <td style="text-align:left"><%= ": "&data("Ven_Nama") %></td>
+        <th style="text-align:left">Phone</th>
+        <td style="text-align:left"><%= ": "&data("Ven_Phone") %></td>
     </tr>
     <tr>
-        <th>Phone</th>
-        <td><%= ": "&data("Ven_Phone") %></td>
+        <th style="text-align:left">Email</th>
+        <td style="text-align:left"><%= ": "&data("Ven_Email") %></td>
+        <th style="text-align:left">TypeTransaksi</th>
+        <td style="text-align:left"><%= ": "&strtype %></td>
     </tr>
     <tr>
-        <th>Alamat</th>
-        <td><%= ": "&data("Ven_Alamat") %></td>
+        <th style="text-align:left">Bank</th>
+        <td style="text-align:left"><%= ": "&data("bank") %></td>
+        <th style="text-align:left">No Rekening</th>
+        <td style="text-align:left"><%= ": "&data("Ven_Norek") %></td>
     </tr>
     <tr>
-        <th>Email</th>
-        <td><%= ": "&data("Ven_Email") %></td>
-    </tr>
-    <tr>
-        <th>TOP</th>
-        <td><%= ": "&data("Ven_TOP") %></td>
+        <th style="text-align:left">Alamat</th>
+        <td style="text-align:left"><%= ": "&data("Ven_Alamat") %></td>
     </tr>
     <tr>
         <td>&nbsp</td>
@@ -73,26 +68,26 @@
 <table id="tbl2">
     <thead>
     <tr>
-        <th>ID</th>
-        <th>Nama</th>
-        <th>Spesification</th>
-        <th>Harga</th>
+        <th style="text-align:center">Kode</th>
+        <th style="text-align:center">Nama</th>
+        <th style="text-align:center">Spesification</th>
+        <th style="text-align:center">Harga</th>
     </tr>
     </thead>
     <tbody>
     <%  
-        do while not ddata.eof 
+        do while not barang.eof 
         %>
         <tr>
-            <th><%= ddata("Dven_Venid") %></th>
-            <td>
-                <%= ddata("Brg_Nama") %>
-            </td>
-            <td><%= ddata("Dven_Spesification") %></td>
-            <td><%= replace(formatCurrency(ddata("Dven_Harga")),"$","") %></td>
+            <td align="left"><%= barang("KategoriNama") &"-"& barang("JenisNama") %></td>
+            <td align="left">
+                <%= barang("Brg_Nama") %>
+            </td align="left">
+            <td align="left"><%= barang("Dven_Spesification") %></td>
+            <td align="right"><%= replace(formatCurrency(barang("Dven_Harga")),"$","") %></td>
         </tr>
         <% 
-        ddata.movenext
+        barang.movenext
         loop
         %>
     </tbody>

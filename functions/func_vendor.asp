@@ -5,18 +5,20 @@ sub tambahVendor()
     cabang = trim(Request.Form("cabang"))
     phone = trim(Request.Form("phone"))
     email = trim(Request.Form("email"))
-    top = trim(Request.Form("top"))
+    typet = trim(Request.Form("typet"))
     kdakun = trim(Request.Form("kdakun"))
+    bank = trim(Request.Form("bank"))
+    norek = trim(Request.Form("norek"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_M_Vendor WHERE Ven_Nama = '"& nama &"' AND Ven_Alamat = '"&  alamat &"' AND Ven_phone = '"& phone &"'"
+    data_cmd.commandText = "SELECT * FROM DLK_M_Vendor WHERE Ven_Nama = '"& nama &"' AND Ven_Alamat = '"&  alamat &"' AND Ven_phone = '"& phone &"' AND Ven_Typetransaksi = "& typet &""
     set data = data_cmd.execute
 
     if data.eof then
-        data_cmd.commandText = "exec sp_AddDLK_M_Vendor '"& cabang &"','"& nama &"','"& alamat &"','"& phone &"','"& email &"','"& kdakun &"','"& top &"'"
-
+        data_cmd.commandText = "exec sp_AddDLK_M_Vendor '"& cabang &"','"& nama &"','"& alamat &"','"& phone &"','"& email &"','"& kdakun &"',"& typet &", "& norek &", "& bank &""
+        ' response.write data_cmd.commandText & "<br>"
         set p = data_cmd.execute
 
         id = p("ID")

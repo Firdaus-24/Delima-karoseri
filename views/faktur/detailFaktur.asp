@@ -5,9 +5,20 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT dbo.DLK_T_InvPemH.*, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_Email, dbo.DLK_M_Vendor.Ven_phone, dbo.DLK_M_Vendor.Ven_ID,  dbo.DLK_T_InvPemH.IPH_OphId, dbo.DLK_T_InvPemH.IPH_Date FROM dbo.DLK_T_InvPemH LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_InvPemH.IPH_VenId = dbo.DLK_M_Vendor.Ven_ID LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_InvPemH.IPH_AgenId = dbo.GLB_M_Agen.AgenID WHERE (dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y') AND (dbo.DLK_T_InvPemH.IPH_ID = '"& id &"')"
+    data_cmd.commandText = "SELECT dbo.DLK_T_InvPemH.*, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_Email, dbo.DLK_M_Vendor.Ven_phone, dbo.DLK_M_Vendor.Ven_ID, dbo.DLK_M_Vendor.Ven_TypeTransaksi, dbo.DLK_M_Vendor.Ven_Norek, GL_M_Bank.Bank_Name FROM dbo.DLK_T_InvPemH LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_InvPemH.IPH_VenId = dbo.DLK_M_Vendor.Ven_ID LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_InvPemH.IPH_AgenId = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN GL_M_Bank ON DLK_M_Vendor.Ven_BankID = GL_M_Bank.Bank_ID WHERE (dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y') AND (dbo.DLK_T_InvPemH.IPH_ID = '"& id &"')"
 
     set data = data_cmd.execute
+
+    ' cek type transaksi
+    if data("Ven_TypeTransaksi") = "1" then
+        strtype = "CBD"
+    elseIF data("Ven_TypeTransaksi") = "2" then
+        strtype = "COD"
+    elseIF data("Ven_TypeTransaksi") = "3" then
+        strtype = "TOP"
+    else
+        strtype = ""
+    end if
 
     ' detail faktur
     data_cmd.commandText = "SELECT dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_T_InvPemD.IPD_QtySatuan, dbo.DLK_T_InvPemD.IPD_IphID,dbo.DLK_T_InvPemD.IPD_Item, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_Disc1, dbo.DLK_T_InvPemD.IPD_Disc2 FROM dbo.DLK_M_Kategori RIGHT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_Kategori.KategoriId = dbo.DLK_M_Barang.KategoriID LEFT OUTER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID RIGHT OUTER JOIN dbo.DLK_T_InvPemD ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_InvPemD.IPD_Item LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_InvPemD.IPD_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID WHERE LEFT(dbo.DLK_T_InvPemD.IPD_IphID,13) = '"& id &"' ORDER BY dbo.DLK_T_InvPemD.IPD_IphID"
@@ -25,7 +36,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-12 mb-3 text-center labelId">
+        <div class="col-lg-12 text-center labelId">
             <h3><%= data("IPH_ID") %></h3>
         </div>
     </div>
@@ -58,7 +69,9 @@
                     <th>Tanggal JT</th>
                     <th>:</th>
                     <td>
+                        <%if Cdate(data("IPH_JTDate")) <> Cdate("1/1/1900") then %>
                         <%= Cdate(data("IPH_JTDate")) %>
+                        <% end if %>
                     </td>
                 </tr>
                 <tr>
@@ -79,6 +92,25 @@
                     <td>
                         <%= data("Ven_Email") %>
                     </td>
+                    <th>Type Transaksi</th>
+                    <th>:</th>
+                    <td>
+                        <%= strtype %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Bank</th>
+                    <th>:</th>
+                    <td>
+                        <%= data("Bank_Name") %>
+                    </td>
+                    <th>No.Rekening</th>
+                    <th>:</th>
+                    <td>
+                        <%= data("Ven_Norek") %>
+                    </td>
+                </tr>
+                <tr>
                     <th>Keterangan</th>
                     <th>:</th>
                     <td>

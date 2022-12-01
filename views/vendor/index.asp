@@ -117,7 +117,7 @@
                     <th scope="col">Alamat</th>
                     <th scope="col">Contact</th>
                     <th scope="col">Email</th>
-                    <th scope="col">TOP</th>
+                    <th scope="col">TypeTransaksi</th>
                     <th scope="col">Kode Akun</th>
                     <th scope="col">Aktif</th>
                     <th scope="col" class="text-center">Aksi</th>
@@ -134,6 +134,17 @@
                     ' cek data detail yang kosong untuk delete header
                     agen_cmd.commandText = "SELECT dven_venid FROM DLK_T_VendorD WHERE LEFT(dven_venid,9) = '"& rs("ven_ID") &"'"
                     set ddata = agen_cmd.execute
+
+                    ' cek type transaksi
+                    if rs("Ven_TypeTransaksi") = "1" then
+                        strtype = "CBD"
+                    elseIF rs("Ven_TypeTransaksi") = "2" then
+                        strtype = "COD"
+                    elseIF rs("Ven_TypeTransaksi") = "3" then
+                        strtype = "TOP"
+                    else
+                        strtype = ""
+                    end if
                     %>
                     <tr>
                         <th scope="row"><%= recordcounter %></th>
@@ -141,7 +152,7 @@
                         <td><%= rs("ven_Alamat") %></td>
                         <td><%= rs("ven_phone") %></td>
                         <td><%= rs("ven_Email") %></td>
-                        <td><%= rs("ven_TOP") %></td>
+                        <td><%= strtype %></td>
                         <td><%= rs("Cat_Name") %></td>
                         <td><%if rs("ven_AktifYN") = "Y" then%>Aktif <% end if %></td>
                         <td class="text-center">

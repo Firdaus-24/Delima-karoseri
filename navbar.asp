@@ -9,7 +9,7 @@
           <a href="" class="menu-bars" id="hide-menu" onclick="closeNav()">
             <i class="bi bi-list"></i>
           </a>
-          <a href="dashboard.asp">
+          <a href="\dashboard.asp">
             <h1>
               <img src="<%= url %>public/img/delimalogo.png" alt="delima-logo" width="40" height="40" id="delima-logo"
               />

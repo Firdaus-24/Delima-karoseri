@@ -6,8 +6,19 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_M_Vendor WHERE Ven_ID = '"& id &"' AND Ven_AktifYN = 'Y'"
+    data_cmd.commandText = "SELECT DLK_M_Vendor.*, GL_M_Bank.Bank_Name FROM DLK_M_Vendor LEFT OUTER JOIN GL_M_Bank ON DLK_M_Vendor.Ven_BankID = GL_M_Bank.Bank_ID WHERE Ven_ID = '"& id &"' AND Ven_AktifYN = 'Y'"
     set data = data_cmd.execute
+
+    ' cek type transaksi
+    if data("Ven_TypeTransaksi") = "1" then
+        strtype = "CBD"
+    elseIF data("Ven_TypeTransaksi") = "2" then
+        strtype = "COD"
+    elseIF data("Ven_TypeTransaksi") = "3" then
+        strtype = "TOP"
+    else
+        strtype = ""
+    end if
 
     ' getdata detail
     data_cmd.commandText = "SELECT DLK_T_VendorD.*, DLK_M_Barang.Brg_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama FROM DLK_T_VendorD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_VendorD.Dven_BrgID = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE LEFT(Dven_Venid,9) = '"& data("Ven_ID") &"'"
@@ -15,7 +26,7 @@
     set ddata = data_cmd.execute
 
     ' get data barang
-    data_cmd.commandText = "SELECT DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_ID, DLK_M_Barang.JenisID, DLK_M_Barang.KategoriID, DLK_M_JenisBarang.JenisNama, DLK_M_Kategori.KategoriNama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.JenisID WHERE Brg_AktifYN = 'Y' AND LEFT(Brg_ID,3) = '"& left(data("Ven_ID"),3) &"' AND Brg_Type != '' ORDER BY Brg_Nama ASC"
+    data_cmd.commandText = "SELECT DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_ID, DLK_M_Barang.JenisID, DLK_M_Barang.KategoriID, DLK_M_JenisBarang.JenisNama, DLK_M_Kategori.KategoriNama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.JenisID WHERE Brg_AktifYN = 'Y' AND LEFT(Brg_ID,3) = '"& left(data("Ven_ID"),3) &"' ORDER BY Brg_Nama ASC"
     set barang = data_cmd.execute
 
     call header("Detail Barang Vendor")
@@ -33,39 +44,54 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-1">
+        <div class="col-lg-2">
             <label for="nama" class="col-form-label">Nama</label>
         </div>
-        <div class="col-lg-5 mb-3">
+        <div class="col-lg-4 mb-3">
             <input type="text" id="nama" class="form-control" value="<%= ": "&data("Ven_Nama") %>"  style="background:transparent;border:none;" readonly>
         </div>
-        <div class="col-lg-1">
+        <div class="col-lg-2">
             <label for="Phone" class="col-form-label">Phone</label>
         </div>
-        <div class="col-lg-5 mb-3">
+        <div class="col-lg-4 mb-3">
             <input type="text" id="Phone" class="form-control" value="<%= ": "&data("Ven_Phone") %>" style="background:transparent;border:none;" readonly>
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-1">
-            <label for="Alamat" class="col-form-label">Alamat</label>
-        </div>
-        <div class="col-lg-5 mb-3">
-            <input type="text" id="Alamat" class="form-control" value="<%= ": "&data("Ven_Alamat") %>" style="background:transparent;border:none;" readonly>
-        </div>
-        <div class="col-lg-1">
+        
+        <div class="col-lg-2">
             <label for="Email" class="col-form-label">Email</label>
         </div>
-        <div class="col-lg-5 mb-3">
+        <div class="col-lg-4 mb-3">
             <input type="text" id="Email" class="form-control" value="<%= ": "& data("Ven_Email") %>" style="background:transparent;border:none;" readonly>
+        </div>
+        <div class="col-lg-2">
+            <label for="TOP" class="col-form-label">Type Transaksi</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="text" id="TOP" class="form-control" value="<%= ": "&strtype %>" style="background:transparent;border:none;" readonly>
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-1">
-            <label for="TOP" class="col-form-label">TOP</label>
+        <div class="col-lg-2">
+            <label for="TOP" class="col-form-label">Bank</label>
         </div>
-        <div class="col-lg-5 mb-3">
-            <input type="text" id="TOP" class="form-control" value="<%= ": "&data("Ven_TOP") &" Hari"%>" style="background:transparent;border:none;" readonly>
+        <div class="col-lg-4 mb-3">
+            <input type="text" id="TOP" class="form-control" value="<%= ": "&data("Bank_Name") %>" style="background:transparent;border:none;" readonly>
+        </div>
+        <div class="col-lg-2">
+            <label for="norek" class="col-form-label">No. Rekening</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="text" id="norek" class="form-control" value="<%= ": "&data("Ven_Norek") %>" style="background:transparent;border:none;" readonly>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-2">
+            <label for="Alamat" class="col-form-label">Alamat</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="text" id="Alamat" class="form-control" value="<%= ": "&data("Ven_Alamat") %>" style="background:transparent;border:none;" readonly>
         </div>
     </div>
     <div class="row">
