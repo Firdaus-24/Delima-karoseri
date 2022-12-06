@@ -6,6 +6,6 @@
 <!--#include file="../../navbar.asp"-->
 <%      
         call query("UPDATE DLK_T_InvPemH SET IPH_AktifYN = 'N' WHERE IPH_ID = '"& id &"'")
-        call alert("PURCHASE ORDER DENGAN ID "&id&" ", "berhasil non aktifkan", "success","incomming.asp") 
+        call alert("PURCHASE ORDER DENGAN ID "&id&" ", "berhasil non aktifkan", "success","index.asp") 
 call footer() 
 %>

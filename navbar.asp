@@ -66,7 +66,7 @@
                 <a class="link-name" href="<%= url %>views/klaim/index.asp">Klaim Barang</a>
               </li>
               <li>
-                <a class="link-name" href="<%= url %>views/inventory/jbarang.asp">Outgoing</a>
+                <a class="link-name" href="<%= url %>views/outgoing/index.asp">Outgoing</a>
               </li>
               <li>
                 <a class="link-name" href="<%= url %>views/inventory/permintaan.asp">Permintaan Barang</a>
@@ -150,6 +150,9 @@
               </li>
               <li>
                 <a class="link-name" href="<%= url %>views/finance/mutasiStok.asp">Mutasi Stok Barang</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/Bank/">Master Bank</a>
               </li>
             </ul>
           <!-- hr/ga -->

@@ -48,7 +48,7 @@
     <div class="row">
         <div class="col-lg-12">
             <table class="table" style="border:transparent;">
-                 <tr>
+                <tr>
                     <th>No P.O</th>
                     <th>:</th>
                     <td>

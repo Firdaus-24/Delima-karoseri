@@ -49,7 +49,7 @@
     ' untuk data paggination
     page = Request.QueryString("page")
 
-    orderBy = " ORDER BY PDDAte DESC"
+    orderBy = " ORDER BY DLK_T_ProductH.PDDAte, DLK_M_Barang.Brg_Nama ASC"
     set rs = Server.CreateObject("ADODB.Recordset")
     sqlawal = strquery
 
@@ -144,8 +144,6 @@
                     <th>Nama</th>
                     <th>Tanggal</th>
                     <th>Cabang</th>
-                    <th>Capacity Day</th>
-                    <th>Capacity Month</th>
                     <th class="text-center">Aksi</th>
                 </thead>
                 <tbody>
@@ -165,8 +163,6 @@
                         <td><%= rs("Brg_Nama") %></td>
                         <td><%= Cdate(rs("PDDate")) %></td>
                         <td><%= rs("agenName") %></td>
-                        <td><%= rs("PDCapacityDay") %></td>
-                        <td><%= rs("PDCapacityMonth") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <a href="product_u.asp?id=<%= rs("PDID") %>" class="btn badge text-bg-primary" >Update</a>

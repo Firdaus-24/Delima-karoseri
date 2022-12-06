@@ -93,7 +93,7 @@
         end if	
     loop
 
-    call header("index")
+    call header("Faktur Terhutang")
 %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">

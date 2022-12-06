@@ -31,6 +31,7 @@
       Session("username")= username
       session("cabang") = ckuser("agenName")
       session("server-id") = agen
+      session("Userid") = ckuser("userID")
       
          if session("username") = "ADMINISTRATOR" then
             response.Redirect("\akses")

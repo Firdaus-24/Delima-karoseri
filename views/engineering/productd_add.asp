@@ -29,6 +29,16 @@
     call header("Detail Product")
 %>
 <!--#include file="../../navbar.asp"-->
+<style>
+.clearfix {
+  padding: 80px 0;
+  text-align: center;
+  display:none;
+  position:absolute;
+  width:inherit;
+  overflow:hidden;
+}
+</style>
 <div class="container">
     <div class="row">
         <div class="col-lg-12  mt-3 text-center">
@@ -66,20 +76,6 @@
         </div>
         <div class="col-sm-4 mb-3">
             <input type="text" id="kdakun" class="form-control" name="kdakun" value="<%= data("cat_name") %>" readonly>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-2">
-            <label for="capacityday" class="col-form-label">Capacity Day</label>
-        </div>
-        <div class="col-sm-4 mb-3 capacityday">
-            <input type="number" class="form-control" name="capacityday" id="capacityday" value="<%= data("PDCapacityDay") %>" readonly>
-        </div>
-        <div class="col-sm-2">
-            <label for="capacitymonth" class="col-form-label">Capacity Month</label>
-        </div>
-        <div class="col-sm-4 mb-3">
-            <input type="number" class="form-control" name="capacitymonth" id="capacitymonth" value="<%= data("PDCapacitymonth") %>" readonly>
         </div>
     </div>
     <div class="row">
@@ -157,6 +153,19 @@
       <div class="modal-body">
         <!-- table barang -->
         <div class="row">
+            <div class="col-sm-3">
+                <label for="cdetailProdiksi" class="col-form-label">Cari Barang</label>
+            </div>
+            <div class="col-sm-9 mb-3">
+                <!-- cari nama barang -->
+                <input type="text" id="cdetailProdiksi" class="form-control" name="cdetailProdiksi" autocomplete="off"> 
+                <!-- cabang -->
+                <input type="hidden" id="productCabang" class="form-control" name="productCabang" value="<%= data("PDAgenID") %>" autocomplete="off"> 
+                <!-- id produksi -->
+                <input type="hidden" id="productID" class="form-control" name="productID" value="<%= data("PDBrgID") %>" autocomplete="off"> 
+            </div>
+        </div>
+        <div class="row">
             <div class="col-sm mb-4 overflow-auto" style="height:15rem;">
                 <table class="table" style="font-size:12px;">
                     <thead class="bg-secondary text-light" style="position: sticky;top: 0;">
@@ -166,7 +175,11 @@
                             <th scope="col">Pilih</th>
                         </tr>
                     </thead>
-                    <tbody  class="contentdpo">
+                    <!-- loader -->
+                    <div class="clearfix">
+                        <img src="../../public/img/loader.gif" width="50">
+                    </div>
+                    <tbody class="contentProductD">
                         <% do while not barang.eof %>
                         <tr>
                             <th scope="row"><%= barang("kategoriNama")&"-"& barang("jenisNama") %></th>
