@@ -51,7 +51,8 @@
    }
    @page {
       size: A4;
-      /* margin: 0; */
+      size: auto;   /* auto is the initial value */
+      margin: 0;  /* this affects the margin in the printer settings */
    }
    @media print {
       html, body {
@@ -163,14 +164,14 @@
       <img src="https://chart.googleapis.com/chart?cht=qr&chl=<%= id %>&chs=160x160&chld=L|0" width="60"/></br>
       <article>
          <p>
-               PT.Delima Karoseri Indonesia
+            PT.Delima Karoseri Indonesia
          </p>
          <p>
-               Copyright © 2022, ALL Rights Reserved MuhamadFirdaus-IT Division</br>
-               V.1 Mobile Responsive 2022
+            Copyright © 2022, ALL Rights Reserved MuhamadFirdaus-IT Division</br>
+            V.1 Mobile Responsive 2022
          </p>
       </article>
-    </div>  
+   </div>  
 <% 
     call footer()
 %>

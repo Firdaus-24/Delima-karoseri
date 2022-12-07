@@ -47,7 +47,8 @@
    }
    @page {
       size: A4;
-      /* margin: 0; */
+      size: auto;   /* auto is the initial value */
+      margin: 0;  /* this affects the margin in the printer settings */
    }
    @media print {
       html, body {

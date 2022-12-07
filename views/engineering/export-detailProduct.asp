@@ -49,13 +49,18 @@
         border: 1px solid black;
         padding:5px;
     }
-
+    @page {
+        size: A4;
+        size: auto;   /* auto is the initial value */
+        margin: 0;  /* this affects the margin in the printer settings */
+    }
     #cdetail{
         width:100%;
         font-size:12px;
         border-collapse: collapse;
     }
 </style>
+<body onload="window.print()">
     <table width="100%" style="font-size:16px">
         <tr>
         <div class="row gambar">
@@ -105,20 +110,6 @@
             </td>
             <td colspan="2">
                 : <%= data("cat_name") %>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Capacity Day
-            </td>
-            <td>
-                : <%= data("PDCapacityDay") %>
-            </td>
-            <td>
-                Capacity Month
-            </td>
-            <td colspan="2">
-                : <%= data("PDCapacitymonth") %>
             </td>
         </tr>
         <tr>

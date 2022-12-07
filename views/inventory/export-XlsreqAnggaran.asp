@@ -60,6 +60,14 @@
         right:10px;
         position:absolute;
     }
+    .footer article{
+      font-size:10px;
+    }
+    @page {
+        size: A4;
+        size: auto;   /* auto is the initial value */
+        margin: 0;  /* this affects the margin in the printer settings */
+    }
 </style>
 <body onload="window.print()">
     <div class="row gambar">
@@ -189,7 +197,7 @@
             %>
         </tbody>
     </table>
-    <table width="50%" style="font-size:20px;">
+    <table width="50%">
         <tbody>
             <tr>
                 <td> 
@@ -197,7 +205,7 @@
                 </td>
             </tr>
             <tr >
-                <td style="padding:10px;background-color:#7FFFD4;" > 
+                <td style="padding:10px;background-color:#7FFFD4;font-size:14px;" > 
                     Formulir Pengajuan Anggaran <%= dataH("DepNama") %>
                 </td>
             </tr>
@@ -239,6 +247,18 @@
             </tr>
         </tbody>
     </table>
+    <div class="footer">
+      <img src="https://chart.googleapis.com/chart?cht=qr&chl=<%= id %>&chs=160x160&chld=L|0" width="60"/></br>
+        <article>
+            <p>
+                PT.Delima Karoseri Indonesia
+            </p>
+            <p>
+                Copyright © 2022, ALL Rights Reserved MuhamadFirdaus-IT Division</br>
+                V.1 Mobile Responsive 2022
+            </p>
+        </article>
+    </div>
 </body>
 <% 
     call footer()

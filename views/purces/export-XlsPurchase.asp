@@ -55,7 +55,16 @@
         right:10px;
         position:absolute;
     }
+    .footer article{
+        font-size:10px;
+    }
+    @page {
+        size: A4;
+        size: auto;   /* auto is the initial value */
+        margin: 0;  /* this affects the margin in the printer settings */
+    }
 </style>
+<body onload="window.print()">
     <div class="row gambar">
         <div class="col">
             <img src="<%= url %>/public/img/PT.png" alt="delimalogo">
@@ -219,6 +228,18 @@
             <th><%= replace(formatCurrency(realgrantotal),"$","") %></th>
         </tr>
     </table>
+    <div class="footer">
+        <img src="https://chart.googleapis.com/chart?cht=qr&chl=<%= id %>&chs=160x160&chld=L|0" width="60"/></br>
+        <article>
+            <p>
+                PT.Delima Karoseri Indonesia
+            </p>
+            <p>
+                Copyright © 2022, ALL Rights Reserved MuhamadFirdaus-IT Division</br>
+                V.1 Mobile Responsive 2022
+            </p>
+        </article>
+    </div> 
 <% 
     call footer()
 %>

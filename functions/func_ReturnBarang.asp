@@ -5,7 +5,7 @@ sub tambahReturnBarang()
     venid = trim(Request.Form("venid")) 
     keterangan = trim(Request.Form("keterangan")) 
 
-    data_cmd.commandText = "SELECT * FROM DLK_T_ReturnBarangH WHERE RB_AgenID = '"& cabang &"' AND RB_Date = '"& tgl &"' AND RB_VenID = '"& venid &"' AND RB_keterangan = '"& keterangan &"'"
+    data_cmd.commandText = "SELECT * FROM DLK_T_ReturnBarangH WHERE RB_AgenID = '"& cabang &"' AND RB_Date = '"& tgl &"' AND RB_VenID = '"& venid &"' AND RB_keterangan = '"& keterangan &"' AND RB_AktifYN = 'Y'"
 
     set data = data_cmd.execute
 

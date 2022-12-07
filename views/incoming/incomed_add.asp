@@ -32,7 +32,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12 mb-3 text-center">
-            <img src="https://chart.googleapis.com/chart?cht=qr&chl=<%= id %>&chs=160x160&chld=L|0" />
+            <img src="https://chart.googleapis.com/chart?cht=qr&chl=<%= id %>&chs=160x160&chld=L|0" class="qr-code img-thumbnail img-responsive" width="100" height="100"/>
         </div>
     </div>
    <div class="row">

@@ -59,8 +59,9 @@
         font-size:10px;
     }
     @page {
-        size: A4;
-        /* margin: 0; */
+      size: A4;
+      size: auto;   /* auto is the initial value */
+      margin: 0;  /* this affects the margin in the printer settings */
     }
     @media print {
         html, body {
@@ -80,7 +81,7 @@
     <table width="100%" >
         <tr>
             <td style="text-align:center;">
-                <h3>FAKTUR TERHUTANG</h3>
+                <h5>FAKTUR TERHUTANG</h5>
             </td>
         </tr>
     </table>

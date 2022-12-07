@@ -43,7 +43,13 @@
     #number{
         text-align:right;
     }
+    @page {
+        size: A4;
+        size: auto;   /* auto is the initial value */
+        margin: 0;  /* this affects the margin in the printer settings */
+    }
 </style>
+<body onload="window.print()">
     <div class="row gambar">
          <div class="col ">
             <img src="<%= url %>/public/img/delimalogo.png" alt="delimalogo">
@@ -52,12 +58,12 @@
     <table style="text-align:center;width:100%;">
         <tr>
             <td colspan="7">
-                <h3>DETAIL BARANG KURANG DARI PESANAN</h3>
+                <h5>DETAIL BARANG KURANG DARI PESANAN</h5>
             </td>
         </tr>
         <tr>
             <td colspan="7">
-                <h3><%= data("IPH_ID") %></h3>
+                <h5><%= data("IPH_ID") %></h5>
             </td>
         </tr>
         <tr>
