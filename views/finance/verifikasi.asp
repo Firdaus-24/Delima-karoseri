@@ -1,4 +1,5 @@
-<!--#include file="../../init.asp"-->
+<!--#include file="../../Connections/cargo.asp"-->
+
 <% 
     id = Request.QueryString("d")
 

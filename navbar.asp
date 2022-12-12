@@ -102,6 +102,9 @@
               <li>
                 <a class="link-name" href="<%= url %>views/engineering/produksi.asp">Produksi</a>
               </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/bom/">Form BOM</a>
+              </li>
             </ul>
           <!-- ppic -->
           <li class="nav-text">

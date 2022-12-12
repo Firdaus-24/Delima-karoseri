@@ -57,7 +57,7 @@
             <label for="tgl" class="col-form-label">Tanggal</label>
         </div>
         <div class="col-lg-4 mb-3">
-            <input type="text" id="tgl" name="tgl" class="form-control" value="<%= date() %>" readonly required>
+            <input type="text" id="tgl" name="tgl" class="form-control" value="<%= Cdate(data("IPH_DAte")) %>" readonly required>
         </div>
         <div class="col-lg-2 mb-3">
             <label for="tgljt" class="col-form-label">Tanggal Jatuh Tempo</label>
