@@ -223,7 +223,7 @@
         else
             ppn = 0
         end if
-        realgrantotal = (grantotal - diskonall) + ppn
+        realgrantotal = (grantotal - diskonall) + ppn + data("IPH_Asuransi") + data("IPH_Lain")
         %>
         <tr>
             <th colspan="5">ppn</th>
@@ -235,6 +235,18 @@
             <td><%= data("IPH_Diskonall") %>%</td>
             <td align="right"><%= replace(formatCurrency(diskonall),"$","") %></td>
         </tr>
+        <tr>
+            <th colspan="6">Asuransi</th>
+                <td align="right">
+                    <%= replace(formatcurrency(data("IPH_asuransi")),"$","") %>
+                </td>
+            </tr>
+            <tr>
+                <th colspan="6">Lain-lain</th>
+                <td align="right">
+                    <%= replace(formatcurrency(data("IPH_lain")),"$","")  %>
+                </td>
+            </tr>
         <tr>
             <th colspan="6">Total Pembayaran</th>
             <td align="right"><%= replace(formatCurrency(realgrantotal),"$","") %></td>

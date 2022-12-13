@@ -95,6 +95,86 @@
 
     call header("Faktur Terhutang")
 %>
+<style>
+
+    /* The Modal (background) */
+    .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+    }
+
+    /* Modal Content (image) */
+    .modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    }
+
+    /* Caption of Modal Image */
+    #caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 150px;
+    }
+
+    /* Add Animation */
+    .modal-content, #caption {  
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+    }
+
+    @-webkit-keyframes zoom {
+    from {-webkit-transform:scale(0)} 
+    to {-webkit-transform:scale(1)}
+    }
+
+    @keyframes zoom {
+    from {transform:scale(0)} 
+    to {transform:scale(1)}
+    }
+
+    /* The Close Button */
+    .close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    }
+
+    .close:hover,
+    .close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+    }
+
+    /* 100% Image Width on Smaller Screens */
+    @media only screen and (max-width: 700px){
+    .modal-content {
+        width: 100%;
+    }
+    }
+</style>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row">
@@ -162,6 +242,7 @@
                     <th>Tanggal JT</th>
                     <th>Vendor</th>
                     <th>Keterangan</th>
+                    <th>Document</th>
                     <th class="text-center">Aksi</th>
                 </thead>
                 <tbody>
@@ -186,6 +267,19 @@
                         </td>
                         <td><%= rs("Ven_Nama") %></td>
                         <td><%= rs("IPH_Keterangan") %></td>
+                        <td>
+                            <% if rs("IPH_image") <> "" then%>
+                                <img src="<%= url %>document/image/<%= rs("IPH_image") &".jpg" %>" id="myImg<%= recordcounter %>" width="30px" onclick="openImage('mymodal<%= recordcounter %>', this.src,'img<%= recordcounter %>','caption<%= recordcounter %>','close<%= recordcounter %>','<%= rs("IPH_Id") %>')">
+                                <!-- The Modal -->
+                                <div class="modal" id="mymodal<%= recordcounter %>">
+                                    <span class="close" id="close<%= recordcounter %>">&times;</span>
+                                    <div id="caption<%= recordcounter %>"></div>
+                                    <img class="modal-content" id="img<%= recordcounter %>">
+                                </div>
+                            <% else %>
+                                <a href="uploadImage.asp?id=<%= rs("IPH_Id") %>" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
+                            <% end if %>
+                        </td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <% if not p.eof then %>
@@ -272,5 +366,23 @@
         </div>
     </div>
 </div>  
+<script>
+function openImage(modal,src,img,caption,close,id){
+    let pmodal = $(`#${modal}`)
+        
+    let modalImg = $(`#${img}`);
+    let captionText = $(`#${caption}`);
+
+    pmodal.css("display", "block");
+    modalImg.attr('src', `${src}`) ;
+    captionText.html(`<a href="uploadImage.asp?id=${id}" class="btn badge text-bg-light">UPLOAD ULANG</a>`).css({"text-align":"center","margin-top":"10px", "margin-bottom": "10px"})
+    
+    $(`#${close}`).on('click', function(){
+    
+        pmodal.css("display","none")
+    })
+}
+
+</script>
 <% call footer() %>
 

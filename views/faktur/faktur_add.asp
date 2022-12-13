@@ -86,23 +86,36 @@
                 <label for="ppn" class="col-form-label">PPN</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="number" id="ppn" name="ppn" class="form-control">
+                <input type="number" id="ppn" name="ppn" class="form-control" required>
             </div>
         </div>
+        <div class="row">
+            <div class="col-lg-2 mb-3">
+                <label for="asuransi" class="col-form-label">Asuransi</label>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <input type="text" id="asuransi" name="asuransi" class="form-control" onchange="rupiah(parseInt(this.value), 'asuransi')" autocomplete="off" required>
+            </div>
+            <div class="col-lg-2 mb-3">
+                <label for="lain" class="col-form-label">Lain-lain</label>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <input type="text" id="lain" name="lain" class="form-control" autocomplete="off" onchange="rupiah(parseInt(this.value), 'lain')" autocomplete="off" required>
+            </div>
+        </div>        
         <div class="row">
             <div class="col-lg-2 mb-3">
                 <label for="diskon" class="col-form-label">Diskon</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="number" id="diskon" name="diskon" class="form-control">
+                <input type="number" id="diskon" name="diskon" class="form-control" required>
             </div>
             <div class="col-lg-2 mb-3">
                 <label for="keterangan" class="col-form-label">Keterangan</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" autocomplete="off">
+                <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" autocomplete="off" required>
             </div>
-            
         </div>        
         <div class="row">
             <div class="col-lg-12 text-center">
@@ -112,8 +125,20 @@
         </div>
     </form>
 </div>  
-
-
+<script>
+function format(number){
+    if (!isNaN(number)){
+        var rupiah = '';
+        var angkarev = number.toString().split('').reverse().join('');
+        for (var i = 0; i < angkarev.length; i++) if (i % 3 === 0) rupiah += angkarev.substr(i, 3) + '.';
+        
+        return rupiah.split('', rupiah.length - 1).reverse().join('') + ',-';
+    }else{
+        swal("yang anda masukan bukan nomor!");
+    }
+}
+const rupiah = (e,t) =>{$(`#${t}`).val(format(e))}
+</script>
 <% 
     if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
         call tambahFaktur()

@@ -74,12 +74,26 @@
             <input type="text" id="vendor" name="vendor" class="form-control" value="<%= data("Ven_Nama") %>" readonly>
         </div>
         <div class="col-lg-2 mb-3">
-                <label for="ppn" class="col-form-label">PPN</label>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <input type="number" id="ppn" name="ppn" value="<%= data("IPH_PPN") %>" class="form-control" readonly>
-            </div>
+            <label for="ppn" class="col-form-label">PPN</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="number" id="ppn" name="ppn" value="<%= data("IPH_PPN") %>" class="form-control" readonly>
+        </div>
     </div>
+    <div class="row">
+        <div class="col-lg-2 mb-3">
+            <label for="asuransi" class="col-form-label">Asuransi</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="text" id="asuransi" name="asuransi" class="form-control" value="<%= replace(formatcurrency(data("IPH_Asuransi")),"$","") %>" autocomplete="off" readonly>
+        </div>
+        <div class="col-lg-2 mb-3">
+            <label for="lain" class="col-form-label">Lain-lain</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="text" id="lain" name="lain" class="form-control" autocomplete="off" value="<%= replace(formatcurrency(data("IPH_lain")),"$","") %>"  autocomplete="off" readonly>
+        </div>
+    </div>    
     <div class="row">
         <div class="col-lg-2 mb-3">
                 <label for="diskon" class="col-form-label">Diskon</label>

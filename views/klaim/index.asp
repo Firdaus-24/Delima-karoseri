@@ -199,7 +199,7 @@
                         <td class="p-3 text-center">
                             <% if rs("DB_image1") <> "" then%>
                                 <a href="uploadtest.asp?id=<%= rs("DB_ID") & 1 %>&p=jpg&T=image&db=DB_Image1">
-                                <img src="<%= url %>document/image/<%= rs("DB_image1") &".jpg" %>" width="40px">
+                                <img src="<%= url %>document/image/<%= rs("DB_image1") &".jpg" %>" width="30px">
                                 </a>
                             <% else %>  
                                 <a href="uploadtest.asp?id=<%= rs("DB_ID") & 1 %>&p=jpg&T=image&db=DB_Image1" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
