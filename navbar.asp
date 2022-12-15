@@ -174,16 +174,6 @@
                 <a href="<%= url %>views/departement/">Departement</a>
               </li>
             </ul>
-          <!-- permintaan barang -->
-          <li class="nav-text">
-            <a href="#" onclick="toggle('sublist-permintaanb')"><i class="bi bi-folder2-open"></i> Permintaan Barang</a>
-            <i class="bi bi-chevron-compact-down" id="iconDown"></i>
-          </li>
-            <ul class="sub-menu" id="sublist-permintaanb">
-              <li>
-                <a class="link-name" href="<%= url %>views/permintaan/index.asp">Permintaan Barang</a>
-              </li>
-            <ul>
         </div>
         <hr />
         <div class="nav-section">

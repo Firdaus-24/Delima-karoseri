@@ -116,6 +116,7 @@
             <th scope="col">No Transaksi</th>
             <th scope="col">Items</th>
             <th scope="col">Quantity</th>
+            <th scope="col">Harga</th>
             <th scope="col">Satuan</th>
          </tr>
       </thead>
@@ -127,11 +128,11 @@
             <td>Document</td>
             <td><%= data1("MR_Transaksi") %></td>
             <td><%= data1("MR_Updatetime") %></td>
-            <td><%= data1("username") %></td>
+            <td colspan="2"><%= data1("username") %></td>
          </tr>
          <% 
          ' detail2
-         data_cmd.commandTExt = "SELECT dbo.DLK_T_MaterialReceiptD2.MR_Transaksi, dbo.DLK_T_MaterialReceiptD2.MR_Item,dbo.DLK_T_MaterialReceiptD2.MR_Qtysatuan, dbo.DLK_T_MaterialReceiptD2.MR_JenisSat, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id FROM dbo.DLK_T_MaterialReceiptD2 LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialReceiptD2.MR_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialReceiptD2.MR_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID WHERE dbo.DLK_T_MaterialReceiptD2.MR_ID = '"& id &"' AND LEFT(MR_Transaksi,13) = '"& data1("MR_Transaksi") &"' GROUP BY dbo.DLK_T_MaterialReceiptD2.MR_Transaksi, dbo.DLK_T_MaterialReceiptD2.MR_Item,dbo.DLK_T_MaterialReceiptD2.MR_Qtysatuan, dbo.DLK_T_MaterialReceiptD2.MR_JenisSat, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id ORDER BY dbo.DLK_T_MaterialReceiptD2.MR_Transaksi"
+         data_cmd.commandTExt = "SELECT dbo.DLK_T_MaterialReceiptD2.MR_Transaksi, dbo.DLK_T_MaterialReceiptD2.MR_Item,dbo.DLK_T_MaterialReceiptD2.MR_Qtysatuan, dbo.DLK_T_MaterialReceiptD2.MR_Harga, dbo.DLK_T_MaterialReceiptD2.MR_JenisSat, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id FROM dbo.DLK_T_MaterialReceiptD2 LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialReceiptD2.MR_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialReceiptD2.MR_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID WHERE dbo.DLK_T_MaterialReceiptD2.MR_ID = '"& id &"' AND LEFT(MR_Transaksi,13) = '"& data1("MR_Transaksi") &"' GROUP BY dbo.DLK_T_MaterialReceiptD2.MR_Transaksi, dbo.DLK_T_MaterialReceiptD2.MR_Item,dbo.DLK_T_MaterialReceiptD2.MR_Qtysatuan, dbo.DLK_T_MaterialReceiptD2.MR_Harga, dbo.DLK_T_MaterialReceiptD2.MR_JenisSat, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id ORDER BY dbo.DLK_T_MaterialReceiptD2.MR_Transaksi"
          set data2 = data_cmd.execute
          do while not data2.eof 
          %>
@@ -139,6 +140,7 @@
             <td><%= data2("MR_Transaksi") %></td>
             <td><%= data2("Brg_Nama") %></td>
             <td><%= data2("MR_Qtysatuan") %></td>
+            <td><%= replace(formatCurrency(data2("MR_Harga")),"$","") %></td>
             <td><%= data2("Sat_nama") %></td>
          </tr>
          <% 

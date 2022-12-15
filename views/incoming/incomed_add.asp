@@ -12,7 +12,7 @@
    data_cmd.commandTExt = "SELECT DLK_T_MaterialReceiptD1.*, DLK_M_WebLogin.username FROM DLK_T_MaterialReceiptD1 LEFT OUTER JOIN DLK_M_WebLogin ON DLK_T_MaterialReceiptD1.MR_Updateid = DLK_M_Weblogin.userid WHERE MR_ID = '"& id &"'"
    set data1 = data_cmd.execute
    ' detail2
-   data_cmd.commandTExt = "SELECT dbo.DLK_T_MaterialReceiptD2.*, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id FROM dbo.DLK_T_MaterialReceiptD2 LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialReceiptD2.MR_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialReceiptD2.MR_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID WHERE dbo.DLK_T_MaterialReceiptD2.MR_ID = '"& id &"'"
+   data_cmd.commandTExt = "SELECT dbo.DLK_T_MaterialReceiptD2.*, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id, DLK_M_Rak.Rak_Nama FROM dbo.DLK_T_MaterialReceiptD2 LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialReceiptD2.MR_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialReceiptD2.MR_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_Rak ON DLK_T_MaterialReceiptD2.MR_RakID = DLK_M_Rak.Rak_ID WHERE dbo.DLK_T_MaterialReceiptD2.MR_ID = '"& id &"'"
    set data2 = data_cmd.execute
 
    call header("Proses Incomming")
@@ -120,6 +120,8 @@
                   <th scope="col">Item</th>
                   <th scope="col">Quantity</th>
                   <th scope="col">Satuan</th>
+                  <th scope="col">Harga</th>
+                  <th scope="col">Rak</th>
                </tr>
             </thead>
             <tbody>
@@ -134,6 +136,8 @@
                   <td><%= data2("Brg_Nama") %></td>
                   <td><%= data2("MR_Qtysatuan") %></td>
                   <td><%= data2("Sat_nama") %></td>
+                  <td><%= replace(formatCurrency(data2("MR_Harga")),"$","") %></td>
+                  <td><%= data2("Rak_nama") %></td>
                </tr>
                <% 
                response.flush

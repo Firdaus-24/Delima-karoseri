@@ -131,6 +131,7 @@
                   <th scope="col">No Transaksi</th>
                   <th scope="col">Item</th>
                   <th scope="col">Quantity</th>
+                  <th scope="col">Harga</th>
                   <th scope="col">Satuan</th>
                   <th scope="col" class="text-center">Aksi</th>
                </tr>
@@ -146,6 +147,7 @@
                   <td><%= data2("MR_Transaksi") %></td>
                   <td><%= data2("Brg_Nama") %></td>
                   <td><%= data2("MR_Qtysatuan") %></td>
+                  <td><%= replace(formatCurrency(data2("MR_Harga")),"$","") %></td>
                   <td><%= data2("Sat_nama") %></td>
                   <td class="text-center">
                      <a href="aktifDetail.asp?id=<%= data2("MR_ID") %>&trans2=<%= data2("MR_Transaksi") %>" class="btn badge bg-danger" onclick="deleteItem(event,'delete item material receipt')">delete</a>
