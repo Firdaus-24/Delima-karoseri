@@ -69,10 +69,13 @@
                 <a class="link-name" href="<%= url %>views/outgoing/index.asp">Outgoing</a>
               </li>
               <li>
-                <a class="link-name" href="<%= url %>views/inventory/permintaan.asp">Permintaan Barang</a>
+                <a class="link-name" href="<%= url %>views/inventory/permintaan.asp">Form B.O.M</a>
               </li>
               <li>
                 <a class="link-name" href="<%= url %>views/inventory/POMin.asp">Permintaan Kurang</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/inventory/">Stok Barang</a>
               </li>
             </ul>
           <!-- repair -->
