@@ -5,7 +5,7 @@
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
    ' header
-   data_cmd.commandTExt = "SELECT dbo.DLK_T_MaterialReceiptH.*, dbo.GLB_M_Agen.AgenName, dbo.GLB_M_Agen.AgenID, dbo.DLK_M_TypeBarang.T_Nama FROM dbo.DLK_T_MaterialReceiptH LEFT OUTER JOIN dbo.DLK_M_TypeBarang ON dbo.DLK_T_MaterialReceiptH.MR_Jenis = dbo.DLK_M_TypeBarang.T_ID LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialReceiptH.MR_AgenID = dbo.GLB_M_Agen.AgenID WHERE (dbo.DLK_T_MaterialReceiptH.MR_AktifYN = 'Y') AND (dbo.DLK_T_MaterialReceiptH.MR_ID = '"& id &"')"
+   data_cmd.commandTExt = "SELECT dbo.DLK_T_MaterialReceiptH.*, dbo.GLB_M_Agen.AgenName, dbo.GLB_M_Agen.AgenID, dbo.DLK_M_Weblogin.username FROM dbo.DLK_T_MaterialReceiptH LEFT OUTER JOIN DLK_M_WebLogin ON DLK_T_MaterialReceiptH.MR_UpdateID = DLK_M_Weblogin.userid LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialReceiptH.MR_AgenID = dbo.GLB_M_Agen.AgenID WHERE (dbo.DLK_T_MaterialReceiptH.MR_AktifYN = 'Y') AND (dbo.DLK_T_MaterialReceiptH.MR_ID = '"& id &"')"
 
    set data = data_cmd.execute
    ' detail1
@@ -51,10 +51,10 @@
    </div>
    <div class="row align-items-center">
       <div class="col-lg-2 mb-3">
-         <label for="jenis" class="col-form-label">Type Barang</label>
+         <label for="updateid" class="col-form-label">Update ID</label>
       </div>
       <div class="col-lg-4 mb-3">
-         <input type="text" id="jenis" name="jenis" class="form-control" value="<%= data("T_Nama") %>" readonly>
+         <input type="text" id="updateid" name="updateid" class="form-control" value="<%= data("username") %>" readonly>
       </div>
       <div class="col-lg-2 mb-3">
          <label for="keterangan" class="col-form-label">Keterangan</label>

@@ -83,6 +83,7 @@
                         <th scope="col">Min Stok</th>
                         <th scope="col">Stok</th>
                         <th scope="col">Harga</th>
+                        <th scope="col">Total Harga</th>
                         <th scope="col">Keterangan</th>
                     </tr>
                 </thead>
@@ -106,15 +107,18 @@
                         ket = "-"
                         bgclass = ""
                     end if
+
+                    tharga = data("harga") * data("stok")
                     %>
-                    <tr class="<%= bgclass %>">
+                    <tr>
                         <td><%= data("kategoriNama") &"-"& data("jenisNama") %></td>
                         <td><%= data("Brg_Nama") %></td>
                         <td><%= data("T_Nama") %></td>
                         <td><%= data("Brg_Minstok") %></td>
                         <td><%= data("stok") %></td>
                         <td><%= replace(formatCurrency(data("harga")),"$","") %></td>
-                        <td>
+                        <td><%= replace(formatCurrency(tharga),"$","") %></td>
+                        <td class="<%= bgclass %>">
                             <%= ket %>
                         </td>
                     </tr>

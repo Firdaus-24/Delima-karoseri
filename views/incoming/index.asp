@@ -12,10 +12,6 @@
    data_cmd.commandTExt = "SELECT dbo.DLK_M_WebLogin.UserName, dbo.DLK_M_WebLogin.UserID FROM dbo.DLK_T_MaterialReceiptH LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_MaterialReceiptH.MR_updateID = dbo.DLK_M_WebLogin.UserID WHERE (dbo.DLK_T_MaterialReceiptH.MR_AktifYN = 'Y')GROUP BY dbo.DLK_M_WebLogin.UserName, dbo.DLK_M_WebLogin.UserID ORDER BY Username ASC"
 
    set users = data_cmd.execute
-   ' get type barang
-   data_cmd.commandTExt = "SELECT dbo.DLK_M_TypeBarang.T_Nama, dbo.DLK_M_TypeBarang.T_ID FROM dbo.DLK_T_MaterialReceiptH LEFT OUTER JOIN dbo.DLK_M_TypeBarang ON dbo.DLK_T_MaterialReceiptH.MR_Jenis = dbo.DLK_M_TypeBarang.T_ID WHERE        (dbo.DLK_T_MaterialReceiptH.MR_AktifYN = 'Y') GROUP BY dbo.DLK_M_TypeBarang.T_Nama, dbo.DLK_M_TypeBarang.T_ID ORDER BY dbo.DLK_M_TypeBarang.T_Nama"
-
-   set datajenis = data_cmd.execute
 
    cabang = trim(Request.Form("cabang"))
    user = trim(Request.Form("user"))
@@ -40,11 +36,11 @@
    else 
       filtercabang = ""
    end if
-   if user <> "" then 
-      filteruser = " AND DLK_T_MaterialReceiptH.MR_UpdateID = '"& user &"'"
-   else 
-      filteruser = ""
-   end if
+   ' if user <> "" then 
+   '    filteruser = " AND DLK_T_MaterialReceiptH.MR_UpdateID = '"& user &"'"
+   ' else 
+   '    filteruser = ""
+   ' end if
    if jenis <> "" then 
       filterjenis = " AND DLK_T_MaterialReceiptH.MR_Jenis = '"& jenis &"'"
    else 
@@ -60,7 +56,7 @@
    end if
 
    ' query seach 
-   strquery = "SELECT dbo.DLK_T_MaterialReceiptH.*, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_WebLogin.UserName, dbo.DLK_M_TypeBarang.T_Nama FROM dbo.DLK_T_MaterialReceiptH LEFT OUTER JOIN dbo.DLK_M_TypeBarang ON dbo.DLK_T_MaterialReceiptH.MR_Jenis = dbo.DLK_M_TypeBarang.T_ID LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_MaterialReceiptH.MR_updateID = dbo.DLK_M_WebLogin.UserID LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialReceiptH.MR_AgenID = dbo.GLB_M_Agen.AgenID WHERE (dbo.DLK_T_MaterialReceiptH.MR_AktifYN = 'Y') "& filtercabang &" "& filteruser &" "& filtertgl &" "& filterjenis &""
+   strquery = "SELECT dbo.DLK_T_MaterialReceiptH.*, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_WebLogin.UserName FROM dbo.DLK_T_MaterialReceiptH LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_MaterialReceiptH.MR_updateID = dbo.DLK_M_WebLogin.UserID LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialReceiptH.MR_AgenID = dbo.GLB_M_Agen.AgenID WHERE (dbo.DLK_T_MaterialReceiptH.MR_AktifYN = 'Y') "& filtercabang &" "& filteruser &" "& filtertgl &""
 
    ' untuk data paggination
    page = Request.QueryString("page")
@@ -155,18 +151,6 @@
             %>
          </select>
       </div>
-      <div class="col-lg-4 mt-3">
-         <label for="jenis">Type Barang</label>
-         <select class="form-select" aria-label="Default select example" name="jenis" id="jenis">
-            <option value="">Pilih</option>
-            <% do while not datajenis.eof %>
-               <option value="<%= datajenis("T_ID") %>"><%= datajenis("T_Nama") %></option>
-            <% 
-            datajenis.movenext
-            loop
-            %>
-         </select>
-      </div>
    </div>
    </form>
    <div class="row">
@@ -177,7 +161,6 @@
                <th scope="col">No</th>
                <th scope="col">Cabang</th>
                <th scope="col">Tanggal</th>
-               <th scope="col">Type</th>
                <th scope="col">Update ID</th>
                <th scope="col">Keterangan</th>
                <th scope="col" class="text-center">Aksi</th>
@@ -200,7 +183,6 @@
                   <th><%= rs("MR_ID") %></th>
                   <td><%= rs("AgenName") %></td>
                   <td><%= Cdate(rs("MR_Date")) %></td>
-                  <td><%= rs("T_Nama") %></td>
                   <td><%= rs("username") %></td>
                   <td><%= rs("MR_Keterangan") %></td>
                   <td class="text-center">
