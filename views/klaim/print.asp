@@ -9,27 +9,6 @@
 
     set data = data_cmd.execute
 
-    ' acc 1
-    data_cmd.commandText = "SELECT username FROM DLK_M_Weblogin WHERE USerID = '"& data("DB_Acc1") &"' AND USerAktifYN = 'Y'"
-
-    set acc1 = data_cmd.execute
-    ' acc 2
-    data_cmd.commandText = "SELECT username FROM DLK_M_Weblogin WHERE USerID = '"& data("DB_Acc2") &"' AND USerAktifYN = 'Y'"
-
-    set acc2 = data_cmd.execute
-
-    if not acc1.eof then
-        pjawab1 = acc1("username") 
-    else
-        pjawab1 = ""
-    end if
-    if not acc2.eof then
-        pjawab2 = acc2("username") 
-    else
-        pjawab2 = ""
-    end if
-
-
     call header("Media Print")
 %>
      <style>
@@ -113,18 +92,10 @@
         </tr>
         <tr>
             <th>
-                Kategori
+                Kode
             </th>
             <td>
-                <%= data("kategoriNama") %>
-            </td>
-        </tr>
-        <tr>
-            <th>
-                Jenis
-            </th>
-            <td>
-                <%= data("JenisNama") %>
+                <%= data("kategoriNama") &"-"& data("JenisNama") %>
             </td>
         </tr>
         <tr>
@@ -221,7 +192,7 @@
                 Acc 1
             </th>
             <td>
-                <%= pjawab1 %>
+                <%= data("DB_Acc1") %>
             </td>
         </tr>
         <tr>
@@ -229,7 +200,7 @@
                 Acc 2
             </th>
             <td>
-                <%= pjawab2 %>
+                <%= data("DB_Acc2") %>
             </td>
         </tr>
         <tr>

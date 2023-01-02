@@ -95,6 +95,36 @@
 
     call header("Klaim Barang Rusak") 
 %>
+<style>
+    .column{
+        height:12rem;
+        width:10rem;
+        position:relative;
+    }
+    .column img{
+        display:block;
+    }
+    .textImg {
+        position: absolute;
+        bottom: 0;
+        font-size: 15px;
+        padding: 10px;
+        text-align: center;
+        background: rgb(0, 0, 0);
+        background: rgba(0, 0, 0, 0.5);
+        width: 100%;
+        transition: .5s ease;
+        opacity:0;
+        color: white;
+    }
+    .textImg a {
+        color: #fff;
+        text-decoration:none;
+    }
+    .column:hover .textImg {
+        opacity: 1;
+    }
+</style>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row">
@@ -151,7 +181,6 @@
             <table class="table" style="display:block;overflow:auto;border-color:#fff;">
                 <thead class="bg-secondary text-light">
                     <tr>
-                    <th scope="col">ID</th>
                     <th scope="col">Tanggal</th>
                     <th scope="col">Cabang</th>
                     <th scope="col">Barang</th>
@@ -159,9 +188,9 @@
                     <th scope="col">Satuan</th>
                     <th scope="col">Keterangan</th>
                     <th scope="col">Document</th>
-                    <th scope="col">Image 1</th>
-                    <th scope="col">Image 2</th>
-                    <th scope="col">Image 3</th>
+                    <th scope="col">Doc Image</th>
+                    <th scope="col">Acc 1</th>
+                    <th scope="col">Acc 2</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -174,7 +203,6 @@
                     recordcounter = recordcounter + 1
                     %>
                     <tr>
-                        <th scope="row"><%= rs("DB_ID") %> </th>
                         <td><%= Cdate(rs("DB_Date")) %></td>
                         <td><%= rs("AgenNAme") %></td>
                         <td><%= rs("Brg_Nama") %></td>
@@ -196,31 +224,23 @@
                             set fs = Nothing
                             %>
                         </td>
-                        <td class="p-3 text-center">
-                            <% if rs("DB_image1") <> "" then%>
-                                <a href="uploadtest.asp?id=<%= rs("DB_ID") & 1 %>&p=jpg&T=image&db=DB_Image1">
-                                <img src="<%= url %>document/image/<%= rs("DB_image1") &".jpg" %>" width="30px">
-                                </a>
-                            <% else %>  
-                                <a href="uploadtest.asp?id=<%= rs("DB_ID") & 1 %>&p=jpg&T=image&db=DB_Image1" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#modalImgDeleteBrg" onclick="getIDdestroy('<%=rs("DB_ID")%>', '<%=url%>', '<%=rs("DB_Image1")%>', '<%=rs("DB_Image2")%>', '<%=rs("DB_Image3")%>')">
+                                See
+                            </button>
+                        </td>
+                        <td>
+                            <% if rs("DB_Acc1") = "N" then%>
+                                <button type="button" class="btn badge btn-info" data-bs-toggle="modal" data-bs-target="#modalAccDelbarang" onclick="getIDDelBarang('<%= rs("DB_ID") %>', '1')">Ajukan</button>
+                            <% else %>
+                                yes
                             <% end if %>
                         </td>
-                        <td class="p-3 text-center">
-                            <% if rs("DB_image2") <> "" then%>
-                                <a href="uploadtest.asp?id=<%= rs("DB_ID") & 2 %>&p=jpg&T=image&db=DB_Image2">
-                                <img src="<%= url %>document/image/<%= rs("DB_image2") &".jpg" %>" width="40px">
-                                </a>
-                            <% else %>  
-                                <a href="uploadtest.asp?id=<%= rs("DB_ID") & 2 %>&p=jpg&T=image&db=DB_Image2" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
-                            <% end if %>
-                        </td>
-                        <td class="p-3 text-center">
-                            <% if rs("DB_image3") <> "" then%>
-                                <a href="uploadtest.asp?id=<%= rs("DB_ID") & 3 %>&p=jpg&T=image&db=DB_Image3">
-                                <img src="<%= url %>document/image/<%= rs("DB_image3") &".jpg" %>" width="40px">
-                                </a>
-                            <% else %>  
-                                <a href="uploadtest.asp?id=<%= rs("DB_ID") & 3 %>&p=jpg&T=image&db=DB_Image3" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
+                        <td>
+                            <% if rs("DB_Acc2") = "N" then%>
+                                <button type="button" class="btn badge btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalAccDelbarang" onclick="getIDDelBarang('<%= rs("DB_ID") %>', '2')">Ajukan</button>
+                            <% else %>
+                                yes
                             <% end if %>
                         </td>
                         <td class="text-center">
@@ -306,4 +326,116 @@
         </div>
     </div>
 </div>
+<!-- Modal upload image -->
+<div class="modal fade" id="modalImgDeleteBrg" tabindex="-1" aria-labelledby="modalImgDeleteBrgLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h1 class="modal-title fs-5" id="modalImgDeleteBrgLabel">Document Pendukung</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-4 column">
+                <img id="destroy1" src="" width="100%">
+                <a href="" id="DB_Img1">
+                    <div class="textImg">
+                        Image 1
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-4 column">
+                <img id="destroy2" src="" width="100%">
+                <a href="" id="DB_Img2">
+                    <div class="textImg">
+                        Image 2
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-4 column">
+                <img id="destroy3" src="" width="100%">
+                <a href="" id="DB_Img3">
+                    <div class="textImg">
+                        Image 3
+                    </div>
+                </a>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <p>PT DELIMA KAROSERIN INDONESIA</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalAccDelbarang" tabindex="-1" aria-labelledby="modalAccDelbarangLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modalAccDelbarangLabel">Approve Destroy Barang</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form action="sendEmail.asp" method="post" onsubmit="validasiForm(this,event,'Kirim Email','info')">
+                <input type="hidden" id="ndestroy" name="ndestroy" class="form-control" required>
+                <input type="hidden" id="iddestroy" name="iddestroy" class="form-control" required>
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <label for="emailTo" class="col-form-label">Email TO</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="email" id="emailTo" name="emailTo" class="form-control" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <label for="subject" class="col-form-label">Subject</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="text" id="subject" name="subject" class="form-control" required>
+                    </div>
+                </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const getIDdestroy = (id,url, img1,img2,img3) => {
+        if(!img1){
+            $("#destroy1").attr(`src`,`${url}document/image/nophoto.jpg`)
+        }else{
+            $("#destroy1").attr(`src`,`${url}document/image/${img1}.jpg`)
+
+        }        
+        if(!img2){
+            $("#destroy2").attr(`src`,`${url}document/image/nophoto.jpg`)
+        }else{
+            $("#destroy2").attr(`src`,`${url}document/image/${img2}.jpg`)
+
+        }        
+        if(!img3){
+            $("#destroy3").attr(`src`,`${url}document/image/nophoto.jpg`)
+        }else{
+            $("#destroy3").attr(`src`,`${url}document/image/${img3}.jpg`)
+        }        
+
+        // setting attr href
+        $("#DB_Img1").attr(`href`, `uploadtest.asp?id=${id}1&p=jpg&T=image&db=DB_Image1`)
+        $("#DB_Img2").attr(`href`, `uploadtest.asp?id=${id}2&p=jpg&T=image&db=DB_Image2`)
+        $("#DB_Img3").attr(`href`, `uploadtest.asp?id=${id}3&p=jpg&T=image&db=DB_Image3`)
+
+    }
+    function getIDDelBarang(id,no){
+      $("#iddestroy").val(id)
+      $("#ndestroy").val(no)
+   }
+</script>
 <% call footer() %>

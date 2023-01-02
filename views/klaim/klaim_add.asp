@@ -63,6 +63,10 @@
             <div class="col-sm-4 mb-3">
                 <input type="number" autocomplete="off" class="form-control" id="qty" name="qty" required>
                 <input type="hidden" autocomplete="off" class="form-control" id="qtystokdelbrg" name="qtystokdelbrg" required>
+                <!-- cek satuan barang -->
+                <input type="hidden" autocomplete="off" class="form-control" id="satuan" name="satuan" required>
+                <!-- cek harga -->
+                <input type="hidden" autocomplete="off" class="form-control" id="harga" name="harga" required>
             </div>
         </div>
         <div class="row">
@@ -72,55 +76,10 @@
         </div>
         <div class="row">
             <div class="col-sm-2">
-                <label for="satuan">satuan</label>
-            </div>
-            <div class="col-sm-4 mb-3">
-                <select class="form-select" aria-label="Default select example" id="satuan" name="satuan" required>
-                    <option value="">Pilih</option>
-                    <% do while not satuan.eof %>
-                    <option value="<%= satuan("sat_id") %>"><%= satuan("sat_Nama") %></option>
-                    <% 
-                    satuan.movenext
-                    loop
-                    %>
-                </select>
-            </div>
-            <div class="col-sm-2">
                 <label for="ket">keterangan</label>
             </div>
-            <div class="col-sm-4 mb-3">
+            <div class="col-sm-10 mb-3">
                 <input type="text" class="form-control" id="ket" name="ket" autocomplete="off" maxlength="50" required>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-2">
-                <label for="acc1">acc 1</label>
-            </div>
-            <div class="col-sm-4 mb-3">
-                <select class="form-select" aria-label="Default select example" id="acc1" name="acc1" required>
-                    <option value="">Pilih</option>
-                    <% do while not users.eof %>
-                    <option value="<%= users("userid") %>"><%= users("userName") %></option>
-                    <% 
-                    users.movenext
-                    loop
-                    users.movefirst
-                    %>
-                </select>
-            </div>
-            <div class="col-sm-2">
-                <label for="acc2">acc 2</label>
-            </div>
-            <div class="col-sm-4 mb-3">
-                <select class="form-select" aria-label="Default select example" id="acc2" name="acc2" required>
-                    <option value="">Pilih</option>
-                    <% do while not users.eof %>
-                    <option value="<%= users("userid") %>"><%= users("userName") %></option>
-                    <% 
-                    users.movenext
-                    loop
-                    %>
-                </select>
             </div>
         </div>
         <div class="row">

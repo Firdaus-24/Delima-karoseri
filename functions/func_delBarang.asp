@@ -5,80 +5,69 @@ sub tambahDelbarang()
     brg = trim(Request.Form("brg"))
     qty = trim(Request.Form("qty"))
     satuan = trim(Request.Form("satuan"))
-    acc1 = trim(Request.Form("acc1"))
-    acc2 = trim(Request.Form("acc2"))
+    harga = trim(Request.Form("harga"))
     ket = trim(Request.Form("ket"))
 
-    data_cmd.CommandText = "SELECT * FROM DLK_T_DelBarang WHERE DB_AgenID = '"& delcabang &"' AND DB_Date = '"& tgl &"' AND DB_Item = '"& brg &"' AND DB_Acc1 = '"& acc1 &"' AND DB_Acc2 = '"& acc2 &"' AND DB_AktifYN = 'Y'"
+    data_cmd.CommandText = "SELECT * FROM DLK_T_DelBarang WHERE DB_AgenID = '"& delcabang &"' AND DB_Date = '"& tgl &"' AND DB_Item = '"& brg &"' AND DB_AktifYN = 'Y'"
 
     set headerdata = data_cmd.execute
 
     ' cek data 
-    data_cmd.commandTExt = "SELECT dbo.DLK_T_InvPemD.IPD_IphID, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemH.IPH_DiskonAll, dbo.DLK_T_InvPemH.IPH_Ppn, dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemD.IPD_QtySatuan, dbo.DLK_T_InvPemD.IPD_Item, dbo.DLK_T_InvPemD.IPD_Disc2, dbo.DLK_T_InvPemD.IPD_Disc1 FROM dbo.DLK_T_InvPemD LEFT OUTER JOIN dbo.DLK_T_InvPemH ON LEFT(dbo.DLK_T_InvPemD.IPD_IphID, 13) = dbo.DLK_T_InvPemH.IPH_ID WHERE (dbo.DLK_T_InvPemH.IPH_AgenId = '"& delcabang &"') AND (dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y') AND (dbo.DLK_T_InvPemD.IPD_Item = '"& brg &"') ORDER BY DLK_T_invPemH.IPH_Date ASC"
+    ' data_cmd.commandTExt = "SELECT dbo.DLK_T_InvPemD.IPD_IphID, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemH.IPH_DiskonAll, dbo.DLK_T_InvPemH.IPH_Ppn, dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemD.IPD_QtySatuan, dbo.DLK_T_InvPemD.IPD_Item, dbo.DLK_T_InvPemD.IPD_Disc2, dbo.DLK_T_InvPemD.IPD_Disc1 FROM dbo.DLK_T_InvPemD LEFT OUTER JOIN dbo.DLK_T_InvPemH ON LEFT(dbo.DLK_T_InvPemD.IPD_IphID, 13) = dbo.DLK_T_InvPemH.IPH_ID WHERE (dbo.DLK_T_InvPemH.IPH_AgenId = '"& delcabang &"') AND (dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y') AND (dbo.DLK_T_InvPemD.IPD_Item = '"& brg &"') ORDER BY DLK_T_invPemH.IPH_Date ASC"
     ' response.write data_cmd.commandText & "<br>"
-    set pembelian = data_cmd.execute
+    ' set pembelian = data_cmd.execute
     
+    ' koding berurutan by tgl pembelian
+     '     do while not pembelian.eof
+
+    '     data_cmd.commandTExt = "SELECT ISNULL(SUM(dbo.DLK_T_InvJulD.IJD_QtySatuan),0) AS qty, dbo.DLK_T_InvJulD.IJD_IPDIPHID, dbo.DLK_T_InvJulD.IJD_Item FROM dbo.DLK_T_InvJulD LEFT OUTER JOIN dbo.DLK_T_InvJulH ON LEFT(dbo.DLK_T_InvJulD.IJD_IJHID, 13) = dbo.DLK_T_InvJulH.IJH_ID WHERE (dbo.DLK_T_InvJulH.IJH_agenID = '"& delcabang &"') AND (dbo.DLK_T_InvJulH.IJH_AktifYN = 'Y') AND (dbo.DLK_T_InvJulD.IJD_IPDIPHID = '"& pembelian("IPD_IPHID") &"') GROUP BY dbo.DLK_T_InvJulD.IJD_IPDIPHID, dbo.DLK_T_InvJulD.IJD_Item"
+    '     ' response.write data_cmd.commandText & "<br>"
+    '     set penjualan = data_cmd.execute
+
+    '     if penjualan.eof then
+    '         jual = 0
+    '     else
+    '         jual = penjualan("qty")
+    '     end if
+
+    '     ' cek klaim barang
+    '     data_cmd.commandTExt = "SELECT DB_IPDIPHID, DB_Date, ISNULL(SUM(DB_QtySatuan),0) AS tklaim FROM dbo.DLK_T_DelBarang WHERE DB_AktifYN = 'Y' AND DB_IPDIPHID = '"& pembelian("IPD_IPHID") &"' AND DB_AgenID = '"& delcabang &"' GROUP BY DB_IPDIPHID, DB_Date ORDER BY DB_Date ASC"
+    '     ' response.write data_cmd.commandText & "<br>"
+    '     set klaim = data_cmd.execute
+
+    '     if not klaim.eof then
+    '         tklaim = klaim("tklaim")
+    '     else
+    '         tklaim = 0
+    '     end if
+
+    '     angka = Cint(pembelian("IPD_Qtysatuan")) - CInt(jual) - Cint(tklaim) 
+        
+        
+    '     if angka > 0 then
+    '         disc1 = (pembelian("IPD_Harga") * pembelian("IPD_Disc1")) / 100
+    '         disc2 = (pembelian("IPD_Harga") * pembelian("IPD_Disc2")) / 100
+            
+    '         tharga = (pembelian("IPD_Harga") + (pembelian("IPD_Harga") * pembelian("IPH_PPn")) / 100) - disc1 - disc2
+            
+    '         if angka > Cint(qty) then
+    '             call query ("sp_AddDLK_T_DelBarang '"& delcabang &"', '"& tgl &"', '"& brg &"', '"& pembelian("IPD_IPHID") &"', '"& qty &"', '"& tharga &"', '"& satuan &"', '"& ket &"', '','','','"& acc1 &"','"& acc2 &"'")
+
+    '             qty = 0
+    '         else
+    '             call query ("sp_AddDLK_T_DelBarang '"& delcabang &"', '"& tgl &"', '"& brg &"', '"& pembelian("IPD_IPHID") &"','"& angka &"', '"& tharga &"', '"& satuan &"', '"& ket &"', '','','','"& acc1 &"','"& acc2 &"'")
+
+    '             qty = Cint(qty) - angka
+    '         end if
+    '         if qty <= 0 then
+    '             exit do
+    '         end if
+    '     end if
+    '     response.flush
+    '     pembelian.movenext
+    ' loop
     if headerdata.eof then
-        do while not pembelian.eof
-
-        data_cmd.commandTExt = "SELECT ISNULL(SUM(dbo.DLK_T_InvJulD.IJD_QtySatuan),0) AS qty, dbo.DLK_T_InvJulD.IJD_IPDIPHID, dbo.DLK_T_InvJulD.IJD_Item FROM dbo.DLK_T_InvJulD LEFT OUTER JOIN dbo.DLK_T_InvJulH ON LEFT(dbo.DLK_T_InvJulD.IJD_IJHID, 13) = dbo.DLK_T_InvJulH.IJH_ID WHERE (dbo.DLK_T_InvJulH.IJH_agenID = '"& delcabang &"') AND (dbo.DLK_T_InvJulH.IJH_AktifYN = 'Y') AND (dbo.DLK_T_InvJulD.IJD_IPDIPHID = '"& pembelian("IPD_IPHID") &"') GROUP BY dbo.DLK_T_InvJulD.IJD_IPDIPHID, dbo.DLK_T_InvJulD.IJD_Item"
-        ' response.write data_cmd.commandText & "<br>"
-        set penjualan = data_cmd.execute
-
-        if penjualan.eof then
-            jual = 0
-        else
-            jual = penjualan("qty")
-        end if
-
-        ' cek klaim barang
-        data_cmd.commandTExt = "SELECT DB_IPDIPHID, DB_Date, ISNULL(SUM(DB_QtySatuan),0) AS tklaim FROM dbo.DLK_T_DelBarang WHERE DB_AktifYN = 'Y' AND DB_IPDIPHID = '"& pembelian("IPD_IPHID") &"' AND DB_AgenID = '"& delcabang &"' GROUP BY DB_IPDIPHID, DB_Date ORDER BY DB_Date ASC"
-        ' response.write data_cmd.commandText & "<br>"
-        set klaim = data_cmd.execute
-
-        if not klaim.eof then
-            tklaim = klaim("tklaim")
-        else
-            tklaim = 0
-        end if
-
-        ' cek aset 
-        ' data_cmd.commandTExt = "SELECT ISNULL(SUM(AD_QtySatuan),0) AS taset FROM dbo.DLK_T_AsetD LEFT OUTER JOIN DLK_T_AsetH ON LEFT(DLK_T_AsetD.AD_AsetID,10) = DLK_T_AsetH.ASetID WHERE asetAktifYN = 'Y' AND AD_IPDIPHID = '"& pembelian("IPD_IPHID") &"' AND asetAgenID = '"& delcabang &"' GROUP BY AD_IPDIPHID"
-        ' ' response.write data_cmd.commandText & "<br>"
-        ' set aset = data_cmd.execute
-
-        ' if not aset.eof then
-        '     taset = aset("taset")
-        ' else 
-        '     taset = 0
-        ' end if
-
-
-        angka = Cint(pembelian("IPD_Qtysatuan")) - CInt(jual) - Cint(tklaim) 
-        
-        
-        if angka > 0 then
-            disc1 = (pembelian("IPD_Harga") * pembelian("IPD_Disc1")) / 100
-            disc2 = (pembelian("IPD_Harga") * pembelian("IPD_Disc2")) / 100
-            
-            tharga = (pembelian("IPD_Harga") + (pembelian("IPD_Harga") * pembelian("IPH_PPn")) / 100) - disc1 - disc2
-            
-            if angka > Cint(qty) then
-                call query ("sp_AddDLK_T_DelBarang '"& delcabang &"', '"& tgl &"', '"& brg &"', '"& pembelian("IPD_IPHID") &"', '"& qty &"', '"& tharga &"', '"& satuan &"', '"& ket &"', '','','','"& acc1 &"','"& acc2 &"'")
-
-                qty = 0
-            else
-                call query ("sp_AddDLK_T_DelBarang '"& delcabang &"', '"& tgl &"', '"& brg &"', '"& pembelian("IPD_IPHID") &"','"& angka &"', '"& tharga &"', '"& satuan &"', '"& ket &"', '','','','"& acc1 &"','"& acc2 &"'")
-
-                qty = Cint(qty) - angka
-            end if
-            if qty <= 0 then
-                exit do
-            end if
-        end if
-        response.flush
-        pembelian.movenext
-    loop
+        call query ("sp_AddDLK_T_DelBarang '"& delcabang &"', '"& tgl &"', '"& brg &"', "& qty &", '"& harga &"',  '"& satuan &"', '"& ket &"', '','',''")
         value = 1
     else
         value = 2
@@ -98,9 +87,9 @@ sub updateDelbarang()
     brg = trim(Request.Form("brg"))
     qty = trim(Request.Form("qty"))
     satuan = trim(Request.Form("satuan"))
-    acc1 = trim(Request.Form("acc1"))
-    acc2 = trim(Request.Form("acc2"))
+    harga = trim(Request.Form("harga"))
     ket = trim(Request.Form("ket"))
+    
     nilai = false
     nilai2 = false
 
