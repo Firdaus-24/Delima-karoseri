@@ -24,13 +24,13 @@
     
     ' query seach 
     if agen <> "" and nama <> "" then
-        strquery = "SELECT DLK_M_Vendor.*, GL_M_CategoryItem.cat_name FROM DLK_M_Vendor LEFT OUTER JOIN GL_M_CategoryItem ON DLK_M_Vendor.ven_kodeakun = GL_M_CategoryItem.cat_ID WHERE Ven_AktifYN = 'Y' AND left(Ven_id,3) = '"& agen &"' AND ven_Nama LIKE '%"& nama &"%'"
+        strquery = "SELECT DLK_M_Vendor.*, GLB_M_Agen.Agenname FROM DLK_M_Vendor LEFT OUTER JOIN GLB_M_Agen ON LEFT(DLK_M_Vendor.ven_ID,3) = GLB_M_Agen.AgenID WHERE Ven_AktifYN = 'Y' AND left(Ven_id,3) = '"& agen &"' AND ven_Nama LIKE '%"& nama &"%'"
     elseif agen <> "" then
-        strquery = "SELECT DLK_M_Vendor.*, GL_M_CategoryItem.cat_name FROM DLK_M_Vendor LEFT OUTER JOIN GL_M_CategoryItem ON DLK_M_Vendor.ven_kodeakun = GL_M_CategoryItem.cat_ID WHERE Ven_AktifYN = 'Y' AND left(Ven_id,3) = '"& agen &"'"
+        strquery = "SELECT DLK_M_Vendor.*, GLB_M_Agen.Agenname FROM DLK_M_Vendor LEFT OUTER JOIN GLB_M_Agen ON LEFT(DLK_M_Vendor.ven_ID,3) = GLB_M_Agen.AgenID WHERE Ven_AktifYN = 'Y' AND left(Ven_id,3) = '"& agen &"'"
     elseif nama <> "" then
-        strquery = "SELECT DLK_M_Vendor.*, GL_M_CategoryItem.cat_name FROM DLK_M_Vendor LEFT OUTER JOIN GL_M_CategoryItem ON DLK_M_Vendor.ven_kodeakun = GL_M_CategoryItem.cat_ID WHERE Ven_AktifYN = 'Y' AND ven_Nama LIKE '%"& nama &"%'"
+        strquery = "SELECT DLK_M_Vendor.*, GLB_M_Agen.Agenname FROM DLK_M_Vendor LEFT OUTER JOIN GLB_M_Agen ON LEFT(DLK_M_Vendor.ven_ID,3) = GLB_M_Agen.AgenID WHERE Ven_AktifYN = 'Y' AND ven_Nama LIKE '%"& nama &"%'"
     else
-        strquery = "SELECT DLK_M_Vendor.*, GL_M_CategoryItem.cat_name FROM DLK_M_Vendor LEFT OUTER JOIN GL_M_CategoryItem ON DLK_M_Vendor.ven_kodeakun = GL_M_CategoryItem.cat_ID WHERE Ven_AktifYN = 'Y'"
+        strquery = "SELECT DLK_M_Vendor.*, GLB_M_Agen.Agenname FROM DLK_M_Vendor LEFT OUTER JOIN GLB_M_Agen ON LEFT(DLK_M_Vendor.ven_ID,3) = GLB_M_Agen.AgenID WHERE Ven_AktifYN = 'Y'"
     end if
 
     ' untuk data paggination
@@ -113,13 +113,12 @@
                 <thead class="bg-secondary text-light">
                     <tr>
                     <th scope="col">No</th>
+                    <th scope="col">Cabang</th>
                     <th scope="col">Nama</th>
                     <th scope="col">Alamat</th>
                     <th scope="col">Contact</th>
                     <th scope="col">Email</th>
                     <th scope="col">TypeTransaksi</th>
-                    <th scope="col">Kode Akun</th>
-                    <th scope="col">Aktif</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -148,13 +147,12 @@
                     %>
                     <tr>
                         <th scope="row"><%= recordcounter %></th>
+                        <td><%= rs("AgenName") %></td>
                         <td><%= rs("ven_Nama") %></td>
                         <td><%= rs("ven_Alamat") %></td>
                         <td><%= rs("ven_phone") %></td>
                         <td><%= rs("ven_Email") %></td>
                         <td><%= strtype %></td>
-                        <td><%= rs("Cat_Name") %></td>
-                        <td><%if rs("ven_AktifYN") = "Y" then%>Aktif <% end if %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <a href="detailvendor.asp?id=<%= rs("Ven_Id") %>" class="btn badge text-bg-warning">Detail</a>

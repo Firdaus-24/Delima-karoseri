@@ -19,15 +19,16 @@
         strtype = ""
     end if
 
+    if data("ven_Payterm") <> "" then
+        top = data("ven_payTerm")
+    else 
+        top = 0
+    end if
 
     ' getdata detail
     data_cmd.commandText = "SELECT DLK_T_VendorD.*, DLK_M_Barang.Brg_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama FROM DLK_T_VendorD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_VendorD.Dven_BrgID = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE LEFT(Dven_Venid,9) = '"& data("Ven_ID") &"'"
 
     set ddata = data_cmd.execute
-
-    ' get data barang
-    ' data_cmd.commandText = "SELECT DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_ID, DLK_M_Barang.JenisID, DLK_M_Barang.KategoriID, DLK_M_JenisBarang.JenisNama, DLK_M_Kategori.KategoriNama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.JenisID WHERE Brg_AktifYN = 'Y' AND LEFT(Brg_ID,3) = '"& left(data("Ven_ID"),3) &"' ORDER BY Brg_Nama ASC"
-    ' set barang = data_cmd.execute
 
     call header("Detail Barang Vendor")
 %>
@@ -69,7 +70,7 @@
             <label for="type" class="col-form-label">TypeTransaksi</label>
         </div>
         <div class="col-lg-5 mb-3">
-            <input type="text" id="type" class="form-control" value="<%= ": "&strtype %>" style="background:transparent;border:none;" readonly>
+            <input type="text" id="type" class="form-control" value="<%= ": "&strtype &" | "& top%>" style="background:transparent;border:none;" readonly>
         </div>
     </div>
     <div class="row">
@@ -84,6 +85,20 @@
         </div>
         <div class="col-lg-5 mb-3">
             <input type="number" id="norek" class="form-control" value="<%= ": "&data("Ven_norek") %>" style="background:transparent;border:none;" readonly>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-1">
+            <label for="provinsi" class="col-form-label">Provinsi</label>
+        </div>
+        <div class="col-lg-5 mb-3">
+            <input type="text" id="provinsi" class="form-control" value="<%= ": "&data("Ven_provinsi") %>" style="background:transparent;border:none;" readonly>
+        </div>
+        <div class="col-lg-1">
+            <label for="Kota" class="col-form-label">Kota</label>
+        </div>
+        <div class="col-lg-5 mb-3">
+            <input type="text" id="Kota" class="form-control" value="<%= ": "&data("Ven_Kota") %>" style="background:transparent;border:none;" readonly>
         </div>
     </div>
     <div class="row">

@@ -1,14 +1,20 @@
 <% 
 sub tambahVendor()
-    nama = UCase(trim(Request.Form("nama")))
-    alamat = trim(Request.Form("alamat"))
     cabang = trim(Request.Form("cabang"))
-    phone = trim(Request.Form("phone"))
-    email = trim(Request.Form("email"))
-    typet = trim(Request.Form("typet"))
     kdakun = trim(Request.Form("kdakun"))
+    nama = UCase(trim(Request.Form("nama")))
+    typet = trim(Request.Form("typet"))
+    email = trim(Request.Form("email"))
+    phone = trim(Request.Form("phone"))
+    provinsi = trim(split(Request.Form("provinsi"),",")(1))
+    kota = trim(split(Request.Form("kota"),",")(1))
+    alamat = trim(Request.Form("alamat"))
+    top = trim(Request.Form("top"))
     bank = trim(Request.Form("bank"))
     norek = trim(Request.Form("norek"))
+    rekName = trim(Request.Form("rekName"))
+    cp = trim(Request.Form("cp"))
+    phonecp = trim(Request.Form("phonecp"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
@@ -17,7 +23,7 @@ sub tambahVendor()
     set data = data_cmd.execute
 
     if data.eof then
-        data_cmd.commandText = "exec sp_AddDLK_M_Vendor '"& cabang &"','"& nama &"','"& alamat &"','"& phone &"','"& email &"','"& kdakun &"',"& typet &", "& norek &", "& bank &""
+        data_cmd.commandText = "exec sp_AddDLK_M_Vendor '"& cabang &"','"& nama &"','"& alamat &"','"& phone &"','"& email &"','"& kdakun &"',"& typet &", "& norek &", "& bank &", '"& rekName &"','"& kota &"','"& provinsi &"', "& top &", '"& phonecp &"', '"& cp &"'"
         ' response.write data_cmd.commandText & "<br>"
         set p = data_cmd.execute
 

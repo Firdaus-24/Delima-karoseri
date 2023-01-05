@@ -22,6 +22,12 @@
         strtype = ""
     end if
 
+    if data("ven_Payterm") <> "" then
+        top = data("ven_payTerm")
+    else 
+        top = 0
+    end if
+
     ' getdata detail
     data_cmd.commandText = "SELECT DLK_T_VendorD.*, DLK_M_Barang.Brg_Nama, DLK_M_JenisBarang.JenisNama, DLK_M_Kategori.KategoriNama FROM DLK_T_VendorD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_VendorD.Dven_BrgID = DLK_M_Barang.Brg_ID INNER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID INNER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.JenisID WHERE LEFT(Dven_Venid,9) = '"& data("Ven_ID") &"'"
 
@@ -49,13 +55,19 @@
         <th style="text-align:left">Email</th>
         <td style="text-align:left"><%= ": "&data("Ven_Email") %></td>
         <th style="text-align:left">TypeTransaksi</th>
-        <td style="text-align:left"><%= ": "&strtype %></td>
+        <td style="text-align:left"><%= ": "&strtype &" | "& top%></td>
     </tr>
     <tr>
         <th style="text-align:left">Bank</th>
         <td style="text-align:left"><%= ": "&data("bank") %></td>
         <th style="text-align:left">No Rekening</th>
         <td style="text-align:left"><%= ": "&data("Ven_Norek") %></td>
+    </tr>
+    <tr>
+        <th style="text-align:left">Provinsi</th>
+        <td style="text-align:left"><%= ": "&data("Ven_provinsi") %></td>
+        <th style="text-align:left">Kota</th>
+        <td style="text-align:left"><%= ": "&data("Ven_Kota") %></td>
     </tr>
     <tr>
         <th style="text-align:left">Alamat</th>
