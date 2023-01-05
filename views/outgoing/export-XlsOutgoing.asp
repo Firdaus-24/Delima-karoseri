@@ -148,18 +148,18 @@
                 <%= replace(formatCurrency(total),"$","") %>
             </td>
         </tr>
-        <tr>
-            <td>
-                Grand Total
-            </td>
-            <td colspan="6"> 
-                <%= replace(formatCurrency(tharga),"$","") %>
-            </td>
-        </tr>
     <% 
     ddata.movenext
     loop
     %>
+    <tr>
+        <td>
+            Grand Total
+        </td>
+        <td colspan="6"> 
+            <%= replace(formatCurrency(tharga),"$","") %>
+        </td>
+    </tr>
 </table>
 <% 
     call footer()

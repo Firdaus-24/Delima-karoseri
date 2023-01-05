@@ -51,7 +51,7 @@
     end if
 
     ' query seach 
-    strquery = "SELECT dbo.DLK_T_MaterialOutH.MO_ID, dbo.DLK_T_MaterialOutH.MO_BMHID, dbo.DLK_T_MaterialOutH.MO_Date, dbo.DLK_T_MaterialOutH.MO_Keterangan, dbo.DLK_T_MaterialOutH.MO_UpdateID, dbo.DLK_T_MaterialOutH.MO_UpdateTime, dbo.DLK_T_MaterialOutH.MO_AktifYN, dbo.GLB_M_Agen.AgenName FROM dbo.DLK_T_MaterialOutH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialOutH.MO_AgenID = dbo.GLB_M_Agen.AgenID WHERE MO_AktifYN = 'Y' "& filterAgen &"  "& filterbom &" "& filtertgl &""
+    strquery = "SELECT dbo.DLK_T_MaterialOutH.MO_ID, dbo.DLK_T_MaterialOutH.MO_BMHID, dbo.DLK_T_MaterialOutH.MO_Date, dbo.DLK_T_MaterialOutH.MO_Keterangan, dbo.DLK_T_MaterialOutH.MO_UpdateID, dbo.DLK_T_MaterialOutH.MO_UpdateTime, dbo.DLK_T_MaterialOutH.MO_AktifYN, dbo.GLB_M_Agen.AgenName, DLK_M_WebLogin.username FROM dbo.DLK_T_MaterialOutH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialOutH.MO_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_WebLogin ON DLK_T_MaterialOutH.MO_UpdateID = DLK_M_WebLogin.userID WHERE MO_AktifYN = 'Y' "& filterAgen &"  "& filterbom &" "& filtertgl &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
@@ -152,9 +152,9 @@
                 <thead class="bg-secondary text-light">
                     <th>No</th>
                     <th>ID</th>
+                    <th>No.BOM</th>
                     <th>Cabang</th>
                     <th>Tanggal</th>
-                    <th>No.BOM</th>
                     <th>Update ID</th>
                     <th>Update Time</th>
                     <th>Keterangan</th>
@@ -173,10 +173,10 @@
                     %>
                         <tr><TH><%= recordcounter %></TH>
                         <th><%= rs("MO_ID") %></th>
+                        <td><%= rs("MO_BMHID") %></td>
                         <td><%= rs("agenName") %></td>
                         <td><%= Cdate(rs("MO_Date")) %></td>
-                        <td><%= rs("MO_BMHID") %></td>
-                        <td><%= rs("MO_UpdateID") %></td>
+                        <td><%= rs("username") %></td>
                         <td><%= rs("MO_updatetime") %></td>
                         <td><%= rs("MO_Keterangan") %></td>
                         <td class="text-center">
@@ -187,7 +187,7 @@
                                 <a href="out_u.asp?id=<%= rs("MO_ID") %>" class="btn badge text-bg-primary" >Update</a>
 
                                 <% if p.eof then %>
-                                <a href="aktifh.asp?id=<%= rs("MO_ID") %>" class="btn badge text-bg-danger btn-fakturh">Delete</a>
+                                <a href="aktifh.asp?id=<%= rs("MO_ID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'DELETE MATERIAL OUT HEADER')">Delete</a>
                                 <% end if %>
                             </div>
                         </td>

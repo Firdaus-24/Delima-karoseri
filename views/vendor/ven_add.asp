@@ -91,7 +91,7 @@
                     </div>
                     <div class="col-lg-6 mb-3">
                         <label for="norek" class="form-label">No.Rekening</label>
-                        <input type="text" pattern="\d*" maxlength="20" class="form-control" id="norek" name="norek" autocomplete="off" required>
+                        <input type="text" maxlength="20" class="form-control" id="norek" name="norek" autocomplete="off" required>
                     </div>
                 </div>
                 <div class="row ">

@@ -116,7 +116,7 @@
           </li>
           <!-- purchase -->
           <li class="nav-text">
-            <a href="#" onclick="toggle('sublist-purces')"><i class="bi bi-cash-stack"></i> Mark/Purchase</a>
+            <a href="#" onclick="toggle('sublist-purces')"><i class="bi bi-cash-stack"></i> Purchase</a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
             <ul class="sub-menu" id="sublist-purces">
@@ -139,9 +139,28 @@
                 <a class="link-name" href="<%= url %>views/purces/invPOmin.asp">Barang Kurang</a>
               </li>
             </ul>
+          <!-- general ladger -->
+          <li class="nav-text">
+            <a href="#" onclick="toggle('sublist-gl')"><i class="bi bi-currency-dollar"></i> General Ledger</a>
+            <i class="bi bi-chevron-compact-down" id="iconDown"></i>
+          </li>
+            <ul class="sub-menu" id="sublist-gl">
+              <li>
+                <a class="link-name" href="<%= url %>views/gl/daftarkas.asp">Daftar Kas Masuk/Keluar</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/gl/catitem.asp">Kategori Item</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/gl/kelompok.asp">Kelompok Perkiraan</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/gl/perkiraan.asp">Kode Perkiraan</a>
+              </li>
+            </ul>
           <!-- finance -->
           <li class="nav-text">
-            <a href="#" onclick="toggle('sublist-finance')"><i class="bi bi-bag-plus-fill"></i> Finc/Acc Dev</a>
+            <a href="#" onclick="toggle('sublist-finance')"><i class="bi bi-bag-plus-fill"></i> Finc/Accounting</a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
             <ul class="sub-menu" id="sublist-finance">
@@ -150,9 +169,6 @@
               </li>
               <li>
                 <a class="link-name" href="<%= url %>views/finance/index.asp">Finance</a>
-              </li>
-              <li>
-                <a class="link-name" href="<%= url %>views/finance/catitem.asp">Kategori Item</a>
               </li>
               <li>
                 <a class="link-name" href="<%= url %>views/finance/mutasiStok.asp">Mutasi Stok Barang</a>

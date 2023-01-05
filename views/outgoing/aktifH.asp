@@ -5,7 +5,7 @@
  %>
 <!--#include file="../../navbar.asp"-->
 <%      
-        call query("UPDATE DLK_T_InvJulH SET IJH_AktifYN = 'N' WHERE IJH_ID = '"& id &"'")
-        call alert("FAKTUR HEADER ID "&id&" ", "berhasil non aktifkan", "success","jbarang.asp?id="&id) 
+        call query("UPDATE DLK_T_MaterialOutH SET MO_AktifYN = 'N' WHERE MO_ID = '"& id &"'")
+        call alert("FAKTUR HEADER ID "&id&" ", "berhasil non aktifkan", "success","index.asp") 
 call footer() 
 %>

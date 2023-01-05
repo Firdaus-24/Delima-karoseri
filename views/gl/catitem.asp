@@ -1,10 +1,6 @@
 <!--#include file="../../init.asp"-->
 <% 
-    ' set data_cmd =  Server.CreateObject ("ADODB.Command")
-    ' data_cmd.ActiveConnection = mm_delima_String
-
-    ' ' data_cmd.CommandText = " "
-    ' ' set data = data_cmd.execute
+    nama = trim(Request.Form("nama"))
 
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
@@ -18,21 +14,14 @@
         angka = Request.form("urut") + 1
     end if
     
-    if agen <> "" then
-        filterAgen = "AND OPH_AgenID = '"& agen &"'"
+    if nama <> "" then
+        filterNama = " AND Cat_Name LIKE '%"& nama &"%'"
     else
-        filterAgen = ""
+        filterNama = ""
     end if
 
-    if tgla <> "" AND tgle <> "" then
-        filtertgl = "AND OPH_Date BETWEEN '"& tgla &"' AND '"& tgle &"'"
-    elseIf tgla <> "" AND tgle = "" then
-        filtertgl = "AND OPH_Date = '"& tgla &"'"
-    else 
-        filtertgl = ""
-    end if
     ' query seach 
-    strquery = "SELECT * FROM GL_M_CategoryItem WHERE Cat_AktifYN = 'Y'"
+    strquery = "SELECT GL_M_CategoryItem.*, DLK_M_WebLogin.username FROM GL_M_CategoryItem LEFT OUTER JOIN DLK_M_WebLogin ON GL_M_CategoryItem.Cat_UpdateID = DLK_M_WebLogin.userID WHERE Cat_AktifYN = 'Y' "& filterNama &""
 
     ' untuk data paggination
     page = Request.QueryString("page")
@@ -83,6 +72,22 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-sm-12 mb-3">
+            <button type="button" class="btn btn-primary tambahCat" data-bs-toggle="modal" data-bs-target="#modalCatItem">Tambah</button>
+        </div>
+    </div>
+    <form action="catitem.asp" method="post">
+        <div class="row">
+            <div class="col-sm-4 mb-3">
+                <label for="Nama">Nama</label>
+                <input type="text" class="form-control" id="nama" name="nama" autocomplete="off">
+            </div>
+            <div class="col-lg-2 mt-4 mb-3">
+                <button type="submit" class="btn btn-primary">Cari</button>
+            </div>
+        </div>
+    </form>
+    <div class="row">
         <div class="col-lg-12">
             <table class="table">
                 <thead class="bg-secondary text-light">
@@ -91,6 +96,7 @@
                         <th scope="col">Nama</th>
                         <th scope="col">Update ID</th>
                         <th scope="col">Update Time</th>
+                        <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -102,8 +108,15 @@
                     <tr>
                         <th scope="row"><%= rs("cat_id") %></th>
                         <td><%= rs("cat_name") %></td>
-                        <td><%= rs("cat_UpdateID") %></td>
-                        <td><%= rs("Cat_UpdateTIme") %></td>
+                        <td><%= rs("username") %></td>
+                        <td><%= rs("cat_UpdateTime") %></td>
+                        <td class="text-center">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                           <a href="Cat_aktif.asp?id=<%= rs("cat_id") %>" class="btn badge bg-danger" onclick="deleteItem(event,'delete kategori item')">delete</a>
+                           
+                           <a href="#" class="btn badge bg-primary updateCat" data-bs-toggle="modal" data-bs-target="#modalCatItem" data-id="<%= rs("cat_id") %>" data-name="<%= rs("cat_Name") %>">update</a>
+                        </div>
+                     </td>
                     </tr>
                     <% 
                     showrecords = showrecords - 1
@@ -178,7 +191,62 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="modalCatItem" tabindex="-1" aria-labelledby="modalCatItemLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalCatItemLabel">Kategori Item</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="#" method="post" id="formmodalCatItem" onsubmit="validasiForm(this,event,'KATEGORI ITEM','warning')">
+                <div class="modal-body">
+                    <div class="row">
+                        <input type="hidden" id="id" name="id">
+                        <div class="col-sm-12 mb-3">
+                            <label for="name" class="col-form-label">Name</label>
+                            <input type="hidden" id="lname" name="lname"   maxlength="30" autocomplete="off" required>
+                            <input type="text" id="name" name="name" class="form-control"  maxlength="30" autocomplete="off" required>
+                        </div>
+                    </div>
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary btnCat">Save</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <% 
-    call footer()
+   call footer()
 %>
+<script>
+     // setting tambah dan update kategori
+    $(document).ready(function(){
+        $(".tambahCat").click(function (){
+            
+            $("#formmodalCatItem").attr("action","cat_add.asp")
+            $("#id").val('')
+            $("#lname").val('')
+            $("#name").val('')
+
+            $("#modalCatItemLabel").html("Tambah Kategori Item")
+            $(".btnCat").html("Save")
+        })
+        $(".updateCat").click(function () {
+            const id = $(this).data('id');
+            const name = $(this).data('name');
+
+            $("#id").val(id)
+            $("#lname").val(name)
+            $("#name").val(name)
+
+            $("#formmodalCatItem").attr("action","Cat_u.asp")
+            
+            $("#modalCatItemLabel").html("Update Kategori Item")
+            $(".btnCat").html("Update")
+        })
+    })
+</script>

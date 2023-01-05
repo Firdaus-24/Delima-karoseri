@@ -6,6 +6,13 @@
    idtrans = left(trans,16)
    idbarang = right(trans,11)
 
+   ' cek data trans 
+   if idtrans <> "" then
+      strstok = "WHERE Brg_ID =  '"& idbarang &"'"
+   else
+      strstok = ""
+   end if
+
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
 
@@ -15,7 +22,7 @@
    set data = data_cmd.execute
 
    ' cek stok barang
-   data_cmd.commandText = "SELECT Brg_Nama, ISNULL(ISNULL((SELECT SUM(MR_Qtysatuan) as pembelian FROM DLK_T_MaterialReceiptD2 WHERE MR_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT SUM(MO_Qtysatuan) FROM DLK_T_MaterialOutD WHERE MO_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT SUM(DB_QtySatuan) FROM dbo.DLK_T_DelBarang WHERE DB_Item = DLK_M_Barang.Brg_ID AND DB_AktifYN = 'Y' AND DB_Acc1 = 'Y' AND DB_Acc2 = 'Y'),0),0) as stok FROM DLK_M_Barang WHERE Brg_ID =  '"& idbarang &"'"
+   data_cmd.commandText = "SELECT Brg_Nama, ISNULL(ISNULL((SELECT SUM(MR_Qtysatuan) as pembelian FROM DLK_T_MaterialReceiptD2 WHERE MR_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT SUM(MO_Qtysatuan) FROM DLK_T_MaterialOutD WHERE MO_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT SUM(DB_QtySatuan) FROM dbo.DLK_T_DelBarang WHERE DB_Item = DLK_M_Barang.Brg_ID AND DB_AktifYN = 'Y' AND DB_Acc1 = 'Y' AND DB_Acc2 = 'Y'),0),0) as stok FROM DLK_M_Barang "& strstok &""
    ' response.write data_cmd.commandText
    set stokMaster = data_cmd.execute
 
@@ -23,6 +30,7 @@
    if not data.eof then
       head = ""&"""ID""" & ":"  & """"& data("MO_ID") &""""& "," &"""SUCCESS""" & ":"  & """DATA HEAD TERDAFTAR""" &""
 
+      if idbarang <> "" then
       ' cek detail barang by stok
       data_cmd.commandText = "SELECT * FROM dbo.DLK_T_MaterialOutD WHERE MO_Item = '"& idbarang &"' AND MO_ID = '"& id &"'"
 
@@ -60,6 +68,7 @@
             set updatedata = data_cmd.execute
             masage1 = ","& """MASSAGE1""" & ":" & """DATA BERHASIL DI UPDATE""" &""
          end if 
+      end if
       end if
    else
       head = ""& """ERROR""" & ":" & """DATA TIDAK TERDAFTAR""" &""
