@@ -8,6 +8,8 @@
     vendor = trim(Request.Form("vendor"))
     tgljt = trim(Request.Form("tgljt"))
     diskon = trim(Request.Form("diskon"))
+    asuransi = trim(Request.Form("asuransi"))
+    lain = trim(Request.Form("lain"))
     keterangan = trim(Request.Form("keterangan"))
     if diskon = "" then
         diskon = 0
@@ -25,7 +27,7 @@
     set data = data_cmd.execute
 
     if data.eof then
-        data_cmd.commandText = "exec sp_AddDLK_T_OrPemH '"& agen &"', '"& tgl &"', '"& vendor &"', '"& tgljt &"', '"& keterangan &"', "& diskon &", "& ppn &", '"& memoId &"' "
+        data_cmd.commandText = "exec sp_AddDLK_T_OrPemH '"& agen &"', '"& tgl &"', '"& vendor &"', '"& tgljt &"', '"& keterangan &"', "& diskon &", "& ppn &", '"& asuransi &"', '"& lain &"', '"& memoId &"' "
         ' response.write data_cmd.commandText & "<br>"
         set p = data_cmd.execute
 

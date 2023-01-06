@@ -11,7 +11,7 @@
     set data = data_cmd.execute
 
     ' vendor
-    data_cmd.commandText = "SELECT ven_Nama, Ven_ID FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y' ORDER BY ven_Nama ASC"
+    data_cmd.commandText = "SELECT ven_Nama, Ven_ID FROM DLK_M_Vendor WHERE Ven_AktifYN = 'Y' AND LEFT(Ven_ID,3) = '"& data("agenID") &"' ORDER BY ven_Nama ASC"
     set vendor = data_cmd.execute
 
     call header("Prosess Purchase")
@@ -74,16 +74,33 @@
                 <label for="tgljt" class="col-form-label">Tanggal Jatuh Tempo</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="date" id="tgljt" name="tgljt" class="form-control">
+                <input type="hidden" id="topVendor" name="topVendor" class="form-control">
+                <input type="text" id="tgljt" name="tgljt" class="form-control" onfocus="(this.type='date')">
             </div>
         </div>
         <div class="row align-items-center">
-            
+            <div class="col-lg-2 mb-3">
+                <label for="asuransi" class="col-form-label">Asuransi</label>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <input type="number" id="asuransi" name="asuransi" class="form-control" required>
+            </div>
+            <div class="col-lg-2 mb-3">
+                <label for="lain" class="col-form-label">Lain</label>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <input type="number" id="lain" name="lain" class="form-control" required>
+            </div>
+        </div>
+        <div class="row align-items-center">
             <div class="col-lg-2 mb-3">
                 <label for="diskon" class="col-form-label">Diskon All</label>
             </div>
-            <div class="col-lg-4 mb-3">
+            <div class="col-lg-3 mb-3">
                 <input type="number" id="diskon" name="diskon" class="form-control">
+            </div>
+             <div class="col-lg-1 mb-3 p-0">
+                <label class="col-form-label">%</label>
             </div>
             <div class="col-lg-2 mb-3">
                 <label for="keterangan" class="col-form-label">Keterangan</label>
@@ -205,8 +222,38 @@
         </div>
     </div>
 </div>  
-
-
 <% 
    call footer()
 %>
+<script>
+    let newDate
+    $("#vendor").change(function() {
+        let id = $("#vendor").val()
+        $.post( "./getTopVendor.asp", {id}, function( data ) {
+            let str = Number(data)
+            $("#topVendor").val(str)
+            
+            if($("#tgl").val() != "" && str != 0){
+                let tgl = new Date($("#tgl").val())
+                newDate = new Date(tgl.setDate(tgl.getDate() + str))
+                let tgljt = ((newDate.getMonth() > 8) ? (newDate.getMonth() + 1) : ('0' + (newDate.getMonth() + 1))) + '/' + ((newDate.getDate() > 9) ? newDate.getDate() : ('0' + newDate.getDate())) + '/' + newDate.getFullYear()
+
+                $("#tgljt").val( tgljt)
+            }else{
+                $("#tgljt").val('')
+            }
+        });
+    })
+    $("#tgl").change(function(){
+        let top = Number($("#topVendor").val())
+        if(top != 0){
+            let tgl = new Date($("#tgl").val())
+            newDate = new Date(tgl.setDate(tgl.getDate() + top))
+            let tgljt = ((newDate.getMonth() > 8) ? (newDate.getMonth() + 1) : ('0' + (newDate.getMonth() + 1))) + '/' + ((newDate.getDate() > 9) ? newDate.getDate() : ('0' + newDate.getDate())) + '/' + newDate.getFullYear()
+    
+            $("#tgljt").val( tgljt)
+        }else{
+            $("#tgljt").val('')
+        }
+    })
+</script>
