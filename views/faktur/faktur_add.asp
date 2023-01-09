@@ -138,6 +138,23 @@ function format(number){
     }
 }
 const rupiah = (e,t) =>{$(`#${t}`).val(format(e))}
+
+const getValuePO = (id) => {
+        $.ajax({
+            method: "POST",
+            url: "../../ajax/getPoByNo.asp",
+            data: { id },
+            dataType:'json',
+        }).done(function( msg ) {
+            $("#tgljt").val(msg.JTDate)
+            $("#vendor").val(msg.VENDOR)
+            $("#ppn").val(msg.PPN)
+            $("#asuransi").val(format(msg.ASURANSI))
+            $("#lain").val(format(msg.LAIN))
+            $("#diskon").val(msg.DISKONALL)
+            $("#keterangan").val(msg.KETERANGAN)
+        });
+    }
 </script>
 <% 
     if Request.ServerVariables("REQUEST_METHOD") = "POST" then 

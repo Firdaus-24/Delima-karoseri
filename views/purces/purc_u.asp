@@ -82,7 +82,20 @@
         </div>
     </div>
     <div class="row align-items-center">
-        
+            <div class="col-lg-2 mb-3">
+                <label for="asuransi" class="col-form-label">Asuransi</label>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <input type="text" id="asuransi" name="asuransi" class="form-control" value="<%= replace(formatCurrency(data("OPH_Asuransi")),"$","") %>" readonly>
+            </div>
+            <div class="col-lg-2 mb-3">
+                <label for="lain" class="col-form-label">Lain</label>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <input type="text" id="lain" name="lain" class="form-control" value="<%= replace(formatCurrency(data("OPH_Lain")),"$","") %>" readonly>
+            </div>
+        </div>
+    <div class="row align-items-center">
         <div class="col-lg-2 mb-3">
             <label for="diskon" class="col-form-label">Diskon All</label>
         </div>

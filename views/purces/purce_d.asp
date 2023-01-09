@@ -6,7 +6,6 @@
     data_cmd.ActiveConnection = mm_delima_string
 
     data_cmd.commandText = "SELECT dbo.DLK_M_Vendor.Ven_Nama, dbo.GLB_M_Agen.AgenName, dbo.DLK_T_OrPemH.*, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_phone, dbo.DLK_M_Vendor.Ven_Email FROM dbo.DLK_T_OrPemH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_OrPemH.OPH_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_OrPemH.OPH_venID = dbo.DLK_M_Vendor.Ven_ID WHERE dbo.DLK_T_OrPemH.OPH_ID = '"& id &"' AND dbo.DLK_T_OrPemH.OPH_AktifYN = 'Y'"
-    ' data_cmd.commandText = "SELECT dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_ppn, dbo.DLK_T_OrPemH.OPH_diskonall, dbo.DLK_T_OrPemH.OPH_memoId, dbo.DLK_T_OrPemD.OPD_OPHID, dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_JenisSat, dbo.DLK_T_OrPemD.OPD_Disc1,dbo.DLK_T_OrPemD.OPD_Disc2, dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_phone, DLK_M_Vendor.ven_Email, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_OrPemH RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID,13) LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_OrPemH.OPH_venID = dbo.DLK_M_Vendor.Ven_ID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_OrPemD.OPD_Item = DLK_M_Barang.Brg_ID WHERE dbo.DLK_T_OrPemH.OPH_ID = '"& id &"' AND dbo.DLK_T_OrPemH.OPH_AktifYN = 'Y' GROUP BY dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_T_OrPemH.OPH_ppn, dbo.DLK_T_OrPemH.OPH_diskonall,dbo.DLK_T_OrPemH.OPH_memoId, dbo.DLK_T_OrPemD.OPD_OPHID, dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_JenisSat,dbo.DLK_T_OrPemD.OPD_Disc1, dbo.DLK_T_OrPemD.OPD_Disc2,dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_phone, DLK_M_Vendor.ven_Email,DLK_M_Barang.Brg_Nama"
 
     set data = data_cmd.execute
 
@@ -25,62 +24,78 @@
     </div>
     <div class="row">
         <div class="col-lg-12 mb-3 text-center labelId">
-            <h3><%= id %></h3>
+            <h3><%= left(data("OPH_ID"),2) %>-<% call getAgen(mid(data("OPH_ID"),3,3),"") %>/<%= mid(data("OPH_ID"),6,4) %>/<%= right(data("OPH_ID"),4) %></h3>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-6">
-            <table class="table" style="border:transparent;">
-                <tr>
-                    <th>No PO</th>
-                    <th>:</th>
-                    <td>
-                        <%= left(data("OPH_ID"),2) %>-<% call getAgen(mid(data("OPH_ID"),3,3),"") %>/<%= mid(data("OPH_ID"),6,4) %>/<%= right(data("OPH_ID"),4) %>
-                    </td>
-                </tr>
-                <tr>
-                    <th>No Memo</th>
-                    <th>:</th>
-                    <td>
-                        <%= left(data("OPH_memoID"),4) %>/<%=mid(data("OPH_memoId"),5,3) %>-<% call getAgen(mid(data("OPH_memoID"),8,3),"") %>/<%= mid(data("OPH_memoID"),11,4) %>/<%= right(data("OPH_memoID"),3) %>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Vendor</th>
-                    <th>:</th>
-                    <td>
-                        <%= data("Ven_Nama") %>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Phone</th>
-                    <th>:</th>
-                    <td>
-                        <%= data("Ven_Phone") %>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Email</th>
-                    <th>:</th>
-                    <td>
-                        <%= data("Ven_Email") %>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Ppn</th>
-                    <th>:</th>
-                    <td>
-                        <%= data("OPH_PPN") %>%
-                    </td>
-                </tr>
-                <tr>
-                    <th>Diskon All</th>
-                    <th>:</th>
-                    <td>
-                        <%= data("OPH_DiskonAll") %>%
-                    </td>
-                </tr>
-            </table>
+    <div class="row align-items-center">
+        <div class="col-lg-2 mb-3">
+            <label for="memoId" class="col-form-label">No Memo</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="hidden" id="memoId" name="memoId" class="form-control" value="<%= data("OPH_memoID") %>" readonly>
+            <input type="text" id="lmemoId" name="lmemoId" class="form-control" value="<%= left(data("OPH_memoID"),4) %>/<%=mid(data("OPH_memoId"),5,3) %>-<% call getAgen(mid(data("OPH_memoID"),8,3),"") %>/<%= mid(data("OPH_memoID"),11,4) %>/<%= right(data("OPH_memoID"),3) %>" readonly>
+        </div>
+        <div class="col-lg-2 mb-3">
+            <label for="agen" class="col-form-label">Cabang / Agen</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="text" id="agen" name="agen" class="form-control" value="<%= data("agenName") %>" readonly>
+        </div>
+    </div>
+    <div class="row align-items-center">
+        <div class="col-lg-2 mb-3">
+            <label for="vendor" class="col-form-label">Vendor</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="text" id="vendor" name="vendor" class="form-control" value="<%= data("Ven_Nama") %>" readonly>
+        </div>
+        <div class="col-lg-2 mb-3">
+            <label for="tgl" class="col-form-label">Tanggal</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="text" id="tgl" name="tgl" value="<%= date %>" class="form-control" readonly required>
+        </div>
+    </div>
+    <div class="row align-items-center">
+        <div class="col-lg-2 mb-3">
+            <label for="ppn" class="col-form-label">PPn</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="number" id="ppn" name="ppn" class="form-control" value="<%= data("OPH_PPN") %>" readonly>
+        </div>
+        <div class="col-lg-2 mb-3">
+            <label for="tgljt" class="col-form-label">Tanggal Jatuh Tempo</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="text" id="tgljt" name="tgljt" class="form-control" <% if data("OPH_JTDate") <> "1900-01-01" then %> value="<%= Cdate(data("OPH_JTDate")) %>" <% end if %> readonly>
+        </div>
+    </div>
+    <div class="row align-items-center">
+        <div class="col-lg-2 mb-3">
+            <label for="Phone" class="col-form-label">Phone</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="text" id="Phone" name="Phone" class="form-control" value="<%= data("Ven_Phone") %>" readonly>
+        </div>
+        <div class="col-lg-2 mb-3">
+            <label for="Email" class="col-form-label">Email</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="text" id="Email" name="Email" class="form-control" value="<%= data("Ven_Email") %>" readonly>
+        </div>
+    </div>
+    <div class="row align-items-center">
+        <div class="col-lg-2 mb-3">
+            <label for="diskon" class="col-form-label">Diskon All</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="number" id="diskon" name="diskon" class="form-control" value="<%= data("OPH_DiskonALl") %>" readonly>
+        </div>
+        <div class="col-lg-2 mb-3">
+            <label for="keterangan" class="col-form-label">Keterangan</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" autocomplete="off" value="<%= data("OPH_Keterangan") %>" readonly>
         </div>
     </div>
     
@@ -178,8 +193,16 @@
                     else
                         ppn = 0
                     end if
-                    realgrantotal = (grantotal - diskonall) + ppn
+                    realgrantotal = (grantotal - diskonall) + ppn + data("OPH_Asuransi") + data("OPH_Lain")
                     %>
+                    <tr>
+                        <th colspan="7">Asuransi</th>
+                        <th><%= replace(formatCurrency(data("OPH_Asuransi")),"$","") %></th>
+                    </tr>
+                    <tr>
+                        <th colspan="7">Lain - Lain</th>
+                        <th><%= replace(formatCurrency(data("OPH_Lain")),"$","") %></th>
+                    </tr>
                     <tr>
                         <th colspan="7">Total Pembayaran</th>
                         <th><%= replace(formatCurrency(realgrantotal),"$","") %></th>
