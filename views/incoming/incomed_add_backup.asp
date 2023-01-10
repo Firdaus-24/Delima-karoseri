@@ -1,5 +1,4 @@
 <!--#include file="../../init.asp"-->
-<!--#include file="../../functions/func_incomming.asp"-->   
 <% 
    id = trim(Request.QueryString("id"))
 
@@ -16,22 +15,10 @@
    data_cmd.commandTExt = "SELECT dbo.DLK_T_MaterialReceiptD2.*, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id, DLK_M_Rak.Rak_Nama FROM dbo.DLK_T_MaterialReceiptD2 LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialReceiptD2.MR_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialReceiptD2.MR_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_Rak ON DLK_T_MaterialReceiptD2.MR_RakID = DLK_M_Rak.Rak_ID WHERE dbo.DLK_T_MaterialReceiptD2.MR_ID = '"& id &"'"
    set data2 = data_cmd.execute
 
-   ' get nomor menerimaan/faktur terhutang
-   data_cmd.commandTExt = "SELECT IPH_ID FROM DLK_T_InvPemH WHERE IPH_AktifYN = 'Y' AND NOT EXISTS (SELECT MR_Transaksi FROM DLK_T_MaterialReceiptD1 WHERE MR_Transaksi = IPH_ID)"
-
-   set fakturterhutang = data_cmd.execute
-
-   ' set rak 
-   data_cmd.commandText = "SELECT Rak_ID, Rak_Nama FROM DLK_M_Rak WHERE Rak_aktifYN = 'Y' AND LEFT(Rak_ID,3) = '"& data("AgenID") &"' ORDER BY Rak_nama"
-
-   set drak = data_cmd.execute
-
    call header("Proses Incomming")
 %>
 <!--#include file="../../navbar.asp"--> 
-<!--auto relog page 
-<meta http-equiv="refresh" content="10" />
--->
+<meta http-equiv="refresh" content="10" />  <!--auto relog page -->
 <div class="container">
    <div class="row">
       <div class="col-lg-12 mt-3 text-center">
@@ -77,18 +64,10 @@
       </div>
    </div>
    <div class="row">
-      <div class="col-lg-12">
-         <div class="d-flex mb-3">
-            <div class="me-auto p-2">
-               <button type="button" class="btn btn-primary btn-modalIncomed" data-bs-toggle="modal" data-bs-target="#modalIncomed">Tambah Doc</button>
-            </div>
-            <div class="p-2">
-               <a href="index.asp" class="btn btn-danger">Kembali</a>
-            </div>
-         </div>
+      <div class="col-sm mb-3">
+         <a href="index.asp" type="button" class="btn btn-danger">Kembali</a>
       </div>
    </div>
-   <% if not data1.eof then %>
    <div class="row">
       <div class="col-sm-12 text-end mb-3">
          <h5>Daftar Document</h5>
@@ -126,8 +105,6 @@
          </table>
       </div>
    </div>
-   <% end if %>
-   <% if not data2.eof then %>
    <div class="row">
       <div class="col-sm-12 text-end mb-3">
          <h5>Detail barang</h5>
@@ -145,50 +122,22 @@
                   <th scope="col">Satuan</th>
                   <th scope="col">Harga</th>
                   <th scope="col">Rak</th>
-                  <th scope="col">Aksi</th>
                </tr>
             </thead>
             <tbody>
                <% 
                no1 = 0
-               rakID = ""
                do while not data2.eof 
                no1 = no1 + 1
-
-               ' cek data rak yang sudah terdaftar
-               rakID = data2("MR_RakID")
-
                %>
                <tr>
                   <th scope="row"><%= no1 %></th>
                   <td><%= data2("MR_Transaksi") %></td>
                   <td><%= data2("Brg_Nama") %></td>
-                  <td>
-                     <input type="number" name="qty" id="qty<%= data2("MR_Transaksi") %>" value="<%= data2("MR_Qtysatuan") %>" class="form-control" style="width:5rem;padding:3px;border:none;background:none;">
-                  </td>
+                  <td><%= data2("MR_Qtysatuan") %></td>
                   <td><%= data2("Sat_nama") %></td>
                   <td><%= replace(formatCurrency(data2("MR_Harga")),"$","") %></td>
-                  <td>
-                     <select class="form-select" aria-label="Default select example" name="rakIncome" id="rakIncome<%= data2("MR_Transaksi") %>" style="border:none;background:none;margin:inherit;padding:6px;">
-                        <option value="<%= rakID %>">
-                           <% if data2("MR_RakID") = "" then%>
-                              Pilih
-                           <% else %>
-                              <%= data2("Rak_Nama") %>
-                           <% end if %>
-                        </option>
-                        <% do while not drak.eof %>
-                           <option value="<%= drak("rak_Id") %>"><%= drak("Rak_Nama") %></option>
-                        <% 
-                        drak.movenext
-                        loop
-                        drak.movefirst
-                        %>
-                     </select>
-                  </td>
-                  <td>
-                     <button type="button" class="btn badge text-bg-warning"  onclick="updateData('<%= data2("MR_ID") %>', '<%= data2("MR_transaksi") %>')">Update</button>
-                  </td>
+                  <td><%= data2("Rak_nama") %></td>
                </tr>
                <% 
                response.flush
@@ -199,64 +148,8 @@
          </table>
       </div>
    </div>
-   <% end if %>
 </div>  
-<!-- Modal -->
-<div class="modal fade" id="modalIncomed" tabindex="-1" aria-labelledby="modalIncomedLabel" aria-hidden="true">
-   <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h1 class="modal-title fs-5" id="modalIncomedLabel">Tambah Dokumen Penerimaan Barang</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-         </div>
-         <form action="incomed_add.asp?id=<%= id %>" method="post">
-            <input type="hidden" name="id" value="<%= id %>">
-            <div class="modal-body">
-               <div class="row">
-                  <div class="col-sm-2">
-                     <label for="faktur">Nomor</label>
-                  </div>
-                  <div class="col-sm">
-                     <select class="form-select" aria-label="Default select example" name="fakturH" id="fakturH" required>
-                        <option value="">Pilih</option>
-                        <% do while not fakturterhutang.eof %>
-                        <option value="<%= fakturterhutang("IPH_ID") %>"><%= left(fakturterhutang("IPH_ID"),2) %>-<% call getAgen(mid(fakturterhutang("IPH_ID"),3,3),"") %>/<%= mid(fakturterhutang("IPH_ID"),6,4) %>/<%= right(fakturterhutang("IPH_ID"),4) %></option>
-                        <% 
-                        fakturterhutang.movenext
-                        loop
-                        %>
-                     </select>
-                  </div>
-               </div>
-            </div>
-            <div class="modal-footer">
-               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-               <button type="submit" class="btn btn-primary">Save</button>
-            </div>
-         </form>
-      </div>
-   </div>
-</div>
 
-<script>
-const updateData = (id,trans) => {
-   let qty = $(`#qty${trans}`).val()
-   let rak = $(`#rakIncome${trans}`).val()
-   
-   $.post( "updateMRD2.asp", { id, trans, rak, qty }).done(function( data ) {
-      if(data == "ERROR"){
-         swal("Data tidak Valid")
-      }else{
-         swal({title: 'Data Berhasil Diubah',text: 'Update Rak & Quantity',icon: 'success',button: 'OK',}).then(function() {window.location = 'incomed_add.asp?id='+ id})
-      }
-   });
-
-
-}
-</script>
 <% 
-   if Request.ServerVariables("REQUEST_METHOD") = "POST" then
-      call tambahIncome()
-   end if
    call footer()
 %>

@@ -21,7 +21,7 @@
             response.write """ASURANSI""" & ":" & """" & data("OPH_ASURANSI") &  """" & ","
             response.write """LAIN""" & ":" & """" & data("OPH_LAIN") &  """" & ","
             response.write """DISKONALL""" & ":" & """" & data("OPH_DiskonALL") &  """" & ","
-            response.write """KETERANGAN""" & ":" & """" & data("OPH_LAIN") &  """" 
+            response.write """KETERANGAN""" & ":" & """" & data("OPH_Keterangan") &  """" 
          response.write "}"
    else
       response.write "{}"
