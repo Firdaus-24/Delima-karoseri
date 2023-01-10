@@ -15,14 +15,14 @@
     end if
     
     if nama <> "" then
-        filterNama = " AND K_Name LIKE '%"& nama &"%'"
+        filterNama = " AND CA_Name LIKE '%"& nama &"%'"
     else
         filterNama = ""
     end if
 
 
     ' query seach 
-    strquery = "SELECT GL_M_ChartAccount.*, DLK_M_WebLogin.username FROM GL_M_ChartAccount LEFT OUTER JOIN DLK_M_WebLogin ON GL_M_ChartAccount.CA_UpdateID = DLK_M_WebLogin.userID WHERE CA_AktifYN = 'Y' "& filterNama &""
+    strquery = "SELECT GL_M_ChartAccount.*, DLK_M_WebLogin.username FROM GL_M_ChartAccount LEFT OUTER JOIN DLK_M_WebLogin ON GL_M_ChartAccount.CA_UpdateID = DLK_M_WebLogin.userID WHERE CA_AktifYN = 'Y'"& filterNama &""
 
     ' untuk data paggination
     page = Request.QueryString("page")
@@ -72,13 +72,11 @@
          <h3>DAFTAR KODE PERKIRAAN</h3>
       </div>
    </div>
-   <!-- 
    <div class="row">
       <div class="col-sm-12 mb-3">
-         <button type="button" class="btn btn-primary tambahKP" data-bs-toggle="modal" data-bs-target="#modalperkiraan">Tambah</button>
+         <button type="button" class="btn btn-primary" onclick="window.location.href='perkiraan_add.asp'">Tambah</button>
       </div>
    </div>
-    -->
    <form action="perkiraan.asp" method="post">
       <div class="row">
          <div class="col-sm-4 mb-3">
@@ -103,9 +101,7 @@
                      <th scope="col">GOLONGAN</th>
                      <th scope="col">KELOMPOK</th>
                      <th scope="col">AKTIF</th>
-                     <!-- 
                      <th scope="col" class="text-center">Aksi</th>
-                      -->
                   </tr>
                </thead>
                <tbody>
@@ -120,18 +116,27 @@
                      <td><%= rs("CA_UPID") %></td>
                      <td><%= rs("CA_Jenis") %></td>
                      <td><%= rs("CA_Type") %></td>
-                     <td><%= rs("CA_GOlongan") %></td>
+                     <td>
+                        <% if rs("CA_GOlongan") = "N" then %>
+                           Neraca
+                        <% else %>
+                           LabaRugi 
+                        <% end if %>
+                     </td>
                      <td><%= rs("CA_Kelompok") %></td>
-                     <td><%= rs("CA_AktifYN") %></td>
-                     <!-- 
+                     <td>
+                        <% if rs("CA_AktifYN") = "Y" then %>
+                           Aktif
+                        <% else %>
+                           No 
+                        <% end if %>
+                     </td>
                      <td class="text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">
-                           <a href="#" class="btn badge bg-danger" onclick="deleteItem(event,'delete kode perkiraan')">delete</a>
-                           
-                           <a href="#" class="btn badge bg-primary">update</a>
+                              <a href="aktifPerkiraan.asp?id=<%= rs("CA_ID") %>&p=N" class="btn badge bg-danger" onclick="deleteItem(event,'delete kode perkiraan')">delete</a>
+                           <a href="perkiraan_u.asp?id=<%= rs("CA_ID") %>" class="btn badge bg-primary">update</a>
                         </div>
                      </td>
-                      -->
                   </tr>
                   <% 
                   showrecords = showrecords - 1
