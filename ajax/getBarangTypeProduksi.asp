@@ -18,7 +18,7 @@
         filterCabang = ""
     end if
 
-    data_cmd.commandText = "SELECT DLK_M_Barang.*, dbo.DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama, DLK_M_TypeBarang.T_Nama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.JenisID LEFT OUTER JOIN DLK_M_TypeBarang ON DLK_M_Barang.BRg_Type = DLK_M_TypeBarang.T_ID WHERE Brg_AktifYN = 'Y' AND T_Nama <> 'LOW MATERIAL' "& filterCabang &" "& filterNama &" ORDER BY Brg_Nama ASC"
+    data_cmd.commandText = "SELECT DLK_M_Barang.*, dbo.DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama, DLK_M_TypeBarang.T_Nama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.JenisID LEFT OUTER JOIN DLK_M_TypeBarang ON DLK_M_Barang.BRg_Type = DLK_M_TypeBarang.T_ID WHERE Brg_AktifYN = 'Y' AND T_Nama <> 'ROW MATERIAL' "& filterCabang &" "& filterNama &" ORDER BY Brg_Nama ASC"
 
     set barang = data_cmd.execute
 
@@ -27,7 +27,7 @@
     <select class="form-select" aria-label="Default select example" name="barang" id="barang" required> 
         <option value="">Pilih</option>
         <% do while not barang.eof %>
-            <option value="<%= barang("Brg_ID") %>"><%= barang("Brg_Nama") %></option>
+            <option value="<%=barang("Brg_ID") %>"><%=  "<b>" & barang("KategoriNama") &"-"& barang("JenisNama") & "</b>" &" | "& barang("Brg_Nama") %></option>
         <% 
         barang.movenext
         loop

@@ -9,12 +9,12 @@
     data_cmd.ActiveConnection = mm_delima_string
 
     ' get data header
-    data_cmd.commandText = "SELECT dbo.DLK_T_ProductH.*, dbo.DLK_M_Barang.Brg_Nama, GL_M_CategoryItem.cat_name, GLB_M_Agen.AgenName FROM dbo.DLK_T_ProductH LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_ProductH.PDBrgid = dbo.DLK_M_Barang.brg_ID LEFT OUTER JOIN GL_M_CategoryItem ON DLK_T_ProductH.PDKodeAKun = GL_M_CategoryItem.cat_id LEFT OUTER JOIN GLB_M_Agen ON DLK_T_ProductH.pdAgenID = GLB_M_Agen.AgenID WHERE dbo.DLK_T_ProductH.pdID = '"& id &"' AND dbo.DLK_T_ProductH.pdAktifYN = 'Y'"
+    data_cmd.commandText = "SELECT dbo.DLK_M_ProductH.*, dbo.DLK_M_Barang.Brg_Nama, GLB_M_Agen.AgenName FROM dbo.DLK_M_ProductH LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_ProductH.PDBrgid = dbo.DLK_M_Barang.brg_ID LEFT OUTER JOIN GLB_M_Agen ON DLK_M_ProductH.pdAgenID = GLB_M_Agen.AgenID WHERE dbo.DLK_M_ProductH.pdID = '"& id &"' AND dbo.DLK_M_ProductH.pdAktifYN = 'Y'"
 
     set data = data_cmd.execute
 
     ' get data detail
-    data_cmd.commandText = "SELECT dbo.DLK_T_ProductD.*, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID FROM dbo.DLK_M_SatuanBarang RIGHT OUTER JOIN dbo.DLK_T_ProductD ON dbo.DLK_M_SatuanBarang.Sat_ID = dbo.DLK_T_ProductD.PDDJenisSat LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_ProductD.PDDItem = dbo.DLK_M_Barang.Brg_Id WHERE LEFT(dbo.DLK_T_ProductD.PDDPDID,12) = '"& data("PDID") &"' ORDER BY PDDPDID ASC"
+    data_cmd.commandText = "SELECT dbo.DLK_M_ProductD.*, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID FROM dbo.DLK_M_SatuanBarang RIGHT OUTER JOIN dbo.DLK_M_ProductD ON dbo.DLK_M_SatuanBarang.Sat_ID = dbo.DLK_M_ProductD.PDDJenisSat LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_ProductD.PDDItem = dbo.DLK_M_Barang.Brg_Id WHERE LEFT(dbo.DLK_M_ProductD.PDDPDID,12) = '"& data("PDID") &"' ORDER BY PDDPDID ASC"
 
     set ddata = data_cmd.execute
 
@@ -106,10 +106,10 @@
                 : <%= data("Brg_Nama") %>
             </td>
             <td>
-                Kode Akun
+                Approve
             </td>
             <td colspan="2">
-                : <%= data("cat_name") %>
+                : <%If data("PDApproveYN") = "Y" then %>Yes <% else %>No <% end if %>
             </td>
         </tr>
         <tr>
@@ -128,7 +128,6 @@
         <tr>
             <th scope="col">ID</th>
             <th scope="col">Item</th>
-            <th scope="col">Sepesification</th>
             <th scope="col">Quantity</th>
             <th scope="col">Satuan</th>
         </tr>
@@ -141,9 +140,6 @@
                 </th>
                 <td>
                     <%= ddata("Brg_Nama") %>
-                </td>
-                <td>
-                    <%= ddata("PDDSpect") %>
                 </td>
                 <td>
                     <%= ddata("PDDQtty") %>

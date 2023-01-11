@@ -73,7 +73,7 @@
         </div>
         <div class="row text-center">
             <div class="col-lg-12">
-                <button type="submit" class="btn btn-primary">Tambah</button>
+                <button type="submit" class="btn btn-primary">Update</button>
                 <a href="index.asp"><button type="button" class="btn btn-danger">kembali</button></a>
             </div>
         </div>

@@ -12,14 +12,17 @@
    ' detail1
    data_cmd.commandTExt = "SELECT DLK_T_MaterialReceiptD1.*, DLK_M_WebLogin.username FROM DLK_T_MaterialReceiptD1 LEFT OUTER JOIN DLK_M_WebLogin ON DLK_T_MaterialReceiptD1.MR_Updateid = DLK_M_Weblogin.userid WHERE MR_ID = '"& id &"'"
    set data1 = data_cmd.execute
-   ' detail2
-   data_cmd.commandTExt = "SELECT dbo.DLK_T_MaterialReceiptD2.*, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id, DLK_M_Rak.Rak_Nama FROM dbo.DLK_T_MaterialReceiptD2 LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialReceiptD2.MR_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialReceiptD2.MR_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_Rak ON DLK_T_MaterialReceiptD2.MR_RakID = DLK_M_Rak.Rak_ID WHERE dbo.DLK_T_MaterialReceiptD2.MR_ID = '"& id &"'"
-   set data2 = data_cmd.execute
 
-   ' get nomor menerimaan/faktur terhutang
+   ' get nomor menerimaan/faktur dan nomor produksi
+   ' if data("MR_Type") = 1 then
+   '    strfp = "SELECT IPH_ID FROM DLK_T_InvPemH WHERE IPH_AktifYN = 'Y' AND NOT EXISTS (SELECT MR_Transaksi FROM DLK_T_MaterialReceiptD1 WHERE MR_Transaksi = IPH_ID)"
+   ' else
+   '    strfp = "SELET * FROM DLK_M_ProductH WHERE PDAktifYN = 'Y' ORDER BY PDID ASC "
+   ' end if
+
    data_cmd.commandTExt = "SELECT IPH_ID FROM DLK_T_InvPemH WHERE IPH_AktifYN = 'Y' AND NOT EXISTS (SELECT MR_Transaksi FROM DLK_T_MaterialReceiptD1 WHERE MR_Transaksi = IPH_ID)"
 
-   set fakturterhutang = data_cmd.execute
+   set datafp = data_cmd.execute
 
    ' set rak 
    data_cmd.commandText = "SELECT Rak_ID, Rak_Nama FROM DLK_M_Rak WHERE Rak_aktifYN = 'Y' AND LEFT(Rak_ID,3) = '"& data("AgenID") &"' ORDER BY Rak_nama"
@@ -70,6 +73,14 @@
          <input type="text" id="jenis" name="jenis" class="form-control" value="<%= data("username") %>" readonly>
       </div>
       <div class="col-lg-2 mb-3">
+         <label for="type" class="col-form-label">Type</label>
+      </div>
+      <div class="col-lg-4 mb-3">
+         <input type="text" id="type" name="type" class="form-control"  <% if data("MR_Type") = 1 then %>value="Purchase" <% else %>value="Produksi" <% end if %> readonly>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-lg-2 mb-3">
          <label for="keterangan" class="col-form-label">Keterangan</label>
       </div>
       <div class="col-lg-4 mb-3">
@@ -90,8 +101,8 @@
    </div>
    <% if not data1.eof then %>
    <div class="row">
-      <div class="col-sm-12 text-end mb-3">
-         <h5>Daftar Document</h5>
+      <div class="col-sm-12 text-center mb-3">
+         <h5>DAFTAR DOCUMENT</h5>
       </div>
    </div>   
    <div class="row">
@@ -100,46 +111,7 @@
             <thead class="bg-secondary text-light">
                <tr>
                   <th scope="col">No</th>
-                  <th scope="col">No Transaksi</th>
-                  <th scope="col">Update Time</th>
-                  <th scope="col">Update ID</th>
-               </tr>
-            </thead>
-            <tbody>
-               <% 
-               no = 0
-               do while not data1.eof 
-               no = no + 1
-               %>
-               <tr>
-                  <th scope="row"><%= no %></th>
-                  <td><%= data1("MR_Transaksi") %></td>
-                  <td><%= data1("MR_Updatetime") %></td>
-                  <td><%= data1("username") %></td>
-               </tr>
-               <% 
-               response.flush
-               data1.movenext
-               loop
-               %>
-            </tbody>
-         </table>
-      </div>
-   </div>
-   <% end if %>
-   <% if not data2.eof then %>
-   <div class="row">
-      <div class="col-sm-12 text-end mb-3">
-         <h5>Detail barang</h5>
-      </div>
-   </div>   
-   <div class="row">
-      <div class="col-sm-12 mb-3">
-         <table class="table table-striped">
-            <thead class="bg-secondary text-light">
-               <tr>
-                  <th scope="col">No</th>
-                  <th scope="col">No Transaksi</th>
+                  <th scope="col">Kode Item</th>
                   <th scope="col">Item</th>
                   <th scope="col">Quantity</th>
                   <th scope="col">Satuan</th>
@@ -150,8 +122,20 @@
             </thead>
             <tbody>
                <% 
+               do while not data1.eof 
+               %>
+               <tr>
+                  <td>Document</td>
+                  <td><%= data1("MR_Transaksi") %></td>
+                  <td><%= data1("MR_Updatetime") %></td>
+                  <td colspan="5"><%= data1("username") %></td>
+               </tr>
+               <% 
                no1 = 0
                rakID = ""
+               data_cmd.commandTExt = "SELECT dbo.DLK_T_MaterialReceiptD2.*, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id, DLK_M_Rak.Rak_Nama, DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama FROM dbo.DLK_T_MaterialReceiptD2 LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialReceiptD2.MR_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialReceiptD2.MR_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_Rak ON DLK_T_MaterialReceiptD2.MR_RakID = DLK_M_Rak.Rak_ID LEFT OUTER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId LEFT OUTER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID WHERE dbo.DLK_T_MaterialReceiptD2.MR_ID = '"& id &"' AND LEFT(MR_Transaksi,13) = '"& data1("MR_Transaksi") &"'"
+               set data2 = data_cmd.execute
+
                do while not data2.eof 
                no1 = no1 + 1
 
@@ -161,7 +145,7 @@
                %>
                <tr>
                   <th scope="row"><%= no1 %></th>
-                  <td><%= data2("MR_Transaksi") %></td>
+                  <td><%= data2("kategoriNama") &"-"& data2("jenisNama") %></td>
                   <td><%= data2("Brg_Nama") %></td>
                   <td>
                      <input type="number" name="qty" id="qty<%= data2("MR_Transaksi") %>" value="<%= data2("MR_Qtysatuan") %>" class="form-control" style="width:5rem;padding:3px;border:none;background:none;">
@@ -195,6 +179,11 @@
                data2.movenext
                loop
                %>
+               <% 
+               response.flush
+               data1.movenext
+               loop
+               %>
             </tbody>
          </table>
       </div>
@@ -219,10 +208,10 @@
                   <div class="col-sm">
                      <select class="form-select" aria-label="Default select example" name="fakturH" id="fakturH" required>
                         <option value="">Pilih</option>
-                        <% do while not fakturterhutang.eof %>
-                        <option value="<%= fakturterhutang("IPH_ID") %>"><%= left(fakturterhutang("IPH_ID"),2) %>-<% call getAgen(mid(fakturterhutang("IPH_ID"),3,3),"") %>/<%= mid(fakturterhutang("IPH_ID"),6,4) %>/<%= right(fakturterhutang("IPH_ID"),4) %></option>
+                        <% do while not datafp.eof %>
+                        <option value="<%= datafp("IPH_ID") %>"><%= left(datafp("IPH_ID"),2) %>-<% call getAgen(mid(datafp("IPH_ID"),3,3),"") %>/<%= mid(datafp("IPH_ID"),6,4) %>/<%= right(datafp("IPH_ID"),4) %></option>
                         <% 
-                        fakturterhutang.movenext
+                        datafp.movenext
                         loop
                         %>
                      </select>
@@ -250,8 +239,6 @@ const updateData = (id,trans) => {
          swal({title: 'Data Berhasil Diubah',text: 'Update Rak & Quantity',icon: 'success',button: 'OK',}).then(function() {window.location = 'incomed_add.asp?id='+ id})
       }
    });
-
-
 }
 </script>
 <% 

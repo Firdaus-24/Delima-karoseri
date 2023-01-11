@@ -10,7 +10,7 @@
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
 
-   data_cmd.commandText = "SELECT dbo.DLK_T_BOMH.BMH_ID, dbo.DLK_T_BOMH.BMH_AgenID, dbo.DLK_T_BOMH.BMH_Date, dbo.DLK_T_BOMH.BMH_PDID, dbo.DLK_T_BOMH.BMH_Day, dbo.DLK_T_BOMH.BMH_Month, dbo.DLK_T_BOMH.BMH_Keterangan,dbo.DLK_T_BOMH.BMH_Approve1, dbo.DLK_T_BOMH.BMH_Approve2, dbo.DLK_T_BOMH.BMH_AktifYN, dbo.GLB_M_Agen.AgenID, dbo.GLB_M_Agen.AgenName, dbo.DLK_T_ProductH.PDID, dbo.DLK_M_Barang.Brg_Nama FROM dbo.DLK_M_Barang INNER JOIN dbo.DLK_T_ProductH ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_ProductH.PDBrgID RIGHT OUTER JOIN dbo.DLK_T_BOMH ON dbo.DLK_T_ProductH.PDID = dbo.DLK_T_BOMH.BMH_PDID LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_BOMH.BMH_AgenID = dbo.GLB_M_Agen.AgenID WHERE dbo.DLK_T_BomH.BMH_ID = '"& id &"' AND dbo.DLK_T_BomH.BMH_AktifYN = 'Y'"
+   data_cmd.commandText = "SELECT dbo.DLK_T_BOMH.BMH_ID, dbo.DLK_T_BOMH.BMH_AgenID, dbo.DLK_T_BOMH.BMH_Date, dbo.DLK_T_BOMH.BMH_PDID, dbo.DLK_T_BOMH.BMH_Day, dbo.DLK_T_BOMH.BMH_StartDate, dbo.DLK_T_BOMH.BMH_EndDate, dbo.DLK_T_BOMH.BMH_Keterangan,dbo.DLK_T_BOMH.BMH_Approve1, dbo.DLK_T_BOMH.BMH_Approve2, dbo.DLK_T_BOMH.BMH_AktifYN, dbo.DLK_T_BOMH.BMH_PrototypeYN, dbo.GLB_M_Agen.AgenID, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_ProductH.PDID, dbo.DLK_M_Barang.Brg_Nama FROM dbo.DLK_M_Barang INNER JOIN dbo.DLK_M_ProductH ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_M_ProductH.PDBrgID RIGHT OUTER JOIN dbo.DLK_T_BOMH ON dbo.DLK_M_ProductH.PDID = dbo.DLK_T_BOMH.BMH_PDID LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_BOMH.BMH_AgenID = dbo.GLB_M_Agen.AgenID WHERE dbo.DLK_T_BomH.BMH_ID = '"& id &"' AND dbo.DLK_T_BomH.BMH_AktifYN = 'Y'"
    ' response.write data_cmd.commandText & "<br>"
    set data = data_cmd.execute
 
@@ -54,16 +54,22 @@
          "<td align='left'>: "&data("BMH_PDID") &" | "& data("brg_nama")&"</td>"&_
       "</tr>"&_
       "<tr>"&_
-         "<td>Capacity Day</td>"&_
-         "<td align='left'>: "&data("BMH_day")&"</td>"&_
-         "<td>Capacity Month</td>"&_
-         "<td align='left'>: "&data("BMH_Month")&"</td>"&_
+         "<td>Start Date</td>"&_
+         "<td align='left'>: "&Cdate(data("BMH_StartDate"))&"</td>"&_
+         "<td>End Date</td>"&_
+         "<td align='left'>: "&Cdate(data("BMH_EndDate"))&"</td>"&_
       "</tr>"&_ 
       "<tr>"&_
-         "<td>Keterangan</td>"&_
-         "<td align='left'>: "&data("BMH_Keterangan")&"</td>"&_
+         "<td>Prototype</td>"&_
+         "<td align='left'>: "&data("BMH_PrototypeYN")&"</td>"&_
          "<td>Pengaju</td>"&_
          "<td align='left'>: "&session("username")&"</td>"&_
+      "</tr>"&_ 
+      "<tr>"&_
+         "<td>Capacity Day</td>"&_
+         "<td align='left'>: "&data("BMH_day")&"</td>"&_
+         "<td>Keterangan</td>"&_
+         "<td align='left'>: "&data("BMH_Keterangan")&"</td>"&_
       "</tr>"&_ 
    "</table>"&_ 
    "<table width='100%' style='font-size:12px;border-collapse: collapse;right:10px;'>"&_

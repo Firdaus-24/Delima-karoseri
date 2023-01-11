@@ -62,6 +62,14 @@ $theme-colors: (
                   : <%= data("Username") %>
                </td>
                <th>
+                  Type
+               </th>
+               <td>
+                  :  <% if data("MR_Type") = 1 then %>Purchase <% else %>Produksi <% end if %> 
+               </td>
+            </tr>
+            <tr>
+                <th>
                   Keterangan
                </th>
                <td>

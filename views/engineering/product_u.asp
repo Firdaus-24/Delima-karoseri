@@ -7,12 +7,12 @@
     data_cmd.ActiveConnection = mm_delima_string
 
     ' get data header
-    data_cmd.commandText = "SELECT dbo.DLK_T_ProductH.*, dbo.DLK_M_Barang.Brg_Nama, GL_M_CategoryItem.cat_name, GLB_M_Agen.AgenName FROM dbo.DLK_T_ProductH LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_ProductH.PDBrgid = dbo.DLK_M_Barang.brg_ID LEFT OUTER JOIN GL_M_CategoryItem ON DLK_T_ProductH.PDKodeAKun = GL_M_CategoryItem.cat_id LEFT OUTER JOIN GLB_M_Agen ON DLK_T_ProductH.pdAgenID = GLB_M_Agen.AgenID WHERE dbo.DLK_T_ProductH.pdID = '"& id &"' AND dbo.DLK_T_ProductH.pdAktifYN = 'Y'"
+    data_cmd.commandText = "SELECT dbo.DLK_M_ProductH.*, dbo.DLK_M_Barang.Brg_Nama, GLB_M_Agen.AgenName FROM dbo.DLK_M_ProductH LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_ProductH.PDBrgid = dbo.DLK_M_Barang.brg_ID LEFT OUTER JOIN GLB_M_Agen ON DLK_M_ProductH.pdAgenID = GLB_M_Agen.AgenID WHERE dbo.DLK_M_ProductH.pdID = '"& id &"' AND dbo.DLK_M_ProductH.pdAktifYN = 'Y'"
 
     set data = data_cmd.execute
 
     ' get data detail
-    data_cmd.commandText = "SELECT dbo.DLK_T_ProductD.*, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID FROM dbo.DLK_M_SatuanBarang RIGHT OUTER JOIN dbo.DLK_T_ProductD ON dbo.DLK_M_SatuanBarang.Sat_ID = dbo.DLK_T_ProductD.PDDJenisSat LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_ProductD.PDDItem = dbo.DLK_M_Barang.Brg_Id WHERE LEFT(dbo.DLK_T_ProductD.PDDPDID,12) = '"& data("PDID") &"' ORDER BY PDDPDID ASC"
+    data_cmd.commandText = "SELECT dbo.DLK_M_ProductD.*, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID FROM dbo.DLK_M_SatuanBarang RIGHT OUTER JOIN dbo.DLK_M_ProductD ON dbo.DLK_M_SatuanBarang.Sat_ID = dbo.DLK_M_ProductD.PDDJenisSat LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_ProductD.PDDItem = dbo.DLK_M_Barang.Brg_Id WHERE LEFT(dbo.DLK_M_ProductD.PDDPDID,12) = '"& data("PDID") &"' ORDER BY PDDPDID ASC"
 
     set ddata = data_cmd.execute
 
@@ -62,10 +62,17 @@
             <input type="text" id="barang" class="form-control" name="barang" value="<%= data("Brg_Nama") %>" readonly>
         </div>
         <div class="col-sm-2">
-            <label for="kdakun" class="col-form-label">Kode Akun</label>
+            <label for="approve" class="col-form-label">Approve Y/N</label>
         </div>
         <div class="col-sm-4 mb-3">
-            <input type="text" id="kdakun" class="form-control" name="kdakun" value="<%= data("cat_name") %>" readonly>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="approve" id="approveY" value="Y" <% if data("PDApproveYN") = "Y" then%>checked <% end if %>disabled>
+                <label class="form-check-label" for="approveY">Yes</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="approve" id="approveN" value="N" <% if data("PDApproveYN") = "N" then%>checked <% end if %>disabled>
+                <label class="form-check-label" for="approveN" >No</label>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -95,7 +102,6 @@
                     <tr>
                         <th scope="col">ID</th>
                         <th scope="col">Item</th>
-                        <th scope="col">Sepesification</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Satuan</th>
                         <th scope="col" class="text-center">Aksi</th>
@@ -113,9 +119,6 @@
                                 <%= ddata("Brg_Nama") %>
                             </td>
                             <td>
-                                <%= ddata("PDDSpect") %>
-                            </td>
-                            <td>
                                 <%= ddata("PDDQtty") %>
                             </td>
                             <td>
@@ -123,7 +126,7 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                    <a href="aktifprod.asp?id=<%= ddata("PDDPDID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'delete detail produksi')">Delete</a>
+                                    <a href="aktifprod.asp?id=<%= ddata("PDDPDID") %>&p=product_u" class="btn badge text-bg-danger" onclick="deleteItem(event,'delete detail produksi')">Delete</a>
                                 </div>
                             </td>
                         </tr>

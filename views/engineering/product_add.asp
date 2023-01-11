@@ -9,7 +9,7 @@
     set pcabang = data.execute    
 
     ' get kode akun
-    data.commandText = "SELECT cat_id, cat_Name FROM GL_M_CategoryItem WHERE Cat_AktifYN = 'Y' ORDER BY Cat_Name ASC"
+    data.commandText = "SELECT CA_id, CA_Name FROM GL_M_ChartAccount WHERE CA_AktifYN = 'Y' ORDER BY CA_Name ASC"
     set kodeakun = data.execute    
 
     call header("From Produksi") 
@@ -55,18 +55,17 @@
             </select>
         </div>
         <div class="col-sm-2">
-            <label for="kdakun" class="col-form-label">Kode Akun</label>
+            <label for="approve" class="col-form-label">Approve Y/N</label>
         </div>
         <div class="col-sm-4 mb-3">
-            <select class="form-select" aria-label="Default select example" name="kdakun" id="kdakun" required> 
-                <option value="">Pilih</option>
-            <% do while not kodeakun.eof %> 
-                <option value="<%= kodeakun("cat_ID") %>"><%= kodeakun("cat_Name") %></option>
-            <% 
-            kodeakun.movenext
-            loop
-            %>
-            </select>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="approve" id="approveY" value="Y" required>
+                <label class="form-check-label" for="approveY">Yes</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="approve" id="approveN" value="N">
+                <label class="form-check-label" for="approveN">No</label>
+            </div>
         </div>
     </div>
     <div class="row">

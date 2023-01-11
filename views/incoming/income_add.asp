@@ -42,6 +42,16 @@
       </div>
       <div class="row align-items-center">
          <div class="col-lg-2 mb-3">
+            <label for="type" class="col-form-label">Type</label>
+         </div>
+         <div class="col-lg-4 mb-3">
+            <select class="form-select" aria-label="Default select example" name="type" id="type" required>
+               <option value="">Pilih</option>
+               <option value="1">Purchase</option>
+               <option value="2">Produksi</option>
+            </select>
+         </div>
+         <div class="col-lg-2 mb-3">
             <label for="keterangan" class="col-form-label">Keterangan</label>
          </div>
          <div class="col-lg-4 mb-3">
@@ -62,13 +72,14 @@
       cabang = trim(Request.Form("cabang"))
       tgl = trim(Request.Form("tgl"))
       keterangan = trim(Request.Form("keterangan"))
+      tp = trim(Request.Form("type"))
 
       data_cmd.commandTExt = "SELECT * FROM DLK_T_MaterialReceiptH WHERE MR_AgenID = '"& cabang &"' AND MR_Date = '"& tgl &"' AND MR_Keterangan = '"& keterangan &"' AND MR_aktifYN = 'Y'"
 
       set data = data_cmd.execute
 
       if data.eof then
-         data_cmd.commandTExt = "sp_AddDLK_T_MaterialReceiptH '"& cabang &"', '"& tgl &"', '"& keterangan &"', '', '"& session("userid") &"', '"& now &"'"
+         data_cmd.commandTExt = "sp_AddDLK_T_MaterialReceiptH '"& cabang &"', '"& tgl &"', '"& keterangan &"', '', '"& session("userid") &"', '"& now &"', "& tp &""
          ' response.write data_cmd.commandText & "<br>"
          set id = data_cmd.execute
 

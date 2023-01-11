@@ -22,6 +22,7 @@
     call header("Detail Outgoing")
 %>
 <!--#include file="../../navbar.asp"-->
+<meta http-equiv="refresh" content="10" />
 <style>
     .loaderjual{
         position:relative;
@@ -157,60 +158,60 @@
       </div>
    </div>
    <div class="row">
-      <div class="col-lg-12 text-center mb-3">
-         <h5>DETAIL PENGELUARAN</h5>
-      </div>
-   </div>
-   <div class="row">
-      <div class="col-lg-12">
-         <table class="table table-hover">
-               <thead class="bg-secondary text-light">
-                  <tr>
-                     <th scope="col">ID</th>
-                     <th scope="col">Item</th>
-                     <th scope="col">Quantity</th>
-                     <th scope="col">Harga</th>
-                     <th scope="col">Satuan</th>
-                     <th scope="col">Rak</th>
-                     <th scope="col" class="text-center">Aksi</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  <% 
-                  do while not ddata.eof 
-                  %>
-                     <tr>
-                           <th>
-                              <%= ddata("MO_ID") %>
-                           </th>
-                           <td>
-                              <%= ddata("Brg_Nama") %>
-                           </td>
-                           <td>
-                              <%= ddata("MO_QtySatuan") %>
-                           </td>
-                           <td>
-                              <%= replace(formatCurrency(ddata("MO_Harga")),"$","") %>
-                           </td>
-                           <td>
-                              <%= ddata("Sat_Nama") %>
-                           </td>
-                           <td>
-                              <%= ddata("Rak_Nama") %>
-                           </td>
-                           <td class="text-center">
-                              <div class="btn-group" role="group" aria-label="Basic example">
-                              <a href="aktifd.asp?id=<%= ddata("MO_ID") %>&brg=<%= ddata("MO_Item") %>&p=outd_add" class="btn badge text-bg-danger" onclick="deleteItem(event,'DETAIL BARANG OUTGOING')">Delete</a>
-                           </td>
-                     </tr>
-                  <% 
-                  ddata.movenext
-                  loop
-                  %>
-               </tbody>
-         </table>
-      </div>
-   </div>
+        <div class="col-lg-12 text-center mb-3">
+            <h5>DETAIL PENGELUARAN</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <table class="table table-hover">
+                <thead class="bg-secondary text-light">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Item</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Harga</th>
+                        <th scope="col">Satuan</th>
+                        <th scope="col">Rak</th>
+                        <th scope="col" class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% 
+                    do while not ddata.eof 
+                    %>
+                        <tr>
+                            <th>
+                                <%= ddata("MO_ID") %>
+                            </th>
+                            <td>
+                                <%= ddata("Brg_Nama") %>
+                            </td>
+                            <td>
+                                <%= ddata("MO_QtySatuan") %>
+                            </td>
+                            <td>
+                                <%= replace(formatCurrency(ddata("MO_Harga")),"$","") %>
+                            </td>
+                            <td>
+                                <%= ddata("Sat_Nama") %>
+                            </td>
+                            <td>
+                                <%= ddata("Rak_Nama") %>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                <a href="aktifd.asp?id=<%= ddata("MO_ID") %>&brg=<%= ddata("MO_Item") %>&p=outd_add" class="btn badge text-bg-danger" onclick="deleteItem(event,'DETAIL BARANG OUTGOING')">Delete</a>
+                            </td>
+                        </tr>
+                    <% 
+                    ddata.movenext
+                    loop
+                    %>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>  
 
 <% 

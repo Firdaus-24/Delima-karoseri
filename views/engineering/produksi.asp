@@ -4,7 +4,7 @@
     data_cmd.ActiveConnection = mm_delima_string
 
     ' filter agen
-    data_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_ProductH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_ProductH.PDAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_ProductH.PDAktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    data_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_M_ProductH LEFT OUTER JOIN GLB_M_Agen ON DLK_M_ProductH.PDAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_M_ProductH.PDAktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
     set agendata = data_cmd.execute
 
     agen = trim(Request.Form("agen"))
@@ -25,7 +25,7 @@
     end if
     
     if agen <> "" then
-        filterAgen = "AND DLK_T_ProductH.PDAgenID = '"& agen &"'"
+        filterAgen = "AND DLK_M_ProductH.PDAgenID = '"& agen &"'"
     else
         filterAgen = ""
     end if
@@ -37,19 +37,19 @@
     end if
 
     if tgla <> "" AND tgle <> "" then
-        filtertgl = "AND dbo.DLK_T_ProductH.PDDate BETWEEN '"& tgla &"' AND '"& tgle &"'"
+        filtertgl = "AND dbo.DLK_M_ProductH.PDDate BETWEEN '"& tgla &"' AND '"& tgle &"'"
     elseIf tgla <> "" AND tgle = "" then
-        filtertgl = "AND dbo.DLK_T_ProductH.PDDate = '"& tgla &"'"
+        filtertgl = "AND dbo.DLK_M_ProductH.PDDate = '"& tgla &"'"
     else 
         filtertgl = ""
     end if
 
     ' query seach 
-    strquery = "SELECT DLK_T_ProductH.*, DLK_M_Barang.Brg_Nama, GLB_M_Agen.AgenName FROM DLK_T_ProductH LEFT OUTER JOIN DLK_M_Barang ON DLK_T_ProductH.PDBrgID = DLK_M_Barang.Brg_ID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_ProductH.PDAgenID = GLB_M_Agen.AgenID WHERE PDAktifYN = 'Y' "& filterAgen &" "& filternama &" "& filtertgl &""
+    strquery = "SELECT DLK_M_ProductH.*, DLK_M_Barang.Brg_Nama, GLB_M_Agen.AgenName FROM DLK_M_ProductH LEFT OUTER JOIN DLK_M_Barang ON DLK_M_ProductH.PDBrgID = DLK_M_Barang.Brg_ID LEFT OUTER JOIN GLB_M_Agen ON DLK_M_ProductH.PDAgenID = GLB_M_Agen.AgenID WHERE PDAktifYN = 'Y' "& filterAgen &" "& filternama &" "& filtertgl &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
-    orderBy = " ORDER BY DLK_T_ProductH.PDDAte, DLK_M_Barang.Brg_Nama ASC"
+    orderBy = " ORDER BY DLK_M_ProductH.PDDAte, DLK_M_Barang.Brg_Nama ASC"
     set rs = Server.CreateObject("ADODB.Recordset")
     sqlawal = strquery
 
@@ -154,7 +154,7 @@
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
 
-                    data_cmd.commandText = "SELECT PDDPDID FROM DLK_T_ProductD WHERE LEFT(PDDPDID,12) = '"& rs("PDID") &"'"
+                    data_cmd.commandText = "SELECT PDDPDID FROM DLK_M_ProductD WHERE LEFT(PDDPDID,12) = '"& rs("PDID") &"'"
 
                     set ddata = data_cmd.execute
                     %>

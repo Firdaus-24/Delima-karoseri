@@ -31,7 +31,7 @@
       set cktrans1 = data_cmd.execute
 
       if cktrans1.eof then
-         data_cmd.commandText = "SELECT (IPH_ID) AS notrans  FROM (SELECT IPH_ID FROM dbo.DLK_T_InvPemH WHERE IPH_AktifYN = 'Y' UNION ALL SELECT PDID FROM dbo.DLK_T_ProductH WHERE PDAktifYN = 'Y' ) AS U WHERE U.IPH_ID = '"& trans1 &"'"
+         data_cmd.commandText = "SELECT (IPH_ID) AS notrans  FROM (SELECT IPH_ID FROM dbo.DLK_T_InvPemH WHERE IPH_AktifYN = 'Y' UNION ALL SELECT PDID FROM dbo.DLK_M_ProductH WHERE PDAktifYN = 'Y' ) AS U WHERE U.IPH_ID = '"& trans1 &"'"
 
          set ckurut = data_cmd.execute
 

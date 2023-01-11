@@ -3,18 +3,18 @@ sub tambahProduksiH()
     barang = trim(Request.Form("barang"))
     cabang = trim(Request.Form("cabang"))
     tgl = trim(Request.Form("tgl"))
-    kdakun = trim(Request.Form("kdakun"))
+    approve = trim(Request.Form("approve"))
     keterangan = trim(Request.Form("keterangan"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_T_ProductH WHERE PDBrgID = '"& barang &"' AND PDAgenID = '"& cabang &"'"
+    data_cmd.commandText = "SELECT * FROM DLK_M_ProductH WHERE PDBrgID = '"& barang &"' AND PDAgenID = '"& cabang &"'"
 
     set data = data_cmd.execute
 
     if data.eof then
-        data_cmd.commandText = "exec SP_AddDLK_T_ProductH '"& barang &"', '"& tgl &"', '"& cabang &"', '"& kdakun &"', '', '','"& keterangan &"'"
+        data_cmd.commandText = "exec SP_AddDLK_M_ProductH '"& barang &"', '"& tgl &"', '"& cabang &"', '"& approve &"', '', '','"& keterangan &"'"
 
         set p = data_cmd.execute
 
@@ -37,7 +37,6 @@ end sub
 sub tambahProduksiD()
     pdid = trim(Request.Form("pdid"))
     ckproduckd = trim(Request.Form("ckproduckd"))
-    spect = trim(Request.Form("spect"))
     qtty = trim(Request.Form("qtty"))
     satuan = trim(Request.Form("satuan"))
     nol = "000"
@@ -45,17 +44,17 @@ sub tambahProduksiD()
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_T_ProductD WHERE PDDItem = '"& ckproduckd &"' AND LEFT(PDDPDID,12) = '"& pdid &"'"
+    data_cmd.commandText = "SELECT * FROM DLK_M_ProductD WHERE PDDItem = '"& ckproduckd &"' AND LEFT(PDDPDID,12) = '"& pdid &"'"
     set data = data_cmd.execute
 
     if data.eof then
-        data_cmd.commandTExt = "SELECT (COUNT(PDDPDID)) + 1 AS urut FROM DLK_T_ProductD WHERE left(PDDPDID,12) = '"& pdid &"'"
+        data_cmd.commandTExt = "SELECT (COUNT(PDDPDID)) + 1 AS urut FROM DLK_M_ProductD WHERE left(PDDPDID,12) = '"& pdid &"'"
         ' response.write data_cmd.commandText & "<br>"
         set p = data_cmd.execute
 
         iddetail = pdid & right(nol & p("urut"),3)
 
-        call query("INSERT INTO DLK_T_ProductD (PDDPDID, PDDItem, PDDSpect, PDDQtty, PDDjenissat) VALUES ( '"& iddetail &"','"& ckproduckd &"', '"& spect &"', "& qtty &",'"& satuan &"')")
+        call query("INSERT INTO DLK_M_ProductD (PDDPDID, PDDItem, PDDQtty, PDDjenissat) VALUES ( '"& iddetail &"','"& ckproduckd &"', "& qtty &",'"& satuan &"')")
 
         value = 1
     else
@@ -74,7 +73,6 @@ end sub
 sub updateProduksi()
     pdid = trim(Request.Form("pdid"))
     ckproduckd = trim(Request.Form("ckproduckd"))
-    spect = trim(Request.Form("spect"))
     qtty = trim(Request.Form("qtty"))
     satuan = trim(Request.Form("satuan"))
     nol = "000"
@@ -82,27 +80,27 @@ sub updateProduksi()
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_T_ProductD WHERE LEFT(PDDPDID,12) = '"& pdid &"' AND PDDItem = '"& ckproduckd &"'"
+    data_cmd.commandText = "SELECT * FROM DLK_M_ProductD WHERE LEFT(PDDPDID,12) = '"& pdid &"' AND PDDItem = '"& ckproduckd &"'"
     ' response.write data_cmd.commandText & "<br>"
     set data = data_cmd.execute
     
     if data.eof then
-        data_cmd.commandText = "SELECT TOP 1 (right(PDDPDID,3)) + 1 AS urut FROM DLK_T_ProductD WHERE LEFT(PDDPDID,12) = '"& pdid &"' ORDER BY PDDPDID DESC"
+        data_cmd.commandText = "SELECT TOP 1 (right(PDDPDID,3)) + 1 AS urut FROM DLK_M_ProductD WHERE LEFT(PDDPDID,12) = '"& pdid &"' ORDER BY PDDPDID DESC"
 
         set p = data_cmd.execute
 
         if p.eof then
-            data_cmd.commandTExt = "SELECT (COUNT(PDDPDID)) + 1 AS urut FROM DLK_T_ProductD WHERE LEFT(PDDPDID,12) = '"& pdid &"'"
+            data_cmd.commandTExt = "SELECT (COUNT(PDDPDID)) + 1 AS urut FROM DLK_M_ProductD WHERE LEFT(PDDPDID,12) = '"& pdid &"'"
 
             set a = data_cmd.execute
 
             iddetail = pdid & right(nol & a("urut"),3)
 
-            call query("INSERT INTO DLK_T_ProductD (PDDPDID, PDDItem, PDDSpect, PDDQtty, PDDJenisSat) VALUES ('"& iddetail &"','"& ckproduckd &"', '"& spect &"', "& qtty &", '"& satuan &"') ")
+            call query("INSERT INTO DLK_M_ProductD (PDDPDID, PDDItem, PDDSpect, PDDQtty, PDDJenisSat) VALUES ('"& iddetail &"','"& ckproduckd &"', '"& spect &"', "& qtty &", '"& satuan &"') ")
         else
             iddetail = pdid & right(nol & p("urut"),3)
 
-            call query("INSERT INTO DLK_T_ProductD (PDDPDID, PDDItem, PDDSpect, PDDQtty, PDDJenisSat) VALUES ('"& iddetail &"','"& ckproduckd &"', '"& spect &"', "& qtty &", '"& satuan &"') ")
+            call query("INSERT INTO DLK_M_ProductD (PDDPDID, PDDItem, PDDSpect, PDDQtty, PDDJenisSat) VALUES ('"& iddetail &"','"& ckproduckd &"', '"& spect &"', "& qtty &", '"& satuan &"') ")
         end if
         value = 1
     else

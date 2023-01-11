@@ -7,7 +7,7 @@
    data_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_BOMH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_BOMH.BMH_AgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_BOMH.BMH_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
    set agendata = data_cmd.execute
    ' filter produk
-   data_cmd.commandTExt = "SELECT dbo.DLK_T_ProductH.PDID, dbo.DLK_M_Barang.Brg_Nama FROM dbo.DLK_M_Barang INNER JOIN dbo.DLK_T_ProductH ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_ProductH.PDBrgID RIGHT OUTER JOIN dbo.DLK_T_BOMH ON dbo.DLK_T_ProductH.PDID = dbo.DLK_T_BOMH.BMH_PDID GROUP BY dbo.DLK_T_ProductH.PDID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_BOMH.BMH_AktifYN HAVING (dbo.DLK_T_BOMH.BMH_AktifYN = 'Y') ORDER BY Brg_Nama ASC"
+   data_cmd.commandTExt = "SELECT dbo.DLK_M_ProductH.PDID, dbo.DLK_M_Barang.Brg_Nama FROM dbo.DLK_M_Barang INNER JOIN dbo.DLK_M_ProductH ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_M_ProductH.PDBrgID RIGHT OUTER JOIN dbo.DLK_T_BOMH ON dbo.DLK_M_ProductH.PDID = dbo.DLK_T_BOMH.BMH_PDID GROUP BY dbo.DLK_M_ProductH.PDID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_BOMH.BMH_AktifYN HAVING (dbo.DLK_T_BOMH.BMH_AktifYN = 'Y') ORDER BY Brg_Nama ASC"
 
    set dataproduk = data_cmd.execute
 
@@ -49,7 +49,7 @@
    end if
 
    ' query seach 
-   strquery = "SELECT dbo.DLK_T_BOMH.*, dbo.GLB_M_Agen.AgenName, dbo.DLK_T_ProductH.PDBrgID, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_BOMH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_BOMH.BMH_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN dbo.DLK_T_ProductH ON dbo.DLK_T_BOMH.BMH_PDID = dbo.DLK_T_ProductH.PDID INNER JOIN DLK_M_Barang ON DLK_T_ProductH.PDBrgID = DLK_M_Barang.Brg_ID WHERE DLK_T_BOMH.BMH_AktifYN = 'Y' "& filterAgen &" "& filterproduk &" "& filtertgl &""
+   strquery = "SELECT dbo.DLK_T_BOMH.*, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_ProductH.PDBrgID, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_BOMH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_BOMH.BMH_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN dbo.DLK_M_ProductH ON dbo.DLK_T_BOMH.BMH_PDID = dbo.DLK_M_ProductH.PDID INNER JOIN DLK_M_Barang ON DLK_M_ProductH.PDBrgID = DLK_M_Barang.Brg_ID WHERE DLK_T_BOMH.BMH_AktifYN = 'Y' "& filterAgen &" "& filterproduk &" "& filtertgl &""
    ' untuk data paggination
    page = Request.QueryString("page")
 
@@ -158,7 +158,7 @@
                <th>Product</th>
                <th>Approve1</th>
                <th>Approve2</th>
-               <th>Keterangan</th>
+               <th>Prototype</th>
                <th class="text-center">Aksi</th>
             </thead>
             <tbody>
@@ -191,7 +191,13 @@
                         Yes
                      <% end if %>
                   </td>
-                  <td><%= rs("BMH_Keterangan") %></td>
+                  <td>
+                     <%if rs("BMH_PrototypeYN") = "Y" then %>
+                        Yes 
+                     <% else %>
+                        No
+                     <% end if %>
+                  </td>
                   <td class="text-center">
                      <div class="btn-group" role="group" aria-label="Basic example">
                         <% if not p.eof then %>

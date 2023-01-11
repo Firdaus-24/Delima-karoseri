@@ -1,5 +1,6 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_BOM.asp"-->
+<!--#include file="../../functions/func_DateDiffWeekDays.asp"-->  
 <% 
    id = trim(Request.QueryString("id"))
 
@@ -56,26 +57,47 @@
             <input type="text" id="tgl" name="tgl" class="form-control" value="<%= date() %>" onfocus="(this.type='date')" required>
          </div>
          <div class="col-lg-2 mb-3">
+            <label for="prototype" class="col-form-label">Prototype</label>
+         </div>
+         <div class="col-sm-4 mb-3">
+            <div class="form-check form-check-inline">
+               <input class="form-check-input" type="radio" name="prototype" id="prototypeY" value="Y" required>
+               <label class="form-check-label" for="prototypeY">Yes</label>
+            </div>
+            <div class="form-check form-check-inline">
+               <input class="form-check-input" type="radio" name="prototype" id="prototypeN" value="N">
+               <label class="form-check-label" for="prototypeN">No</label>
+            </div>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-lg-2 mb-3">
+            <label for="tgla" class="col-form-label">Start Date</label>
+         </div>
+         <div class="col-lg-4 mb-3">
+            <input type="date" id="tgla" name="tgla" class="form-control" required>
+         </div>
+         <div class="col-lg-2 mb-3">
+            <label for="tgle" class="col-form-label">End Date</label>
+         </div>
+         <div class="col-lg-4 mb-3">
+            <input type="date" id="tgle" name="tgle" class="form-control" required>
+         </div>
+      </div>      
+      <div class="row">
+         <div class="col-lg-2 mb-3">
             <label for="hari" class="col-form-label">Capacity Day</label>
          </div>
          <div class="col-lg-4 mb-3">
             <input type="number" id="hari" name="hari" class="form-control" required>
          </div>
-      </div>
-      <div class="row">
          <div class="col-lg-2 mb-3">
             <label for="keterangan" class="col-form-label">Keterangan</label>
          </div>
          <div class="col-lg-4 mb-3">
             <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" autocomplete="off" required>
          </div>
-         <div class="col-lg-2 mb-3">
-            <label for="bulan" class="col-form-label">Capacity Month</label>
-         </div>
-         <div class="col-lg-4 mb-3">
-            <input type="number" id="bulan" name="bulan" class="form-control" required>
-         </div>
-      </div>        
+      </div>  
       <div class="row">
          <div class="col-lg-12 text-center">
                <a href="index.asp" type="button" class="btn btn-danger">Kembali</a>
