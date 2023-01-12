@@ -4,19 +4,19 @@
         tgl = trim(Request.Form("tgl"))
         divisi = trim(Request.Form("divisi"))
         departement = trim(Request.Form("departement"))
-        kebutuhan = Cint(trim(Request.Form("kebutuhan")))
+        kebutuhan = ""
         produk = trim(Request.Form("produk"))
         keterangan = trim(Request.Form("keterangan"))
 
         set data_cmd =  Server.CreateObject ("ADODB.Command")
         data_cmd.ActiveConnection = mm_delima_string
 
-        data_cmd.commandText = "SELECT * FROM DLK_T_OrJulH WHERE OJH_AgenID = '"& agen &"' AND OJH_Date = '"& tgl &"' AND OJH_divID = '"& divisi &"' AND OJH_depID = '"& departement &"' AND OJH_Kebutuhan = "& kebutuhan &" AND OJH_PDID = '"& produk &"' AND OJH_Keterangan = '"& keterangan &"' AND OJH_AktifYN = 'Y'"
+        data_cmd.commandText = "SELECT * FROM DLK_T_OrJulH WHERE OJH_AgenID = '"& agen &"' AND OJH_Date = '"& tgl &"' AND OJH_divID = '"& divisi &"' AND OJH_depID = '"& departement &"' AND OJH_PDID = '"& produk &"' AND OJH_Keterangan = '"& keterangan &"' AND OJH_AktifYN = 'Y'"
         ' response.write data_cmd.commandText & "<br>"
         set data = data_cmd.execute
 
         if data.eof then
-            data_cmd.commandText = "exec sp_AddDLK_T_OrJulH '"& agen &"','"& tgl &"', '"& divisi &"', '"& departement &"', '"& keterangan &"', '"& produk &"', "& kebutuhan &""
+            data_cmd.commandText = "exec sp_AddDLK_T_OrJulH '"& agen &"','"& tgl &"', '"& divisi &"', '"& departement &"', '"& keterangan &"', '"& produk &"', 0"
             ' response.write data_cmd.commandText & "<br>"
             set p = data_cmd.execute
 

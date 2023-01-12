@@ -22,6 +22,22 @@
     call header("Detail Outgoing")
 %>
 <!--#include file="../../navbar.asp"-->
+<meta http-equiv="refresh" content="10" />
+<style>
+    .loaderjual{
+        position:relative;
+        width:100%;
+        display: flex;
+        justify-content: center;
+        top: 50%;
+        /* display:none; */
+    }
+    .loaderjual img{
+        position: absolute;
+        top: 50%;
+        display:none; 
+    }
+</style>
 <div class="container">
     <div class="row">
         <div class="col-lg-12 mt-3 text-center">
@@ -29,7 +45,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-12 text-center labelId">
+        <div class="col-lg-12 mb-3 text-center labelId">
             <h3><%= id %></h3>
         </div>
     </div>
@@ -89,10 +105,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="d-flex">
-            <div class="me-auto p-2">
-                <button type="button" class="btn btn-secondary" onClick="window.open('export-XlsOutgoing.asp?id=<%=id%>','_self')">EXPORT</button>
-            </div>
+        <div class="d-flex mb-3">
             <div class="p-2">
                 <a href="index.asp" type="button" class="btn btn-danger">Kembali</a>
             </div>
@@ -119,23 +132,23 @@
                <% 
                do while not barang.eof 
                %>
-                <tr>
-                    <th>
-                    <%= barang("BMD_ID") %>
-                    </th>
-                    <th>
-                    <%= barang("KategoriNama") &"-"& barang("jenisNama") %>
-                    </th>
-                    <td>
-                    <%= barang("Brg_Nama") %>
-                    </td>
-                    <td>
-                    <%= barang("BMD_QtySatuan") %>
-                    </td>
-                    <td>
-                    <%= barang("Sat_nama") %>
-                    </td>
-                </tr>
+                  <tr>
+                     <th>
+                        <%= barang("BMD_ID") %>
+                     </th>
+                     <th>
+                        <%= barang("KategoriNama") &"-"& barang("jenisNama") %>
+                     </th>
+                     <td>
+                        <%= barang("Brg_Nama") %>
+                     </td>
+                     <td>
+                        <%= barang("BMD_QtySatuan") %>
+                     </td>
+                     <td>
+                        <%= barang("Sat_nama") %>
+                     </td>
+                  </tr>
                <% 
                barang.movenext
                loop
@@ -160,6 +173,7 @@
                         <th scope="col">Harga</th>
                         <th scope="col">Satuan</th>
                         <th scope="col">Rak</th>
+                        <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -184,6 +198,10 @@
                             </td>
                             <td>
                                 <%= ddata("Rak_Nama") %>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                <a href="aktifd.asp?id=<%= ddata("MO_ID") %>&brg=<%= ddata("MO_Item") %>&p=outd_add" class="btn badge text-bg-danger" onclick="deleteItem(event,'DETAIL BARANG OUTGOING')">Delete</a>
                             </td>
                         </tr>
                     <% 

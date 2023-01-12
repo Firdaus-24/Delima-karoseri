@@ -92,7 +92,7 @@
 
 <% 
     if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
-        call tambahOrjul()
+        call tambahOrjulH()
     end if
     call footer()
 %>

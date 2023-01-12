@@ -17,7 +17,7 @@
     set ddata = data_cmd.execute
 
     ' getbarang 
-    data_cmd.commandText = "SELECT DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_ID, DLK_M_kategori.kategoriNama, DLK_M_JenisBarang.jenisNama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.kategoriID = DLK_M_Kategori.kategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE Brg_AktifYN = 'Y' AND Brg_ID <> '"& data("PDBrgID") &"' ORDER BY Brg_Nama ASC"
+    data_cmd.commandText = "SELECT DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_ID, DLK_M_kategori.kategoriNama, DLK_M_JenisBarang.jenisNama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.kategoriID = DLK_M_Kategori.kategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE Brg_AktifYN = 'Y' AND Brg_ID <> '"& data("PDBrgID") &"' AND LEFT(Brg_ID,3) = '"& data("pdAgenID") &"' ORDER BY Brg_Nama ASC"
 
     set barang = data_cmd.execute
 
@@ -29,6 +29,16 @@
     call header("Detail Product")
 %>
 <!--#include file="../../navbar.asp"-->
+<style>
+.clearfix {
+  padding: 80px 0;
+  text-align: center;
+  display:none;
+  position:absolute;
+  width:inherit;
+  overflow:hidden;
+}
+</style>
 <div class="container">
     <div class="row">
         <div class="col-lg-12  mt-3 text-center">
@@ -117,7 +127,7 @@
                             </th>
                             <td>
                                 <%= ddata("Brg_Nama") %>
-                            </td>
+                        </td>
                             <td>
                                 <%= ddata("PDDQtty") %>
                             </td>
@@ -126,8 +136,7 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                    <a href="aktifprod.asp?id=<%= ddata("PDDPDID") %>&p=product_u" class="btn badge text-bg-danger" onclick="deleteItem(event,'delete detail produksi')">Delete</a>
-                                </div>
+                                <a href="aktifprod.asp?id=<%= ddata("PDDPDID") %>&p=productd_add" class="btn badge text-bg-danger" onclick="deleteItem(event,'delete detail produksi')">Delete</a>
                             </td>
                         </tr>
                     <% 
@@ -152,6 +161,19 @@
       <div class="modal-body">
         <!-- table barang -->
         <div class="row">
+            <div class="col-sm-3">
+                <label for="cdetailProdiksi" class="col-form-label">Cari Barang</label>
+            </div>
+            <div class="col-sm-9 mb-3">
+                <!-- cari nama barang -->
+                <input type="text" id="cdetailProdiksi" class="form-control" name="cdetailProdiksi" autocomplete="off"> 
+                <!-- cabang -->
+                <input type="hidden" id="productCabang" class="form-control" name="productCabang" value="<%= data("PDAgenID") %>" autocomplete="off"> 
+                <!-- id produksi -->
+                <input type="hidden" id="productID" class="form-control" name="productID" value="<%= data("PDBrgID") %>" autocomplete="off"> 
+            </div>
+        </div>
+        <div class="row">
             <div class="col-sm mb-4 overflow-auto" style="height:15rem;">
                 <table class="table" style="font-size:12px;">
                     <thead class="bg-secondary text-light" style="position: sticky;top: 0;">
@@ -161,7 +183,11 @@
                             <th scope="col">Pilih</th>
                         </tr>
                     </thead>
-                    <tbody  class="contentdpo">
+                    <!-- loader -->
+                    <div class="clearfix">
+                        <img src="../../public/img/loader.gif" width="50">
+                    </div>
+                    <tbody class="contentProductD">
                         <% do while not barang.eof %>
                         <tr>
                             <th scope="row"><%= barang("kategoriNama")&"-"& barang("jenisNama") %></th>
@@ -181,14 +207,6 @@
             </div>
         </div>
         <!-- end table -->
-        <div class="row">
-            <div class="col-sm-3">
-                <label for="spect" class="col-form-label">Sepesification</label>
-            </div>
-            <div class="col-sm-9 mb-3">
-                <input type="text" id="spect" class="form-control" name="spect" maxlength="50" autocomplete="off" required>
-            </div>
-        </div>
         <div class="row">
             <div class="col-sm-3">
                 <label for="qtty" class="col-form-label">Quantity</label>
@@ -223,8 +241,6 @@
     </div>
   </div>
 </div>
-
-
 <% 
     if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
         call updateProduksi()

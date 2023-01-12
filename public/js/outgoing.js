@@ -16,4 +16,17 @@ $(document).ready(function(){
          });
      }   
    })
+   $("#cOutItem").keyup(function(){
+      let nama = $("#cOutItem").val()
+      let cabang = $("#cOutcabang").val()
+      
+      $.ajax({
+         method: "POST",
+         url: "../../ajax/getStokOutgoing.asp",
+         data: { nama, cabang }
+      }).done(function( msg ) {
+         $(".contentItemsOutgoing").html(msg)
+      });  
+   })
+
 })

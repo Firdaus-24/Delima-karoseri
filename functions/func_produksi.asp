@@ -96,11 +96,11 @@ sub updateProduksi()
 
             iddetail = pdid & right(nol & a("urut"),3)
 
-            call query("INSERT INTO DLK_M_ProductD (PDDPDID, PDDItem, PDDSpect, PDDQtty, PDDJenisSat) VALUES ('"& iddetail &"','"& ckproduckd &"', '"& spect &"', "& qtty &", '"& satuan &"') ")
+            call query("INSERT INTO DLK_M_ProductD (PDDPDID, PDDItem, PDDQtty, PDDJenisSat) VALUES ('"& iddetail &"','"& ckproduckd &"', "& qtty &", '"& satuan &"') ")
         else
             iddetail = pdid & right(nol & p("urut"),3)
 
-            call query("INSERT INTO DLK_M_ProductD (PDDPDID, PDDItem, PDDSpect, PDDQtty, PDDJenisSat) VALUES ('"& iddetail &"','"& ckproduckd &"', '"& spect &"', "& qtty &", '"& satuan &"') ")
+            call query("INSERT INTO DLK_M_ProductD (PDDPDID, PDDItem, PDDQtty, PDDJenisSat) VALUES ('"& iddetail &"','"& ckproduckd &"', "& qtty &", '"& satuan &"') ")
         end if
         value = 1
     else

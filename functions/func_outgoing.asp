@@ -32,4 +32,51 @@
          value = 0
       end if
    End Sub
+
+   sub DetailOutgoing()
+      id = trim(Request.Form("id"))
+      ckbrgid = trim(Request.Form("ckbrgid"))
+      harga = trim(Request.Form("harga"))
+      qty = trim(Request.Form("qty"))
+      dsatuan = trim(Request.Form("dsatuan"))
+      rak = trim(Request.Form("rak"))
+
+      set data_cmd =  Server.CreateObject ("ADODB.Command")
+      data_cmd.ActiveConnection = mm_delima_string
+
+      data_cmd.commandText = "SELECT * FROM dbo.DLK_T_MaterialOutD WHERE MO_Item = '"& ckbrgid &"' AND MO_ID = '"& id &"'"
+
+      set detaildata = data_cmd.execute
+
+      if detaildata.eof then
+         call query("INSERT INTO DLK_T_MAterialOutD (MO_ID,MO_Item,MO_Qtysatuan,MO_Harga,MO_JenisSat,MO_RakID) VALUES ('"& id &"', '"& ckbrgid &"', "& qty &", '"& harga &"', '"& dsatuan &"', '"& rak &"')")
+
+         call alert("DETAIL BARANG OUTGOIN", "berhasil ditambahkan", "success","outd_add.asp?id="&id) 
+      else 
+         call alert("DETAIL BARANG OUTGOIN", "Sudah terdaftar!", "error","outd_add.asp?id="&id) 
+      end if
+   end sub
+   sub updateOutgoing()
+      id = trim(Request.Form("id"))
+      ckbrgid = trim(Request.Form("ckbrgid"))
+      harga = trim(Request.Form("harga"))
+      qty = trim(Request.Form("qty"))
+      dsatuan = trim(Request.Form("dsatuan"))
+      rak = trim(Request.Form("rak"))
+
+      set data_cmd =  Server.CreateObject ("ADODB.Command")
+      data_cmd.ActiveConnection = mm_delima_string
+
+      data_cmd.commandText = "SELECT * FROM dbo.DLK_T_MaterialOutD WHERE MO_Item = '"& ckbrgid &"' AND MO_ID = '"& id &"'"
+
+      set detaildata = data_cmd.execute
+
+      if detaildata.eof then
+         call query("INSERT INTO DLK_T_MAterialOutD (MO_ID,MO_Item,MO_Qtysatuan,MO_Harga,MO_JenisSat,MO_RakID) VALUES ('"& id &"', '"& ckbrgid &"', "& qty &", '"& harga &"', '"& dsatuan &"', '"& rak &"')")
+
+         call alert("DETAIL BARANG OUTGOIN", "berhasil ditambahkan", "success","out_u.asp?id="&id) 
+      else 
+         call alert("DETAIL BARANG OUTGOIN", "Sudah terdaftar!", "error","out_u.asp?id="&id) 
+      end if
+   end sub
 %>
