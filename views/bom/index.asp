@@ -11,21 +11,33 @@
 
    set dataproduk = data_cmd.execute
 
-   agen = trim(Request.Form("agen"))
-   produk = trim(Request.Form("produk"))
-   tgla = trim(Request.Form("tgla"))
-   tgle = trim(Request.Form("tgle"))
-
    set conn = Server.CreateObject("ADODB.Connection")
    conn.open MM_Delima_string
 
    dim recordsonpage, requestrecords, allrecords, hiddenrecords, showrecords, lastrecord, recordconter, pagelist, pagelistcounter, sqlawal
    dim angka
    dim code, nama, aktifId, UpdateId, uTIme, orderBy
+   
    ' untuk angka
    angka = request.QueryString("angka")
    if len(angka) = 0 then 
       angka = Request.form("urut") + 1
+   end if
+   agen = request.QueryString("agen")
+   if len(agen) = 0 then 
+      agen = trim(Request.Form("agen"))
+   end if
+   produk = request.QueryString("produk")
+   if len(produk) = 0 then 
+      produk = trim(Request.Form("produk"))
+   end if
+   tgla = request.QueryString("tgla")
+   if len(tgla) = 0 then 
+      tgla = trim(Request.Form("tgla"))
+   end if
+   tgle = request.QueryString("tgle")
+   if len(tgle) = 0 then 
+      tgle = trim(Request.Form("tgle"))
    end if
    
    if agen <> "" then
@@ -222,63 +234,63 @@
             </tbody>
          </table>
       </div>
-    </div>  
-    <div class="row">
+   </div>  
+   <div class="row">
       <div class="col-sm-12">
-         <!-- paggination -->
+      <!-- paggination -->
          <nav aria-label="Page navigation example">
-               <ul class="pagination">
-                  <li class="page-item">
-                  <% 
-                     if page = "" then
-                           npage = 1
-                     else
-                           npage = page - 1
-                     end if
-                     if requestrecords <> 0 then 
+            <ul class="pagination">
+               <li class="page-item">
+               <% 
+                  if page = "" then
+                     npage = 1
+                  else
+                     npage = page - 1
+                  end if
+                  if requestrecords <> 0 then 
+               %>
+                  <a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&agen=<%=agen%>&produk=<%=produk%>&tgla=<%=tgla%>&tgle=<%=tgle%>">&#x25C4; Prev </a>
+               <% else %>
+                  <p class="page-link prev-p">&#x25C4; Prev </p>
+               <% end if %>
+               </li>
+               <li class="page-item d-flex" style="overflow-y:auto;height: max-content;">	
+                  <%
+                  pagelist = 0
+                  pagelistcounter = 0
+                  do until pagelist > allrecords  
+                  pagelistcounter = pagelistcounter + 1
+                  if page = "" then
+                     page = 1
+                  else
+                     page = page
+                  end if
+                  if Cint(page) = pagelistcounter then
                   %>
-                     <a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Prev </a>
+                     <a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&produk=<%=produk%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
+                  <%else%>
+                     <a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&produk=<%=produk%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
+                  <%
+                  end if
+                  pagelist = pagelist + recordsonpage
+                  loop
+                  %>
+               </li>
+               <li class="page-item">
+                  <% 
+                  if page = "" then
+                     page = 1
+                  else
+                     page = page + 1
+                  end if
+                  %>
+                  <% if(recordcounter > 1) and (lastrecord <> 1) then %>
+                     <a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&agen=<%=agen%>&produk=<%=produk%>&tgla=<%=tgla%>&tgle=<%=tgle%>">Next &#x25BA;</a>
                   <% else %>
-                     <p class="page-link prev-p">&#x25C4; Prev </p>
+                     <p class="page-link next-p">Next &#x25BA;</p>
                   <% end if %>
-                  </li>
-                  <li class="page-item d-flex" style="overflow-y:auto;height: max-content;">	
-                     <%
-                     pagelist = 0
-                     pagelistcounter = 0
-                     do until pagelist > allrecords  
-                     pagelistcounter = pagelistcounter + 1
-                     if page = "" then
-                           page = 1
-                     else
-                           page = page
-                     end if
-                     if Cint(page) = pagelistcounter then
-                     %>
-                           <a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
-                     <%else%>
-                           <a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
-                     <%
-                     end if
-                     pagelist = pagelist + recordsonpage
-                     loop
-                     %>
-                  </li>
-                  <li class="page-item">
-                     <% 
-                     if page = "" then
-                           page = 1
-                     else
-                           page = page + 1
-                     end if
-                     %>
-                     <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                           <a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
-                     <% else %>
-                           <p class="page-link next-p">Next &#x25BA;</p>
-                     <% end if %>
-                  </li>	
-               </ul>
+               </li>	
+            </ul>
          </nav> 
       </div>
    </div>

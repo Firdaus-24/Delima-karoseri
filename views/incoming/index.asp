@@ -13,12 +13,6 @@
 
    set users = data_cmd.execute
 
-   cabang = trim(Request.Form("cabang"))
-   user = trim(Request.Form("user"))
-   tgla = trim(Request.Form("tgla"))
-   tgle = trim(Request.Form("tgle"))
-   jenis = trim(Request.Form("jenis"))
-
    set conn = Server.CreateObject("ADODB.Connection")
    conn.open MM_Delima_string
 
@@ -30,6 +24,28 @@
    if len(angka) = 0 then 
       angka = Request.form("urut") + 1
    end if
+
+   cabang = request.QueryString("cabang")
+   if len(cabang) = 0 then 
+      cabang = trim(Request.Form("cabang"))
+   end if
+
+   tgla = request.QueryString("tgla")
+   if len(tgla) = 0 then 
+      tgla = trim(Request.Form("tgla"))
+   end if
+
+   tgle = request.QueryString("tgle")
+   if len(tgle) = 0 then 
+      tgle = trim(Request.Form("tgle"))
+   end if
+
+   jenis = request.QueryString("jenis")
+   if len(jenis) = 0 then 
+      jenis = trim(Request.Form("jenis"))
+   end if
+
+   ' user = trim(Request.Form("user"))
 
    if cabang <> "" then 
       filtercabang = " AND DLK_T_MaterialReceiptH.MR_AgenID = '"& cabang &"'"
@@ -49,7 +65,7 @@
 
    if tgla <> "" AND tgle <> "" then
       filtertgl = "AND dbo.DLK_T_MaterialReceiptH.MR_Date BETWEEN '"& tgla &"' AND '"& tgle &"'"
-    elseIf tgla <> "" AND tgle = "" then
+   elseIf tgla <> "" AND tgle = "" then
       filtertgl = "AND dbo.DLK_T_MaterialReceiptH.MR_Date = '"& tgla &"'"
    else 
       filtertgl = ""
@@ -222,7 +238,7 @@
                   end if
                if requestrecords <> 0 then 
                %>
-                  <a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Prev </a>
+                  <a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&cabang=<%=cabang%>&tgla=<%=tgla%>&tgle=<%=tgle%>&jenis=<%=jenis%>">&#x25C4; Prev </a>
                <% else %>
                   <p class="page-link prev-p">&#x25C4; Prev </p>
                <% end if %>
@@ -240,9 +256,9 @@
                   end if
                   if Cint(page) = pagelistcounter then
                   %>
-                     <a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                     <a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&cabang=<%=cabang%>&tgla=<%=tgla%>&tgle=<%=tgle%>&jenis=<%=jenis%>"><%= pagelistcounter %></a> 
                   <%else%>
-                     <a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                     <a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&cabang=<%=cabang%>&tgla=<%=tgla%>&tgle=<%=tgle%>&jenis=<%=jenis%>"><%= pagelistcounter %></a> 
                   <%
                   end if
                   pagelist = pagelist + recordsonpage
@@ -258,7 +274,7 @@
                   end if
                   %>
                   <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                     <a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
+                     <a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&cabang=<%=cabang%>&tgla=<%=tgla%>&tgle=<%=tgle%>&jenis=<%=jenis%>">Next &#x25BA;</a>
                   <% else %>
                      <p class="page-link next-p">Next &#x25BA;</p>
                   <% end if %>

@@ -3,11 +3,6 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    ' get data puchaseOrder
-    ' data_cmd.commandTExt = "SELECT dbo.DLK_T_OrPemH.OPH_ID FROM dbo.DLK_T_OrPemH WHERE OPH_AktifYN = 'Y' AND (SELECT IPH_OPHID FROM DLK_T_InvPemH WHERE IPH_AktifYN = 'Y' AND IPH_OPHID = OPH_ID)IS NULL ORDER BY dbo.DLK_T_OrPemH.OPH_ID DESC "
-
-    ' set getpo = data_cmd.execute
-
     ' filter agen
     data_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_InvPemH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_InvPemH.IPH_AgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_InvPemH.IPH_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
     set agendata = data_cmd.execute
@@ -15,21 +10,33 @@
     data_cmd.commandText = "SELECT dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_ID FROM dbo.DLK_T_InvPemH LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_InvPemH.IPH_venID = dbo.DLK_M_Vendor.Ven_ID WHERE DLK_T_InvPemH.IPH_AktifYN = 'Y' GROUP BY dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_ID ORDER BY Ven_Nama ASC"
     set vendata = data_cmd.execute
 
-    agen = trim(Request.Form("agen"))
-    vendor = trim(Request.Form("vendor"))
-    tgla = trim(Request.Form("tgla"))
-    tgle = trim(Request.Form("tgle"))
-
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
 
     dim recordsonpage, requestrecords, allrecords, hiddenrecords, showrecords, lastrecord, recordconter, pagelist, pagelistcounter, sqlawal
     dim angka
     dim code, nama, aktifId, UpdateId, uTIme, orderBy
+
     ' untuk angka
     angka = request.QueryString("angka")
     if len(angka) = 0 then 
         angka = Request.form("urut") + 1
+    end if
+    agen = request.QueryString("agen")
+    if len(agen) = 0 then 
+        agen = trim(Request.Form("agen"))
+    end if
+    vendor = request.QueryString("vendor")
+    if len(vendor) = 0 then 
+        vendor = trim(Request.Form("vendor"))
+    end if
+    tgla = request.QueryString("tgla")
+    if len(tgla) = 0 then 
+        tgla = trim(Request.Form("tgla"))
+    end if
+    tgle = request.QueryString("tgle")
+    if len(tgle) = 0 then 
+        tgle = trim(Request.Form("tgle"))
     end if
     
     if agen <> "" then
@@ -320,7 +327,7 @@
                         end if
                         if requestrecords <> 0 then 
                     %>
-                        <a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Prev </a>
+                        <a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&agen=<%=agen%>&vendor=<%=vendor%>&tgla=<%=tgla%>&tgle=<%=tgle%>">&#x25C4; Prev </a>
                     <% else %>
                         <p class="page-link prev-p">&#x25C4; Prev </p>
                     <% end if %>
@@ -338,9 +345,9 @@
                         end if
                         if Cint(page) = pagelistcounter then
                         %>
-                            <a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&vendor=<%=vendor%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
                         <%else%>
-                            <a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&vendor=<%=vendor%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
                         <%
                         end if
                         pagelist = pagelist + recordsonpage
@@ -356,7 +363,7 @@
                         end if
                         %>
                         <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                            <a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
+                            <a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&agen=<%=agen%>&vendor=<%=vendor%>&tgla=<%=tgla%>&tgle=<%=tgle%>">Next &#x25BA;</a>
                         <% else %>
                             <p class="page-link next-p">Next &#x25BA;</p>
                         <% end if %>

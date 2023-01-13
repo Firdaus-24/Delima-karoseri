@@ -1,9 +1,5 @@
 <!--#include file="../../init.asp"-->
 <% 
-    cabang = trim(Request.Form("cabang"))
-    brg = trim(Request.Form("brg"))
-    tgla = trim(Request.Form("tgla"))
-    tgle = trim(Request.Form("tgle"))
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
@@ -23,10 +19,27 @@
     dim recordsonpage, requestrecords, allrecords, hiddenrecords, showrecords, lastrecord, recordconter, pagelist, pagelistcounter, sqlawal
     dim angka
     dim code, nama, aktifId, UpdateId, uTIme, orderBy
+
     ' untuk angka
     angka = request.QueryString("angka")
     if len(angka) = 0 then 
         angka = Request.form("urut") + 1
+    end if
+    cabang = request.QueryString("cabang")
+    if len(cabang) = 0 then 
+        cabang = trim(Request.Form("cabang"))
+    end if
+    brg = request.QueryString("brg")
+    if len(brg) = 0 then 
+        brg = trim(Request.Form("brg"))
+    end if
+    tgla = request.QueryString("tgla")
+    if len(tgla) = 0 then 
+        tgla = trim(Request.Form("tgla"))
+    end if
+    tgle = request.QueryString("tgle")
+    if len(tgle) = 0 then 
+        tgle = trim(Request.Form("tgle"))
     end if
 
     if cabang <> "" then 
@@ -280,7 +293,7 @@
                         end if
                         if requestrecords <> 0 then 
                     %>
-                        <a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Prev </a>
+                        <a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&cabang=<%=cabang%>&brg=<%=brg%>&tgla=<%=tgla%>&tgle=<%=tgle%>">&#x25C4; Prev </a>
                     <% else %>
                         <p class="page-link prev-p">&#x25C4; Prev </p>
                     <% end if %>
@@ -298,9 +311,9 @@
                         end if
                         if Cint(page) = pagelistcounter then
                         %>
-                            <a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&cabang=<%=cabang%>&brg=<%=brg%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
                         <%else%>
-                            <a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&cabang=<%=cabang%>&brg=<%=brg%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
                         <%
                         end if
                         pagelist = pagelist + recordsonpage
@@ -316,7 +329,7 @@
                         end if
                         %>
                         <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                            <a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
+                            <a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&cabang=<%=cabang%>&brg=<%=brg%>&tgla=<%=tgla%>&tgle=<%=tgle%>">Next &#x25BA;</a>
                         <% else %>
                             <p class="page-link next-p">Next &#x25BA;</p>
                         <% end if %>
