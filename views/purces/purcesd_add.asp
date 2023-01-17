@@ -70,10 +70,10 @@
     </div>
     <div class="row align-items-center">
         <div class="col-lg-2 mb-3">
-            <label for="ppn" class="col-form-label">PPn</label>
+            <label for="acpdate" class="col-form-label">Tanggal Diterima</label>
         </div>
         <div class="col-lg-4 mb-3">
-            <input type="number" id="ppn" name="ppn" value="<%= data("OPH_PPN") %>" class="form-control" readonly>
+            <input type="text" id="acpdate" name="acpdate" <% if cdate(data("OPH_Acpdate")) <> Cdate("01/01/1900") then %> value="<%= cdate(data("OPH_Acpdate")) %>" <% end if %> class="form-control" readonly>
         </div>
         <div class="col-lg-2 mb-3">
             <label for="tgljt" class="col-form-label">Tanggal Jatuh Tempo</label>
@@ -98,15 +98,23 @@
     </div>
     <div class="row align-items-center">
         <div class="col-lg-2 mb-3">
+            <label for="ppn" class="col-form-label">PPn</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="number" id="ppn" name="ppn" value="<%= data("OPH_PPN") %>" class="form-control" readonly>
+        </div>
+        <div class="col-lg-2 mb-3">
             <label for="diskon" class="col-form-label">Diskon All</label>
         </div>
         <div class="col-lg-4 mb-3">
             <input type="number" id="diskon" name="diskon" value="<%= data("OPH_DiskonAll") %>" class="form-control" readonly>
         </div>
+    </div>
+    <div class="row">
         <div class="col-lg-2 mb-3">
             <label for="keterangan" class="col-form-label">Keterangan</label>
         </div>
-        <div class="col-lg-4 mb-3">
+        <div class="col-lg-10 mb-3">
             <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" value="<%= data("OPH_Keterangan") %>" autocomplete="off" readonly>
         </div>
     </div>

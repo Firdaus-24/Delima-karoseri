@@ -18,7 +18,7 @@
             ' cek detail 1
             if document.eof then
                ' insert detail 1
-               call query("INSERT INTO DLK_T_MaterialREceiptD1 (MR_ID,MR_Transaksi,MR_UpdateTime,MR_UpdateID) VALUES ('"& ckheader("MR_ID") &"', '"& data("IPH_ID") &"','"& now &"','"& session("userID") &"')")
+               call query("INSERT INTO DLK_T_MaterialREceiptD1 (MR_ID,MR_Transaksi,MR_UpdateID) VALUES ('"& ckheader("MR_ID") &"', '"& data("IPH_ID") &"','"& session("userID") &"')")
 
                ' cek data detail barang yang di terima
                data_cmd.commandTExt = "SELECT * FROM DLK_T_InvPemD WHERE LEFT(IPD_IPHID,13) = '"& data("IPH_ID") &"'"
@@ -59,7 +59,7 @@
 
                   end if                  
                   ' input data barang masuk
-                  data_cmd.commandText = "INSERT INTO DLK_T_MaterialREceiptD2 (MR_ID,MR_Transaksi,MR_Item,MR_Qtysatuan,MR_Harga,MR_JenisSat, MR_RakID) VALUES ('"& id &"', '"& ckurut2("IPD_IPHID") &"','"& ckurut2("IPD_Item") &"', "& ckurut2("IPD_Qtysatuan") &",'"& hpp &"','"& ckurut2("IPD_Jenissat") &"', '"& rak &"')"
+                  data_cmd.commandText = "INSERT INTO DLK_T_MaterialREceiptD2 (MR_ID, MR_AcpDate, MR_Transaksi,MR_Item,MR_Qtysatuan,MR_Harga,MR_JenisSat, MR_RakID) VALUES ('"& id &"', '"& now &"','"& ckurut2("IPD_IPHID") &"','"& ckurut2("IPD_Item") &"', "& ckurut2("IPD_Qtysatuan") &",'"& hpp &"','"& ckurut2("IPD_Jenissat") &"', '"& rak &"')"
 
                   set dtrans2 = data_cmd.execute
 
@@ -110,7 +110,7 @@
             ' cek detail 1
             if document.eof then
                ' insert detail 1
-               call query("INSERT INTO DLK_T_MaterialREceiptD1 (MR_ID,MR_Transaksi,MR_UpdateTime,MR_UpdateID) VALUES ('"& ckheader("MR_ID") &"', '"& data("IPH_ID") &"','"& now &"','"& session("userID") &"')")
+               call query("INSERT INTO DLK_T_MaterialREceiptD1 (MR_ID,MR_Transaksi,MR_UpdateID) VALUES ('"& ckheader("MR_ID") &"', '"& data("IPH_ID") &"','"& session("userID") &"')")
 
                ' cek data detail barang yang di terima
                data_cmd.commandTExt = "SELECT * FROM DLK_T_InvPemD WHERE LEFT(IPD_IPHID,13) = '"& data("IPH_ID") &"'"
@@ -151,7 +151,7 @@
 
                   end if                  
                   ' input data barang masuk
-                  data_cmd.commandText = "INSERT INTO DLK_T_MaterialREceiptD2 (MR_ID,MR_Transaksi,MR_Item,MR_Qtysatuan,MR_Harga,MR_JenisSat, MR_RakID) VALUES ('"& id &"', '"& ckurut2("IPD_IPHID") &"','"& ckurut2("IPD_Item") &"', "& ckurut2("IPD_Qtysatuan") &",'"& hpp &"','"& ckurut2("IPD_Jenissat") &"', '"& rak &"')"
+                  data_cmd.commandText = "INSERT INTO DLK_T_MaterialREceiptD2 (MR_ID,MR_AcpDate,MR_Transaksi,MR_Item,MR_Qtysatuan,MR_Harga,MR_JenisSat, MR_RakID) VALUES ('"& id &"', '"& now &"', '"& ckurut2("IPD_IPHID") &"','"& ckurut2("IPD_Item") &"', "& ckurut2("IPD_Qtysatuan") &",'"& hpp &"','"& ckurut2("IPD_Jenissat") &"', '"& rak &"')"
 
                   set dtrans2 = data_cmd.execute
 

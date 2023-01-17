@@ -10,12 +10,12 @@
     set data = data_cmd.execute
 
     ' detail bom
-    data_cmd.commandText = "SELECT dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_BOMD.BMD_ID, dbo.DLK_T_BOMD.BMD_Item, dbo.DLK_T_BOMD.BMD_Qtysatuan, dbo.DLK_T_BOMD.BMD_JenisSat, dbo.DLK_M_SatuanBarang.Sat_Nama, DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama FROM dbo.DLK_T_BOMD LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_BOMD.BMD_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_BOMD.BMD_Item = dbo.DLK_M_Barang.Brg_Id INNER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID INNER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE LEFT(dbo.DLK_T_BOMD.BMD_ID, 13) = '"& data("MO_BMHID") &"' ORDER BY dbo.DLK_M_Barang.Brg_Nama asc"
+    ' data_cmd.commandText = "SELECT dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_BOMD.BMD_ID, dbo.DLK_T_BOMD.BMD_Item, dbo.DLK_T_BOMD.BMD_Qtysatuan, dbo.DLK_T_BOMD.BMD_JenisSat, dbo.DLK_M_SatuanBarang.Sat_Nama, DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama FROM dbo.DLK_T_BOMD LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_BOMD.BMD_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_BOMD.BMD_Item = dbo.DLK_M_Barang.Brg_Id INNER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID INNER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE LEFT(dbo.DLK_T_BOMD.BMD_ID, 13) = '"& data("MO_BMHID") &"' ORDER BY dbo.DLK_M_Barang.Brg_Nama asc"
     ' response.write data_cmd.commandText & "<br>"
-    set barang = data_cmd.execute
+    ' set barang = data_cmd.execute
 
     ' detail data
-    data_cmd.commandText = "SELECT dbo.DLK_T_MaterialOutD.MO_ID, dbo.DLK_T_MaterialOutD.MO_Item, dbo.DLK_T_MaterialOutD.MO_Qtysatuan, dbo.DLK_T_MaterialOutD.MO_Harga, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Rak.Rak_nama FROM dbo.DLK_T_MaterialOutD LEFT OUTER JOIN dbo.DLK_M_Rak ON dbo.DLK_T_MaterialOutD.MO_RakID = dbo.DLK_M_Rak.Rak_ID LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialOutD.MO_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialOutD.MO_Item = dbo.DLK_M_Barang.Brg_Id WHERE MO_ID = '"& data("MO_ID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
+    data_cmd.commandText = "SELECT dbo.DLK_T_MaterialOutD.MO_ID, dbo.DLK_T_MaterialOutD.MO_Date, dbo.DLK_T_MaterialOutD.MO_Item, dbo.DLK_T_MaterialOutD.MO_Qtysatuan, dbo.DLK_T_MaterialOutD.MO_Harga, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Rak.Rak_nama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama FROM dbo.DLK_T_MaterialOutD LEFT OUTER JOIN dbo.DLK_M_Rak ON dbo.DLK_T_MaterialOutD.MO_RakID = dbo.DLK_M_Rak.Rak_ID LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialOutD.MO_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialOutD.MO_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId LEFT OUTER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID WHERE MO_ID = '"& data("MO_ID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
 
     set ddata = data_cmd.execute
 
@@ -98,52 +98,6 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-12 text-center mb-3">
-            <h5>DAFTAR B.O.M</h5>
-        </div>
-    </div>
-    <div class="row">
-      <div class="col-lg-12 mb-3">
-         <table class="table table-hover">
-            <thead class="bg-secondary text-light">
-               <tr>
-                  <th scope="col">ID</th>
-                  <th scope="col">Kode</th>
-                  <th scope="col">Item</th>
-                  <th scope="col">Quantity</th>
-                  <th scope="col">Satuan</th>
-               </tr>
-            </thead>
-            <tbody>
-               <% 
-               do while not barang.eof 
-               %>
-                <tr>
-                    <th>
-                    <%= barang("BMD_ID") %>
-                    </th>
-                    <th>
-                    <%= barang("KategoriNama") &"-"& barang("jenisNama") %>
-                    </th>
-                    <td>
-                    <%= barang("Brg_Nama") %>
-                    </td>
-                    <td>
-                    <%= barang("BMD_QtySatuan") %>
-                    </td>
-                    <td>
-                    <%= barang("Sat_nama") %>
-                    </td>
-                </tr>
-               <% 
-               barang.movenext
-               loop
-               %>
-            </tbody>
-         </table>
-      </div>
-   </div>
    <div class="row">
         <div class="col-lg-12 text-center mb-3">
             <h5>DETAIL PENGELUARAN</h5>
@@ -154,7 +108,8 @@
             <table class="table table-hover">
                 <thead class="bg-secondary text-light">
                     <tr>
-                        <th scope="col">ID</th>
+                        <th scope="col">Tanggal</th>
+                        <th scope="col">Kode</th>
                         <th scope="col">Item</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Harga</th>
@@ -168,7 +123,10 @@
                     %>
                         <tr>
                             <th>
-                                <%= ddata("MO_ID") %>
+                            <%= ddata("MO_Date") %>
+                            </th>
+                            <th>
+                                <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
                             </th>
                             <td>
                                 <%= ddata("Brg_Nama") %>

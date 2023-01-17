@@ -96,15 +96,30 @@
     </div>    
     <div class="row">
         <div class="col-lg-2 mb-3">
-                <label for="diskon" class="col-form-label">Diskon</label>
+            <label for="diskon" class="col-form-label">Diskon</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="number" id="diskon" name="diskon" value="<%= data("IPH_diskonALL") %>"class="form-control" readonly>
+        </div>
+        <div class="col-lg-2 mb-3">
+            <label for="tukar" class="col-form-label">Tukar Faktur</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="tukarY" name="tukar" <% if data("IPH_TukarYN") = "Y" then %>checked <% end if %> disabled>
+                <label class="form-check-label" for="tukarY">Yes</label>
             </div>
-            <div class="col-lg-4 mb-3">
-                <input type="number" id="diskon" name="diskon" value="<%= data("IPH_diskonALL") %>"class="form-control" readonly>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="tukanN" name="tukar" <% if data("IPH_TukarYN") = "N" then %>checked <% end if %> disabled>
+                <label class="form-check-label" >No</label>
             </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-lg-2 mb-3">
             <label for="keterangan" class="col-form-label">Keterangan</label>
         </div>
-        <div class="col-lg-4 mb-3">
+        <div class="col-lg-10 mb-3">
             <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" value="<%= data("IPH_Keterangan") %>" autocomplete="off" readonly>
         </div>
     </div>

@@ -111,6 +111,7 @@
             <thead class="bg-secondary text-light">
                <tr>
                   <th scope="col">No</th>
+                  <th scope="col">Diterima</th>
                   <th scope="col">Kode Item</th>
                   <th scope="col">Item</th>
                   <th scope="col">Quantity</th>
@@ -125,9 +126,9 @@
                do while not data1.eof 
                %>
                <tr>
-                  <td>Document</td>
+                  <td colspan="2">Document :</td>
                   <td><%= data1("MR_Transaksi") %></td>
-                  <td><%= data1("MR_Updatetime") %></td>
+                  <td>User :</td>
                   <td colspan="5"><%= data1("username") %></td>
                </tr>
                <% 
@@ -145,6 +146,7 @@
                %>
                <tr>
                   <th scope="row"><%= no1 %></th>
+                  <td><%= data2("MR_AcpDate") %></td>
                   <td><%= data2("kategoriNama") &"-"& data2("jenisNama") %></td>
                   <td><%= data2("Brg_Nama") %></td>
                   <td>

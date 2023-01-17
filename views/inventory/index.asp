@@ -201,6 +201,7 @@
                         </td>
                     </tr>
                     <% 
+                    response.flush
                     showrecords = showrecords - 1
                     rs.movenext
                     if rs.EOF then

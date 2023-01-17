@@ -65,10 +65,10 @@
         </div>
         <div class="row align-items-center">
             <div class="col-lg-2 mb-3">
-                <label for="ppn" class="col-form-label">PPn</label>
+                <label for="acpdate" class="col-form-label">Tanggal Diterima</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="number" id="ppn" name="ppn" class="form-control">
+                <input type="text" id="acpdate" name="acpdate" class="form-control" onfocus="(this.type='date')">
             </div>
             <div class="col-lg-2 mb-3">
                 <label for="tgljt" class="col-form-label">Tanggal Jatuh Tempo</label>
@@ -94,18 +94,26 @@
         </div>
         <div class="row align-items-center">
             <div class="col-lg-2 mb-3">
+                <label for="ppn" class="col-form-label">PPn</label>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <input type="number" id="ppn" name="ppn" class="form-control">
+            </div>
+            <div class="col-lg-2 mb-3">
                 <label for="diskon" class="col-form-label">Diskon All</label>
             </div>
             <div class="col-lg-3 mb-3">
                 <input type="number" id="diskon" name="diskon" class="form-control">
             </div>
-             <div class="col-lg-1 mb-3 p-0">
+            <div class="col-lg-1 mb-3 p-0">
                 <label class="col-form-label">%</label>
             </div>
+        </div>
+        <div class="row">
             <div class="col-lg-2 mb-3">
                 <label for="keterangan" class="col-form-label">Keterangan</label>
             </div>
-            <div class="col-lg-4 mb-3">
+            <div class="col-lg-10 mb-3">
                 <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" autocomplete="off">
             </div>
         </div>

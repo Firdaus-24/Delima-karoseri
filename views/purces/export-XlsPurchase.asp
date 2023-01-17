@@ -22,14 +22,15 @@
 <style>
     body{
         padding:10px;
+        font-size:10px;
     }
     .gambar{
-        height: 100px;
+        height: 80px;
         width: 100%;
     }
     .gambar img{
         width: 100%;
-        height: 100px;
+        height: 80px;
         object-fit: contain;
     }
     #cdetail > * > tr > *  {
@@ -113,13 +114,17 @@
             </td>
             <td>Keterangan</td>
             <td>
-                : <%= data("OPH_Keterangan") %>
+                : <%= Cdate(data("OPH_AcpDate")) %>
             </td>
         </tr>
         <tr>
             <td>Email</td>
             <td>
                 : <%= data("Ven_Email") %>
+            </td>
+            <td>Keterangan</td>
+            <td>
+                : <%= data("OPH_Keterangan") %>
             </td>
         </tr>
         <tr>

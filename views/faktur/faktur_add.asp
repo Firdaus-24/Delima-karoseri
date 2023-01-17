@@ -111,12 +111,27 @@
                 <input type="number" id="diskon" name="diskon" class="form-control" required>
             </div>
             <div class="col-lg-2 mb-3">
-                <label for="keterangan" class="col-form-label">Keterangan</label>
+                <label for="tukar" class="col-form-label">Tukar Faktur</label>
             </div>
             <div class="col-lg-4 mb-3">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="tukarY" name="tukar" value="Y" required>
+                    <label class="form-check-label" for="tukarY">Yes</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="tukanN" name="tukar" value="N">
+                    <label class="form-check-label" for="tukanN">No</label>
+                </div>
+            </div>
+        </div>      
+        <div class="row">
+            <div class="col-lg-2 mb-3">
+                <label for="keterangan" class="col-form-label">Keterangan</label>
+            </div>
+            <div class="col-lg-10 mb-3">
                 <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" autocomplete="off" required>
             </div>
-        </div>        
+        </div>    
         <div class="row">
             <div class="col-lg-12 text-center">
                 <a href="index.asp" type="button" class="btn btn-danger">Kembali</a>
@@ -146,7 +161,7 @@ const getValuePO = (id) => {
             data: { id },
             dataType:'json',
         }).done(function( msg ) {
-            $("#tgljt").val(msg.JTDate)
+            $("#tgljt").val(msg.JTDATE)
             $("#vendor").val(msg.VENDOR)
             $("#ppn").val(msg.PPN)
             $("#asuransi").val(format(msg.ASURANSI))

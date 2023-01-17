@@ -75,6 +75,9 @@
                 <a class="link-name" href="<%= url %>views/inventory/POMin.asp">Permintaan Kurang</a>
               </li>
               <li>
+                <a class="link-name" href="<%= url %>views/inventory/mutasiStok.asp">Mutasi Stok Barang</a>
+              </li>
+              <li>
                 <a class="link-name" href="<%= url %>views/inventory/">Stok Barang</a>
               </li>
             </ul>
@@ -169,9 +172,6 @@
               </li>
               <li>
                 <a class="link-name" href="<%= url %>views/finance/index.asp">Finance</a>
-              </li>
-              <li>
-                <a class="link-name" href="<%= url %>views/finance/mutasiStok.asp">Mutasi Stok Barang</a>
               </li>
               <li>
                 <a class="link-name" href="<%= url %>views/Bank/">Master Bank</a>

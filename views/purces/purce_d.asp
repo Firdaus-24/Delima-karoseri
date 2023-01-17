@@ -58,10 +58,10 @@
     </div>
     <div class="row align-items-center">
         <div class="col-lg-2 mb-3">
-            <label for="ppn" class="col-form-label">PPn</label>
+            <label for="acpdate" class="col-form-label">Tanggal Diterima</label>
         </div>
         <div class="col-lg-4 mb-3">
-            <input type="number" id="ppn" name="ppn" class="form-control" value="<%= data("OPH_PPN") %>" readonly>
+            <input type="text" id="acpdate" name="acpdate" class="form-control" <% if data("OPH_acpDate") <> "1900-01-01" then %> value="<%= Cdate(data("OPH_acpDate")) %>" <% end if %> readonly>
         </div>
         <div class="col-lg-2 mb-3">
             <label for="tgljt" class="col-form-label">Tanggal Jatuh Tempo</label>
@@ -72,33 +72,40 @@
     </div>
     <div class="row align-items-center">
         <div class="col-lg-2 mb-3">
-            <label for="Phone" class="col-form-label">Phone</label>
+            <label for="Asuransi" class="col-form-label">Asuransi</label>
         </div>
         <div class="col-lg-4 mb-3">
-            <input type="text" id="Phone" name="Phone" class="form-control" value="<%= data("Ven_Phone") %>" readonly>
+            <input type="text" id="Asuransi" name="Asuransi" class="form-control" value="<%= replace(formatcurrency(data("OPH_Asuransi")),"$","") %>" readonly>
         </div>
         <div class="col-lg-2 mb-3">
-            <label for="Email" class="col-form-label">Email</label>
+            <label for="Lain" class="col-form-label">Lain</label>
         </div>
         <div class="col-lg-4 mb-3">
-            <input type="text" id="Email" name="Email" class="form-control" value="<%= data("Ven_Email") %>" readonly>
+            <input type="text" id="Lain" name="Lain" class="form-control" value="<%= replace(formatcurrency(data("OPH_Lain")),"$","") %>" readonly>
         </div>
     </div>
     <div class="row align-items-center">
+        <div class="col-lg-2 mb-3">
+            <label for="ppn" class="col-form-label">PPn</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="number" id="ppn" name="ppn" class="form-control" value="<%= data("OPH_PPN") %>" readonly>
+        </div>
         <div class="col-lg-2 mb-3">
             <label for="diskon" class="col-form-label">Diskon All</label>
         </div>
         <div class="col-lg-4 mb-3">
             <input type="number" id="diskon" name="diskon" class="form-control" value="<%= data("OPH_DiskonALl") %>" readonly>
         </div>
+    </div>
+    <div class="row">
         <div class="col-lg-2 mb-3">
             <label for="keterangan" class="col-form-label">Keterangan</label>
         </div>
-        <div class="col-lg-4 mb-3">
+        <div class="col-lg-10 mb-3">
             <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" autocomplete="off" value="<%= data("OPH_Keterangan") %>" readonly>
         </div>
     </div>
-    
     <div class="row">
         <div class="col-lg-12">
             <div class="d-flex mb-3">

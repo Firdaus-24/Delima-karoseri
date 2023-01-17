@@ -1,6 +1,5 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_purce.asp"-->
-<!--#include file="../../functions/func_metpem.asp"-->
 <% 
     id = trim(Request.QueryString("id"))
 
@@ -69,44 +68,52 @@
     </div>
     <div class="row align-items-center">
         <div class="col-lg-2 mb-3">
-            <label for="ppn" class="col-form-label">PPn</label>
+            <label for="acpdate" class="col-form-label">Tanggal Diterima</label>
         </div>
         <div class="col-lg-4 mb-3">
-            <input type="number" id="ppn" name="ppn" class="form-control" value="<%= data("OPH_PPN") %>" readonly>
+            <input type="text" id="acpdate" name="acpdate" <% if cdate(data("OPH_Acpdate")) <> Cdate("01/01/1900") then %> value="<%= cdate(data("OPH_Acpdate")) %>" <% end if %> class="form-control" readonly>
         </div>
         <div class="col-lg-2 mb-3">
             <label for="tgljt" class="col-form-label">Tanggal Jatuh Tempo</label>
         </div>
         <div class="col-lg-4 mb-3">
-            <input type="text" id="tgljt" name="tgljt" class="form-control" <% if data("OPH_JTDate") <> "1900-01-01" then %> value="<%= data("OPH_JTDate") %>" <% end if %> readonly>
+            <input type="text" id="tgljt" name="tgljt" <% if cdate(data("OPH_JTDate")) <> Cdate("01/01/1900") then %> value="<%= cdate(data("OPH_JTDate")) %>" <% end if %> class="form-control" readonly>
         </div>
     </div>
     <div class="row align-items-center">
-            <div class="col-lg-2 mb-3">
-                <label for="asuransi" class="col-form-label">Asuransi</label>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <input type="text" id="asuransi" name="asuransi" class="form-control" value="<%= replace(formatCurrency(data("OPH_Asuransi")),"$","") %>" readonly>
-            </div>
-            <div class="col-lg-2 mb-3">
-                <label for="lain" class="col-form-label">Lain</label>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <input type="text" id="lain" name="lain" class="form-control" value="<%= replace(formatCurrency(data("OPH_Lain")),"$","") %>" readonly>
-            </div>
+        <div class="col-lg-2 mb-3">
+            <label for="asuransi" class="col-form-label">Asuransi</label>
         </div>
+        <div class="col-lg-4 mb-3">
+            <input type="text" id="asuransi" name="asuransi" value="<%= replace(formatCurrency(data("OPH_asuransi")),"$","") %>" class="form-control" readonly>
+        </div>
+        <div class="col-lg-2 mb-3">
+            <label for="lain" class="col-form-label">Lain-lain</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="text" id="lain" name="lain"  value="<%= replace(formatCurrency(data("OPH_Lain")),"$","") %>"  class="form-control" readonly>
+        </div>
+    </div>
     <div class="row align-items-center">
+        <div class="col-lg-2 mb-3">
+            <label for="ppn" class="col-form-label">PPn</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="number" id="ppn" name="ppn" value="<%= data("OPH_PPN") %>" class="form-control" readonly>
+        </div>
         <div class="col-lg-2 mb-3">
             <label for="diskon" class="col-form-label">Diskon All</label>
         </div>
         <div class="col-lg-4 mb-3">
-            <input type="number" id="diskon" name="diskon" class="form-control" value="<%= data("OPH_DiskonALl") %>" readonly>
+            <input type="number" id="diskon" name="diskon" value="<%= data("OPH_DiskonAll") %>" class="form-control" readonly>
         </div>
+    </div>
+    <div class="row">
         <div class="col-lg-2 mb-3">
             <label for="keterangan" class="col-form-label">Keterangan</label>
         </div>
-        <div class="col-lg-4 mb-3">
-            <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" autocomplete="off" value="<%= data("OPH_Keterangan") %>" readonly>
+        <div class="col-lg-10 mb-3">
+            <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" value="<%= data("OPH_Keterangan") %>" autocomplete="off" readonly>
         </div>
     </div>
     <div class="row">

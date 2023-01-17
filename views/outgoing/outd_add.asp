@@ -16,7 +16,7 @@
     set barang = data_cmd.execute
 
     ' detail data
-    data_cmd.commandText = "SELECT dbo.DLK_T_MaterialOutD.MO_ID, dbo.DLK_T_MaterialOutD.MO_Item, dbo.DLK_T_MaterialOutD.MO_Qtysatuan, dbo.DLK_T_MaterialOutD.MO_Harga, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Rak.Rak_nama FROM dbo.DLK_T_MaterialOutD LEFT OUTER JOIN dbo.DLK_M_Rak ON dbo.DLK_T_MaterialOutD.MO_RakID = dbo.DLK_M_Rak.Rak_ID LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialOutD.MO_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialOutD.MO_Item = dbo.DLK_M_Barang.Brg_Id WHERE MO_ID = '"& data("MO_ID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
+    data_cmd.commandText = "SELECT dbo.DLK_T_MaterialOutD.MO_ID, dbo.DLK_T_MaterialOutD.MO_Date, dbo.DLK_T_MaterialOutD.MO_Item, dbo.DLK_T_MaterialOutD.MO_Qtysatuan, dbo.DLK_T_MaterialOutD.MO_Harga, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Rak.Rak_nama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama FROM dbo.DLK_T_MaterialOutD LEFT OUTER JOIN dbo.DLK_M_Rak ON dbo.DLK_T_MaterialOutD.MO_RakID = dbo.DLK_M_Rak.Rak_ID LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialOutD.MO_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialOutD.MO_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId LEFT OUTER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID WHERE MO_ID = '"& data("MO_ID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
 
     set ddata = data_cmd.execute
 
@@ -31,6 +31,8 @@
     set datasatuan = data_cmd.execute
 
     call header("Detail Outgoing")
+
+    
 %>
 <!--#include file="../../navbar.asp"-->
 <style>
@@ -165,6 +167,7 @@
                      </td>
                   </tr>
                <% 
+               response.flush
                barang.movenext
                loop
                %>
@@ -180,50 +183,55 @@
    <div class="row">
       <div class="col-lg-12">
          <table class="table table-hover">
-               <thead class="bg-secondary text-light">
-                  <tr>
-                     <th scope="col">ID</th>
-                     <th scope="col">Item</th>
-                     <th scope="col">Quantity</th>
-                     <th scope="col">Harga</th>
-                     <th scope="col">Satuan</th>
-                     <th scope="col">Rak</th>
-                     <th scope="col" class="text-center">Aksi</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  <% 
-                  do while not ddata.eof 
-                  %>
-                     <tr>
-                           <th>
-                              <%= ddata("MO_ID") %>
-                           </th>
-                           <td>
-                              <%= ddata("Brg_Nama") %>
-                           </td>
-                           <td>
-                              <%= ddata("MO_QtySatuan") %>
-                           </td>
-                           <td>
-                              <%= replace(formatCurrency(ddata("MO_Harga")),"$","") %>
-                           </td>
-                           <td>
-                              <%= ddata("Sat_Nama") %>
-                           </td>
-                           <td>
-                              <%= ddata("Rak_Nama") %>
-                           </td>
-                           <td class="text-center">
-                              <div class="btn-group" role="group" aria-label="Basic example">
-                              <a href="aktifd.asp?id=<%= ddata("MO_ID") %>&brg=<%= ddata("MO_Item") %>&p=outd_add" class="btn badge text-bg-danger" onclick="deleteItem(event,'DETAIL BARANG OUTGOING')">Delete</a>
-                           </td>
-                     </tr>
-                  <% 
-                  ddata.movenext
-                  loop
-                  %>
-               </tbody>
+            <thead class="bg-secondary text-light">
+                <tr>
+                    <th scope="col">Tanggal</th>
+                    <th scope="col">Kode</th>
+                    <th scope="col">Item</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Harga</th>
+                    <th scope="col">Satuan</th>
+                    <th scope="col">Rak</th>
+                    <th scope="col" class="text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% 
+                do while not ddata.eof 
+                %>
+                    <tr>
+                        <th>
+                            <%= ddata("MO_Date") %>
+                        </th>
+                        <th>
+                            <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
+                        </th>
+                        <td>
+                            <%= ddata("Brg_Nama") %>
+                        </td>
+                        <td>
+                            <%= ddata("MO_QtySatuan") %>
+                        </td>
+                        <td>
+                            <%= replace(formatCurrency(ddata("MO_Harga")),"$","") %>
+                        </td>
+                        <td>
+                            <%= ddata("Sat_Nama") %>
+                        </td>
+                        <td>
+                            <%= ddata("Rak_Nama") %>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                            <a href="aktifd.asp?id=<%= ddata("MO_ID") %>&brg=<%= ddata("MO_Item") %>&p=outd_add&tgl=<%= ddata("MO_Date") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'DETAIL BARANG OUTGOING')">Delete</a>
+                        </td>
+                    </tr>
+                <% 
+                response.flush
+                ddata.movenext
+                loop
+                %>
+            </tbody>
          </table>
       </div>
    </div>
@@ -273,6 +281,7 @@
                                 </td>
                             </tr>
                             <% 
+                            response.flush
                             getstok.movenext
                             loop
                             %>
@@ -280,6 +289,15 @@
                         </table>
                     </div>
                     <div class="row">
+                        <div class="col-sm-3">
+                            <label for="tgl" class="col-form-label">Tanggal</label>
+                        </div>
+                        <div class="col-sm-5 mb-3">
+                            <input type="text" id="tgl" name="tgl" class="form-control" value="<%= date() %>" onfocus="(this.type='date')" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- get harga dan stok -->
                         <input type="hidden" id="harga" name="harga" class="form-control">
                         <input type="hidden" id="stok" name="stok" class="form-control">
                         
@@ -290,7 +308,7 @@
                             <input type="number" id="qty" name="qty" class="form-control" required>
                         </div>
                     </div>
-                    <div class="row">
+                <div class="row">
                         <div class="col-sm-3">
                             <label for="rak" class="col-form-label">Rak</label>
                         </div>
@@ -332,7 +350,7 @@
         $("#harga").val(harga)
         $("#stok").val(stok)
         $("#qty").val('')
-
+        
         $.post("../../ajax/getRakOutgoing.asp", {brgid}, function(data){
             $(".rakOutLama").hide()
             $(".rakOutBaru").html(data)

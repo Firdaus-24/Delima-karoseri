@@ -94,11 +94,14 @@ $theme-colors: (
          <table class="table">
             <thead class="bg-secondary text-light">
                <tr>
-                  <th scope="col">No Transaksi</th>
-                  <th scope="col">Items</th>
+                  <th scope="col">No</th>
+                  <th scope="col">Diterima</th>
+                  <th scope="col">Kode</th>
+                  <th scope="col">Item</th>
                   <th scope="col">Quantity</th>
-                  <th scope="col">Harga</th>
                   <th scope="col">Satuan</th>
+                  <th scope="col">Harga</th>
+                  <th scope="col">Rak</th>
                </tr>
             </thead>
             <tbody>
@@ -106,23 +109,29 @@ $theme-colors: (
                do while not data1.eof 
                %>
                <tr class="bg-primary text-light">
-                  <td>Document</td>
+                  <td colspan="2">Document :</td>
                   <td><%= data1("MR_Transaksi") %></td>
-                  <td><%= data1("MR_Updatetime") %></td>
-                  <td colspan="2"><%= data1("username") %></td>
+                  <td>User :</td>
+                  <td colspan="4"><%= data1("username") %></td>
                </tr>
                <% 
                ' detail2
-               data_cmd.commandTExt = "SELECT dbo.DLK_T_MaterialReceiptD2.MR_Transaksi, dbo.DLK_T_MaterialReceiptD2.MR_Item,dbo.DLK_T_MaterialReceiptD2.MR_Qtysatuan, dbo.DLK_T_MaterialReceiptD2.MR_Harga, dbo.DLK_T_MaterialReceiptD2.MR_JenisSat, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id FROM dbo.DLK_T_MaterialReceiptD2 LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialReceiptD2.MR_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialReceiptD2.MR_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID WHERE dbo.DLK_T_MaterialReceiptD2.MR_ID = '"& id &"' AND LEFT(MR_Transaksi,13) = '"& data1("MR_Transaksi") &"' GROUP BY dbo.DLK_T_MaterialReceiptD2.MR_Transaksi, dbo.DLK_T_MaterialReceiptD2.MR_Item,dbo.DLK_T_MaterialReceiptD2.MR_Qtysatuan, dbo.DLK_T_MaterialReceiptD2.MR_Harga, dbo.DLK_T_MaterialReceiptD2.MR_JenisSat, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id ORDER BY dbo.DLK_T_MaterialReceiptD2.MR_Transaksi"
+               data_cmd.commandTExt = "SELECT dbo.DLK_T_MaterialReceiptD2.*, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id, DLK_M_Rak.Rak_Nama, DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama FROM dbo.DLK_T_MaterialReceiptD2 LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialReceiptD2.MR_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialReceiptD2.MR_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_Rak ON DLK_T_MaterialReceiptD2.MR_RakID = DLK_M_Rak.Rak_ID LEFT OUTER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId LEFT OUTER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID WHERE dbo.DLK_T_MaterialReceiptD2.MR_ID = '"& id &"' AND LEFT(MR_Transaksi,13) = '"& data1("MR_Transaksi") &"'"
+
                set data2 = data_cmd.execute
+               no = 0
                do while not data2.eof 
+               no = no + 1
                %>
                <tr>
-                  <td><%= data2("MR_Transaksi") %></td>
+                  <td><%= no %></td>
+                  <td><%= data2("MR_AcpDate") %></td>
+                  <td><%= data2("kategoriNama") &"-"& data2("jenisNama") %></td>
                   <td><%= data2("Brg_Nama") %></td>
                   <td><%= data2("MR_Qtysatuan") %></td>
-                  <td><%= replace(formatCurrency(data2("MR_Harga")),"$","") %></td>
                   <td><%= data2("Sat_nama") %></td>
+                  <td><%= replace(formatCurrency(data2("MR_Harga")),"$","") %></td>
+                  <td><%= data2("Rak_nama") %></td>
                </tr>
                <% 
                response.flush

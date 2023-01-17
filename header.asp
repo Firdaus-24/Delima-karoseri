@@ -15,4 +15,5 @@
     <link href="../../public/css/style.css" rel="stylesheet" />
     <link href="../../public/css/cabang.css" rel="stylesheet" />
     <link href="../../public/css/purchase.css" rel="stylesheet" />
+    <link href='../../public/img/delimalogo.png' rel='website icon' type='png' />
   </head>

@@ -139,6 +139,10 @@
             </td>
         </tr>
         <tr>
+            <th>Tukar Faktur</th>
+            <td>
+                : <%if data("IPH_tukarYN") ="Y" then %>Yes <% else %>No <% end if %>
+            </td>
             <th>Keterangan</th>
             <td>
                 : <%= data("IPH_Keterangan") %>

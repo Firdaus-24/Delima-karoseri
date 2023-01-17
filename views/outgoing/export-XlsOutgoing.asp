@@ -13,7 +13,7 @@
     set data = data_cmd.execute
 
     ' detail data
-    data_cmd.commandText = "SELECT dbo.DLK_T_MaterialOutD.MO_ID, dbo.DLK_T_MaterialOutD.MO_Item, dbo.DLK_T_MaterialOutD.MO_Qtysatuan, dbo.DLK_T_MaterialOutD.MO_Harga, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Rak.Rak_nama FROM dbo.DLK_T_MaterialOutD LEFT OUTER JOIN dbo.DLK_M_Rak ON dbo.DLK_T_MaterialOutD.MO_RakID = dbo.DLK_M_Rak.Rak_ID LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialOutD.MO_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialOutD.MO_Item = dbo.DLK_M_Barang.Brg_Id WHERE MO_ID = '"& data("MO_ID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
+    data_cmd.commandText = "SELECT dbo.DLK_T_MaterialOutD.MO_ID, dbo.DLK_T_MaterialOutD.MO_Date, dbo.DLK_T_MaterialOutD.MO_Item, dbo.DLK_T_MaterialOutD.MO_Qtysatuan, dbo.DLK_T_MaterialOutD.MO_Harga, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Rak.Rak_nama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama FROM dbo.DLK_T_MaterialOutD LEFT OUTER JOIN dbo.DLK_M_Rak ON dbo.DLK_T_MaterialOutD.MO_RakID = dbo.DLK_M_Rak.Rak_ID LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialOutD.MO_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialOutD.MO_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId LEFT OUTER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID WHERE MO_ID = '"& data("MO_ID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
 
     set ddata = data_cmd.execute
 
@@ -57,7 +57,7 @@
         <td>
             Cabang
         </td>
-        <td class="col-sm-4">
+        <td class="col-sm-4" colspan="5">
             : <%= data("AgenName") %>
         </td>
     </tr>
@@ -71,7 +71,7 @@
         <td>
             No Produksi
         </td>
-        <td>
+        <td colspan="5">
             : <%= data("PDID") &" | " & data("Brg_Nama")%>
         </td>
     </tr>
@@ -85,7 +85,7 @@
         <td>
             Update Time
         </td>
-        <td>
+        <td colspan="5">
             : <%= data("MO_UpdateTime") %>
         </td>
     </tr>
@@ -93,7 +93,7 @@
         <td>
             Keterangan
         </td>
-        <td colspan="3">
+        <td colspan="7">
             : <%= data("MO_Keterangan") %>
         </td>
     </tr>
@@ -110,7 +110,8 @@
         </td>
     </tr>
     <tr id="cdetail">
-        <th>ID</th>
+        <th>Tanggal</th>
+        <th>Kode</th>
         <th>Item</th>
         <th>Quantity</th>
         <th>Satuan</th>
@@ -127,7 +128,10 @@
     %>
         <tr>
             <th>
-                <%= ddata("MO_ID") %>
+                <%= ddata("MO_Date") %>
+            </th>
+            <th>
+                <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
             </th>
             <td>
                 <%= ddata("Brg_Nama") %>
@@ -156,7 +160,7 @@
         <td>
             Grand Total
         </td>
-        <td colspan="6"> 
+        <td colspan="7"> 
             <%= replace(formatCurrency(tharga),"$","") %>
         </td>
     </tr>

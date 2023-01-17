@@ -248,7 +248,7 @@
                     <th>Tanggal</th>
                     <th>Tanggal JT</th>
                     <th>Vendor</th>
-                    <th>Keterangan</th>
+                    <th>Tukar Faktur</th>
                     <th>Document</th>
                     <th class="text-center">Aksi</th>
                 </thead>
@@ -273,7 +273,7 @@
                             <% end if %>
                         </td>
                         <td><%= rs("Ven_Nama") %></td>
-                        <td><%= rs("IPH_Keterangan") %></td>
+                        <td><%if rs("IPH_TukarYN") = "Y"  then%>Yes <% else %>No <%  end if %></td>
                         <td>
                             <% if rs("IPH_image") <> "" then%>
                                 <img src="<%= url %>document/image/<%= rs("IPH_image") &".jpg" %>" id="myImg<%= recordcounter %>" width="30px" onclick="openImage('mymodal<%= recordcounter %>', this.src,'img<%= recordcounter %>','caption<%= recordcounter %>','close<%= recordcounter %>','<%= rs("IPH_Id") %>')">

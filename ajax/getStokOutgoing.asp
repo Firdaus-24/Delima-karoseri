@@ -18,7 +18,7 @@
       <td><%= getAjaxstok("stok") %></td>
       <td class="text-center">
          <div class="form-check form-check-inline">
-               <input class="form-check-input" type="radio" name="ckbrgid" id="ckbrgid" value="<%=  getAjaxstok("Brg_ID") %>" onclick="getDataOutgoing('<%=getAjaxstok("harga")%>', '<%= getAjaxstok("stok") %>')" required>
+               <input class="form-check-input" type="radio" name="ckbrgid" id="ckbrgid" value="<%=  getAjaxstok("Brg_ID") %>" onclick="getDataOutgoing('<%=getAjaxstok("harga")%>', '<%= getAjaxstok("stok") %>', '<%= getAjaxstok("brg_ID") %>')" required>
          </div>
       </td>
    </tr>

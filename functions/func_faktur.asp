@@ -8,18 +8,19 @@
         keterangan = trim(Request.Form("keterangan"))
         diskon = trim(Request.Form("diskonall"))
         ppn = trim(Request.Form("ppn"))
+        tukar = trim(Request.Form("tukar"))
         asuransi = trim(replace(replace(Request.Form("asuransi"),".",""),",-",""))
         lain = trim(replace(replace(Request.Form("lain"),".",""),",-",""))
 
         set data_cmd =  Server.CreateObject ("ADODB.Command")
         data_cmd.ActiveConnection = mm_delima_string
 
-        data_cmd.commandText = "SELECT * FROM DLK_T_invPemH WHERE IPH_OPHID = '"& ophid &"' AND IPH_AgenID = '"& agen &"' AND IPH_Date = '"& tgl &"' AND IPH_VenID = '"& vendor &"' AND IPH_JTDate = '"& tgljt &"' AND IPH_AktifYN = 'Y'"
+        data_cmd.commandText = "SELECT * FROM DLK_T_invPemH WHERE IPH_OPHID = '"& ophid &"' AND IPH_AgenID = '"& agen &"' AND IPH_Date = '"& tgl &"' AND IPH_VenID = '"& vendor &"' AND IPH_JTDate = '"& tgljt &"' AND IPH_tukarYN = '"& tukar &"' AND IPH_AktifYN = 'Y'"
         ' response.write data_cmd.commandText & "<br>"
         set data = data_cmd.execute
 
         if data.eof then
-            data_cmd.commandText = "exec sp_AddDLK_T_invPemH '"& agen &"', '"& ophid &"','"& tgl &"', '"& vendor &"', '"& tgljt &"', '"& keterangan &"', '"& diskon &"', '"& ppn &"', '"& asuransi &"', '"& lain &"', ''"
+            data_cmd.commandText = "exec sp_AddDLK_T_invPemH '"& agen &"', '"& ophid &"','"& tgl &"', '"& vendor &"', '"& tgljt &"', '"& keterangan &"', '"& diskon &"', '"& ppn &"', '"& asuransi &"', '"& lain &"', '', '"& tukar &"'"
             ' response.write data_cmd.commandText & "<br>"
             set p = data_cmd.execute
 
@@ -33,7 +34,7 @@
         if value = 1 then
             call alert("FAKTUR TERHUTANG", "berhasil ditambahkan", "success","fakturd_add.asp?id="&id) 
         elseif value = 2 then
-            call alert("FAKTUR TERHUTANG", "sudah terdaftar", "warning","fakturd_add.asp?id="&id)
+            call alert("FAKTUR TERHUTANG", "sudah terdaftar", "warning","faktur_add.asp")
         else
             value = 0
         end if

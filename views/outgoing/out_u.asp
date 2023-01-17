@@ -16,7 +16,7 @@
     set barang = data_cmd.execute
 
     ' detail data
-    data_cmd.commandText = "SELECT dbo.DLK_T_MaterialOutD.MO_ID, dbo.DLK_T_MaterialOutD.MO_Item, dbo.DLK_T_MaterialOutD.MO_Qtysatuan, dbo.DLK_T_MaterialOutD.MO_Harga, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Rak.Rak_nama FROM dbo.DLK_T_MaterialOutD LEFT OUTER JOIN dbo.DLK_M_Rak ON dbo.DLK_T_MaterialOutD.MO_RakID = dbo.DLK_M_Rak.Rak_ID LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialOutD.MO_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialOutD.MO_Item = dbo.DLK_M_Barang.Brg_Id WHERE MO_ID = '"& data("MO_ID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
+    data_cmd.commandText = "SELECT dbo.DLK_T_MaterialOutD.MO_ID, dbo.DLK_T_MaterialOutD.MO_Date, dbo.DLK_T_MaterialOutD.MO_Item, dbo.DLK_T_MaterialOutD.MO_Qtysatuan, dbo.DLK_T_MaterialOutD.MO_Harga, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Rak.Rak_nama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama FROM dbo.DLK_T_MaterialOutD LEFT OUTER JOIN dbo.DLK_M_Rak ON dbo.DLK_T_MaterialOutD.MO_RakID = dbo.DLK_M_Rak.Rak_ID LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialOutD.MO_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialOutD.MO_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId LEFT OUTER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID WHERE MO_ID = '"& data("MO_ID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
 
     set ddata = data_cmd.execute
 
@@ -30,7 +30,7 @@
 
     set datasatuan = data_cmd.execute
 
-    call header("Detail Outgoing")
+    call header("Update Detail Outgoing")
 %>
 <!--#include file="../../navbar.asp"-->
 <style>
@@ -182,7 +182,8 @@
          <table class="table table-hover">
                <thead class="bg-secondary text-light">
                   <tr>
-                     <th scope="col">ID</th>
+                     <th scope="col">Tanggal</th>
+                     <th scope="col">Kode</th>
                      <th scope="col">Item</th>
                      <th scope="col">Quantity</th>
                      <th scope="col">Harga</th>
@@ -194,31 +195,34 @@
                <tbody>
                   <% 
                   do while not ddata.eof 
-                  %>
-                     <tr>
-                           <th>
-                              <%= ddata("MO_ID") %>
-                           </th>
-                           <td>
-                              <%= ddata("Brg_Nama") %>
-                           </td>
-                           <td>
-                              <%= ddata("MO_QtySatuan") %>
-                           </td>
-                           <td>
-                              <%= replace(formatCurrency(ddata("MO_Harga")),"$","") %>
-                           </td>
-                           <td>
-                              <%= ddata("Sat_Nama") %>
-                           </td>
-                           <td>
-                              <%= ddata("Rak_Nama") %>
-                           </td>
-                           <td class="text-center">
-                              <div class="btn-group" role="group" aria-label="Basic example">
-                              <a href="aktifd.asp?id=<%= ddata("MO_ID") %>&brg=<%= ddata("MO_Item") %>&p=out_u" class="btn badge text-bg-danger" onclick="deleteItem(event,'DETAIL BARANG OUTGOING')">Delete</a>
-                           </td>
-                     </tr>
+                %>
+                    <tr>
+                        <th>
+                            <%= ddata("MO_Date") %>
+                        </th>
+                        <th>
+                            <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
+                        </th>
+                        <td>
+                            <%= ddata("Brg_Nama") %>
+                        </td>
+                        <td>
+                            <%= ddata("MO_QtySatuan") %>
+                        </td>
+                        <td>
+                            <%= replace(formatCurrency(ddata("MO_Harga")),"$","") %>
+                        </td>
+                        <td>
+                            <%= ddata("Sat_Nama") %>
+                        </td>
+                        <td>
+                            <%= ddata("Rak_Nama") %>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                            <a href="aktifd.asp?id=<%= ddata("MO_ID") %>&brg=<%= ddata("MO_Item") %>&p=out_u&tgl=<%= ddata("MO_Date") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'DETAIL BARANG OUTGOING')">Delete</a>
+                        </td>
+                    </tr>
                   <% 
                   ddata.movenext
                   loop
@@ -241,45 +245,55 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-sm-3 mb-3">
-                           <label for="cOutItem" class="col-form-label">Cari Item</label>
+                            <label for="cOutItem" class="col-form-label">Cari Item</label>
                         </div>
                         <div class="col-sm mb-3">
-                           <input type="hidden" id="cOutcabang" class="form-control" value="<%= data("agenID") %>">
-                           <input type="text" id="cOutItem" class="form-control">
+                            <input type="hidden" id="cOutcabang" class="form-control" value="<%= data("agenID") %>">
+                            <input type="text" id="cOutItem" class="form-control">
                         </div>
                     </div>
                     <div class="tablestokpo" style="height: 20em;overflow-y:auto;margin-bottom:20px;font-size:14px;">
                         <table class="table">
-                           <thead class="bg-secondary text-light"  style="position: sticky;top: 0;">
-                           <tr style="position: sticky;">
-                              <th scope="col">Kode</th>
-                              <th scope="col">Barang</th>
-                              <th scope="col">Satuan</th>
-                              <th scope="col">Stok</th>
-                              <th scope="col">Pilih</th>
-                           </tr>
-                           </thead>
-                           <tbody class="contentItemsOutgoing">
-                           <%do while not getstok.eof %>
-                           <tr>
-                              <td><%= getstok("kategoriNama") &"-"& getstok("jenisNama") %></td>
-                              <td><%= getstok("Brg_Nama") %></td>
-                              <td><%= getstok("satuan") %></td>
-                              <td><%= getstok("stok") %></td>
-                              <td class="text-center">
-                                 <div class="form-check form-check-inline">
-                                       <input class="form-check-input" type="radio" name="ckbrgid" id="ckbrgid" value="<%=  getstok("Brg_ID") %>" onclick="getDataOutgoing('<%=getstok("harga")%>', '<%= getstok("stok") %>', '<%=  getstok("Brg_ID") %>')" required>
-                                 </div>
-                              </td>
-                           </tr>
-                           <% 
-                           getstok.movenext
-                           loop
-                           %>
-                           <tbody>
+                            <thead class="bg-secondary text-light"  style="position: sticky;top: 0;">
+                            <tr style="position: sticky;">
+                                <th scope="col">Kode</th>
+                                <th scope="col">Barang</th>
+                                <th scope="col">Satuan</th>
+                                <th scope="col">Stok</th>
+                                <th scope="col">Pilih</th>
+                            </tr>
+                            </thead>
+                            <tbody class="contentItemsOutgoing">
+                            <%do while not getstok.eof %>
+                            <tr>
+                                <td><%= getstok("kategoriNama") &"-"& getstok("jenisNama") %></td>
+                                <td><%= getstok("Brg_Nama") %></td>
+                                <td><%= getstok("satuan") %></td>
+                                <td><%= getstok("stok") %></td>
+                                <td class="text-center">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="ckbrgid" id="ckbrgid" value="<%=  getstok("Brg_ID") %>" onclick="getDataOutgoing('<%=getstok("harga")%>', '<%= getstok("stok") %>', '<%=  getstok("Brg_ID") %>')" required>
+                                    </div>
+                                </td>
+                            </tr>
+                            <% 
+                            response.flush
+                            getstok.movenext
+                            loop
+                            %>
+                            <tbody>
                         </table>
                     </div>
                     <div class="row">
+                        <div class="col-sm-3">
+                            <label for="tgl" class="col-form-label">Tanggal</label>
+                        </div>
+                        <div class="col-sm-5 mb-3">
+                            <input type="text" id="tgl" name="tgl" class="form-control" value="<%= date() %>" onfocus="(this.type='date')" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- get harga dan stok -->
                         <input type="hidden" id="harga" name="harga" class="form-control">
                         <input type="hidden" id="stok" name="stok" class="form-control">
                         
@@ -290,7 +304,7 @@
                             <input type="number" id="qty" name="qty" class="form-control" required>
                         </div>
                     </div>
-                    <div class="row">
+                <div class="row">
                         <div class="col-sm-3">
                             <label for="rak" class="col-form-label">Rak</label>
                         </div>

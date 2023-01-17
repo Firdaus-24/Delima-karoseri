@@ -1,32 +1,32 @@
-$(document).ready(function(){
+$(document).ready(function () {
    // get nomor bom
-   $("#agenOutgoing").change(function(){
+   $("#agenOutgoing").change(function () {
       let cabang = $("#agenOutgoing").val()
-      
-      if(!cabang){
+
+      if (!cabang) {
          $(".lbomlama").show()
-     }else{
+      } else {
          $(".lbomlama").hide()
          $.ajax({
             method: "POST",
             url: "../../ajax/getNomorBomByCabang.asp",
             data: { cabang }
-         }).done(function( msg ) {
+         }).done(function (msg) {
             $(".lbombaru").html(msg)
          });
-     }   
+      }
    })
-   $("#cOutItem").keyup(function(){
+   $("#cOutItem").keyup(function () {
       let nama = $("#cOutItem").val()
       let cabang = $("#cOutcabang").val()
-      
+
       $.ajax({
          method: "POST",
          url: "../../ajax/getStokOutgoing.asp",
          data: { nama, cabang }
-      }).done(function( msg ) {
+      }).done(function (msg) {
          $(".contentItemsOutgoing").html(msg)
-      });  
+      });
    })
 
 })
