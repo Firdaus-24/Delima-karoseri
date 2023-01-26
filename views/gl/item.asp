@@ -22,12 +22,12 @@
 
 
    ' query seach 
-   strquery = "SELECT GL_M_ChartAccount.*, DLK_M_WebLogin.username FROM GL_M_ChartAccount LEFT OUTER JOIN DLK_M_WebLogin ON GL_M_ChartAccount.CA_UpdateID = DLK_M_WebLogin.userID WHERE CA_AktifYN = 'Y' "& filterNama &""
+   strquery = "SELECT GL_M_ItemDelima.*, DLK_M_WebLogin.username, GL_M_CategoryItem.CAT_Name FROM GL_M_ItemDelima LEFT OUTER JOIN DLK_M_WebLogin ON GL_M_ItemDelima.Item_UpdateID = DLK_M_WebLogin.userID LEFT OUTER JOIN GL_M_CategoryItem ON GL_M_ItemDelima.Item_Cat_ID = GL_M_CategoryItem.Cat_ID"
 
    ' untuk data paggination
    page = Request.QueryString("page")
 
-   orderBy = " ORDER BY CA_ID ASC"
+   orderBy = " ORDER BY Item_ID ASC"
    set rs = Server.CreateObject("ADODB.Recordset")
    sqlawal = strquery
 
@@ -69,16 +69,14 @@
 <div class="container">
    <div class="row">
       <div class="col-lg-12 mt-3 mb-3 text-center">
-         <h3>DAFTAR KODE PERKIRAAN</h3>
+         <h3>DAFTAR PEMASUKAN DAN PENGELUARAN</h3>
       </div>
    </div>
-   <!-- 
    <div class="row">
       <div class="col-sm-12 mb-3">
-         <button type="button" class="btn btn-primary tambahKP" data-bs-toggle="modal" data-bs-target="#modalperkiraan">Tambah</button>
+         <button type="button" class="btn btn-primary" onclick="window.location.href='item_add.asp'">Tambah</button>
       </div>
    </div>
-    -->
    <form action="perkiraan.asp" method="post">
       <div class="row">
          <div class="col-sm-4 mb-3">
@@ -95,13 +93,14 @@
          <table class="table">
                <thead class="bg-secondary text-light">
                   <tr>
-                     <th scope="col">KODE AKUN</th>
-                     <th scope="col">KETERANGAN</th>
-                     <th scope="col">KODE UP AKUN</th>
-                     <th scope="col">JENIS</th>
-                     <th scope="col">TIPE</th>
-                     <th scope="col">GOLONGAN</th>
-                     <th scope="col">KELOMPOK</th>
+                     <th scope="col">ID</th>
+                     <th scope="col">KATEGORI</th>
+                     <th scope="col">NAMA</th>
+                     <th scope="col">TYPE</th>
+                     <th scope="col">STATUS</th>
+                     <th scope="col">ACC IDD</th>
+                     <th scope="col">ACC IDK</th>
+                     <th scope="col">UPDATE ID</th>
                      <th scope="col">AKTIF</th>
                      <!-- 
                      <th scope="col" class="text-center">Aksi</th>
@@ -115,14 +114,15 @@
                   do until showrecords = 0 OR  rs.EOF
                   recordcounter = recordcounter + 1 %>
                   <tr>
-                     <th scope="row"><%= rs("CA_ID") %></th>
-                     <td><%= rs("CA_name") %></td>
-                     <td><%= rs("CA_UPID") %></td>
-                     <td><%= rs("CA_Jenis") %></td>
-                     <td><%= rs("CA_Type") %></td>
-                     <td><%= rs("CA_GOlongan") %></td>
-                     <td><%= rs("CA_Kelompok") %></td>
-                     <td><%= rs("CA_AktifYN") %></td>
+                     <th scope="row"><%= rs("Item_ID") %></th>
+                     <td><%= rs("Cat_Name") %></td>
+                     <td><%= rs("Item_Name") %></td>
+                     <td><%= rs("Item_Type") %></td>
+                     <td><%= rs("Item_Status") %></td>
+                     <td><%= rs("Item_CAIDD") %></td>
+                     <td><%= rs("Item_CAIDk") %></td>
+                     <td><%= rs("Item_UpdateID") %></td>
+                     <td><%= rs("Item_AktifYN") %></td>
                      <!-- 
                      <td class="text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">

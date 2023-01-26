@@ -177,7 +177,7 @@
                     recordcounter = recordcounter + 1
 
                     ' cek data detail
-                    agen_cmd.commandText = "SELECT MemoHarga FROM DLK_T_Memo_D WHERE Left(memoID,17) = '"& rs("memoID") &"' AND MemoHarga = 0 OR MemoHarga = ''"
+                    agen_cmd.commandText = "SELECT MemoHarga FROM DLK_T_Memo_D WHERE Left(memoID,17) = '"& rs("memoID") &"' AND (MemoHarga = '0' OR MemoHarga = '')"
                     set ddetail = agen_cmd.execute
                     %>
                     <tr>

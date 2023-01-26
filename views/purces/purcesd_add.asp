@@ -7,7 +7,7 @@
     data_cmd.ActiveConnection = mm_delima_string
 
     ' get data header
-    data_cmd.commandText = "SELECT dbo.DLK_T_OrPemH.*, dbo.DLK_M_Vendor.Ven_Nama, DLK_T_Memo_H.memoID, GLB_M_Agen.AgenName FROM dbo.DLK_T_OrPemH LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_OrPemH.OPH_venID = dbo.DLK_M_Vendor.Ven_ID LEFT OUTER JOIN DLK_T_Memo_H ON DLK_T_OrPemH.OPH_memoID = DLK_T_Memo_H.memoID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_OrPemH.OPH_AgenID = GLB_M_Agen.AgenID WHERE dbo.DLK_T_OrPemH.OPH_ID = '"& id &"' AND dbo.DLK_T_OrPemH.OPH_AktifYN = 'Y'"
+    data_cmd.commandText = "SELECT dbo.DLK_T_OrPemH.*, dbo.DLK_M_Vendor.Ven_Nama, DLK_T_Memo_H.memoID, GLB_M_Agen.AgenName, DLK_M_Kebutuhan.K_Name FROM dbo.DLK_T_OrPemH LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_OrPemH.OPH_venID = dbo.DLK_M_Vendor.Ven_ID LEFT OUTER JOIN DLK_T_Memo_H ON DLK_T_OrPemH.OPH_memoID = DLK_T_Memo_H.memoID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_OrPemH.OPH_AgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Kebutuhan ON DLK_T_OrPemH.OPH_KID = DLK_M_Kebutuhan.K_ID WHERE dbo.DLK_T_OrPemH.OPH_ID = '"& id &"' AND dbo.DLK_T_OrPemH.OPH_AktifYN = 'Y'"
 
     set data = data_cmd.execute
 
@@ -112,9 +112,15 @@
     </div>
     <div class="row">
         <div class="col-lg-2 mb-3">
+            <label for="kebutuhan" class="col-form-label">kebutuhan</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="text" id="kebutuhan" name="kebutuhan" class="form-control" maxlength="50" value="<%= data("K_name") %>" autocomplete="off" readonly>
+        </div>
+        <div class="col-lg-2 mb-3">
             <label for="keterangan" class="col-form-label">Keterangan</label>
         </div>
-        <div class="col-lg-10 mb-3">
+        <div class="col-lg-4 mb-3">
             <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" value="<%= data("OPH_Keterangan") %>" autocomplete="off" readonly>
         </div>
     </div>

@@ -6,20 +6,9 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT DLK_T_Memo_H.*, DLK_M_Departement.DepNama, GLB_M_Agen.AgenName, DLK_M_Divisi.DivNama FROM DLK_T_Memo_H LEFT OUTER JOIN DLK_M_Departement ON DLK_T_Memo_H.memoDepID = DLK_M_Departement.DepID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Divisi ON DLK_T_Memo_H.memoDivID = DLK_M_Divisi.divID WHERE memoID = '"& id &"' and memoAktifYN = 'Y'"
+    data_cmd.commandText = "SELECT DLK_T_Memo_H.*, DLK_M_Departement.DepNama, GLB_M_Agen.AgenName, DLK_M_Divisi.DivNama, DLK_M_Kebutuhan.K_Name FROM DLK_T_Memo_H LEFT OUTER JOIN DLK_M_Departement ON DLK_T_Memo_H.memoDepID = DLK_M_Departement.DepID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Divisi ON DLK_T_Memo_H.memoDivID = DLK_M_Divisi.divID LEFT OUTER JOIN DLK_M_Kebutuhan ON DLK_T_Memo_H.memoKebutuhan = DLK_M_Kebutuhan.K_ID WHERE memoID = '"& id &"' and memoAktifYN = 'Y'"
     ' response.write data_cmd.commandText
     set dataH = data_cmd.execute
-
-    ' cek kebutuhan
-    if dataH("memoKebutuhan") = 0 then
-        kebutuhan = "Produksi"
-    elseif dataH("memoKebutuhan") = 1 then
-        kebutuhan = "Khusus"
-    elseif dataH("memoKebutuhan") = 2 then
-        kebutuhan = "Umum"
-    else
-        kebutuhan = "Sendiri"
-    end if
 
     ' cek nomor real
     ' left(dataH("memoID"),4)/dataH("memoDepID")- getAgen(mid(dataH("memoID"),8,3),"")/ mid(dataH("memoID"),11,4)/ right(dataH("memoID"),3)
@@ -77,7 +66,7 @@
             <label for="kebutuhan" class="col-form-label">Kebutuhan</label>
         </div>
         <div class="col-sm-4 mb-3">
-            <input type="text" id="kebutuhan" class="form-control" name="kebutuhan" value="<%= kebutuhan %>" readonly>
+            <input type="text" id="kebutuhan" class="form-control" name="kebutuhan" value="<%= dataH("K_Name") %>" readonly>
         </div>
         <div class="col-sm-2">
             <label for="keterangan" class="col-form-label">Keterangan</label>

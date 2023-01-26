@@ -7,9 +7,6 @@
 
    set users = data_cmd.execute
 
-   nama = trim(Request.Form("nama"))
-   user = trim(Request.Form("user"))
-
    set conn = Server.CreateObject("ADODB.Connection")
    conn.open MM_Delima_string
 
@@ -20,6 +17,14 @@
    angka = request.QueryString("angka")
    if len(angka) = 0 then 
       angka = Request.form("urut") + 1
+   end if
+   nama = request.QueryString("nama")
+   if len(nama) = 0 then 
+      nama = trim(Request.Form("nama"))
+   end if
+   user = request.QueryString("user")
+   if len(user) = 0 then 
+      user = trim(Request.Form("user"))
    end if
 
    if nama <> "" then 

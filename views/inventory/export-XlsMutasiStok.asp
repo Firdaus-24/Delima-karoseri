@@ -1,39 +1,11 @@
 <!--#include file="../../init.asp"-->
 <% 
-   set data_cmd =  Server.CreateObject ("ADODB.Command")
-   data_cmd.ActiveConnection = mm_delima_string
+   agen = trim(Request.QueryString("agen"))
+   tgl = trim(Request.QueryString("tgla"))
+   nama = Ucase(trim(Request.QueryString("nama")))
 
-   data_cmd.CommandText = "SELECT AgenId, AgenName FROM GLB_M_Agen WHERE AgenaktifYN = 'Y' ORDER BY AgenName ASC"
-
-   set agendata = data_cmd.execute
-
-   set conn = Server.CreateObject("ADODB.Connection")
-   conn.open MM_Delima_string
-
-   dim recordsonpage, requestrecords, allrecords, hiddenrecords, showrecords, lastrecord, recordconter, pagelist, pagelistcounter, sqlawal
-   dim angka
-   dim code, nama, aktifId, UpdateId, uTIme, orderBy
-
-   ' untuk angka
-   angka = request.QueryString("angka")
-   if len(angka) = 0 then 
-      angka = Request.form("urut") + 1
-   end if
-   
-   agen = request.QueryString("agen")
-   if len(agen) = 0 then 
-      agen = trim(Request.Form("agen"))
-   end if
-
-   tgl = request.QueryString("tgla")
-   if len(tgl) = 0 then 
-      tgl = trim(Request.Form("tgla"))
-   end if
-
-   nama = request.QueryString("nama")
-   if len(nama) = 0 then 
-      nama = trim(Request.Form("nama"))
-   end if
+   Response.ContentType = "application/vnd.ms-excel"
+   Response.AddHeader "content-disposition", "filename=MutasiStok "& agen &" "& tgl &" "& nama &" .xls"
 
    if tgl <> "" then
       bulan = month(tgl)
@@ -53,6 +25,15 @@
       filternama = " AND UPPER(DLK_M_Barang.Brg_nama) LIKE '%"& ucase(nama) &"%'"
    else
       filternama = ""
+   end if
+
+   set data_cmd =  Server.CreateObject ("ADODB.Command")
+   data_cmd.ActiveConnection = mm_delima_string
+
+   ' cek cabang
+   if agen <> "" then
+      data_cmd.commandText = "SELECT AgenName FROM GLB_M_Agen WHERE AgenID = '"& agen &"'"
+      set dagen = data_cmd.execute
    end if
 
    if tgl <> "" then
@@ -81,256 +62,62 @@
       elseIf bulan = "12" then
          strsql = "SELECT DLK_T_MutasiStok.MSTahun, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriId,dbo.DLK_M_Kategori.KategoriNama, DLK_M_Barang.Brg_Nama, DLK_T_MutasiStok.MSAwal, DLK_T_MutasiStok.MSBeli12 as beli, DLK_T_MutasiStok.MSJual12 as jual, (DLK_T_MutasiStok.MSAwal + DLK_T_MutasiStok.MSBeli01 + DLK_T_MutasiStok.MSBeli02 + DLK_T_MutasiStok.MSBeli03 + DLK_T_MutasiStok.MSBeli04 + DLK_T_MutasiStok.MSBeli05 + DLK_T_MutasiStok.MSBeli06 + DLK_T_MutasiStok.MSBeli07 + DLK_T_MutasiStok.MSBeli08 + DLK_T_MutasiStok.MSBeli09 + DLK_T_MutasiStok.MSBeli10 + DLK_T_MutasiStok.MSBeli11 + DLK_T_MutasiStok.MSBeli12) - (DLK_T_MutasiStok.MSJual01 + DLK_T_MutasiStok.MSJual02 + DLK_T_MutasiStok.MSJual03 + DLK_T_MutasiStok.MSJual04 + DLK_T_MutasiStok.MSJual05 + DLK_T_MutasiStok.MSJual06 + DLK_T_MutasiStok.MSJual07 + DLK_T_MutasiStok.MSJual08 + DLK_T_MutasiStok.MSJual09 + DLK_T_MutasiStok.MSJual10 + DLK_T_MutasiStok.MSJual11 + DLK_T_MutasiStok.MSJual12) as tsaldoakhir, DLK_T_MutasiStok.MSHAwal, DLK_T_MutasiStok.MSHBeli12 as hbeli, DLK_T_MutasiStok.MSHJual12 as hjual, (DLK_T_MutasiStok.MSHAwal + DLK_T_MutasiStok.MSHBeli01 + DLK_T_MutasiStok.MSHBeli02 + DLK_T_MutasiStok.MSHBeli03 + DLK_T_MutasiStok.MSHBeli04 + DLK_T_MutasiStok.MSHBeli05 + DLK_T_MutasiStok.MSHBeli06 + DLK_T_MutasiStok.MSHBeli07 + DLK_T_MutasiStok.MSHBeli08 + DLK_T_MutasiStok.MSHBeli09 + DLK_T_MutasiStok.MSHBeli10 + DLK_T_MutasiStok.MSHBeli11 + DLK_T_MutasiStok.MSHBeli12) - (DLK_T_MutasiStok.MSHJual01 + DLK_T_MutasiStok.MSHJual02 + DLK_T_MutasiStok.MSHJual03 + DLK_T_MutasiStok.MSHJual04 + DLK_T_MutasiStok.MSHJual05 + DLK_T_MutasiStok.MSHJual06 + DLK_T_MutasiStok.MSHJual07 + DLK_T_MutasiStok.MSHJual08 + DLK_T_MutasiStok.MSHJual09 + DLK_T_MutasiStok.MSHJual10 + DLK_T_MutasiStok.MSHJual11 + DLK_T_MutasiStok.MSHJual12) as hargaAkhir FROM DLK_T_MutasiStok LEFT OUTER JOIN DLK_M_Barang ON DLK_T_MutasiStok.MSItem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId LEFT OUTER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID WHERE (DLK_T_MutasiStok.MSAwal + DLK_T_MutasiStok.MSBeli01 + DLK_T_MutasiStok.MSBeli02 + DLK_T_MutasiStok.MSBeli03 + DLK_T_MutasiStok.MSBeli04 + DLK_T_MutasiStok.MSBeli05 + DLK_T_MutasiStok.MSBeli06 + DLK_T_MutasiStok.MSBeli07 + DLK_T_MutasiStok.MSBeli08 + DLK_T_MutasiStok.MSBeli09 + DLK_T_MutasiStok.MSBeli10 + DLK_T_MutasiStok.MSBeli11 + DLK_T_MutasiStok.MSBeli12) - (DLK_T_MutasiStok.MSJual01 + DLK_T_MutasiStok.MSJual02 + DLK_T_MutasiStok.MSJual03 + DLK_T_MutasiStok.MSJual04 + DLK_T_MutasiStok.MSJual05 + DLK_T_MutasiStok.MSJual06 + DLK_T_MutasiStok.MSJual07 + DLK_T_MutasiStok.MSJual08 + DLK_T_MutasiStok.MSJual09 + DLK_T_MutasiStok.MSJual10 + DLK_T_MutasiStok.MSJual11 + DLK_T_MutasiStok.MSJual12) <> 0 AND (DLK_T_MutasiStok.MSHAwal + DLK_T_MutasiStok.MSHBeli01 + DLK_T_MutasiStok.MSHBeli02 + DLK_T_MutasiStok.MSHBeli03 + DLK_T_MutasiStok.MSHBeli04 + DLK_T_MutasiStok.MSHBeli05 + DLK_T_MutasiStok.MSHBeli06 + DLK_T_MutasiStok.MSHBeli07 + DLK_T_MutasiStok.MSHBeli08 + DLK_T_MutasiStok.MSHBeli09 + DLK_T_MutasiStok.MSHBeli10 + DLK_T_MutasiStok.MSHBeli11 + DLK_T_MutasiStok.MSHBeli12) - (DLK_T_MutasiStok.MSHJual01 + DLK_T_MutasiStok.MSHJual02 + DLK_T_MutasiStok.MSHJual03 + DLK_T_MutasiStok.MSHJual04 + DLK_T_MutasiStok.MSHJual05 + DLK_T_MutasiStok.MSHJual06 + DLK_T_MutasiStok.MSHJual07 + DLK_T_MutasiStok.MSHJual08 + DLK_T_MutasiStok.MSHJual09 + DLK_T_MutasiStok.MSHJual10 + DLK_T_MutasiStok.MSHJual11 + DLK_T_MutasiStok.MSHJual12) <> 0 AND MStahun = '"& tahun &"' "& filterAgen &" "& filterNama &"  "
       end if
-
-
-      ' query seach 
-      strquery = strsql
-
-      ' untuk data paggination
-      page = Request.QueryString("page")
-
-      orderBy = " ORDER BY DLK_M_Barang.Brg_Nama ASC"
-      set rs = Server.CreateObject("ADODB.Recordset")
-      sqlawal = strquery
-
-      sql= sqlawal + orderBy
-      ' response.write sql & "<br>"
-      rs.open sql, conn
-      ' records per halaman
-      recordsonpage = 10
-      ' count all records
-      allrecords = 0
-      do until rs.EOF
-         allrecords = allrecords + 1
-         rs.movenext
-      loop
-      ' if offset is zero then the first page will be loaded
-      offset = Request.QueryString("offset")
-      if offset = 0 OR offset = "" then
-         requestrecords = 0
-      else
-         requestrecords = requestrecords + offset
-      end if
-      rs.close
-      set rs = server.CreateObject("ADODB.RecordSet")
-      sqlawal = strquery
-      sql=sqlawal + orderBy
-      rs.open sql, conn
-      ' reads first records (offset) without showing them (can't find another solution!)
-      hiddenrecords = requestrecords
-      do until hiddenrecords = 0 OR rs.EOF
-         hiddenrecords = hiddenrecords - 1
-         rs.movenext
-         if rs.EOF then
-         lastrecord = 1
-         end if	
-      loop
-
    end if
 
-    call header("Mutasi Stok Barang") 
+   data_cmd.commandText = strsql
+
+   set data = data_cmd.execute
 %>
-<!--#include file="../../navbar.asp"-->
-<div class="container">
-   <div class="row">
-      <div class="col-sm-12 text-center mt-3 mb-3">
-         <h3>PROSES MUTASI STOK BARANG</h3>
-      </div>
-   </div>  
-   <div class="row">
-      <div class="col-sm mb-3">
-         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalProses">Proses</button>
-      </div>
-   </div>
-   <form action="mutasiStok.asp" method="post">
-      <div class="row">
-         <div class="col-lg-3 mb-3">
-            <label for="Agen">Cabang</label>
-            <select class="form-select" aria-label="Default select example" name="agen" id="agen">
-               <option value="">Pilih</option>
-               <% do while not agendata.eof %>
-               <option value="<%= agendata("agenID") %>"><%= agendata("agenNAme") %></option>
-               <% 
-               agendata.movenext
-               loop
-               %>
-            </select>
-         </div>
-         <div class="col-lg-3 mb-3">
-            <label for="tgla">Bulan & Tahun</label>
-            <input type="month" class="form-control" name="tgla" id="tgla" autocomplete="off" required>
-         </div>
-         <div class="col-lg-4">
-            <label for="nama">Item</label>
-            <input type="text" class="form-control" name="nama" id="nama" autocomplete="off" placeholder="cari nama">
-         </div>
-         <div class="col-lg-2 mt-4 mb-3">
-            <button type="submit" class="btn btn-primary">Cari</button>
-            <% 
-            if agen <> "" OR tgl <> "" then 
-               if not rs.eof then
-            %>
-            <button type="button" class="btn btn-secondary" onclick="window.location.href='export-XlsMutasiStok.asp?agen=<%=agen%>&tgla=<%=tgl%>&nama=<%=nama%>'">Export</button>
-            <% 
-               end if 
-            end if %>
-         </div>
-      </div>
-   </form>
-   <% if agen <> "" OR tgl <>  "" then %>
-   <div class="row">
-      <div class="col-sm-12">
-         <table class="table" style="font-size:14px;">
-            <thead class="bg-secondary text-light">
-               <tr>
-                  <th scope="col">No</th>
-                  <th scope="col">Kode</th>
-                  <th scope="col">Item</th>
-                  <th scope="col">Saldo-Awal</th>
-                  <th scope="col">Harga-Awal</th>
-                  <th scope="col">Saldo-Beli</th>
-                  <th scope="col">Harga-Beli</th>
-                  <th scope="col">Saldo-Jual</th>
-                  <th scope="col">Harga-Jual</th>
-                  <th scope="col">Saldo-Akhir</th>
-                  <th scope="col">Harga-Akhir</th>
-               </tr>
-            </thead>
-            <tbody>
-               <% 
-               no = 0
-               'prints records in the table
-               showrecords = recordsonpage
-               recordcounter = requestrecords
-               do until showrecords = 0 OR  rs.EOF
-               recordcounter = recordcounter + 1
-               no = no + 1
-               %>
-               <tr>
-                  <th scope="row"><%= recordcounter %></th>
-                  <td><%= rs("kategoriNama") &"-"& rs("jenisNama") %></td>
-                  <td><%= rs("Brg_Nama") %></td>
-                  <td><%= rs("MSAwal") %></td>
-                  <td><%= replace(formatCurrency(rs("MSHAwal")),"$","") %></td>
-                  <td><%= rs("beli") %></td>
-                  <td><%= replace(formatCurrency(rs("hbeli")),"$","") %></td>
-                  <td><%= rs("jual") %></td>
-                  <td><%= replace(formatCurrency(rs("hjual")),"$","") %></td>
-                  <td><%= rs("tsaldoakhir") %></td>
-                  <td><%= replace(formatCurrency(rs("hargaakhir")),"$","") %></td>
-               </tr>
-               <% 
-               response.flush
-                  showrecords = showrecords - 1
-                  rs.movenext
-                  if rs.EOF then
-                  lastrecord = 1
-                  end if
-                  loop
-                  rs.close
-               %>
-            </tbody>
-         </table>
-      </div>
-   </div>  
-   <div class="row">
-      <div class="col-sm-12">
-         <!-- paggination -->
-         <nav aria-label="Page navigation example">
-               <ul class="pagination">
-               <li class="page-item">
-               <% 
-                  if page = "" then
-                     npage = 1
-                  else
-                     npage = page - 1
-                  end if
-               if requestrecords <> 0 then 
-               %>
-                  <a class="page-link prev" href="mutasistok.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&agen=<%=agen%>&tgla=<%=tgl%>&nama=<%=nama%>">&#x25C4; Prev </a>
-               <% else %>
-                  <p class="page-link prev-p">&#x25C4; Prev </p>
-               <% end if %>
-               </li>
-               <li class="page-item d-flex" style="overflow-y:auto;height: max-content;">	
-                  <%
-                  pagelist = 0
-                  pagelistcounter = 0
-                  do until pagelist > allrecords  
-                  pagelistcounter = pagelistcounter + 1
-                  if page = "" then
-                     page = 1
-                  else
-                     page = page
-                  end if
-                  if Cint(page) = pagelistcounter then
-                  %>
-                     <a class="page-link hal bg-primary text-light" href="mutasistok.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&tgla=<%=tgl%>&nama=<%=nama%>"><%= pagelistcounter %></a> 
-                  <%else%>
-                     <a class="page-link hal" href="mutasistok.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&tgla=<%=tgl%>&nama=<%=nama%>"><%= pagelistcounter %></a> 
-                  <%
-                  end if
-                  pagelist = pagelist + recordsonpage
-                  loop
-                  %>
-               </li>
-               <li class="page-item">
-                  <% 
-                  if page = "" then
-                     page = 1
-                  else
-                     page = page + 1
-                  end if
-                  %>
-                  <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                     <a class="page-link next" href="mutasistok.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&agen=<%=agen%>&tgla=<%=tgl%>&nama=<%=nama%>">Next &#x25BA;</a>
-                  <% else %>
-                     <p class="page-link next-p">Next &#x25BA;</p>
-                  <% end if %>
-               </li>	
-               </ul>
-         </nav> 
-      </div>
-   </div>
+
+<table widht="100%" style="font-family: Calibri, Arial, sans-serif;">
+   <tr>
+      <td colspan="11" align="center">MUTASI STOK INVENTORY</td> 
+   </tr>
+   <% if agen <> "" then %>
+   <tr>
+      <td colspan="11" align="center">Cabang : <%= dagen("agenName") %></td> 
+   </tr>
    <% end if %>
-</div>  
-<!-- Modal -->
-<div class="modal fade" id="modalProses" tabmutasistok="-1" aria-labelledby="modalProsesLabel" aria-hidden="true">
-   <div class="modal-dialog">
-      <div class="modal-content">
-         <div class="modal-header">
-               <h1 class="modal-title fs-5" id="modalProsesLabel">Proses Mutasi Stok</h1>
-               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-         </div>
-         <form action="p_mutasi.asp" method="post">
-         <div class="modal-body">
-            <div class="row">
-               <div class="col-sm-6 mb-3">
-                  <label for="pagen">Cabang</label>
-                  <select class="form-select" aria-label="Default select example" name="pagen" id="pagen">
-                        <option value="">Pilih</option>
-                        <% 
-                        agendata.MoveFirst
-                        do while not agendata.eof %>
-                        <option value="<%= agendata("agenID") %>"><%= agendata("agenNAme") %></option>
-                        <% 
-                        agendata.movenext
-                        loop
-                        %>
-                  </select>
-               </div>
-               <div class="col-sm-6 mb-3">
-                  <label for="pbulan">Bulan & tahun</label>
-                  <input type="month" class="form-control" id="pbulan" name="pbulan">
-               </div>
-            </div>
-         </div>
-         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Proses</button>
-         </div>
-         </form>
-      </div>
-   </div>
-</div>
-<% call footer() %>
+   <tr>
+      <td colspan="11" align="center">Priode : <%= bulan &"/"& tahun %></td> 
+   </tr>
+    <tr>
+      <td colspan="11" align="center">&nbsp</td> 
+   </tr>
+   <tr style="font-size:12px;">
+      <th style="background-color: #0000a0;color:#fff;">No</th>
+      <th style="background-color: #0000a0;color:#fff;">Kode</th>
+      <th style="background-color: #0000a0;color:#fff;">Item</th>
+      <th style="background-color: #0000a0;color:#fff;">Qty-Awal</th>
+      <th style="background-color: #0000a0;color:#fff;">Harga-Awal</th>
+      <th style="background-color: #0000a0;color:#fff;">Qty-Beli</th>
+      <th style="background-color: #0000a0;color:#fff;">Harga-Beli</th>
+      <th style="background-color: #0000a0;color:#fff;">Qty-Jual</th>
+      <th style="background-color: #0000a0;color:#fff;">Harga-Jual</th>
+      <th style="background-color: #0000a0;color:#fff;">Qty-Akhir</th>
+      <th style="background-color: #0000a0;color:#fff;">Harga-Akhir</th>
+   </tr>
+   <% 
+   no = 0
+   Do While not data.eof  
+   no = no + 1
+   %>
+   <tr style="font-size:12px"> 
+      <th scope="row"><%= no %></th>
+      <td><%= data("kategoriNama") &"-"& data("jenisNama") %></td>
+      <td><%= data("Brg_Nama") %></td>
+      <td><%= data("MSAwal") %></td>
+      <td><%= replace(formatCurrency(data("MSHAwal")),"$","") %></td>
+      <td><%= data("beli") %></td>
+      <td><%= replace(formatCurrency(data("hbeli")),"$","") %></td>
+      <td><%= data("jual") %></td>
+      <td><%= replace(formatCurrency(data("hjual")),"$","") %></td>
+      <td><%= data("tsaldoakhir") %></td>
+      <td><%= replace(formatCurrency(data("hargaakhir")),"$","") %></td>
+   </tr>
+   <% 
+   response.flush
+   data.movenext
+   loop
+   %>
+</table>

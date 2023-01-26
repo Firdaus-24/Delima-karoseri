@@ -16,6 +16,11 @@
     data.commandText = "SELECT DivNama, DivID FROM DLK_M_Divisi WHERE DivAktifYN = 'Y' ORDER BY DivNama ASC"
     set pdivisi = data.execute    
 
+    ' cek kebutuhan
+    data.commandText = "SELECT K_ID,K_Name FROM DLK_M_Kebutuhan WHERE K_AktifYN = 'Y' ORDER BY K_ID ASC"
+
+    set ckkebutuhan = data.execute
+
     call header("From Permintaan Anggaran") 
 %>
 
@@ -83,10 +88,14 @@
             <div class="col-sm-4 mb-3">
                 <select class="form-select" aria-label="Default select example" name="kebutuhan" id="kebutuhan" required> 
                     <option value="">Pilih</option>
-                    <option value="0">Produksi</option>
-                    <option value="1">Khusus</option>
-                    <option value="2">Umum</option>
-                    <option value="3">Sendiri</option>
+                    <% do while not ckkebutuhan.eof %>
+                    <option value="<%= ckkebutuhan("K_ID") %>"><%= ckkebutuhan("K_Name") %></option>
+                    <% 
+                    response.flush
+                    ckkebutuhan.movenext
+                    loop
+                    %>
+
                 </select>
             </div>
             <div class="col-sm-2">

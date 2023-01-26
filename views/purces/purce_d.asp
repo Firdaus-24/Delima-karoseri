@@ -5,7 +5,7 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT dbo.DLK_M_Vendor.Ven_Nama, dbo.GLB_M_Agen.AgenName, dbo.DLK_T_OrPemH.*, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_phone, dbo.DLK_M_Vendor.Ven_Email FROM dbo.DLK_T_OrPemH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_OrPemH.OPH_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_OrPemH.OPH_venID = dbo.DLK_M_Vendor.Ven_ID WHERE dbo.DLK_T_OrPemH.OPH_ID = '"& id &"' AND dbo.DLK_T_OrPemH.OPH_AktifYN = 'Y'"
+    data_cmd.commandText = "SELECT DLK_T_OrPemH.*, GLB_M_Agen.AgenName, DLK_M_vendor.Ven_Nama, DLK_M_Kebutuhan.K_Name FROM DLK_T_OrPemH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_OrPemH.OPH_AgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_vendor ON DLK_T_OrPemH.OPH_venID = DLK_M_Vendor.Ven_ID LEFT OUTER JOIN DLK_M_Kebutuhan ON DLK_T_OrPemH.OPH_KID = DLK_M_Kebutuhan.K_ID WHERE OPH_ID = '"& id &"' AND OPH_AktifYN = 'Y'"
 
     set data = data_cmd.execute
 
@@ -100,10 +100,16 @@
     </div>
     <div class="row">
         <div class="col-lg-2 mb-3">
+            <label for="kebutuhan" class="col-form-label">Kebutuhan</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="text" id="kebutuhan" name="kebutuhan" class="form-control" maxlength="50" value="<%= data("K_NAme") %>" autocomplete="off" readonly>
+        </div>
+        <div class="col-lg-2 mb-3">
             <label for="keterangan" class="col-form-label">Keterangan</label>
         </div>
-        <div class="col-lg-10 mb-3">
-            <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" autocomplete="off" value="<%= data("OPH_Keterangan") %>" readonly>
+        <div class="col-lg-4 mb-3">
+            <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" value="<%= data("OPH_Keterangan") %>" autocomplete="off" readonly>
         </div>
     </div>
     <div class="row">

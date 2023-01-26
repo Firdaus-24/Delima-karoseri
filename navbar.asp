@@ -38,6 +38,9 @@
                 <a href="<%= url %>views/kategori/">Master Kategori</a>
               </li>
               <li>
+                <a href="<%= url %>views/kebutuhan/">Master Kebutuhan</a>
+              </li>
+              <li>
                 <a href="<%= url %>views/Rak/">Master Rak</a>
               </li>
               <li>
@@ -149,7 +152,7 @@
           </li>
             <ul class="sub-menu" id="sublist-gl">
               <li>
-                <a class="link-name" href="<%= url %>views/gl/daftarkas.asp">Daftar Kas Masuk/Keluar</a>
+                <a class="link-name" href="<%= url %>views/gl/item.asp">Daftar Kas Masuk/Keluar</a>
               </li>
               <li>
                 <a class="link-name" href="<%= url %>views/gl/catitem.asp">Kategori Item</a>
