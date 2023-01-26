@@ -6,7 +6,7 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT dbo.DLK_T_InvPemH.*, DLK_T_OrPemH.OPH_ID, dbo.DLK_M_Vendor.Ven_Nama, GLB_M_Agen.AgenName FROM dbo.DLK_T_InvPemH LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_InvPemH.IPH_venID = dbo.DLK_M_Vendor.Ven_ID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_InvPemH.IPH_AgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_T_OrPemH ON DLK_T_InvPemH.IPH_OPHID = DLK_T_OrPemH.OPH_ID WHERE dbo.DLK_T_InvPemH.IPH_ID = '"& id &"' AND dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y'"
+    data_cmd.commandText = "SELECT dbo.DLK_T_InvPemH.*, DLK_T_OrPemH.OPH_ID, dbo.DLK_M_Vendor.Ven_Nama, GLB_M_Agen.AgenName, DLK_M_Kebutuhan.K_Name FROM dbo.DLK_T_InvPemH LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_InvPemH.IPH_venID = dbo.DLK_M_Vendor.Ven_ID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_InvPemH.IPH_AgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_T_OrPemH ON DLK_T_InvPemH.IPH_OPHID = DLK_T_OrPemH.OPH_ID LEFT OUTER JOIN DLK_M_Kebutuhan ON DLK_T_InvPemH.IPH_KID = DLK_M_Kebutuhan.K_ID WHERE dbo.DLK_T_InvPemH.IPH_ID = '"& id &"' AND dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y'"
     ' response.write data_cmd.commandText & "<br>"
     set data = data_cmd.execute
 
@@ -117,9 +117,15 @@
     </div>
     <div class="row">
         <div class="col-lg-2 mb-3">
+            <label for="Kebutuhan" class="col-form-label">Kebutuhan</label>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <input type="text" id="Kebutuhan" name="Kebutuhan" class="form-control" maxlength="50" value="<%= data("K_NAme") %>" autocomplete="off" readonly>
+        </div>
+        <div class="col-lg-2 mb-3">
             <label for="keterangan" class="col-form-label">Keterangan</label>
         </div>
-        <div class="col-lg-10 mb-3">
+        <div class="col-lg-4 mb-3">
             <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" value="<%= data("IPH_Keterangan") %>" autocomplete="off" readonly>
         </div>
     </div>

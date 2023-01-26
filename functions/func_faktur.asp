@@ -9,6 +9,7 @@
         diskon = trim(Request.Form("diskonall"))
         ppn = trim(Request.Form("ppn"))
         tukar = trim(Request.Form("tukar"))
+        kebutuhan = trim(Request.Form("kebutuhan"))
         asuransi = trim(replace(replace(Request.Form("asuransi"),".",""),",-",""))
         lain = trim(replace(replace(Request.Form("lain"),".",""),",-",""))
 
@@ -20,7 +21,7 @@
         set data = data_cmd.execute
 
         if data.eof then
-            data_cmd.commandText = "exec sp_AddDLK_T_invPemH '"& agen &"', '"& ophid &"','"& tgl &"', '"& vendor &"', '"& tgljt &"', '"& keterangan &"', '"& diskon &"', '"& ppn &"', '"& asuransi &"', '"& lain &"', '', '"& tukar &"'"
+            data_cmd.commandText = "exec sp_AddDLK_T_invPemH '"& agen &"', '"& ophid &"','"& tgl &"', '"& vendor &"', '"& tgljt &"', '"& keterangan &"', '"& diskon &"', '"& ppn &"', '"& asuransi &"', '"& lain &"', '', '"& tukar &"', "& kebutuhan &""
             ' response.write data_cmd.commandText & "<br>"
             set p = data_cmd.execute
 

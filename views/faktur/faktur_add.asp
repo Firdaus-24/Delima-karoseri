@@ -126,9 +126,16 @@
         </div>      
         <div class="row">
             <div class="col-lg-2 mb-3">
+                <label for="kebutuhan" class="col-form-label">Kebutuhan</label>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <input type="hidden" id="kebutuhan" name="kebutuhan" class="form-control"  autocomplete="off" required>
+                <input type="text" id="lkebutuhan" name="lkebutuhan" class="form-control"  autocomplete="off" readonly required>
+            </div>
+            <div class="col-lg-2 mb-3">
                 <label for="keterangan" class="col-form-label">Keterangan</label>
             </div>
-            <div class="col-lg-10 mb-3">
+            <div class="col-lg-4 mb-3">
                 <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" autocomplete="off" required>
             </div>
         </div>    
@@ -167,6 +174,8 @@ const getValuePO = (id) => {
             $("#asuransi").val(format(msg.ASURANSI))
             $("#lain").val(format(msg.LAIN))
             $("#diskon").val(msg.DISKONALL)
+            $("#lkebutuhan").val(msg.KEBUTUHANLABEL)
+            $("#kebutuhan").val(msg.KEBUTUHANID)
             $("#keterangan").val(msg.KETERANGAN)
         });
     }

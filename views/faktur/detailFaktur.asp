@@ -5,7 +5,7 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT dbo.DLK_T_InvPemH.*, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_Email, dbo.DLK_M_Vendor.Ven_phone, dbo.DLK_M_Vendor.Ven_ID, dbo.DLK_M_Vendor.Ven_TypeTransaksi, dbo.DLK_M_Vendor.Ven_Norek, GL_M_Bank.Bank_Name FROM dbo.DLK_T_InvPemH LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_InvPemH.IPH_VenId = dbo.DLK_M_Vendor.Ven_ID LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_InvPemH.IPH_AgenId = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN GL_M_Bank ON DLK_M_Vendor.Ven_BankID = GL_M_Bank.Bank_ID WHERE (dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y') AND (dbo.DLK_T_InvPemH.IPH_ID = '"& id &"')"
+    data_cmd.commandText = "SELECT dbo.DLK_T_InvPemH.*, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_Email, dbo.DLK_M_Vendor.Ven_phone, dbo.DLK_M_Vendor.Ven_ID, dbo.DLK_M_Vendor.Ven_TypeTransaksi, dbo.DLK_M_Vendor.Ven_Norek, GL_M_Bank.Bank_Name, DLK_M_Kebutuhan.K_Name FROM dbo.DLK_T_InvPemH LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_InvPemH.IPH_VenId = dbo.DLK_M_Vendor.Ven_ID LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_InvPemH.IPH_AgenId = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN GL_M_Bank ON DLK_M_Vendor.Ven_BankID = GL_M_Bank.Bank_ID LEFT OUTER JOIN DLK_M_Kebutuhan ON DLK_T_InvPemH.IPH_KID = DLK_M_Kebutuhan.K_ID WHERE (dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y') AND (dbo.DLK_T_InvPemH.IPH_ID = '"& id &"')"
 
     set data = data_cmd.execute
 
@@ -116,6 +116,13 @@
                     <td>
                         <%if data("IPH_tukarYN") ="Y" then %>Yes <% else %>No <% end if %>
                     </td>
+                    <th>Kebutuhan</th>
+                    <th>:</th>
+                    <td>
+                        <%= data("K_Name") %>
+                    </td>
+                </tr>
+                <tr>
                     <th>Keterangan</th>
                     <th>:</th>
                     <td>
