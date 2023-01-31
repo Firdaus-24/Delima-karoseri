@@ -1,116 +1,93 @@
 <!--#include file="../../init.asp"-->
-<!--#include file="../../functions/func_BOM.asp"-->
-<!--#include file="../../functions/func_DateDiffWeekDays.asp"-->  
+<!--#include file="../../functions/func_bom.asp"-->
 <% 
-   id = trim(Request.QueryString("id"))
+   set data =  Server.CreateObject ("ADODB.Command")
+   data.ActiveConnection = mm_delima_string
 
-   set data_cmd =  Server.CreateObject ("ADODB.Command")
-   data_cmd.ActiveConnection = mm_delima_string
+   ' get agen / cabang
+   data.commandText = "SELECT AgenName, AgenID FROM GLB_M_Agen WHERE agenAktifYN = 'Y' ORDER BY AgenName ASC"
+   set pcabang = data.execute    
 
-   ' agen / cabang
-   data_cmd.commandTExt = "SELECT AgenName, AgenID FROM GLB_M_Agen WHERE AgenAktifYN = 'Y' ORDER BY AgenNAme ASC"
+   ' get kode akun
+   data.commandText = "SELECT CA_id, CA_Name FROM GL_M_ChartAccount WHERE CA_AktifYN = 'Y' ORDER BY CA_Name ASC"
+   set kodeakun = data.execute    
 
-   set agen = data_cmd.execute
-
-   call header("Form BOM")
+   call header("From B.O.M") 
 %>
-<!--#include file="../../navbar.asp"--> 
+
+<!--#include file="../../navbar.asp"-->
 <div class="container">
    <div class="row">
       <div class="col-lg-12 mb-3 mt-3 text-center">
          <h3>FORM TAMBAH B.O.M</h3>
       </div>
    </div>
-   <form action="bom_add.asp" method="post" onsubmit="validasiForm(this,event,'FORM B.O.M','info')">
+   <form action="bom_add.asp" method="post" onsubmit="validasiForm(this,event,'Master B.O.M','warning')">
       <div class="row">
-         <div class="col-lg-2 mb-3">
-            <label for="bomagen" class="col-form-label">Cabang / Agen</label>
+         <div class="col-sm-2">
+            <label for="tgl" class="col-form-label">Tanggal</label>
          </div>
-         <div class="col-lg-4 mb-3">
-            <select class="form-select" aria-label="Default select example" id="bomagen" name="agen" required>
+         <div class="col-sm-4 mb-3">
+            <input type="text" id="tgl" class="form-control" name="tgl" value="<%= Date() %>" onfocus="(this.type='date')" required>
+         </div>
+         <div class="col-sm-2">
+            <label for="cabang" class="col-form-label">Cabang</label>
+         </div>
+         <div class="col-sm-4 mb-3">
+            <select class="form-select" aria-label="Default select example" name="cabang" id="bomcabang" required> 
                <option value="">Pilih</option>
-               <% do while not agen.eof %>
-               <option value="<%= agen("AgenID") %>"><%= agen("AgenName") %></option>
-               <% 
-               agen.movenext
+               <% do while not pcabang.eof %>
+               <option value="<%= pcabang("agenID") %>"><%= pcabang("AgenName") %></option>
+               <%  
+               pcabang.movenext
                loop
                %>
             </select>
          </div>
-         <div class="col-lg-2 mb-3">
-            <label for="ophid" class="col-form-label">No Product</label>
+      </div>
+      <div class="row">
+         <div class="col-sm-2">
+            <label for="bombrg" class="col-form-label">Barang</label>
          </div>
-         <div class="col-lg-4 mb-3 lproductlama">
-            <select class="form-select" aria-label="Default select example" name="lpo" id="lpo" > 
-               <option value="" readonly disabled>Pilih Cabang dahulu</option>
+         <div class="col-sm-4 mb-3 bombrg">
+            <select class="form-select" aria-label="Default select example" name="bombrg" id="bombrg" required> 
+               <option value="" readonly disabled>Pilih cabang dahulu</option>
             </select>
          </div>
-         <div class="col-lg-4 lproductbaru">
-            <!-- kontent product -->
-         </div>
-      </div>
-      <div class="row align-items-center">
-         <div class="col-lg-2 mb-3">
-            <label for="tgl" class="col-form-label">Tanggal</label>
-         </div>
-         <div class="col-lg-4 mb-3">
-            <input type="text" id="tgl" name="tgl" class="form-control" value="<%= date() %>" onfocus="(this.type='date')" required>
-         </div>
-         <div class="col-lg-2 mb-3">
-            <label for="prototype" class="col-form-label">Prototype</label>
+         <div class="col-sm-2">
+            <label for="approve" class="col-form-label">Approve Y/N</label>
          </div>
          <div class="col-sm-4 mb-3">
             <div class="form-check form-check-inline">
-               <input class="form-check-input" type="radio" name="prototype" id="prototypeY" value="Y" required>
-               <label class="form-check-label" for="prototypeY">Yes</label>
+               <input class="form-check-input" type="radio" name="approve" id="approveY" value="Y" required>
+               <label class="form-check-label" for="approveY">Yes</label>
             </div>
             <div class="form-check form-check-inline">
-               <input class="form-check-input" type="radio" name="prototype" id="prototypeN" value="N">
-               <label class="form-check-label" for="prototypeN">No</label>
+               <input class="form-check-input" type="radio" name="approve" id="approveN" value="N">
+               <label class="form-check-label" for="approveN">No</label>
             </div>
          </div>
       </div>
       <div class="row">
-         <div class="col-lg-2 mb-3">
-            <label for="tgla" class="col-form-label">Start Date</label>
-         </div>
-         <div class="col-lg-4 mb-3">
-            <input type="date" id="tgla" name="tgla" class="form-control" required>
-         </div>
-         <div class="col-lg-2 mb-3">
-            <label for="tgle" class="col-form-label">End Date</label>
-         </div>
-         <div class="col-lg-4 mb-3">
-            <input type="date" id="tgle" name="tgle" class="form-control" required>
-         </div>
-      </div>      
-      <div class="row">
-         <div class="col-lg-2 mb-3">
-            <label for="hari" class="col-form-label">Capacity Day</label>
-         </div>
-         <div class="col-lg-4 mb-3">
-            <input type="number" id="hari" name="hari" class="form-control" required>
-         </div>
-         <div class="col-lg-2 mb-3">
+         <div class="col-sm-2">
             <label for="keterangan" class="col-form-label">Keterangan</label>
          </div>
-         <div class="col-lg-4 mb-3">
-            <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" autocomplete="off" required>
+         <div class="col-sm-10 mb-3 keterangan">
+            <input type="text" class="form-control" name="keterangan" id="keterangan" maxlength="50" autocomplete="off" required>
          </div>
-      </div>  
+      </div>
+      <!-- end button -->
       <div class="row">
          <div class="col-lg-12 text-center">
-               <a href="index.asp" type="button" class="btn btn-danger">Kembali</a>
-               <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" onclick="window.location.href='index.asp'" class="btn btn-danger">Kembali</button>
+            <button type="submit" class="btn btn-primary">Tambah</button>
          </div>
       </div>
    </form>
-</div>  
-
-
+</div>
 <% 
-   if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
-      call tambahBOMH()
-   end if
-   call footer()
+if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
+   call tambahbomH()
+end if
+call footer() 
 %>

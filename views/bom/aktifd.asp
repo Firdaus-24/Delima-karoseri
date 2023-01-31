@@ -1,12 +1,15 @@
 <!--#include file="../../init.asp"-->
 <% 
-   id = trim(Request.QueryString("id"))
-   strurl = trim(Request.QueryString("p"))
-   call header("aktif")
+id = trim(Request.QueryString("id"))
+p = trim(Request.QueryString("p"))
+
+strid = left(id,12)
+
+call header("aktif")
  %>
 <!--#include file="../../navbar.asp"-->
 <%      
-   call query("DELETE DLK_T_BomD WHERE BMD_ID = '"& id &"'")
-   call alert("FORM B.O.M DENGAN ID "& id &"", "berhasil non aktifkan", "success", strurl &".asp?id="& left(id,13)) 
+call query("DELETE DLK_M_BOMD WHERE BMDBMID = '"& id &"'")
+call alert("BARANG DETAIL ITEM "&id&" ", "berhasil hapus", "success", p&".asp?id="&strid) 
 call footer() 
 %>

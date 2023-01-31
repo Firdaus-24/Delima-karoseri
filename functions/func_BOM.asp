@@ -1,74 +1,118 @@
 <% 
-   Sub tambahBOMH()
-      agen = trim(Request.Form("agen"))
-      tgl = trim(Request.Form("tgl"))
-      tgla = trim(Request.Form("tgla"))
-      tgle = trim(Request.Form("tgle"))
-      produk = trim(Request.Form("produk"))
-      hari = trim(Request.Form("hari"))
-      bulan = trim(Request.Form("bulan"))
-      keterangan = trim(Request.Form("keterangan"))
-      prototype = trim(Request.Form("prototype"))
+sub tambahbomH()
+   barang = trim(Request.Form("barang"))
+   cabang = trim(Request.Form("cabang"))
+   tgl = trim(Request.Form("tgl"))
+   approve = trim(Request.Form("approve"))
+   keterangan = trim(Request.Form("keterangan"))
 
-      set data_cmd =  Server.CreateObject ("ADODB.Command")
-      data_cmd.ActiveConnection = mm_delima_string
+   set data_cmd =  Server.CreateObject ("ADODB.Command")
+   data_cmd.ActiveConnection = mm_delima_string
 
-      data_cmd.commandTExt = "SELECT * FROM DLK_T_BomH WHERE BMH_AgenID = '"& agen &"' AND BMH_Date = '"& tgl &"' AND BMH_PDID = '"& produk &"' AND BMH_Day = "& hari &" AND BMH_StartDate = '"& tgla &"' AND BMH_EndDate = '"& tgle &"'"
+   data_cmd.commandText = "SELECT * FROM DLK_M_bomH WHERE BMBrgID = '"& barang &"' AND BMAgenID = '"& cabang &"'"
+   ' response.write data_cmd.commandText & "<br>"
+   set data = data_cmd.execute
 
-      set data = data_cmd.execute
+   if data.eof then
+      data_cmd.commandText = "exec SP_AddDLK_M_bomH '"& barang &"', '"& tgl &"', '"& cabang &"', '"& approve &"', '', '','','"& keterangan &"'"
 
-      if data.eof then
-         data_cmd.commandText = "exec sp_AddDLK_T_BOMH '"& agen &"', '"& tgl &"', '"& produk &"', '"& hari &"', '"& tgla &"', '"& tgle &"', '"& keterangan &"', '"& prototype &"'"
-         ' response.write data_cmd.commandText & "<br>"
-         set p = data_cmd.execute
+      set p = data_cmd.execute
 
-         id = p("ID")
+      id = p("ID")
 
-         data_cmd.commandTExt = "SELECT * FROM DLK_T_BOMD WHERE LEFT(BMD_ID,13) = '"& id &"'"
-         set detail = data_cmd.execute
+      value = 1
+   else
+      value = 2
+   end if
 
-         if detail.eof then
-            data_cmd.commandTExt = "SELECT BMH_PDID, BMH_AgenID FROM DLK_T_BomH WHERE BMH_ID = '"& id &"'"
+   if value = 1 then
+      call alert("MATER B.O.M", "berhasil di tambahkan", "success","bomd_add.asp?id="&id) 
+   elseif value = 2 then
+      call alert("MATER B.O.M", "sudah terdaftar", "warning", "bom_add.asp")
+   else
+      value = 0
+   end if
+end sub
 
-            set ckheader = data_cmd.execute
+sub tambahbomD()
+   bmid = trim(Request.Form("bmid"))
+   ckproduckd = trim(Request.Form("ckproduckd"))
+   qtty = trim(Request.Form("qtty"))
+   satuan = trim(Request.Form("satuan"))
+   nol = "000"
 
-            data_cmd.commandTExt = "SELECT dbo.DLK_M_ProductH.PDBrgID, dbo.DLK_M_ProductH.PDID, dbo.DLK_M_ProductH.PDAgenID, dbo.DLK_M_ProductH.PDAktifYN, dbo.DLK_M_ProductD.PDDItem, dbo.DLK_M_ProductD.PDDJenisSat, dbo.DLK_M_ProductD.PDDQtty FROM dbo.DLK_M_ProductH RIGHT OUTER JOIN dbo.DLK_M_ProductD ON dbo.DLK_M_ProductH.PDID = LEFT(dbo.DLK_M_ProductD.PDDPDID, 12) WHERE (dbo.DLK_M_ProductH.PDAktifYN = 'Y') AND (dbo.DLK_M_ProductH.PDAgenID = '"& ckheader("BMH_AgenID") &"') AND (dbo.DLK_M_ProductH.PDID = '"& ckheader("BMH_PDID") &"') "
+   set data_cmd =  Server.CreateObject ("ADODB.Command")
+   data_cmd.ActiveConnection = mm_delima_string
 
-            set ckproduk = data_cmd.execute
+   data_cmd.commandText = "SELECT * FROM DLK_M_BOMD WHERE BMDItem = '"& ckproduckd &"' AND LEFT(BMDBMID,12) = '"& bmid &"'"
+   set data = data_cmd.execute
 
-            do while not ckproduk.EOF
-               if Cint(hari) <> 0 then
-                  strHari = Cint(hari)
-               else
-                  strHari = 1
-               end if
-               
-               strBulan = DateDiffWeekDays(Cdate(tgla), CDate(tgle))
+   if data.eof then
+      data_cmd.commandTExt = "SELECT (COUNT(BMDBMID)) + 1 AS urut FROM DLK_M_BOMD WHERE left(BMDBMID,12) = '"& bmid &"'"
+      ' response.write data_cmd.commandText & "<br>"
+      set p = data_cmd.execute
 
-               capacity = (Cint(ckproduk("PDDQtty")) * strHari) * strBulan
-              
-               data_cmd.commandTExt = "SELECT ('"& id &"' + Right('000' + Convert(varchar,Convert(int,(Right(isnull(Max(BMD_ID),'000'),3)))+1),3)) as iddetail FROM DLK_T_BOMD WHERE LEFT(BMD_ID,13) = '"& id &"'"
+      iddetail = bmid & right(nol & p("urut"),3)
 
-               set ckidBaru = data_cmd.execute
+      call query("INSERT INTO DLK_M_BOMD (BMDBMID, BMDItem, BMDQtty, BMDjenissat) VALUES ( '"& iddetail &"','"& ckproduckd &"', "& qtty &",'"& satuan &"')")
 
-               call query ("INSERT INTO DLK_T_BomD (BMD_ID,BMD_Item,BMD_Qtysatuan,BMD_JenisSat) VALUES ('"& ckidBaru("iddetail") &"', '"& ckproduk("PDDItem") &"', "& capacity &", '"& ckproduk("PDDJenisSat")&"')")
-            response.flush
-            ckproduk.movenext
-            loop
-         end if
+      value = 1
+   else
+      value = 2
+   end if
 
-         value = 1 'case untuk insert data
+   if value = 1 then
+      call alert("RINCIAN DETAIL B.O.M", "berhasil di tambahkan", "success","bomd_add.asp?id="&bmid) 
+   elseif value = 2 then
+      call alert("RINCIAN DETAIL B.O.M", "sudah terdaftar", "warning","bomd_add.asp?id="&bmid)
+   else
+      value = 0
+   end if
+end sub
+
+sub updatebomD()
+   bmid = trim(Request.Form("bmid"))
+   ckproduckd = trim(Request.Form("ckproduckd"))
+   qtty = trim(Request.Form("qtty"))
+   satuan = trim(Request.Form("satuan"))
+   nol = "000"
+
+   set data_cmd =  Server.CreateObject ("ADODB.Command")
+   data_cmd.ActiveConnection = mm_delima_string
+
+   data_cmd.commandText = "SELECT * FROM DLK_M_BOMD WHERE LEFT(bmDbmID,12) = '"& bmid &"' AND bmDItem = '"& ckproduckd &"'"
+   ' response.write data_cmd.commandText & "<br>"
+   set data = data_cmd.execute
+   
+   if data.eof then
+      data_cmd.commandText = "SELECT TOP 1 (right(bmDbmID,3)) + 1 AS urut FROM DLK_M_BOMD WHERE LEFT(bmDbmID,12) = '"& bmid &"' ORDER BY bmDbmID DESC"
+
+      set p = data_cmd.execute
+
+      if p.eof then
+         data_cmd.commandTExt = "SELECT (COUNT(bmDbmID)) + 1 AS urut FROM DLK_M_BOMD WHERE LEFT(bmDbmID,12) = '"& bmid &"'"
+
+         set a = data_cmd.execute
+
+         iddetail = bmid & right(nol & a("urut"),3)
+
+         call query("INSERT INTO DLK_M_BOMD (bmDbmID, bmDItem, bmDQtty, bmDJenisSat) VALUES ('"& iddetail &"','"& ckproduckd &"', "& qtty &", '"& satuan &"') ")
       else
-         value = 2 'case jika gagal insert 
-      end if
+         iddetail = bmid & right(nol & p("urut"),3)
 
-      if value = 1 then
-         call alert("FORM B.O.M", "berhasil ditambahkan", "success","bomd_add.asp?id="&id) 
-      elseif value = 2 then
-         call alert("FORM B.O.M", "sudah terdaftar", "warning","bom_add.asp")
-      else
-         value = 0
+         call query("INSERT INTO DLK_M_BOMD (bmDbmID, bmDItem, bmDQtty, bmDJenisSat) VALUES ('"& iddetail &"','"& ckproduckd &"', "& qtty &", '"& satuan &"') ")
       end if
-    End Sub
+      value = 1
+   else
+      value = 2
+   end if
 
+   if value = 1 then
+      call alert("DETAIL BARANG B.O.M", "berhasil ditambahkan", "success","bom_u.asp?id="&bmid) 
+   elseif value = 2 then
+      call alert("DETAIL BARANG B.O.M", "sudah terdaftar", "warning","bom_u.asp?id="&bmid)
+   else
+      value = 0
+   end if
+end sub
 %>

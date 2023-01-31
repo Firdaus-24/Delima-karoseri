@@ -4,12 +4,8 @@
    data_cmd.ActiveConnection = mm_delima_string
 
    ' filter agen
-   data_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_BOMH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_BOMH.BMH_AgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_BOMH.BMH_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+   data_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_M_BOMH LEFT OUTER JOIN GLB_M_Agen ON DLK_M_BOMH.BMAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_M_BOMH.BMAktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
    set agendata = data_cmd.execute
-   ' filter produk
-   data_cmd.commandTExt = "SELECT dbo.DLK_M_ProductH.PDID, dbo.DLK_M_Barang.Brg_Nama FROM dbo.DLK_M_Barang INNER JOIN dbo.DLK_M_ProductH ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_M_ProductH.PDBrgID RIGHT OUTER JOIN dbo.DLK_T_BOMH ON dbo.DLK_M_ProductH.PDID = dbo.DLK_T_BOMH.BMH_PDID GROUP BY dbo.DLK_M_ProductH.PDID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_BOMH.BMH_AktifYN HAVING (dbo.DLK_T_BOMH.BMH_AktifYN = 'Y') ORDER BY Brg_Nama ASC"
-
-   set dataproduk = data_cmd.execute
 
    set conn = Server.CreateObject("ADODB.Connection")
    conn.open MM_Delima_string
@@ -27,9 +23,9 @@
    if len(agen) = 0 then 
       agen = trim(Request.Form("agen"))
    end if
-   produk = request.QueryString("produk")
-   if len(produk) = 0 then 
-      produk = trim(Request.Form("produk"))
+   nama = request.QueryString("nama")
+   if len(nama) = 0 then 
+      nama = trim(Request.Form("nama"))
    end if
    tgla = request.QueryString("tgla")
    if len(tgla) = 0 then 
@@ -41,31 +37,31 @@
    end if
    
    if agen <> "" then
-      filterAgen = "AND DLK_T_BOMH.BMH_AgenID = '"& agen &"'"
+      filterAgen = "AND DLK_M_BOMH.BMAgenID = '"& agen &"'"
    else
       filterAgen = ""
    end if
 
-   if produk <> "" then
-      filterproduk = "AND dbo.DLK_T_BOMH.BMH_PDID = '"& produk &"'"
+   if nama <> "" then
+      filternama = "AND dbo.DLK_M_Barang.Brg_nama LIKE '%"& nama &"%'"
    else
-      filterproduk = ""
+      filternama = ""
    end if
 
    if tgla <> "" AND tgle <> "" then
-      filtertgl = "AND dbo.DLK_T_BOMH.BMH_Date BETWEEN '"& tgla &"' AND '"& tgle &"'"
+      filtertgl = "AND dbo.DLK_M_BOMH.BMDate BETWEEN '"& tgla &"' AND '"& tgle &"'"
    elseIf tgla <> "" AND tgle = "" then
-      filtertgl = "AND dbo.DLK_T_BOMH.BMH_Date = '"& tgla &"'"
+      filtertgl = "AND dbo.DLK_M_BOMH.BMDate = '"& tgla &"'"
    else 
       filtertgl = ""
    end if
 
    ' query seach 
-   strquery = "SELECT dbo.DLK_T_BOMH.*, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_ProductH.PDBrgID, DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_BOMH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_BOMH.BMH_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN dbo.DLK_M_ProductH ON dbo.DLK_T_BOMH.BMH_PDID = dbo.DLK_M_ProductH.PDID INNER JOIN DLK_M_Barang ON DLK_M_ProductH.PDBrgID = DLK_M_Barang.Brg_ID WHERE DLK_T_BOMH.BMH_AktifYN = 'Y' "& filterAgen &" "& filterproduk &" "& filtertgl &""
+   strquery = "SELECT DLK_M_BOMH.*, DLK_M_Barang.Brg_Nama, GLB_M_Agen.AgenName FROM DLK_M_BOMH LEFT OUTER JOIN DLK_M_Barang ON DLK_M_BOMH.BMBrgID = DLK_M_Barang.Brg_ID LEFT OUTER JOIN GLB_M_Agen ON DLK_M_BOMH.BMAgenID = GLB_M_Agen.AgenID WHERE (BMAktifYN = 'Y' OR BMAktifYN = 'N') "& filterAgen &" "& filternama &" "& filtertgl &""
    ' untuk data paggination
    page = Request.QueryString("page")
 
-   orderBy = " ORDER BY BMH_Date DESC"
+   orderBy = " ORDER BY DLK_M_Barang.Brg_Nama, DLK_M_BOMH.BMID ASC"
    set rs = Server.CreateObject("ADODB.Recordset")
    sqlawal = strquery
 
@@ -101,22 +97,108 @@
       end if	
    loop
 
-    call header("Permintaan BOM")
+   call header("Master B.O.M") 
 %>
+<style>
+
+    /* The Modal (background) */
+    .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+    }
+
+    /* Modal Content (image) */
+    .modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    }
+
+    /* Caption of Modal Image */
+    #caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 150px;
+    }
+
+    /* Add Animation */
+    .modal-content, #caption {  
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+    }
+
+    @-webkit-keyframes zoom {
+    from {-webkit-transform:scale(0)} 
+    to {-webkit-transform:scale(1)}
+    }
+
+    @keyframes zoom {
+    from {transform:scale(0)} 
+    to {transform:scale(1)}
+    }
+
+    /* The Close Button */
+    .close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    }
+
+    .close:hover,
+    .close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+    }
+
+    /* 100% Image Width on Smaller Screens */
+    @media only screen and (max-width: 700px){
+    .modal-content {
+        width: 100%;
+    }
+    }
+</style>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
    <div class="row">
       <div class="col-lg-12 mb-3 mt-3 text-center">
-         <h3>FORM PERMINTAAN B.O.M</h3>
-      </div>
+         <h3>MASTER B.O.M </h3>
+      </div>  
    </div>
    <div class="row">
       <div class="col-lg-12 mb-3">
-         <a href="bom_add.asp" class="btn btn-primary ">Tambah</a>
+         <button type="button" class="btn btn-primary" onclick="window.location.href='bom_add.asp'">
+            Tambah
+         </button>
       </div>
    </div>
    <form action="index.asp" method="post">
       <div class="row">
+         <div class="col-lg-4 mb-3">
+            <label for="nama">Nama</label>
+            <input type="text" class="form-control" name="nama" id="nama" autocomplete="off">
+         </div>
          <div class="col-lg-4 mb-3">
             <label for="Agen">Cabang</label>
             <select class="form-select" aria-label="Default select example" name="agen" id="agen">
@@ -125,18 +207,6 @@
                <option value="<%= agendata("agenID") %>"><%= agendata("agenNAme") %></option>
                <% 
                agendata.movenext
-               loop
-               %>
-            </select>
-         </div>
-         <div class="col-lg-4 mb-3">
-            <label for="produk">Produk</label>
-            <select class="form-select" aria-label="Default select example" name="produk" id="produk">
-               <option value="">Pilih</option>
-               <% do while not dataproduk.eof %>
-               <option value="<%= dataproduk("PDID") %>"><%= dataproduk("Brg_Nama") %></option>
-               <% 
-               dataproduk.movenext
                loop
                %>
             </select>
@@ -153,9 +223,6 @@
          </div>
          <div class="col-lg-2 mt-4 mb-3">
             <button type="submit" class="btn btn-primary">Cari</button>
-            <% if tgla <> "" OR tgle <> "" OR agen <> "" OR produk <> "" then %>    
-            <button type="button" class="btn btn-secondary" onclick="window.location.href='export-HeaderBom.asp?la=<%=tgla%>&le=<%=tgle%>&en=<%=agen%>&or=<%=produk%>'">Export</button>
-            <% end if %>
          </div>
       </div>
    </form>
@@ -164,13 +231,13 @@
          <table class="table table-hover">
             <thead class="bg-secondary text-light">
                <th>No</th>
-               <th>Bom ID</th>
-               <th>Cabang</th>
+               <th>ID Product</th>
+               <th>Nama</th>
                <th>Tanggal</th>
-               <th>Product</th>
-               <th>Approve1</th>
-               <th>Approve2</th>
-               <th>Prototype</th>
+               <th>Cabang</th>
+               <th>Draw 1</th>
+               <th>Draw 2</th>
+               <th>Draw 3</th>
                <th class="text-center">Aksi</th>
             </thead>
             <tbody>
@@ -181,45 +248,67 @@
                do until showrecords = 0 OR  rs.EOF
                recordcounter = recordcounter + 1
 
-               data_cmd.commandTExt = "SELECT BMD_ID FROM DLK_T_BOMD WHERE LEFT(BMD_ID,13) = '"& rs("BMH_ID") &"'"
-               set p = data_cmd.execute
+               data_cmd.commandText = "SELECT BMDBMID FROM DLK_M_BOMD WHERE LEFT(BMDBMID,12) = '"& rs("BMID") &"'"
+
+               set ddata = data_cmd.execute
                %>
                   <tr><TH><%= recordcounter %></TH>
-                  <th><%= rs("BMH_ID") %></th>
-                  <td><%= rs("AgenNAme")%></td>
-                  <td><%= Cdate(rs("BMH_Date")) %></td>
+                  <th><%= left(rs("BMID"),2) %>-<%=mid(rs("BMID"),3,3) %>/<%= mid(rs("BMID"),6,4) %>/<%= right(rs("BMID"),3) %></th>
                   <td><%= rs("Brg_Nama") %></td>
+                  <td><%= Cdate(rs("BMDate")) %></td>
+                  <td><%= rs("agenName") %></td>
                   <td>
-                     <% if rs("BMH_Approve1") = "N" then %>
-                        <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalAppBom" onclick="getIDBom('<%= rs("BMH_ID") %>', '1')">Ajukan</button>
-                     <% else %>
-                        Yes
-                     <% end if %>
+                        <% if rs("BMimg1") <> "" then%>
+                           <img src="<%= url %>document/stack/<%= rs("BMimg1") &".jpg" %>" id="myImg<%= recordcounter %>" width="30px" onclick="openDrawing('mymodal<%= recordcounter %>', this.src,'img<%= recordcounter %>','caption<%= recordcounter %>','close<%= recordcounter %>','<%= rs("BMId") %>', '1')">
+                           <!-- The Modal -->
+                           <div class="modal" id="mymodal<%= recordcounter %>">
+                              <span class="close" id="close<%= recordcounter %>">&times;</span>
+                              <div id="caption<%= recordcounter %>"></div>
+                              <img class="modal-content" id="img<%= recordcounter %>">
+                           </div>
+                        <% else %>
+                           <a href="uploadDrawing.asp?id=<%= rs("BMId") %>&img=1" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
+                        <% end if %>
                   </td>
                   <td>
-                     <% if rs("BMH_Approve2") = "N" then %>
-                        <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalAppBom" onclick="getIDBom('<%= rs("BMH_ID") %>', '2')">Ajukan</button>
-                     <% else %>
-                        Yes
-                     <% end if %>
+                        <% if rs("BMimg2") <> "" then%>
+                           <img src="<%= url %>document/stack/<%= rs("BMimg2") &".jpg" %>" id="myImg<%= recordcounter %>" width="30px" onclick="openDrawing('mymodal<%= recordcounter %>', this.src,'img<%= recordcounter %>','caption<%= recordcounter %>','close<%= recordcounter %>','<%= rs("BMId") %>', '2')">
+                           <!-- The Modal -->
+                           <div class="modal" id="mymodal<%= recordcounter %>">
+                              <span class="close" id="close<%= recordcounter %>">&times;</span>
+                              <div id="caption<%= recordcounter %>"></div>
+                              <img class="modal-content" id="img<%= recordcounter %>">
+                           </div>
+                        <% else %>
+                           <a href="uploadDrawing.asp?id=<%= rs("BMId") %>&img=2" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
+                        <% end if %>
                   </td>
                   <td>
-                     <%if rs("BMH_PrototypeYN") = "Y" then %>
-                        Yes 
-                     <% else %>
-                        No
-                     <% end if %>
+                        <% if rs("BMimg3") <> "" then%>
+                           <img src="<%= url %>document/stack/<%= rs("BMimg3") &".jpg" %>" id="myImg<%= recordcounter %>" width="30px" onclick="openDrawing('mymodal<%= recordcounter %>', this.src,'img<%= recordcounter %>','caption<%= recordcounter %>','close<%= recordcounter %>','<%= rs("BMId") %>', '3')">
+                           <!-- The Modal -->
+                           <div class="modal" id="mymodal<%= recordcounter %>">
+                              <span class="close" id="close<%= recordcounter %>">&times;</span>
+                              <div id="caption<%= recordcounter %>"></div>
+                              <img class="modal-content" id="img<%= recordcounter %>">
+                           </div>
+                        <% else %>
+                           <a href="uploadDrawing.asp?id=<%= rs("BMId") %>&img=3" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
+                        <% end if %>
                   </td>
                   <td class="text-center">
-                     <div class="btn-group" role="group" aria-label="Basic example">
-                        <% if not p.eof then %>
-                           <a href="detailBom.asp?id=<%= rs("BMH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
-                        <% end if %>
-                        <a href="bom_u.asp?id=<%= rs("BMH_ID") %>" class="btn badge text-bg-primary" >Update</a>
-                        <% if p.eof then %>
-                           <a href="aktifh.asp?id=<%= rs("BMH_ID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'DELETE HEADER BOM')">Delete</a>
-                        <% end if %>
-                     </div>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                           <a href="bom_u.asp?id=<%= rs("BMID") %>" class="btn badge text-bg-primary" >Update</a>
+                           <% if not ddata.eof then %>
+                           <a href="detailBom.asp?id=<%= rs("BMID") %>" class="btn badge text-light bg-warning">Detail</a>
+                           <% else %>
+                              <% if rs("BMAktifYN") = "Y" then %>
+                                 <a href="aktifH.asp?id=<%= rs("BMID") %>&p=N" class="btn badge text-bg-danger" onclick="deleteItem(event,'delete master B.O.M')">Delete</a>
+                              <% else %>
+                                 <a href="aktifH.asp?id=<%= rs("BMID") %>&p=Y" class="btn badge text-bg-secondary" onclick="deleteItem(event,'aktif master B.O.M')">aktif</a>
+                              <% end if %>
+                           <% end if %>
+                        </div>
                   </td>
                </tr>
                <% 
@@ -237,19 +326,19 @@
    </div>  
    <div class="row">
       <div class="col-sm-12">
-      <!-- paggination -->
+         <!-- paggination -->
          <nav aria-label="Page navigation example">
             <ul class="pagination">
                <li class="page-item">
                <% 
                   if page = "" then
-                     npage = 1
+                        npage = 1
                   else
-                     npage = page - 1
+                        npage = page - 1
                   end if
                   if requestrecords <> 0 then 
                %>
-                  <a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&agen=<%=agen%>&produk=<%=produk%>&tgla=<%=tgla%>&tgle=<%=tgle%>">&#x25C4; Prev </a>
+                  <a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&agen=<%=agen%>&nama=<%=nama%>&tgla=<%=tgla%>&tgle=<%=tgle%>">&#x25C4; Prev </a>
                <% else %>
                   <p class="page-link prev-p">&#x25C4; Prev </p>
                <% end if %>
@@ -261,15 +350,15 @@
                   do until pagelist > allrecords  
                   pagelistcounter = pagelistcounter + 1
                   if page = "" then
-                     page = 1
+                        page = 1
                   else
-                     page = page
+                        page = page
                   end if
                   if Cint(page) = pagelistcounter then
                   %>
-                     <a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&produk=<%=produk%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
+                        <a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&nama=<%=nama%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
                   <%else%>
-                     <a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&produk=<%=produk%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
+                        <a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&nama=<%=nama%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
                   <%
                   end if
                   pagelist = pagelist + recordsonpage
@@ -279,64 +368,38 @@
                <li class="page-item">
                   <% 
                   if page = "" then
-                     page = 1
+                        page = 1
                   else
-                     page = page + 1
+                        page = page + 1
                   end if
                   %>
                   <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                     <a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&agen=<%=agen%>&produk=<%=produk%>&tgla=<%=tgla%>&tgle=<%=tgle%>">Next &#x25BA;</a>
+                        <a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&agen=<%=agen%>&nama=<%=nama%>&tgla=<%=tgla%>&tgle=<%=tgle%>">Next &#x25BA;</a>
                   <% else %>
-                     <p class="page-link next-p">Next &#x25BA;</p>
+                        <p class="page-link next-p">Next &#x25BA;</p>
                   <% end if %>
                </li>	
             </ul>
          </nav> 
       </div>
    </div>
-</div>  
-<!-- Modal -->
-<div class="modal fade" id="modalAppBom" tabindex="-1" aria-labelledby="modalAppBomLabel" aria-hidden="true">
-   <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-      <div class="modal-header">
-         <h5 class="modal-title" id="modalAppBomLabel">Approve B.O.M</h5>
-         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-         <form action="semail_bom.asp" method="post" onsubmit="validasiForm(this,event,'Kirim Email','info')">
-            <input type="hidden" id="idbom" name="idbom" class="form-control" required>
-            <input type="hidden" id="typeapp" name="typeapp" class="form-control" required>
-            <div class="row mb-3">
-               <div class="col-sm-3">
-                  <label for="userEmail" class="col-form-label">Email TO</label>
-               </div>
-               <div class="col-sm-9">
-                  <input type="email" id="userEmail" name="userEmail" class="form-control" required>
-               </div>
-            </div>
-            <div class="row">
-               <div class="col-sm-3">
-                  <label for="subject" class="col-form-label">Subject</label>
-               </div>
-               <div class="col-sm-9">
-                  <input type="text" id="subject" name="subject" class="form-control" required>
-               </div>
-            </div>
-      </div>
-      <div class="modal-footer">
-         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-         <button type="submit" class="btn btn-primary">Send</button>
-      </div>
-      </form>
-      </div>
-   </div>
 </div>
 <script>
-   function getIDBom(id,no){
-      $("#idbom").val(id)
-      $("#typeapp").val(no)
-   }
+function openDrawing(modal,src,img,caption,close,id,urut){
+    let pmodal = $(`#${modal}`)
+        
+    let modalImg = $(`#${img}`);
+    let captionText = $(`#${caption}`);
+
+    pmodal.css("display", "block");
+    modalImg.attr('src', `${src}`) ;
+    captionText.html(`<a href="uploadDrawing.asp?id=${id}&img=${urut}" class="btn badge text-bg-light">UPLOAD ULANG</a>`).css({"text-align":"center","margin-top":"10px", "margin-bottom": "10px"})
+    
+    $(`#${close}`).on('click', function(){
+    
+        pmodal.css("display","none")
+    })
+}
+
 </script>
 <% call footer() %>
-

@@ -8,10 +8,13 @@ Server.ScriptTimeout = 600
 ' of a directory with write permissions, for example "C:\Inetpub\wwwroot"
 Dim uploadsDirVar
    response.AddHeader "REFRESH","0:URL=index.asp?id=000000000"
-uploadsDirVar = "D:\Delima\document\image\"
+uploadsDirVar = "D:\Delima\document\stack\"
 ' ****************************************************
-dim id, data_cmd
-id = Request.QueryString("id")
+dim id, data_cmd,img, strid
+strid = Request.QueryString("id")
+img = Request.QueryString("img")
+
+id = strid&img
 
 function OutputForm()
 
@@ -66,7 +69,7 @@ function SaveFiles
       
       next
       
-      Response.Redirect("image_u.asp?id="&id)
+      Response.Redirect("drawing_u.asp?id="&strid&"&img="&img)
    else
       SaveFiles = "The file name specified in the upload form does not correspond to a valid file in the system."
    end if
@@ -74,7 +77,7 @@ function SaveFiles
 end function
 %>
 <!--#include file="../../init.asp"-->
-<% call header("UPLOAD DOCUMENT") %>
+<% call header("UPLOAD DRAWING") %>
 <!--#include file="../../navbar.asp"-->	
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -137,11 +140,11 @@ function onSubmitForm(objForm) {
 <div class="container">
     <div class='row'>
         <div class='col text-center'>
-            <h3>UPLOAD DOCUMENT</h3>
+            <h3>UPLOAD DRAWING</h3>
         </div>
     </div>
     <div class="upload">
-        <form name="frmSend" method="POST" enctype="multipart/form-data" action="uploadImage.asp?id=<%=request.querystring("id")%>" onSubmit="return onSubmitForm(this);">   	<p style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
+        <form name="frmSend" method="POST" enctype="multipart/form-data" action="uploadDrawing.asp?id=<%=request.querystring("id")%>&img=<%= img %>" onSubmit="return onSubmitForm(this);">   	<p style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
         
         <p style="margin-top: 0; margin-bottom: 0"><b>File To Upload : </b>
         <input name="filter" type="file" size="20" />
@@ -172,11 +175,11 @@ function onSubmitForm(objForm) {
         end if
         %>
         <u><b>Ketentuan :</b></u><ul>
-        <li>Pastikan nama faktur sama dengan id traksaksi yang terdaftar</li>
+        <li>Pastikan name dari dwaring harus sama dengan ID product.</li>
         <li>CONTOH : 0010821003.jpg</li>
         <li>Kami hanya menerima foto dalam bentuk format file *.jpg</li>
 
-        <button type="button" onclick="window.location.href='index.asp?id=<%= id %>'" class="btn btn-danger mt-4">Kembali</button>
+        <button type="button" onclick="window.location.href='produksi.asp'" class="btn btn-danger mt-4">Kembali</button>
         <img src="../../public/img/delimalogo.png">
     </div>
 </div>
@@ -478,7 +481,7 @@ Class UploadedFile
         nameOfFile = SubstNoReg(nameOfFile, "|", "_")
     End Property
     Public Property Get FileName()
-        FileName = request.querystring("id") & ".jpg"
+        FileName = id & ".jpg"
     End Property
     'Public Property Get FileN()ame
 	

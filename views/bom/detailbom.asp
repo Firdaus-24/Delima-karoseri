@@ -1,152 +1,137 @@
 <!--#include file="../../init.asp"-->
-<!--#include file="../../functions/func_BOM.asp"-->
+<!--#include file="../../functions/func_Produksi.asp"--> 
 <% 
-   id = trim(Request.QueryString("id"))
+    id = trim(Request.QueryString("id"))
 
-   set data_cmd =  Server.CreateObject ("ADODB.Command")
-   data_cmd.ActiveConnection = mm_delima_string
+    set data_cmd =  Server.CreateObject ("ADODB.Command")
+    data_cmd.ActiveConnection = mm_delima_string
 
-   data_cmd.commandText = "SELECT dbo.DLK_T_BOMH.BMH_ID, dbo.DLK_T_BOMH.BMH_AgenID, dbo.DLK_T_BOMH.BMH_Date, dbo.DLK_T_BOMH.BMH_PDID, dbo.DLK_T_BOMH.BMH_Day, dbo.DLK_T_BOMH.BMH_StartDate, dbo.DLK_T_BOMH.BMH_EndDate, dbo.DLK_T_BOMH.BMH_Keterangan,dbo.DLK_T_BOMH.BMH_Approve1, dbo.DLK_T_BOMH.BMH_Approve2, dbo.DLK_T_BOMH.BMH_AktifYN, dbo.DLK_T_BOMH.BMH_PrototypeYN, dbo.GLB_M_Agen.AgenID, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_ProductH.PDID, dbo.DLK_M_Barang.Brg_Nama FROM dbo.DLK_M_Barang INNER JOIN dbo.DLK_M_ProductH ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_M_ProductH.PDBrgID RIGHT OUTER JOIN dbo.DLK_T_BOMH ON dbo.DLK_M_ProductH.PDID = dbo.DLK_T_BOMH.BMH_PDID LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_BOMH.BMH_AgenID = dbo.GLB_M_Agen.AgenID WHERE dbo.DLK_T_BomH.BMH_ID = '"& id &"' AND dbo.DLK_T_BomH.BMH_AktifYN = 'Y'"
-   ' response.write data_cmd.commandText & "<br>"
-   set data = data_cmd.execute
+    ' get data header
+    data_cmd.commandText = "SELECT dbo.DLK_M_BOMH.*, dbo.DLK_M_Barang.Brg_Nama, GLB_M_Agen.AgenName FROM dbo.DLK_M_BOMH LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_BOMH.BMBrgid = dbo.DLK_M_Barang.brg_ID LEFT OUTER JOIN GLB_M_Agen ON DLK_M_BOMH.BMAgenID = GLB_M_Agen.AgenID WHERE dbo.DLK_M_BOMH.BMID = '"& id &"' AND dbo.DLK_M_BOMH.BMAktifYN = 'Y'"
 
-   ' getbarang by vendor
-   data_cmd.commandText = "SELECT dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_BOMD.BMD_ID, dbo.DLK_T_BOMD.BMD_Item, dbo.DLK_T_BOMD.BMD_Qtysatuan, dbo.DLK_T_BOMD.BMD_JenisSat, dbo.DLK_M_SatuanBarang.Sat_Nama, DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama FROM dbo.DLK_T_BOMD LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_BOMD.BMD_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_BOMD.BMD_Item = dbo.DLK_M_Barang.Brg_Id INNER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID INNER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE LEFT(dbo.DLK_T_BOMD.BMD_ID, 13) = '"& data("BMH_ID") &"' ORDER BY dbo.DLK_M_Barang.Brg_Nama asc"
-   ' response.write data_cmd.commandText & "<br>"
-   set barang = data_cmd.execute
-   
-   call header("Detail B.O.M")
+    set data = data_cmd.execute
+
+    ' get data detail
+    data_cmd.commandText = "SELECT dbo.DLK_M_BOMD.*, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama FROM dbo.DLK_M_SatuanBarang RIGHT OUTER JOIN dbo.DLK_M_BOMD ON dbo.DLK_M_SatuanBarang.Sat_ID = dbo.DLK_M_BOMD.BMDJenisSat LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_BOMD.BMDItem = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.kategoriID = DLK_M_Kategori.kategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.jenisID = DLK_M_JenisBarang.jenisID WHERE LEFT(dbo.DLK_M_BOMD.BMDBMID,12) = '"& data("BMID") &"' ORDER BY BMDBMID ASC"
+
+    set ddata = data_cmd.execute
+
+    call header("Detail B.O.M")
 %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
-   <div class="row">
-      <div class="col-lg-12 mt-3 text-center">
-         <h3>DETAIL FORM B.O.M</h3>
+    <div class="row">
+        <div class="col-lg-12  mt-3 text-center">
+            <h3>DETAIL BARANG B.O.M</h3>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 mb-3 text-center">
+         <img src="https://chart.googleapis.com/chart?cht=qr&chl=<%= id %>&chs=160x160&chld=L|0" class="qr-code img-thumbnail img-responsive" width="100" height="100" />
       </div>
    </div>
    <div class="row">
-      <div class="col-lg-12 mb-3 text-center labelId">
-         <h3><%= data("BMH_ID") %></h3>
+      <div class="col-lg-12 text-center mb-3 labelId">
+         <h3><%= left(id,2) %>-<%=mid(id,3,3) %>/<%= mid(id,6,4) %>/<%= right(id,3) %></h3>
       </div>
    </div>
-   <div class="row">
-      <div class="col-lg-2 mb-3">
-         <label for="agen" class="col-form-label">Cabang / Agen</label>
-      </div>
-      <div class="col-lg-4 mb-3">
-         <input type="text" class="form-control" name="lagen" id="lagen" value="<%= data("AgenName") %>" readonly>
-      </div>
-      <div class="col-lg-2 mb-3">
-         <label for="nopd" class="col-form-label">No Produksi</label>
-      </div>
-      <div class="col-lg-4 mb-3">
-         <input type="text" id="nopd" name="nopd" class="form-control" value="<%= data("BMH_PDID") &" | "& data("brg_nama")%>" readonly>
-      </div>
-   </div>
-   <div class="row align-items-center">
-      <div class="col-lg-2 mb-3">
-         <label for="tgl" class="col-form-label">Tanggal</label>
-      </div>
-      <div class="col-lg-4 mb-3">
-         <input type="text" id="tgl" name="tgl" class="form-control" value="<%= Cdate(data("BMH_date")) %>" readonly required>
-      </div>
-      <div class="col-lg-2 mb-3">
-         <label for="prototype" class="col-form-label">Prototype</label>
-      </div>
-      <div class="col-sm-4 mb-3">
-         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="prototype" id="prototypeY" value="Y" <% if data("BMH_PrototypeYN") = "Y" then %>checked <%  end if %>disabled>
-            <label class="form-check-label" for="prototypeY">Yes</label>
-         </div>
-         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="prototype" id="prototypeN" value="N" <% if data("BMH_PrototypeYN") = "Y" then %>checked <%  end if %>disabled>
-            <label class="form-check-label" for="prototypeN">No</label>
-         </div>
-      </div>
-   </div>
-   <div class="row align-items-center">
-      <div class="col-lg-2 mb-3">
-         <label for="tgla" class="col-form-label">Start Date</label>
-      </div>
-      <div class="col-lg-4 mb-3">
-         <input type="text" id="tgla" name="tgla" value="<%= Cdate(data("BMH_StartDate")) %>" class="form-control" readonly>
-      </div>
-      <div class="col-lg-2 mb-3">
-         <label for="tgle" class="col-form-label">End Date</label>
-      </div>
-      <div class="col-lg-4 mb-3">
-         <input type="text" id="tgle" name="tgle" value="<%= Cdate(data("BMH_EndDate")) %>" class="form-control" readonly>
-      </div>
-   </div>
-   <div class="row">
-      <div class="col-lg-2 mb-3">
-         <label for="hari" class="col-form-label">Capacity Day</label>
-      </div>
-      <div class="col-lg-4 mb-3">
-         <input type="text" id="hari" name="hari" class="form-control" value="<%= data("BMH_Day") %>" readonly>
-      </div>
-      <div class="col-lg-2 mb-3">
-         <label for="keterangan" class="col-form-label">Keterangan</label>
-      </div>
-      <div class="col-lg-4 mb-3">
-         <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" value="<%= data("BMH_Keterangan") %>" autocomplete="off" readonly>
-      </div>
-   </div>
-   <div class="row">
-       <div class="d-flex mb-3">
-            <div class="me-auto p-2">
-               <button type="button" class="btn btn-secondary" onClick="window.open('export-XlsBom.asp?id=<%=id%>','_self')">EXPORT</button>
+    <div class="row">
+        <div class="col-sm-2">
+            <label for="tgl" class="col-form-label">Tanggal</label>
+        </div>
+        <div class="col-sm-4 mb-3">
+            <input type="text" id="tgl" class="form-control" name="tgl" value="<%= Cdate(data("BMDate")) %>" readonly>
+        </div>
+        <div class="col-sm-2">
+            <label for="cabang" class="col-form-label">Cabang</label>
+        </div>
+        <div class="col-sm-4 mb-3">
+            <input type="text" id="cabang" class="form-control" name="cabang" value="<%= data("agenName") %>" readonly>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <label for="barang" class="col-form-label">Barang</label>
+        </div>
+        <div class="col-sm-4 mb-3">
+            <input type="text" id="barang" class="form-control" name="barang" value="<%= data("Brg_Nama") %>" readonly>
+        </div>
+        <div class="col-sm-2">
+            <label for="approve" class="col-form-label">Approve Y/N</label>
+        </div>
+        <div class="col-sm-4 mb-3">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="approve" id="approveY" value="Y" <% if data("BMApproveYN") = "Y" then%>checked <% end if %>disabled>
+                <label class="form-check-label" for="approveY">Yes</label>
             </div>
-            <div class="p-2">
-               <a href="index.asp" type="button" class="btn btn-danger">Kembali</a>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="approve" id="approveN" value="N" <% if data("BMApproveYN") = "N" then%>checked <% end if %>disabled>
+                <label class="form-check-label" for="approveN" >No</label>
             </div>
         </div>
-   </div>
-   <div class="row">
-      <div class="col-lg-12">
-         <table class="table table-hover">
-            <thead class="bg-secondary text-light">
-               <tr>
-                  <th scope="col">ID</th>
-                  <th scope="col">Kode</th>
-                  <th scope="col">Item</th>
-                  <th scope="col">Quantity</th>
-                  <th scope="col">Satuan</th>
-               </tr>
-            </thead>
-            <tbody>
-               <% 
-               do while not barang.eof 
-               %>
-                  <tr>
-                     <th>
-                        <%= barang("BMD_ID") %>
-                     </th>
-                     <th>
-                        <%= barang("KategoriNama") &"-"& barang("jenisNama") %>
-                     </th>
-                     <td>
-                        <%= barang("Brg_Nama") %>
-                     </td>
-                     <td>
-                        <%= barang("BMD_QtySatuan") %>
-                     </td>
-                     <td>
-                        <%= barang("Sat_nama") %>
-                     </td>
-                  </tr>
-               <% 
-               barang.movenext
-               loop
-               %>
-            </tbody>
-         </table>
-      </div>
-   </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <label for="keterangan" class="col-form-label">Keterangan</label>
+        </div>
+        <div class="col-sm-10 mb-3 keterangan">
+            <input type="text" class="form-control" name="keterangan" id="keterangan" maxlength="50" autocomplete="off" value="<%= data("BMKeterangan") %>" readonly>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="d-flex mb-3">
+                <div class="me-auto p-2">
+                    <button type="button" class="btn btn-secondary" onClick="window.open('export-detailbom.asp?id=<%=id%>')" >Export</button>
+                </div>
+                <div class="p-2">
+                    <a href="index.asp" class="btn btn-danger">Kembali</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <table class="table table-hover">
+                <thead class="bg-secondary text-light">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Kode</th>
+                        <th scope="col">Item</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Satuan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% 
+                    do while not ddata.eof 
+                    %>
+                        <tr>
+                            <th>
+                              <%= left(ddata("bmDbmID"),2) %>-<%=mid(ddata("bmDbmID"),3,3) %>/<%= mid(ddata("bmDbmID"),6,4) %>/<%= mid(ddata("BMDBMID"),10,3) %>/<%= right(ddata("BMDBMID"),3) %>
+                           </th>
+                            <td>
+                                <%= ddata("kategoriNama") &"-"& ddata("JenisNama") %>
+                            </td>
+                            <td>
+                                <%= ddata("Brg_Nama") %>
+                            </td>
+                            <td>
+                                <%= ddata("BMDQtty") %>
+                            </td>
+                            <td>
+                                <%= ddata("sat_nama") %>
+                            </td>
+                        </tr>
+                    <% 
+                    ddata.movenext
+                    loop
+                    %>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>  
 <% 
-   if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
-      ' call tambahDetailFaktur()
-   end if
-   call footer()
+    call footer()
 %>

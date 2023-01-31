@@ -1,118 +1,99 @@
 <% 
-sub tambahProduksiH()
-    barang = trim(Request.Form("barang"))
-    cabang = trim(Request.Form("cabang"))
+Sub tambahProduksiH()
+    agen = trim(Request.Form("agen"))
     tgl = trim(Request.Form("tgl"))
-    approve = trim(Request.Form("approve"))
+    tgla = trim(Request.Form("tgla"))
+    tgle = trim(Request.Form("tgle"))
     keterangan = trim(Request.Form("keterangan"))
+    prototype = trim(Request.Form("prototype"))
+    model = trim(Request.Form("model"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_M_ProductH WHERE PDBrgID = '"& barang &"' AND PDAgenID = '"& cabang &"'"
+    data_cmd.commandTExt = "SELECT * FROM DLK_T_ProduksiH WHERE PDH_AgenID = '"& agen &"' AND PDH_Date = '"& tgl &"' AND PDH_StartDate = '"& tgla &"' AND PDH_EndDate = '"& tgle &"' AND PDH_ProtoTypeYN = '"& prototype &"' AND PDH_Model = '"& model &"'"
 
     set data = data_cmd.execute
 
     if data.eof then
-        data_cmd.commandText = "exec SP_AddDLK_M_ProductH '"& barang &"', '"& tgl &"', '"& cabang &"', '"& approve &"', '', '','"& keterangan &"'"
-
+        data_cmd.commandText = "exec sp_AddDLK_T_ProduksiH '"& agen &"', '"& tgl &"', '"& tgla &"', '"& tgle &"', '"& keterangan &"', '"& prototype &"', '"& model &"'"
+        ' response.write data_cmd.commandText & "<br>"
         set p = data_cmd.execute
 
         id = p("ID")
 
-        value = 1
+        value = 1 'case untuk insert data
     else
-        value = 2
+        value = 2 'case jika gagal insert 
     end if
-
     if value = 1 then
-        call alert("MATER PRODUKSI", "berhasil di tambahkan", "success","productd_add.asp?id="&id) 
+        call alert("FORM PRODUKSI", "berhasil ditambahkan", "success","prodd_add.asp?id="&id) 
     elseif value = 2 then
-        call alert("MATER PRODUKSI", "sudah terdaftar", "warning", "product_add.asp")
+        call alert("FORM PRODUKSI", "sudah terdaftar", "warning","prod_add.asp")
     else
         value = 0
     end if
-end sub
-
+End Sub
 sub tambahProduksiD()
-    pdid = trim(Request.Form("pdid"))
-    ckproduckd = trim(Request.Form("ckproduckd"))
-    qtty = trim(Request.Form("qtty"))
-    satuan = trim(Request.Form("satuan"))
-    nol = "000"
+    id = trim(Request.Form("id"))
+    bomid = trim(Request.Form("bomid"))
+    capacity = Cint(trim(Request.Form("capacity")))
 
-    set data_cmd =  Server.CreateObject ("ADODB.Command")
-    data_cmd.ActiveConnection = mm_delima_string
+    a = split(bomid,",")
 
-    data_cmd.commandText = "SELECT * FROM DLK_M_ProductD WHERE PDDItem = '"& ckproduckd &"' AND LEFT(PDDPDID,12) = '"& pdid &"'"
+    ' set id bom
+    strbomid = a(0)
+    ' set brg id
+    strbrgid = a(1)
+
+    data_cmd.commandTExt = "SELECT * FROM DLK_T_ProduksiD WHERE LEFT(PDD_ID,13) = '"& id &"' AND PDD_BMID = '"& strbomid &"'"
+
     set data = data_cmd.execute
 
-    if data.eof then
-        data_cmd.commandTExt = "SELECT (COUNT(PDDPDID)) + 1 AS urut FROM DLK_M_ProductD WHERE left(PDDPDID,12) = '"& pdid &"'"
-        ' response.write data_cmd.commandText & "<br>"
-        set p = data_cmd.execute
-
-        iddetail = pdid & right(nol & p("urut"),3)
-
-        call query("INSERT INTO DLK_M_ProductD (PDDPDID, PDDItem, PDDQtty, PDDjenissat) VALUES ( '"& iddetail &"','"& ckproduckd &"', "& qtty &",'"& satuan &"')")
-
-        value = 1
+    if not data.eof then
+        call alert("FORM DETAIL PRODUKSI", "sudah terdaftar", "error","prodd_add.asp?id="&id)
     else
-        value = 2
-    end if
+        dim i
+        for i=1 to capacity 
+            data_cmd.commandTExt = "SELECT ('"&id&"' + Right('000' + Convert(varchar,Convert(int,(Right(isnull(Max(PDD_ID),'000'),3)))+1),3)) as id From DLK_T_ProduksiD Where Left(PDD_ID,13) = '"& id &"'"
 
-    if value = 1 then
-        call alert("RINCIAN DETAIL PRODUKSI", "berhasil di tambahkan", "success","productd_add.asp?id="&pdid) 
-    elseif value = 2 then
-        call alert("RINCIAN DETAIL PRODUKSI", "sudah terdaftar", "warning","productd_add.asp?id="&pdid)
-    else
-        value = 0
-    end if
+            set getID = data_cmd.execute
+
+            call query("INSERT INTO DLK_T_ProduksiD (PDD_ID,PDD_BMID,PDD_Item) VALUES ('"& getID("id") &"','"& strbomid &"', '"& strbrgid &"') ")
+        response.flush
+        next
+        call alert("FORM DETAIL PRODUKSI", "berhasil didaftarkan", "success","prodd_add.asp?id="&id)
+    end if 
 end sub
+sub updateProduksiD()
+    id = trim(Request.Form("id"))
+    bomid = trim(Request.Form("bomid"))
+    capacity = Cint(trim(Request.Form("capacity")))
 
-sub updateProduksi()
-    pdid = trim(Request.Form("pdid"))
-    ckproduckd = trim(Request.Form("ckproduckd"))
-    qtty = trim(Request.Form("qtty"))
-    satuan = trim(Request.Form("satuan"))
-    nol = "000"
+    a = split(bomid,",")
 
-    set data_cmd =  Server.CreateObject ("ADODB.Command")
-    data_cmd.ActiveConnection = mm_delima_string
+    ' set id bom
+    strbomid = a(0)
+    ' set brg id
+    strbrgid = a(1)
 
-    data_cmd.commandText = "SELECT * FROM DLK_M_ProductD WHERE LEFT(PDDPDID,12) = '"& pdid &"' AND PDDItem = '"& ckproduckd &"'"
-    ' response.write data_cmd.commandText & "<br>"
+    data_cmd.commandTExt = "SELECT * FROM DLK_T_ProduksiD WHERE LEFT(PDD_ID,13) = '"& id &"' AND PDD_BMID = '"& strbomid &"'"
+
     set data = data_cmd.execute
-    
-    if data.eof then
-        data_cmd.commandText = "SELECT TOP 1 (right(PDDPDID,3)) + 1 AS urut FROM DLK_M_ProductD WHERE LEFT(PDDPDID,12) = '"& pdid &"' ORDER BY PDDPDID DESC"
 
-        set p = data_cmd.execute
-
-        if p.eof then
-            data_cmd.commandTExt = "SELECT (COUNT(PDDPDID)) + 1 AS urut FROM DLK_M_ProductD WHERE LEFT(PDDPDID,12) = '"& pdid &"'"
-
-            set a = data_cmd.execute
-
-            iddetail = pdid & right(nol & a("urut"),3)
-
-            call query("INSERT INTO DLK_M_ProductD (PDDPDID, PDDItem, PDDQtty, PDDJenisSat) VALUES ('"& iddetail &"','"& ckproduckd &"', "& qtty &", '"& satuan &"') ")
-        else
-            iddetail = pdid & right(nol & p("urut"),3)
-
-            call query("INSERT INTO DLK_M_ProductD (PDDPDID, PDDItem, PDDQtty, PDDJenisSat) VALUES ('"& iddetail &"','"& ckproduckd &"', "& qtty &", '"& satuan &"') ")
-        end if
-        value = 1
+    if not data.eof then
+        call alert("FORM DETAIL PRODUKSI", "sudah terdaftar", "error","prod_u.asp?id="&id)
     else
-        value = 2
-    end if
+        dim i
+        for i=1 to capacity 
+            data_cmd.commandTExt = "SELECT ('"&id&"' + Right('000' + Convert(varchar,Convert(int,(Right(isnull(Max(PDD_ID),'000'),3)))+1),3)) as id From DLK_T_ProduksiD Where Left(PDD_ID,13) = '"& id &"'"
 
-    if value = 1 then
-        call alert("DETAIL BARANG PRODUKSI", "berhasil ditambahkan", "success","product_u.asp?id="&pdid) 
-    elseif value = 2 then
-        call alert("DETAIL BARANG PRODUKSI", "sudah terdaftar", "warning","product_u.asp?id="&pdid)
-    else
-        value = 0
-    end if
+            set getID = data_cmd.execute
+
+            call query("INSERT INTO DLK_T_ProduksiD (PDD_ID,PDD_BMID,PDD_Item) VALUES ('"& getID("id") &"','"& strbomid &"', '"& strbrgid &"') ")
+        response.flush
+        next
+        call alert("FORM DETAIL PRODUKSI", "berhasil didaftarkan", "success","prod_u.asp?id="&id)
+    end if 
 end sub
 %>

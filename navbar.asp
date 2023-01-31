@@ -72,7 +72,7 @@
                 <a class="link-name" href="<%= url %>views/outgoing/index.asp">Outgoing</a>
               </li>
               <li>
-                <a class="link-name" href="<%= url %>views/inventory/permintaan.asp">Form B.O.M</a>
+                <a class="link-name" href="<%= url %>views/inventory/permintaan.asp">Form Produksi</a>
               </li>
               <li>
                 <a class="link-name" href="<%= url %>views/inventory/POMin.asp">Permintaan Kurang</a>
@@ -91,7 +91,7 @@
           </li>
             <ul class="sub-menu" id="sublist-repair">
               <li>
-                <a class="link-name" href="<%= url %>views/repair/">reparir</a>
+                <a class="link-name" href="<%= url %>views/repair/">Repair</a>
               </li>
             </ul>
           <!-- qc -->
@@ -109,10 +109,10 @@
                 <a class="link-name" href="<%= url %>views/engineering/">Engineering</a>
               </li>
               <li>
-                <a class="link-name" href="<%= url %>views/engineering/produksi.asp">Produksi</a>
+                <a class="link-name" href="<%= url %>views/produksi/">Produksi</a>
               </li>
               <li>
-                <a class="link-name" href="<%= url %>views/bom/">Form BOM</a>
+                <a class="link-name" href="<%= url %>views/bom/">Master B.O.M</a>
               </li>
             </ul>
           <!-- ppic -->

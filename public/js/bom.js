@@ -1,19 +1,39 @@
-$(document).ready(function(){
-   // get all product
-   $("#bomagen").change(function(){
-      let agen = $("#bomagen").val()
+$(document).ready(function () {
+   // get barang by agen
+   $("#bomcabang").change(function () {
+      let cabang = $("#bomcabang").val()
 
-      if(!agen){
-         $(".lproductlama").show()
-      }else{
-         $(".lproductlama").hide()
+      if (!cabang) {
+         $("#bombrg").show()
+      } else {
+         $("#bombrg").hide()
          $.ajax({
             method: "POST",
-            url: "../../ajax/getallproduk.asp",
-            data: { agen }
-         }).done(function( msg ) {
-            $(".lproductbaru").html(msg)
+            url: "../../ajax/getBarangTypeProduksi.asp",
+            data: { cabang }
+         }).done(function (msg) {
+            $(".bombrg").html(msg)
          });
-      }     
+      }
+   })
+   // get barang productd_add
+   $("#cdetailbom").keyup(function () {
+      let nama = $("#cdetailbom").val()
+      let cabang = $("#bomdCabang").val()
+      let bomid = $("#bmid").val()
+      let tbodylama = $(".contentBOMD").html()
+      if (nama.length > 0) {
+         $(".clearfixbom").show()
+         $.ajax({
+            type: "POST",
+            url: "../../ajax/getBarangProduksiByCabang.asp",
+            data: { nama, cabang, bomid }
+         }).done(function (data) {
+            $(".contentBOMD").html(data)
+            $(".clearfixbom").hide()
+         });
+      } else {
+         $(".contentBOMD").html(tbodylama);
+      }
    })
 })
