@@ -1,6 +1,6 @@
 <% 
    Sub tambahOutgoing()
-      bmhid = trim(Request.Form("bmhid"))
+      pddid = trim(Request.Form("pddid"))
       agen = trim(Request.Form("agen"))
       tgl = trim(Request.Form("tgl"))
       keterangan = trim(Request.Form("keterangan"))
@@ -8,12 +8,12 @@
       set data_cmd =  Server.CreateObject ("ADODB.Command")
       data_cmd.ActiveConnection = mm_delima_string
 
-      data_cmd.commandText = "SELECT * FROM DLK_T_MaterialOutH WHERE MO_BMHID = '"& bmhid &"' AND MO_AgenID = '"& agen &"' AND MO_Date = '"& tgl &"' AND MO_AktifYN = 'Y'"
+      data_cmd.commandText = "SELECT * FROM DLK_T_MaterialOutH WHERE MO_pddID = '"& pddid &"' AND MO_AgenID = '"& agen &"' AND MO_Date = '"& tgl &"' AND MO_AktifYN = 'Y'"
       ' response.write data_cmd.commandText & "<br>"
       set data = data_cmd.execute
 
       if data.eof then
-         data_cmd.commandText = "exec sp_AddDLK_T_materialOutH '"& bmhid &"','"& agen &"', '"& tgl &"', '"& keterangan &"', '', '"& session("userid") &"', '"& now &"'"
+         data_cmd.commandText = "exec sp_AddDLK_T_materialOutH '"& pddid &"','"& agen &"', '"& tgl &"', '"& keterangan &"', '', '"& session("userid") &"', '"& now &"'"
          ' response.write data_cmd.commandText & "<br>"
          set p = data_cmd.execute
 

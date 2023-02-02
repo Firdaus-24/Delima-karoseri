@@ -2,13 +2,13 @@
 <% 
     id = trim(Request.QueryString("id"))
     Response.ContentType = "application/vnd.ms-excel"
-    Response.AddHeader "content-disposition", "filename=Outgoing No:"&id&".xls"
+    Response.AddHeader "content-disposition", "filename=Outgoing No:"&left(id,2)&"-"& mid(id,3,3) &"/"& mid(id,6,4) &"/"&  right(id,4) &".xls"
 
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT dbo.GLB_M_Agen.AgenName, dbo.DLK_M_ProductH.PDID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_WebLogin.UserName, dbo.DLK_T_MaterialOutH.MO_ID, dbo.DLK_T_MaterialOutH.MO_Date, dbo.DLK_T_MaterialOutH.MO_BMHID, dbo.DLK_T_MaterialOutH.MO_Keterangan, dbo.DLK_T_MaterialOutH.MO_AktifYN, dbo.DLK_T_MaterialOutH.MO_UpdateTime FROM dbo.DLK_M_Barang INNER JOIN dbo.DLK_M_ProductH INNER JOIN dbo.DLK_T_BOMH ON dbo.DLK_M_ProductH.PDID = dbo.DLK_T_BOMH.BMH_PDID ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_M_ProductH.PDBrgID RIGHT OUTER JOIN dbo.DLK_T_MaterialOutH LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_MaterialOutH.MO_UpdateID = dbo.DLK_M_WebLogin.UserID ON dbo.DLK_T_BOMH.BMH_ID = dbo.DLK_T_MaterialOutH.MO_BMHID LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialOutH.MO_AgenID = dbo.GLB_M_Agen.AgenID WHERE (dbo.DLK_T_MaterialOutH.MO_AktifYN = 'Y') AND (dbo.DLK_T_MaterialOutH.MO_ID = '"&id&"')"
+    data_cmd.commandText = "SELECT dbo.DLK_T_MaterialOutH.MO_ID, dbo.DLK_T_MaterialOutH.MO_PDDID, dbo.DLK_T_MaterialOutH.MO_AgenID, dbo.DLK_T_MaterialOutH.MO_Date, dbo.DLK_T_MaterialOutH.MO_Keterangan, dbo.DLK_T_MaterialOutH.MO_UpdateID, dbo.DLK_T_MaterialOutH.MO_UpdateTime, dbo.DLK_T_MaterialOutH.MO_AktifYN, dbo.DLK_T_MaterialOutH.MO_JDID, dbo.GLB_M_Agen.AgenName, dbo.GLB_M_Agen.AgenID, DLK_M_Weblogin.username FROM dbo.DLK_T_MaterialOutH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialOutH.MO_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN dbo.DLK_T_ProduksiD ON dbo.DLK_T_MaterialOutH.MO_PDDID = dbo.DLK_T_ProduksiD.PDD_ID LEFT OUTER JOIN DLK_M_Weblogin ON DLK_T_MaterialOutH.MO_UpdateID = DLK_M_Weblogin.userid WHERE (dbo.DLK_T_MaterialOutH.MO_ID = '"&id&"')"
 
     set data = data_cmd.execute
 
@@ -31,17 +31,17 @@
 </style>
 <table width="100%">
     <tr>
-        <td colspan="7" align="center">
+        <td colspan="8" align="center">
             <b>DETAIL BARANG OUTGOING</b>
         </td>
     </tr>
     <tr>
-        <td colspan="7" align="center">
-            <b><%= id %></b>
+        <td colspan="8" align="center">
+            <b><%= left(id,2) %>-<%= mid(id,3,3) %>/<%= mid(id,6,4) %>/<%= right(id,4) %></b>
         </td>
     </tr>
     <tr>
-        <td colspan="7">
+        <td colspan="8">
             &nbsp
         </td>
     </tr>
@@ -49,10 +49,10 @@
 <table width="100%">
     <tr>
         <td>
-            No B.O.M
+            No Produksi
         </td>
         <td>
-            : <%= data("MO_BMHID") %>
+            : <%= left(data("MO_PDDID"),2) %>-<%= mid(data("MO_PDDID"),3,3) %>/<%= mid(data("MO_PDDID"),6,4) %>/<%= mid(data("MO_PDDID"),10,4) %>/<%= right(data("MO_PDDID"),3) %>
         </td>
         <td>
             Cabang
@@ -68,32 +68,24 @@
         <td>
             : <%= Cdate(data("MO_Date")) %>
         </td>
-        <td>
-            No Produksi
+        <td >
+            Update ID
         </td>
         <td colspan="5">
-            : <%= data("PDID") &" | " & data("Brg_Nama")%>
+            : <%= data("username") %>
         </td>
     </tr>
     <tr>
-        <td>
-            Update ID
-        </td>
-        <td>
-            : <%= data("username") %>
-        </td>
         <td>
             Update Time
         </td>
-        <td colspan="5">
+        <td >
             : <%= data("MO_UpdateTime") %>
         </td>
-    </tr>
-    <tr>
-        <td>
+         <td>
             Keterangan
         </td>
-        <td colspan="7">
+        <td colspan="5">
             : <%= data("MO_Keterangan") %>
         </td>
     </tr>
@@ -105,7 +97,7 @@
 </table>
 <table width="100%">
     <tr>
-        <td colspan="7" align="center">
+        <td colspan="8" align="center">
             <b>DETAIL PENGELUARAN</b>
         </td>
     </tr>
@@ -157,10 +149,10 @@
     loop
     %>
     <tr>
-        <td>
+        <td colspan="7">
             Grand Total
         </td>
-        <td colspan="7"> 
+        <td > 
             <%= replace(formatCurrency(tharga),"$","") %>
         </td>
     </tr>

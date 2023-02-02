@@ -5,14 +5,9 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT dbo.GLB_M_Agen.AgenName, dbo.DLK_M_ProductH.PDID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_WebLogin.UserName, dbo.DLK_T_MaterialOutH.MO_ID, dbo.DLK_T_MaterialOutH.MO_Date, dbo.DLK_T_MaterialOutH.MO_BMHID, dbo.DLK_T_MaterialOutH.MO_Keterangan, dbo.DLK_T_MaterialOutH.MO_AktifYN, dbo.DLK_T_MaterialOutH.MO_UpdateTime FROM dbo.DLK_M_Barang INNER JOIN dbo.DLK_M_ProductH INNER JOIN dbo.DLK_T_BOMH ON dbo.DLK_M_ProductH.PDID = dbo.DLK_T_BOMH.BMH_PDID ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_M_ProductH.PDBrgID RIGHT OUTER JOIN dbo.DLK_T_MaterialOutH LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_MaterialOutH.MO_UpdateID = dbo.DLK_M_WebLogin.UserID ON dbo.DLK_T_BOMH.BMH_ID = dbo.DLK_T_MaterialOutH.MO_BMHID LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialOutH.MO_AgenID = dbo.GLB_M_Agen.AgenID WHERE (dbo.DLK_T_MaterialOutH.MO_AktifYN = 'Y') AND (dbo.DLK_T_MaterialOutH.MO_ID = '"&id&"')"
+    data_cmd.commandText = "SELECT dbo.DLK_T_MaterialOutH.MO_ID, dbo.DLK_T_MaterialOutH.MO_PDDID, dbo.DLK_T_MaterialOutH.MO_AgenID, dbo.DLK_T_MaterialOutH.MO_Date, dbo.DLK_T_MaterialOutH.MO_Keterangan, dbo.DLK_T_MaterialOutH.MO_UpdateID, dbo.DLK_T_MaterialOutH.MO_UpdateTime, dbo.DLK_T_MaterialOutH.MO_AktifYN, dbo.DLK_T_MaterialOutH.MO_JDID, dbo.GLB_M_Agen.AgenName, dbo.GLB_M_Agen.AgenID, DLK_M_Weblogin.username FROM dbo.DLK_T_MaterialOutH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialOutH.MO_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN dbo.DLK_T_ProduksiD ON dbo.DLK_T_MaterialOutH.MO_PDDID = dbo.DLK_T_ProduksiD.PDD_ID LEFT OUTER JOIN DLK_M_Weblogin ON DLK_T_MaterialOutH.MO_UpdateID = DLK_M_Weblogin.userid WHERE (dbo.DLK_T_MaterialOutH.MO_ID = '"&id&"')"
 
     set data = data_cmd.execute
-
-    ' detail bom
-    ' data_cmd.commandText = "SELECT dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_BOMD.BMD_ID, dbo.DLK_T_BOMD.BMD_Item, dbo.DLK_T_BOMD.BMD_Qtysatuan, dbo.DLK_T_BOMD.BMD_JenisSat, dbo.DLK_M_SatuanBarang.Sat_Nama, DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama FROM dbo.DLK_T_BOMD LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_BOMD.BMD_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_BOMD.BMD_Item = dbo.DLK_M_Barang.Brg_Id INNER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID INNER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE LEFT(dbo.DLK_T_BOMD.BMD_ID, 13) = '"& data("MO_BMHID") &"' ORDER BY dbo.DLK_M_Barang.Brg_Nama asc"
-    ' response.write data_cmd.commandText & "<br>"
-    ' set barang = data_cmd.execute
 
     ' detail data
     data_cmd.commandText = "SELECT dbo.DLK_T_MaterialOutD.MO_ID, dbo.DLK_T_MaterialOutD.MO_Date, dbo.DLK_T_MaterialOutD.MO_Item, dbo.DLK_T_MaterialOutD.MO_Qtysatuan, dbo.DLK_T_MaterialOutD.MO_Harga, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Rak.Rak_nama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama FROM dbo.DLK_T_MaterialOutD LEFT OUTER JOIN dbo.DLK_M_Rak ON dbo.DLK_T_MaterialOutD.MO_RakID = dbo.DLK_M_Rak.Rak_ID LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialOutD.MO_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialOutD.MO_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId LEFT OUTER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID WHERE MO_ID = '"& data("MO_ID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
@@ -30,7 +25,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12 text-center labelId">
-            <h3><%= id %></h3>
+            <h3><%= left(id,2) %>-<%= mid(id,3,3) %>/<%= mid(id,6,4) %>/<%= right(id,4) %></h3>
         </div>
     </div>
     <div class="row">
@@ -40,10 +35,10 @@
     </div>
     <div class="row mb-3">
         <div class="col-sm-2">
-            <label>No B.O.M</label>
+            <label>No Produksi</label>
         </div>
         <div class="col-sm-4">
-            <input type="text" class="form-control" value="<%= data("MO_BMHID") %>" readonly>
+            <input type="text" class="form-control" value="<%= left(data("MO_PDDID"),2) %>-<%= mid(data("MO_PDDID"),3,3) %>/<%= mid(data("MO_PDDID"),6,4) %>/<%= mid(data("MO_PDDID"),10,4) %>/<%= right(data("MO_PDDID"),3) %>" readonly>
         </div>
         <div class="col-sm-2">
             <label>Cabang</label>
@@ -60,31 +55,23 @@
             <input type="text" class="form-control" value="<%= Cdate(data("MO_Date")) %>" readonly>
         </div>
         <div class="col-sm-2">
-            <label>No Produksi</label>
-        </div>
-        <div class="col-sm-4">
-            <input type="text" class="form-control" value="<%= data("PDID") &" | " & data("Brg_Nama")%>" readonly>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-sm-2">
             <label>Update ID</label>
         </div>
         <div class="col-sm-4">
             <input type="text" class="form-control" value="<%= data("username") %>" readonly>
         </div>
+    </div>
+    <div class="row mb-3">
         <div class="col-sm-2">
             <label>Update Time</label>
         </div>
         <div class="col-sm-4">
             <input type="text" class="form-control" value="<%= data("MO_UpdateTime") %>" readonly>
         </div>
-    </div>
-    <div class="row mb-3">
         <div class="col-sm-2">
             <label>Keterangan</label>
         </div>
-        <div class="col-sm-10">
+        <div class="col-sm-4">
             <input type="text" class="form-control" value="<%= data("MO_Keterangan") %>" readonly>
         </div>
     </div>

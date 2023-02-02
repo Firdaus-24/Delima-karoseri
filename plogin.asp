@@ -36,7 +36,7 @@
          if session("username") = "ADMINISTRATOR" then
             response.Redirect("\akses")
          else
-            Response.redirect ("dashboard.asp")
+            Response.redirect ("\views")
          end if
    else
       call alert("ERROR", "data yang anda masukan salah! atau tidak terdaftar", "error","login.asp") 

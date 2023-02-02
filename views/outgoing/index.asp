@@ -9,7 +9,7 @@
     set agendata = data_cmd.execute
 
     ' filter produksi
-    data_cmd.commandText = "SELECT dbo.DLK_T_BOMH.BMH_ID FROM dbo.DLK_T_MaterialOutH LEFT OUTER JOIN dbo.DLK_T_BOMH ON dbo.DLK_T_MaterialOutH.MO_BMHID = dbo.DLK_T_BOMH.BMH_ID WHERE (dbo.DLK_T_MaterialOutH.MO_AktifYN = 'Y') GROUP BY dbo.DLK_T_MaterialOutH.MO_AktifYN, dbo.DLK_T_BOMH.BMH_ID ORDER BY BMH_ID ASC"
+    data_cmd.commandText = "SELECT dbo.DLK_T_ProduksiD.PDD_ID FROM dbo.DLK_T_MaterialOutH LEFT OUTER JOIN dbo.DLK_T_ProduksiD ON dbo.DLK_T_MaterialOutH.MO_PDDID = dbo.DLK_T_ProduksiD.PDD_ID WHERE (dbo.DLK_T_MaterialOutH.MO_AktifYN = 'Y') GROUP BY dbo.DLK_T_MaterialOutH.MO_AktifYN, dbo.DLK_T_ProduksiD.PDD_ID ORDER BY PDD_ID ASC"
     ' response.write data_cmd.commandText & "<br>"
     set custdata = data_cmd.execute
 
@@ -49,7 +49,7 @@
     end if
 
     if bom <> "" then
-        filterbom = "AND dbo.DLK_T_MaterialOutH.MO_BMHID = '"& bom &"'"
+        filterbom = "AND dbo.DLK_T_MaterialOutH.MO_PDDID = '"& bom &"'"
     else
         filterbom = ""
     end if
@@ -63,7 +63,7 @@
     end if
 
     ' query seach 
-    strquery = "SELECT dbo.DLK_T_MaterialOutH.MO_ID, dbo.DLK_T_MaterialOutH.MO_BMHID, dbo.DLK_T_MaterialOutH.MO_Date, dbo.DLK_T_MaterialOutH.MO_Keterangan, dbo.DLK_T_MaterialOutH.MO_UpdateID, dbo.DLK_T_MaterialOutH.MO_UpdateTime, dbo.DLK_T_MaterialOutH.MO_AktifYN, dbo.GLB_M_Agen.AgenName, DLK_M_WebLogin.username FROM dbo.DLK_T_MaterialOutH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialOutH.MO_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_WebLogin ON DLK_T_MaterialOutH.MO_UpdateID = DLK_M_WebLogin.userID WHERE MO_AktifYN = 'Y' "& filterAgen &"  "& filterbom &" "& filtertgl &""
+    strquery = "SELECT dbo.DLK_T_MaterialOutH.MO_ID, dbo.DLK_T_MaterialOutH.MO_PDDID, dbo.DLK_T_MaterialOutH.MO_Date, dbo.DLK_T_MaterialOutH.MO_Keterangan, dbo.DLK_T_MaterialOutH.MO_UpdateID, dbo.DLK_T_MaterialOutH.MO_UpdateTime, dbo.DLK_T_MaterialOutH.MO_AktifYN, dbo.GLB_M_Agen.AgenName, DLK_M_WebLogin.username FROM dbo.DLK_T_MaterialOutH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialOutH.MO_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_WebLogin ON DLK_T_MaterialOutH.MO_UpdateID = DLK_M_WebLogin.userID WHERE MO_AktifYN = 'Y' "& filterAgen &"  "& filterbom &" "& filtertgl &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
@@ -132,11 +132,11 @@
                 </select>
             </div>
             <div class="col-lg-4 mb-3">
-                <label for="bom">No B.O.M</label>
+                <label for="bom">No Produksi</label>
                 <select class="form-select" aria-label="Default select example" name="bom" id="bom">
                     <option value="">Pilih</option>
                     <% do while not custdata.eof %>
-                    <option value="<%= custdata("BMH_ID") %>"><%= custdata("BMH_ID") %></option>
+                    <option value="<%= custdata("PDD_ID") %>"><%= left(custdata("PDD_ID"),2) %>-<%= mid(custdata("PDD_ID"),3,3) %>/<%= mid(custdata("PDD_ID"),6,4) %>/<%= mid(custdata("PDD_ID"),10,4) %>/<%= right(custdata("PDD_ID"),3) %></option>
                     <% 
                     custdata.movenext
                     loop
@@ -164,12 +164,11 @@
                 <thead class="bg-secondary text-light">
                     <th>No</th>
                     <th>ID</th>
-                    <th>No.BOM</th>
+                    <th>No.Produksi</th>
                     <th>Cabang</th>
                     <th>Tanggal</th>
                     <th>Update ID</th>
                     <th>Update Time</th>
-                    <th>Keterangan</th>
                     <th class="text-center">Aksi</th>
                 </thead>
                 <tbody>
@@ -184,13 +183,16 @@
                     set p = data_cmd.execute
                     %>
                         <tr><TH><%= recordcounter %></TH>
-                        <th><%= rs("MO_ID") %></th>
-                        <td><%= rs("MO_BMHID") %></td>
+                        <th>
+                            <%= left(rs("MO_ID"),2) %>-<%= mid(rs("MO_ID"),3,3) %>/<%= mid(rs("MO_ID"),6,4) %>/<%= right(rs("MO_ID"),4) %>
+                        </th>
+                        <td>
+                            <%= left(rs("MO_PDDID"),2) %>-<%= mid(rs("MO_PDDID"),3,3) %>/<%= mid(rs("MO_PDDID"),6,4) %>/<%= mid(rs("MO_PDDID"),10,4) %>/<%= right(rs("MO_PDDID"),3) %>
+                        </td>
                         <td><%= rs("agenName") %></td>
                         <td><%= Cdate(rs("MO_Date")) %></td>
                         <td><%= rs("username") %></td>
                         <td><%= rs("MO_updatetime") %></td>
-                        <td><%= rs("MO_Keterangan") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <% if not p.eof then %>

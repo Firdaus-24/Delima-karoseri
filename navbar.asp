@@ -89,11 +89,13 @@
             <a href="#" onclick="toggle('sublist-repair')"><i class="bi bi-activity"></i> Repair</a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
+            <!-- 
             <ul class="sub-menu" id="sublist-repair">
               <li>
                 <a class="link-name" href="<%= url %>views/repair/">Repair</a>
               </li>
             </ul>
+             -->
           <!-- qc -->
           <li class="nav-text">
             <a href="#"><i class="bi bi-check2-all"></i> QR/QC</a>
@@ -224,7 +226,7 @@
             </li>
             </ul>
           <li class="nav-text">
-            <a href="\logout.asp"><i class="bi bi-box-arrow-in-left"></i> Log Out</a>
+            <a href="<%= url %>logout.asp"><i class="bi bi-box-arrow-in-left"></i> Log Out</a>
           </li>
         </div>
       </ul>
