@@ -1,6 +1,9 @@
-
 <!--#include file="../../init.asp"-->
 <% 
+   if session("M10") = false then 
+      Response.Redirect("../index.asp")
+   end if
+
    set conn = Server.CreateObject("ADODB.Connection")
    conn.open MM_Delima_string
 
@@ -73,11 +76,13 @@
          <h3>MASTER KEBUTUHAN</h3>
       </div>
    </div>
+   <% if session("M10A") = true then %>
    <div class="row mt-3 mb-3">
       <div class="col-lg-2">
          <a href="Keb_add.asp" class="btn btn-primary tambahKebutuhan" data-bs-toggle="modal" data-bs-target="#modalKebutuhan">Tambah</a>
       </div>
    </div>
+   <%  end if %>
    <div class="row">
       <div class="col-lg-4 mb-3">
       <form action="index.asp" method="post">
@@ -117,11 +122,15 @@
                   <td><%if rs("K_AktifYN") = "Y" then%>Aktif <% end if %></td>
                   <td class="text-center">
                      <div class="btn-group" role="group" aria-label="Basic example">
+                        <% if session("M10B") = true then  %>
                         <a href="#" data="<%= rs("K_Id") %>" valname="<%= rs("K_Name") %>" class="btn badge text-bg-primary kebutuhanUpdate" data-bs-toggle="modal" data-bs-target="#modalKebutuhan">update</a>
-                        <% if rs("K_AktifYN") = "Y" then %>
-                        <a href="aktif.asp?id=<%= rs("K_Id") %>&p=N" class="btn badge text-bg-danger" onclick="ApproveYN(event,'DELETE KEBUTUHAN', '', 'warning')">delete</a>
-                        <% else %>
-                        <a href="aktif.asp?id=<%= rs("K_Id") %>&p=Y" class="btn badge text-bg-info" onclick="ApproveYN(event,'AKTIF KEBUTUHAN', '','warning')">aktif</a>
+                        <% end if %>
+                        <% if session("M10C") = true then  %>
+                           <% if rs("K_AktifYN") = "Y" then %>
+                           <a href="aktif.asp?id=<%= rs("K_Id") %>&p=N" class="btn badge text-bg-danger" onclick="ApproveYN(event,'DELETE KEBUTUHAN', '', 'warning')">delete</a>
+                           <% else %>
+                           <a href="aktif.asp?id=<%= rs("K_Id") %>&p=Y" class="btn badge text-bg-info" onclick="ApproveYN(event,'AKTIF KEBUTUHAN', '','warning')">aktif</a>
+                           <% end if %>   
                         <% end if %>   
                      </div>
                   </td>

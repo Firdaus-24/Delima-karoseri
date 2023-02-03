@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("M8") = false then  
+        Response.Redirect("../index.asp")
+    end if
+
     ' query cabang 
     set agen_cmd =  Server.CreateObject ("ADODB.Command")
     agen_cmd.ActiveConnection = mm_delima_string
@@ -86,11 +90,13 @@
             <h3>MASTER VENDOR</h3>
         </div>
     </div>
+    <% if session("M8A") = true then   %>
     <div class="row">
         <div class="col-lg-2 mb-3">
             <a href="ven_add.asp" class="btn btn-primary">Tambah</a>
         </div>
     </div>
+    <% end if %>
     <div class="row">
         <div class="col-lg-4 mb-3">
             <form action="index.asp" method="post">
@@ -161,9 +167,13 @@
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <a href="detailvendor.asp?id=<%= rs("Ven_Id") %>" class="btn badge text-bg-warning">Detail</a>
-                                <a href="vn_u.asp?id=<%= rs("Ven_Id") %>" class="btn badge text-bg-primary">update</a>
-                                <% if ddata.eof then %>
-                                <a href="aktif.asp?id=<%= rs("Ven_Id") %>" class="btn badge text-bg-danger btn-aktifvendor">delete</a>
+                                <% if session("M8B") = true then   %>
+                                    <a href="vn_u.asp?id=<%= rs("Ven_Id") %>" class="btn badge text-bg-primary">update</a>
+                                <% end if %>
+                                <% if session("M8C") = true then   %>
+                                    <% if ddata.eof then %>
+                                    <a href="aktif.asp?id=<%= rs("Ven_Id") %>" class="btn badge text-bg-danger btn-aktifvendor">delete</a>
+                                    <% end if %>
                                 <% end if %>
                             </div>
                         </td>

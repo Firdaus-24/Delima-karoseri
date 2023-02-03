@@ -105,7 +105,9 @@
    </div>  
    <div class="row">
       <div class="col-lg-12 mb-3 text-center d-flex justify-content-between">
+         <% if session("ENG1D") = true then %>
          <button type="button" class="btn btn-secondary" onclick="window.location.href='export-Xlsproduksi.asp?id=<%= data("PDH_ID") %>'">Export</button>
+         <% end if %>
          <a href="index.asp" type="button" class="btn btn-danger">Kembali</a>
       </div>
    </div>
@@ -142,7 +144,9 @@
                      <td class="text-center">
                         <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
                            <button type="button" class="btn btn-outline-dark" onclick="window.location.href='export-Dproduksi.asp?id=<%= ddata("PDD_ID") %>'">Cetak</button>
-                           <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVoucher" onclick="getDataBOM('<%=ddata("PDD_id")%>')">Voucher</button>
+                           <% if session("ENG1F") = false then %>
+                              <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVoucher" onclick="getDataBOM('<%=ddata("PDD_id")%>')">Voucher</button>
+                           <% end if %>
                         </div>
                            
                      </td>

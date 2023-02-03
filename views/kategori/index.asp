@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("M4") = false then 
+        Response.Redirect("../index.asp")
+    end if
+
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
 
@@ -114,8 +118,12 @@
                         <td><%if rs("KategoriAktifYN") = "Y" then%>Aktif <% end if %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="kat_u.asp?id=<%= rs("KategoriId") %>" class="btn badge text-bg-primary">update</a>
-                                <a href="aktif.asp?id=<%= rs("KategoriId") %>" class="btn badge text-bg-danger btn-aktifkat">delete</a>
+                                <% if session("M4B") = true then  %>
+                                    <a href="kat_u.asp?id=<%= rs("KategoriId") %>" class="btn badge text-bg-primary">update</a>
+                                <% end if %>
+                                <% if session("M4C") = true then  %>
+                                    <a href="aktif.asp?id=<%= rs("KategoriId") %>" class="btn badge text-bg-danger btn-aktifkat">delete</a>
+                                <% end if %>
                             </div>
                         </td>
                     </tr>

@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("FN2") = false then
+      Response.Redirect("../index.asp")
+   end if
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
 
@@ -89,11 +92,13 @@
          <h3>MASTER BANK</h3>
       </div>
    </div>
+   <% if session("FN2") = true then %>
    <div class="row">
       <div class="col-sm mt-3">
          <a href="bank_add.asp" class="btn btn-primary">Tambah</a>
       </div>   
    </div>
+   <% end if %>
    <form action="index.asp" method="post">
    <div class="row">
       <div class="col-sm-5 mt-3">
@@ -146,8 +151,12 @@
                         <td><%= rs("username") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
+                              <% if session("FN2B") = true then %>
                                 <a href="bank_u.asp?id=<%= rs("Bank_ID") %>" class="btn badge text-bg-primary">update</a>
+                              <% end if %>
+                              <% if session("FN2C") = true then %>
                                 <a href="aktif.asp?id=<%= rs("Bank_ID") %>" class="btn badge bg-danger" onclick="deleteItem(event,'delete master bank')">delete</a>
+                              <% end if %>
                             </div>
                         </td>
                     </tr>

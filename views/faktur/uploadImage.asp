@@ -13,6 +13,11 @@ uploadsDirVar = "D:\Delima\document\image\"
 dim id, data_cmd
 id = Request.QueryString("id")
 
+if session("PR4E") = false then
+	Response.Redirect("index.asp")
+end if
+
+
 function OutputForm()
 
 end function

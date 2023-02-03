@@ -1,6 +1,10 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_satuan.asp"-->
 <%  
+    if session("M6B") = false then 
+        Response.Redirect("index.asp")
+    end if
+
     id = trim(Request.QueryString("id"))
     ' data query
     set satuan_cmd =  Server.CreateObject ("ADODB.Command")

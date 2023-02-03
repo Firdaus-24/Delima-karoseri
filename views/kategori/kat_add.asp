@@ -1,6 +1,12 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_kategori.asp"-->
-<%  call header("Form Kategori") %>
+<%  
+    if session("M4A") = false then 
+        Response.Redirect("index.asp")
+    end if
+    
+    call header("Form Kategori") 
+%>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row mt-3 mb-3">

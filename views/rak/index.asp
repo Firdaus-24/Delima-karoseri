@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("M5") = false then 
+        Response.Redirect("../index.asp")
+    end if
+
     'query cabang/agen
     set cabang_cmd =  Server.CreateObject ("ADODB.Command")
     cabang_cmd.ActiveConnection = mm_delima_string
@@ -89,11 +93,13 @@
             <h3>MASTER RAK INVENTORY</h3>
         </div>
     </div>
+    <% if session("M5A") = true then  %>
     <div class="row mt-3 mb-3">
         <div class="col-lg-2">
             <a href="ra_add.asp" class="btn btn-primary">Tambah</a>
         </div>
     </div>
+    <%  end if %>
     <div class="row">
         <div class="col-lg-4 mb-3">
             <form action="index.asp" method="post">
@@ -146,8 +152,12 @@
                         <td><%if rs("Rak_AktifYN") = "Y" then %>Aktif <% end if %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
+                                <% if session("M5B") = true then  %>
                                 <a href="ra_u.asp?id=<%= rs("Rak_Id") %>" class="btn badge text-bg-primary">update</a>
+                                <% end if %>
+                                <% if session("M5C") = true then  %>
                                 <a href="aktif.asp?id=<%= rs("Rak_Id") %>" class="btn badge text-bg-danger btn-aktifrak">delete</a>
+                                <% end if %>
                             </div>
                         </td>
                     </tr>

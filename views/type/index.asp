@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("M7") = false then 
+        Response.Redirect("../index.asp")
+    end if
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
@@ -82,6 +85,7 @@
             <h3>MASTER TYPE BARANG</h3>
         </div>
     </div>
+    <% if session("M7A") = true then %>
     <div class="row mt-3 mb-3">
         <div class="col-lg-2">
             <!-- Button trigger modal -->
@@ -90,6 +94,7 @@
             </button>
         </div>
     </div>
+    <% end if %>
     <form action="index.asp" method="post">
         <div class="row">
             <div class="col-lg-4 mb-3">
@@ -140,8 +145,12 @@
                         <td><%if rs("T_AktifYN") = "Y" then%>Aktif <% end if %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
+                                <% if session("M7B") = true then  %>
                                 <a href="type_u.asp?id=<%= rs("T_Id") %>" class="btn badge text-bg-primary">update</a> 
+                                <% end if %>
+                                <% if session("M7C") = true then  %>
                                 <a href="aktif.asp?id=<%= rs("T_Id") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'MASTER TYPE BARANG')">delete</a>
+                                <% end if %>
                             </div>
                         </td>
                     </tr>

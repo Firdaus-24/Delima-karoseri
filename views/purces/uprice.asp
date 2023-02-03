@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("PR3") = false then
+        Response.Redirect("index.asp")
+    end if
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
@@ -198,9 +201,11 @@
                         </td>
                         <td class="text-center">
                             <% if not ddetail.eof then %>
+                                <% if session("PR3A") = true then %>
                                 <div class="btn-group" role="group" aria-label="Basic example">
                                     <a href="uprice_add.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-primary">Update</a>
                                 </div>
+                                <% end if %>
                             <% else %>
                                 -
                             <% end if %>

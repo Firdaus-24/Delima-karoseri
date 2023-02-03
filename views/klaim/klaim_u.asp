@@ -1,6 +1,9 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_delBarang.asp"-->
 <% 
+    if session("INV3B") = false then
+        Response.Redirect("../index.asp")
+    end if
 
     id = trim(Request.QueryString("id")) 
 

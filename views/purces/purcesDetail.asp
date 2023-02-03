@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("PR2") = false then
+        Response.Redirect("index.asp")
+    end if
+
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
@@ -114,6 +118,7 @@
             <h3>DETAIL PURCHASE ORDER</h3>
         </div>  
     </div>
+    <% if session("PR2A") = true then %>
     <div class="row">
         <div class="col-lg-12 mb-3">
             <!-- Button trigger modal -->
@@ -122,6 +127,7 @@
             </button>
         </div>
     </div>
+    <% end if %>
     <form action="purcesDetail.asp" method="post">
         <div class="row">
             <div class="col-lg-4 mb-3">
@@ -208,9 +214,13 @@
                                 <% if not ddata.eof then %>
                                 <a href="purce_d.asp?id=<%= rs("OPH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
                                 <% end if %>
-                                <a href="purc_u.asp?id=<%= rs("OPH_ID") %>" class="btn badge text-bg-primary" >Update</a>
-                                <% if ddata.eof then %>
-                                <a href="aktifh.asp?id=<%= rs("OPH_ID") %>" class="btn badge text-bg-danger btn-purce1">Delete</a>
+                                <% if session("PR2B") = true then %>
+                                    <a href="purc_u.asp?id=<%= rs("OPH_ID") %>" class="btn badge text-bg-primary" >Update</a>
+                                <% end if %>
+                                <% if session("PR2C") = true then %>
+                                    <% if ddata.eof then %>
+                                    <a href="aktifh.asp?id=<%= rs("OPH_ID") %>" class="btn badge text-bg-danger btn-purce1">Delete</a>
+                                    <% end if %>
                                 <% end if %>
                             </div>
                         </td>

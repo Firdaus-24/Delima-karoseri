@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("HR1") = false then
+        Response.Redirect("../index.asp")
+    end if
+
     cabang = trim(Request.Form("cabang"))
     user = trim(Request.Form("user"))
     divisi = trim(Request.Form("divisi"))
@@ -114,11 +118,13 @@
             <h3>MASTER ASET BARANG</h3>
         </div>
     </div>
+    <% if session("HR1A") = true then %>
     <div class="row mt-3 mb-3">
         <div class="col-lg-2">
             <a href="aset_add.asp" class="btn btn-primary">Tambah</a>
         </div>
     </div>
+    <% end if %>
     <form action="index.asp" method="post">
         <div class="row">
             <div class="col-lg-1">
@@ -219,12 +225,18 @@
                         <td><%= rs("AsetKeterangan") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <% if not detailaset.eof then %>
-                                <button class="btn badge bg-warning" onclick="printIt('print.asp?id=<%= rs("AsetId") %>')">print</button>
+                                <% if session("HR1D") = true then %>
+                                    <% if not detailaset.eof then %>
+                                    <button class="btn badge bg-warning" onclick="printIt('print.asp?id=<%= rs("AsetId") %>')">print</button>
+                                    <% end if %>
                                 <% end if %>
-                                <a href="aset_u.asp?id=<%= rs("AsetId") %>" class="btn badge text-bg-primary">update</a>
-                                <% if detailaset.eof then %>
-                                <a href="aktif.asp?id=<%= rs("AsetId") %>" class="btn badge bg-danger" onclick="deleteItem(event,'delete master aset')">delete</a>
+                                <% if session("HR1B") = true then %>
+                                    <a href="aset_u.asp?id=<%= rs("AsetId") %>" class="btn badge text-bg-primary">update</a>
+                                <% end if %>
+                                <% if session("HR1C") = true then %>
+                                    <% if detailaset.eof then %>
+                                    <a href="aktif.asp?id=<%= rs("AsetId") %>" class="btn badge bg-danger" onclick="deleteItem(event,'delete master aset')">delete</a>
+                                    <% end if %>
                                 <% end if %>
                             </div>
                         </td>

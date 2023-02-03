@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+        if session("INV4C") = false then
+                Response.Redirect("../index.asp")
+        end if
+
         id = Request.QueryString("id")
         brg = Request.QueryString("brg")
         tgl = Request.QueryString("tgl")

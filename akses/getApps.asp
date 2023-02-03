@@ -1,5 +1,10 @@
 <!--#include file="../init.asp"-->
 <% 
+   ' cek hakakses 
+   if Ucase(session("username")) <> "DAUSIT" AND Ucase(session("username")) <> Ucase("ADMINISTRATOR") then
+      Response.Redirect(url&"login.asp")
+   end if
+
    user = trim(Request.form("user"))
    serverID = trim(Request.form("serverID"))
    app = trim(Request.form("app"))

@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("HR4") = false then
+        Response.Redirect("../index.asp")
+    end if
     set data =  Server.CreateObject ("ADODB.Command")
     data.ActiveConnection = mm_Delima_String
 
@@ -63,11 +66,13 @@
             <h3>MASTER CABANG</h3>
         </div>
     </div>
+    <% if session("HR4A") = true then %>
     <div class="row mb-3">
         <div class="col-lg-2">
             <a href="cb_add.asp" class="btn btn-primary">Tambah</a>
         </div>
     </div>
+    <% end if %>
     <div class="row">
         <div class="col-lg-12">
             <table class="table">
@@ -103,8 +108,12 @@
                         <td><%= rs("agencontactperson") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
+                                <% if session("HR4B") = true then %>
                                 <a href="cb_u.asp?id=<%= rs("agenID") %>" class="btn badge text-bg-primary">update</a>
+                                <% end if %>
+                                <% if session("HR4C") = true then %>
                                 <a href="aktif.asp?id=<%= rs("AgenID") %>" class="btn badge text-bg-danger btn-aktifCabang">delete</a>
+                                <% end if %>
                             </div>
                         </td>
                     </tr>

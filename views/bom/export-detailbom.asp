@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("ENG2D") = false then
+        Response.Redirect("index.asp")
+    end if
+
     id = trim(Request.QueryString("id"))
 
     ' Response.ContentType = "application/vnd.ms-excel"

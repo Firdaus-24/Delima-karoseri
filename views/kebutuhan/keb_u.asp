@@ -1,6 +1,10 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../navbar.asp"-->
 <% 
+   if session("M10B") = false then 
+      Response.Redirect("index.asp")
+   end if
+
    call header("Tambah Kebutuhan ")
 
    id = ucase(trim(Request.Form("id")))

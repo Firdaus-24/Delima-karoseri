@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("INV1") = false then
+        Response.Redirect("index.asp")
+    end if
+
     ' query cabang  
     set agen_cmd =  Server.CreateObject ("ADODB.Command")
     agen_cmd.ActiveConnection = mm_delima_string
@@ -109,11 +113,13 @@
             <h3>PERMINTAAN ANGGARAN INVENTORY</h3>
         </div>
     </div>
+    <% if session("INV1A") = true then %>
     <div class="row">
         <div class="col-lg-2 mb-3">
             <a href="reqAnggaran_add.asp" class="btn btn-primary">Tambah</a>
         </div>
     </div>
+    <% end if %>
     <form action="reqAnggaran.asp" method="post">
         <div class="row">
             <div class="col-lg-3 mb-3">
@@ -208,9 +214,13 @@
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <a href="detailAnggaran.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-warning">Detail</a>
                             <% if rs("memoApproveYN") = "N" then %>
-                                <a href="reqAnggaran_u.asp?id=<%= rs("memoID") %>" class="btn badge btn-primary btn-sm">Update</a>
+                                <% if session("INV1B") = true then %>
+                                    <a href="reqAnggaran_u.asp?id=<%= rs("memoID") %>" class="btn badge btn-primary btn-sm">Update</a>
+                                <% end if %>
                                 <% if ddetail.eof then%>
-                                <a href="reqAktifH.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'Header Permintaan Anggaran')">delete</a>
+                                    <% if session("INV1C") = true then %>
+                                    <a href="reqAktifH.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'Header Permintaan Anggaran')">delete</a>
+                                    <% end if %>
                                 <% end if %>
                             <% end if %>
                             </div>

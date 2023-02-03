@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("INV6") = false then
+        Response.Redirect("index.asp")
+    end if
     ' query cabang  
     set agen_cmd =  Server.CreateObject ("ADODB.Command")
     agen_cmd.ActiveConnection = mm_delima_string

@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("PR5") = false then
+        Response.Redirect("../index.asp")
+    end if
+
     set data_cmd =  Server.CreateObject ("ADODB.Command")   
     data_cmd.ActiveConnection = mm_delima_string    
     ' filter agen
@@ -112,11 +116,13 @@
             <h3>RETURN BARANG PEMBELIAN</h3>
         </div>
     </div>
+    <% if session("PR5A") = true then %>
     <div class="row mt-3 mb-3">
         <div class="col-lg-2">
             <a href="rb_add.asp" class="btn btn-primary">Tambah</a>
         </div>
     </div>
+    <% end if %>
     <form action="index.asp" method="post">
     <div class="row">
         <div class="col-lg-4 mb-3">
@@ -197,9 +203,13 @@
                         <td><%= rs("RB_Keterangan") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
+                                <% if session("PR5B") = true then %>
                                 <a href="rb_u.asp?id=<%= rs("RB_ID") %>" class="btn badge text-bg-primary">update</a>
+                                <% end if %>
                                 <% if detail.eof then %>
-                                <a href="aktif.asp?id=<%= rs("RB_ID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'RETURN BARANG HEADER')">delete</a>
+                                    <% if session("PR5C") = true then %>
+                                    <a href="aktif.asp?id=<%= rs("RB_ID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'RETURN BARANG HEADER')">delete</a>
+                                    <% end if %>
                                 <% else %>
                                 <a href="detail.asp?id=<%= rs("RB_ID") %>" class="btn badge text-bg-warning">detail</a>
                                 <% end if %>    

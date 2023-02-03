@@ -1,6 +1,10 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_delBarang.asp"-->
 <% 
+    if session("INV3A") = false then
+        Response.Redirect("index.asp")
+    end if
+
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
     ' get cabang

@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("INV7D") = false then
+      Response.Redirect("index.asp")
+   end if
    agen = trim(Request.QueryString("agen"))
    tgl = trim(Request.QueryString("tgla"))
    nama = Ucase(trim(Request.QueryString("nama")))

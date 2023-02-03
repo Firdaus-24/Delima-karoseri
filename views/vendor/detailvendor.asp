@@ -109,6 +109,7 @@
             <input type="text" id="Alamat" class="form-control" value="<%= ": "&data("Ven_Alamat") %>" style="background:transparent;border:none;" readonly>
         </div>
     </div>
+    <% if session("M8D") = true then  %>
     <div class="row">
         <div class="d-flex mb-3">
             <div class="me-auto p-2">
@@ -118,7 +119,8 @@
                 <a href="index.asp"><button type="button" class="btn btn-danger">kembali</button></a>
             </div>
         </div>
-    </div>                
+    </div>  
+    <% end if %>              
     <div class="row">
         <div class="col-sm-12">
             <table class="table" >

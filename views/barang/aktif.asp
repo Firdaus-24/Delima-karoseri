@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+        if session("M1C") = false then
+                Response.Redirect("index.asp")
+        end if
         id = trim(Request.QueryString("id"))
         call header("aktif")
  %>

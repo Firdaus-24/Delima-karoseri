@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("M10C") = false then 
+      Response.Redirect("index.asp")
+    end if
+
    id = Request.QueryString("id")
    p = Request.QueryString("p")
    if p = "Y" then

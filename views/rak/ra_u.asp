@@ -1,6 +1,10 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_rak.asp"-->
 <% 
+    if session("M5B") = false then 
+        Response.Redirect("../index.asp")
+    end if
+
     id = Request.QueryString("id")
     ' query cabang
     set cabang_cmd =  Server.CreateObject ("ADODB.Command")

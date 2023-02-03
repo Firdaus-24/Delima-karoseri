@@ -71,9 +71,11 @@
               <li>
                 <a class="link-name" href="<%= url %>views/outgoing/index.asp">Outgoing</a>
               </li>
+              <!-- 
               <li>
                 <a class="link-name" href="<%= url %>views/inventory/permintaan.asp">Form Produksi</a>
               </li>
+               -->
               <li>
                 <a class="link-name" href="<%= url %>views/inventory/POMin.asp">Permintaan Kurang</a>
               </li>
@@ -214,17 +216,6 @@
             <a href="#" onclick="toggle('sublist-report')"><i class="bi bi-book"></i> Report</a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
-            <ul class="sub-menu" id="sublist-report">
-            <li>
-              <a class="link-name" href="<%= url %>views/report/R_stok.asp">Stok Barang</a>
-            </li>
-            <li>
-              <a class="link-name" href="<%= url %>views/report/R_cekin.asp">Barang Masuk</a>
-            </li>
-            <li>
-              <a class="link-name" href="<%= url %>views/report/R_cekout.asp">Barang Keluar</a>
-            </li>
-            </ul>
           <li class="nav-text">
             <a href="<%= url %>logout.asp"><i class="bi bi-box-arrow-in-left"></i> Log Out</a>
           </li>

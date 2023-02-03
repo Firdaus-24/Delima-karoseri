@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("PR2A") = false then
+        Response.Redirect("index.asp")
+    end if
     call header("Purcase Order Proses")
 
     memoId = trim(Request.Form("memoId"))

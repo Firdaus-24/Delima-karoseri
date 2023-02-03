@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("ENG1D") = false then
+      Response.Redirect("index.asp")
+   end if
    Response.ContentType = "application/vnd.ms-excel"
    Response.AddHeader "content-disposition", "filename=Produksi "& trim(Request.QueryString("id")) &".xls"
 

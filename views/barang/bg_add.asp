@@ -1,6 +1,9 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_barang.asp"-->
 <% 
+    if session("M1A") = false then
+        Response.Redirect("index.asp")
+    end if
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
     ' cabang

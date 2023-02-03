@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("PR4B") = false then
+      Response.Redirect("index.asp")
+   end if
+
    call header("image")
    id = trim(Request.QueryString("id"))
 

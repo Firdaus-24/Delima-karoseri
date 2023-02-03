@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("INV2") = false then
+      Response.Redirect("../index.asp")
+   end if
+
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
 
@@ -122,11 +126,13 @@
          <h3>PROSES INCOMMING</h3>
       </div>
    </div>
+   <% if session("INV2A") = true then %>
    <div class="row">
       <div class="col-sm mt-3">
          <a href="income_add.asp" class="btn btn-primary">Tambah</a>
       </div>   
    </div>
+   <% end if %>
    <form action="index.asp" method="post">
    <div class="row">
       <div class="col-sm-4 mt-3">
@@ -204,9 +210,13 @@
                   <td class="text-center">
                      <div class="btn-group" role="group" aria-label="Basic example">
                         <a href="detail.asp?id=<%= rs("MR_ID") %>" class="btn badge text-bg-warning">Detail</a>
+                        <% if session("INV2B") = true then %> 
                         <a href="income_u.asp?id=<%= rs("MR_ID") %>" class="btn badge text-bg-primary">update</a>
-                        <% if detail.eof then %>
-                        <a href="aktif.asp?id=<%= rs("MR_ID") %>" class="btn badge bg-danger" onclick="deleteItem(event,'delete header material receipt')">delete</a>
+                        <% end if %>
+                        <% if session("INV2C") = true then %> 
+                           <% if detail.eof then %>
+                           <a href="aktif.asp?id=<%= rs("MR_ID") %>" class="btn badge bg-danger" onclick="deleteItem(event,'delete header material receipt')">delete</a>
+                           <% end if %>
                         <% end if %>
                      </div>
                   </td>

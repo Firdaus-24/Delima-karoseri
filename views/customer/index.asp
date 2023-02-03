@@ -1,6 +1,10 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_barang.asp"-->
 <% 
+    if session("M2") = false then 
+        Response.Redirect("../index.asp")
+    end if
+
     nama = Ucase(trim(Request.Form("nama")))
     alamat = trim(Request.Form("alamat"))
 
@@ -75,6 +79,7 @@
             <h3>MASTER CUSTOMER</h3>
         </div>
     </div>
+    <% if session("M2A") = true then  %>
     <div class="row mt-3 mb-3">
         <div class="col-lg-2">
             <!-- Button trigger modal -->
@@ -83,6 +88,7 @@
             </a>
         </div>
     </div>
+    <% end if %>
     <form action="index.asp" method="post">
         <div class="row">
             <div class="col-lg-4 mb-3">
@@ -133,8 +139,12 @@
                         <td><%=rs("cat_Name") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
+                                <% if session("M2B") = true then  %>
                                 <a href="cust_u.asp?id=<%= rs("custId") %>" class="btn badge text-bg-primary">update</a> 
+                                <% end if %>
+                                <% if session("M2C") = true then  %>
                                 <a href="aktif.asp?id=<%= rs("custId") %>" class="btn badge text-bg-danger btn-aktifcust">delete</a>
+                                <% end if %>
                             </div>
                         </td>
                     </tr>

@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+        if session("INV1C") = false then 
+                Response.Redirect("index.asp")
+        end if
+
         id = trim(Request.QueryString("id"))
         strid = left(id,17)
         call header("aktif")

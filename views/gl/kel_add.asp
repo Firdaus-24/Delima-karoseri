@@ -2,6 +2,9 @@
 <% call header("FORM KELOMPOK") %>
 <!--#include file="../../navbar.asp"-->   
 <% 
+   if session("GL3A") = false then
+      Response.Redirect("kelompok.asp")
+   end if
    kode = trim(Ucase(Request.Form("kode")))
    name = trim(Ucase(Request.Form("name")))
 

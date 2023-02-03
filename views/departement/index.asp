@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("HR3") = false then
+        Response.Redirect("../index.asp")
+    end if
+
     nama = trim(ucase(Request.Form("nama")))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
@@ -76,11 +80,13 @@
             <h3>MASTER DEPARTEMENT</h3>
         </div>
     </div>
+    <% if session("HR3A") = true then %>
     <div class="row">
         <div class="col-lg-2 mb-3">
             <a href="Dep_add.asp" class="btn btn-primary tambahDep" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Tambah</a>
         </div>
     </div>
+    <% end if %>
     <form action="index.asp" method="post">
         <div class="row">
             <div class="col-lg-4 mb-3">
@@ -122,8 +128,12 @@
                         <td><%if rs("DepAktifYN") = "Y" then%>Aktif <% end if %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
+                                <% if session("HR3B") = true then %>
                                 <a href="kb_u.asp?id=<%= rs("DepId") %>" class="btn badge text-bg-primary updateDep" data-bs-toggle="modal" data-bs-target="#staticBackdrop" valname="<%= rs("DepNama") %>" data="<%= rs("DepID") %>" divid="<%= rs("DepdivID") %>">update</a>
+                                <% end if %>
+                                <% if session("HR3C") = true then %>
                                 <a href="aktif.asp?id=<%= rs("DepId") %>" class="btn badge text-bg-danger btn-aktifDep">delete</a>
+                                <% end if %>
                             </div>
                         </td>
                     </tr>

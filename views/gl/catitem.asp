@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("GL2") = false then
+        Response.Redirect("../index.asp")
+    end if
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
 
@@ -73,11 +76,13 @@
             <h3>KATEGORI ITEM</h3>
         </div>
     </div>
+    <% if session("GL2A") = true then %>
     <div class="row">
         <div class="col-sm-12 mb-3">
             <button type="button" class="btn btn-primary tambahCat" data-bs-toggle="modal" data-bs-target="#modalCatItem">Tambah</button>
         </div>
     </div>
+    <% end if %>
     <form action="catitem.asp" method="post">
         <div class="row">
             <div class="col-sm-4 mb-3">
@@ -114,9 +119,12 @@
                         <td><%= rs("cat_UpdateTime") %></td>
                         <td class="text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">
+                            <% if session("GL2C") = false then %>
                            <a href="Cat_aktif.asp?id=<%= rs("cat_id") %>" class="btn badge bg-danger" onclick="deleteItem(event,'delete kategori item')">delete</a>
-                           
+                           <% end if %>
+                           <% if session("GL2B") = true then %>
                            <a href="#" class="btn badge bg-primary updateCat" data-bs-toggle="modal" data-bs-target="#modalCatItem" data-id="<%= rs("cat_id") %>" data-name="<%= rs("cat_Name") %>">update</a>
+                           <% end if %>
                         </div>
                      </td>
                     </tr>

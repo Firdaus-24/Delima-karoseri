@@ -1,6 +1,9 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_vendor.asp"-->
 <% 
+    if session("M8A") = false then  
+        Response.Redirect("index.asp")
+    end if
     set cabang_cmd =  Server.CreateObject ("ADODB.Command")
     cabang_cmd.ActiveConnection = mm_delima_string
     ' cabang / agen

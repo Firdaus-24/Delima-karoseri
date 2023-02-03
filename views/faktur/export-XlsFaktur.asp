@@ -3,6 +3,10 @@
     ' Response.ContentType = "application/vnd.ms-excel"
     ' Response.AddHeader "content-disposition", "filename=FakturTerhutang "& Request.QueryString("id")&" .xls"
 
+    if session("PR4C") = false then
+        Response.Redirect("index.asp")
+    end if
+
     id = trim(Request.QueryString("id"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")

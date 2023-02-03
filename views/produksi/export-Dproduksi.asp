@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("ENG1D") = false then
+      Response.Redirect("index.asp")
+   end if
+
    response.buffer=false
    server.ScriptTimeout=300000
 

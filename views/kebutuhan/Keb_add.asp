@@ -1,6 +1,10 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../navbar.asp"-->
 <% 
+   if session("M10A") = false then 
+      Response.Redirect("index.asp")
+    end if
+
    call header("Tambah Kebutuhan ")
    nama = ucase(trim(Request.Form("nama")))
    set data_cmd =  Server.CreateObject ("ADODB.Command")

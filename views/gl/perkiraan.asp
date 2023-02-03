@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("GL4") = false then
+      Response.Redirect("../index.asp")
+   end if
    set conn = Server.CreateObject("ADODB.Connection")
    conn.open MM_Delima_string
 
@@ -73,11 +76,13 @@
          <h3>DAFTAR KODE PERKIRAAN</h3>
       </div>
    </div>
+   <% if session("GL4A") = true then %>
    <div class="row">
       <div class="col-sm-12 mb-3">
          <button type="button" class="btn btn-primary" onclick="window.location.href='perkiraan_add.asp'">Tambah</button>
       </div>
    </div>
+   <% end if %>
    <form action="perkiraan.asp" method="post">
       <div class="row">
          <div class="col-sm-4 mb-3">
@@ -134,8 +139,12 @@
                      </td>
                      <td class="text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">
+                           <% if session("GL4C") = false then %>
                               <a href="aktifPerkiraan.asp?id=<%= rs("CA_ID") %>&p=N" class="btn badge bg-danger" onclick="deleteItem(event,'delete kode perkiraan')">delete</a>
+                           <%  end if %>
+                           <% if session("GL4B") = false then %>
                            <a href="perkiraan_u.asp?id=<%= rs("CA_ID") %>" class="btn badge bg-primary">update</a>
+                           <% end if %>
                         </div>
                      </td>
                   </tr>

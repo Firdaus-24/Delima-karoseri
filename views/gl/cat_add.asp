@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("GL2A") = false then
+      Response.Redirect("catitem.asp")
+   end if
    name = trim(ucase(Request.Form("name")))
 
    call header("Tambah Kategori Item") 

@@ -2,6 +2,9 @@
 <% call header("FORM KELOMPOK") %>
 <!--#include file="../../navbar.asp"-->   
 <% 
+   if session("GL3B") = false then
+      Response.Redirect("../index.asp")
+   end if
    lkode = trim(Ucase(Request.Form("lkode")))
    lname = trim(Ucase(Request.Form("lname")))
    kode = trim(Ucase(Request.Form("kode")))

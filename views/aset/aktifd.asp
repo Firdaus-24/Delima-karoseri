@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+        if session("HR1C") = false then
+                Response.Redirect("index.asp")
+        end if
+
         id = trim(Request.QueryString("id"))
         strid = trim(left(id,10))
         url = trim(Request.QueryString("p"))

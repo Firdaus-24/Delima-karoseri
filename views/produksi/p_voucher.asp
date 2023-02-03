@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("ENG1F") = false then
+      Response.Redirect("index.asp")
+   end if
+
    pddid = trim(Request.Form("pddid"))
    vchID = trim(Request.Form("vchID"))
    call header("Print Voucher")

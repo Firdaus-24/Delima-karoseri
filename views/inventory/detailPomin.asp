@@ -79,9 +79,11 @@
     </div>
     <div class="row">
         <div class="d-flex mb-3">
+            <% if session("INV6D") = true then%>
             <div class="me-auto p-2">
                 <button type="button" class="btn btn-secondary" onClick="window.open('export-XlspoMin.asp?id=<%=id%>')" class="btn btn-secondary">Export</button>
             </div>
+            <% end if %>
             <div class="p-2">
                 <a href="POmin.asp" class="btn btn-danger">Kembali</a>
             </div>

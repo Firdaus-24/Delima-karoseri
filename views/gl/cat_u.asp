@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("GL2B") = false then
+      Response.Redirect("catitem.asp")
+   end if
+
    id = trim(ucase(Request.Form("id")))
    lname = trim(ucase(Request.Form("lname")))
    name = trim(ucase(Request.Form("name")))

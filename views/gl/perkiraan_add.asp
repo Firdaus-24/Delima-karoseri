@@ -1,6 +1,9 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_perkiraan.asp"-->
 <% 
+   if session("GL3A") = false then
+      Response.Redirect("perkiraan.asp")
+   end if
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
 

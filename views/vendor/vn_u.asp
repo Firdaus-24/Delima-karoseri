@@ -1,6 +1,10 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_vendor.asp"-->
 <% 
+    if session("M8B") = false then  
+        Response.Redirect("index.asp")
+    end if
+
     id = trim(Request.querystring("id"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")

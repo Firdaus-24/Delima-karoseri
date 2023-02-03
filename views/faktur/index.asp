@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("PR4") = false then
+        Response.Redirect("../index.asp")
+    end if
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
@@ -189,11 +192,13 @@
             <h3>TRANSAKSI FAKTUR PEMBELIAN</h3>
         </div>
     </div>
+    <% if session("PR4A") = true then %>
     <div class="row">
         <div class="col-lg-12 mb-3">
             <a href="faktur_add.asp" class="btn btn-primary ">Tambah</a>
         </div>
     </div>
+    <% end if %>
     <form action="index.asp" method="post">
         <div class="row">
             <div class="col-lg-4 mb-3">
@@ -275,6 +280,7 @@
                         <td><%= rs("Ven_Nama") %></td>
                         <td><%if rs("IPH_TukarYN") = "Y"  then%>Yes <% else %>No <%  end if %></td>
                         <td>
+                            <% if session("PR4E") = true then %>
                             <% if rs("IPH_image") <> "" then%>
                                 <img src="<%= url %>document/image/<%= rs("IPH_image") &".jpg" %>" id="myImg<%= recordcounter %>" width="30px" onclick="openImage('mymodal<%= recordcounter %>', this.src,'img<%= recordcounter %>','caption<%= recordcounter %>','close<%= recordcounter %>','<%= rs("IPH_Id") %>')">
                                 <!-- The Modal -->
@@ -286,15 +292,20 @@
                             <% else %>
                                 <a href="uploadImage.asp?id=<%= rs("IPH_Id") %>" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
                             <% end if %>
+                            <% end if %>
                         </td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <% if not p.eof then %>
                                     <a href="detailFaktur.asp?id=<%= rs("IPH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
                                 <% end if %>
+                                <% if session("PR4B") = true then %>    
                                 <a href="faktur_u.asp?id=<%= rs("IPH_ID") %>" class="btn badge text-bg-primary" >Update</a>
-                                <% if p.eof then %>
-                                    <a href="aktifh.asp?id=<%= rs("IPH_ID") %>" class="btn badge text-bg-danger btn-fakturh">Delete</a>
+                                <% end if %>
+                                <% if session("PR4C") = true then %>    
+                                    <% if p.eof then %>
+                                        <a href="aktifh.asp?id=<%= rs("IPH_ID") %>" class="btn badge text-bg-danger btn-fakturh">Delete</a>
+                                    <% end if %>
                                 <% end if %>
                             </div>
                         </td>

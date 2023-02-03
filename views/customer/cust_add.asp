@@ -1,6 +1,10 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_customer.asp"-->
 <% 
+    if session("M2A") = false then  
+        Response.Redirect("index.asp")
+    end if
+
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 

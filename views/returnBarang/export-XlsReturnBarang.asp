@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("PR5D") = false then
+      Response.Redirect("index.asp")
+   end if
     id = trim(Request.querystring("id"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")

@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("ENG2") = false then
+      Response.Redirect("../index.asp")
+   end if
+
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
 
@@ -186,6 +190,7 @@
          <h3>MASTER B.O.M </h3>
       </div>  
    </div>
+   <% if session("ENG2A") = true then %>
    <div class="row">
       <div class="col-lg-12 mb-3">
          <button type="button" class="btn btn-primary" onclick="window.location.href='bom_add.asp'">
@@ -193,6 +198,7 @@
          </button>
       </div>
    </div>
+   <% end if %>
    <form action="index.asp" method="post">
       <div class="row">
          <div class="col-lg-4 mb-3">
@@ -298,14 +304,18 @@
                   </td>
                   <td class="text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">
-                           <a href="bom_u.asp?id=<%= rs("BMID") %>" class="btn badge text-bg-primary" >Update</a>
+                           <% if session("ENG2B") = true then %>
+                              <a href="bom_u.asp?id=<%= rs("BMID") %>" class="btn badge text-bg-primary" >Update</a>
+                           <% end if %>
                            <% if not ddata.eof then %>
                            <a href="detailBom.asp?id=<%= rs("BMID") %>" class="btn badge text-light bg-warning">Detail</a>
                            <% else %>
-                              <% if rs("BMAktifYN") = "Y" then %>
-                                 <a href="aktifH.asp?id=<%= rs("BMID") %>&p=N" class="btn badge text-bg-danger" onclick="deleteItem(event,'delete master B.O.M')">Delete</a>
-                              <% else %>
-                                 <a href="aktifH.asp?id=<%= rs("BMID") %>&p=Y" class="btn badge text-bg-secondary" onclick="deleteItem(event,'aktif master B.O.M')">aktif</a>
+                              <% if session("ENG2C") = true then %>
+                                 <% if rs("BMAktifYN") = "Y" then %>
+                                    <a href="aktifH.asp?id=<%= rs("BMID") %>&p=N" class="btn badge text-bg-danger" onclick="deleteItem(event,'delete master B.O.M')">Delete</a>
+                                 <% else %>
+                                    <a href="aktifH.asp?id=<%= rs("BMID") %>&p=Y" class="btn badge text-bg-secondary" onclick="deleteItem(event,'aktif master B.O.M')">aktif</a>
+                                 <% end if %>
                               <% end if %>
                            <% end if %>
                         </div>

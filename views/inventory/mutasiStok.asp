@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("INV7") = false then
+      Response.Redirect("index.asp")
+   end if
+
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
 
@@ -137,11 +141,13 @@
          <h3>PROSES MUTASI STOK BARANG</h3>
       </div>
    </div>  
+   <% if session("INV7A") = true then %>
    <div class="row">
       <div class="col-sm mb-3">
          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalProses">Proses</button>
       </div>
    </div>
+   <% end if %>
    <form action="mutasiStok.asp" method="post">
       <div class="row">
          <div class="col-lg-3 mb-3">
@@ -170,8 +176,10 @@
             if agen <> "" OR tgl <> "" then 
                if not rs.eof then
             %>
-            <button type="button" class="btn btn-secondary" onclick="window.location.href='export-XlsMutasiStok.asp?agen=<%=agen%>&tgla=<%=tgl%>&nama=<%=nama%>'">Export</button>
+                  <% if session("INV7D") = true then %>
+                     <button type="button" class="btn btn-secondary" onclick="window.location.href='export-XlsMutasiStok.asp?agen=<%=agen%>&tgla=<%=tgl%>&nama=<%=nama%>'">Export</button>
             <% 
+                  end if 
                end if 
             end if %>
          </div>

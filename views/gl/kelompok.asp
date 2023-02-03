@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("GL3") = false then
+      Response.Redirect("../index.asp")
+   end if
+
    set conn = Server.CreateObject("ADODB.Connection")
    conn.open MM_Delima_string
 
@@ -73,11 +77,13 @@
          <h3>DAFTAR KELOMPOK PERKIRAAN</h3>
       </div>
    </div>
+   <% if session("GL3A") = true then %>
    <div class="row">
       <div class="col-sm-12 mb-3">
          <button type="button" class="btn btn-primary tambahKP" data-bs-toggle="modal" data-bs-target="#modalKelompok">Tambah</button>
       </div>
    </div>
+   <% end if %>
    <form action="kelompok.asp" method="post">
       <div class="row">
          <div class="col-sm-4 mb-3">
@@ -114,9 +120,12 @@
                      <td><%= rs("K_UpdateTIme") %></td>
                      <td class="text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">
+                           <% if session("GL3C") = true then %>
                            <a href="Kel_aktif.asp?id=<%= rs("K_ID") %>" class="btn badge bg-danger" onclick="deleteItem(event,'delete kelompok perkiraan')">delete</a>
-                           
+                           <% end if %>
+                           <% if session("GL3B") = true then %>
                            <a href="#" class="btn badge bg-primary updateKP" data-bs-toggle="modal" data-bs-target="#modalKelompok" data-id="<%= rs("k_ID") %>" data-name="<%= rs("K_Name") %>">update</a>
+                           <%  end if %>
                         </div>
                      </td>
                   </tr>

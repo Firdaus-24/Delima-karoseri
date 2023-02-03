@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("GL1") = false then
+      Response.Redirect("../index.asp")
+   end if
+
    nama = trim(Request.Form("nama"))
 
    set conn = Server.CreateObject("ADODB.Connection")
@@ -72,11 +76,13 @@
          <h3>DAFTAR PEMASUKAN DAN PENGELUARAN</h3>
       </div>
    </div>
+   <% if session("GL1A") = true then %>
    <div class="row">
       <div class="col-sm-12 mb-3">
          <button type="button" class="btn btn-primary" onclick="window.location.href='item_add.asp'">Tambah</button>
       </div>
    </div>
+   <% end if %>
    <form action="perkiraan.asp" method="post">
       <div class="row">
          <div class="col-sm-4 mb-3">

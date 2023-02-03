@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("PR6D") = false then
+        Response.Redirect("index.asp")
+    end if
+
     ' Response.ContentType = "application/vnd.ms-excel"
     ' Response.AddHeader "content-disposition", "filename=Invoices Reserve "& Request.QueryString("id")&" .xls"
 

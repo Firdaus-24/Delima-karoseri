@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("GL1A") = false then
+      Response.Redirect("../index.asp")
+   end if
    call header("Tambah Item")
 %>
 <!--#include file="../../navbar.asp"-->

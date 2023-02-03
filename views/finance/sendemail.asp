@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("FN1E") = false then
+        Response.Redirect("appmemo.asp")
+    end if
+
     id = Request.Form("idappmemo")
     custEmail = Request.Form("custEmail")
     subject = Request.Form("subject")

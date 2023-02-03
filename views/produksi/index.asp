@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("ENG1") = false then
+      Response.Redirect("../index.asp")
+   end if
+
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
 
@@ -106,11 +110,13 @@
          <h3>TRANSAKSI PRODUKSI</h3>
       </div>
    </div>
+   <% if session("ENG1A") = true then %>
    <div class="row">
       <div class="col-lg-12 mb-3">
          <a href="prod_add.asp" class="btn btn-primary ">Tambah</a>
       </div>
    </div>
+   <% end if %>
    <form action="index.asp" method="post">
       <div class="row">
          <div class="col-lg-4 mb-3">
@@ -168,21 +174,31 @@
                set p = data_cmd.execute
                %>
                   <tr><TH><%= recordcounter %></TH>
-                  <th><a href="printNoProduksi.asp?id=<%= rs("PDH_ID") %>" class="btn btn-outline-info badge text-dark" style="text-decoration:none"><%= left(rs("PDH_ID"),2) %>-<%= mid(rs("PDH_ID"),3,3) %>/<%= mid(rs("PDH_ID"),6,4) %>/<%= right(rs("PDH_ID"),3)  %></a></th>
+                  <th>
+                     <% if session("ENG1D") = true then %>
+                        <a href="printNoProduksi.asp?id=<%= rs("PDH_ID") %>" class="btn btn-outline-info badge text-dark" style="text-decoration:none"><%= left(rs("PDH_ID"),2) %>-<%= mid(rs("PDH_ID"),3,3) %>/<%= mid(rs("PDH_ID"),6,4) %>/<%= right(rs("PDH_ID"),3)  %></a>
+                     <% else %>
+                        <%= left(rs("PDH_ID"),2) %>-<%= mid(rs("PDH_ID"),3,3) %>/<%= mid(rs("PDH_ID"),6,4) %>/<%= right(rs("PDH_ID"),3)  %>
+                     <% end if %>
+                  </th>
                   <td><%= rs("AgenNAme")%></td>
                   <td><%= Cdate(rs("PDH_Date")) %></td>
                   <td>
-                     <% if rs("PDH_Approve1") = "N" then %>
-                        <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalAppProduksi" onclick="getIDProduksi('<%= rs("PDH_ID") %>', '1')">Ajukan</button>
-                     <% else %>
-                        Yes
+                     <% if session("ENG1E") = true then %>
+                        <% if rs("PDH_Approve1") = "N" then %>
+                           <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalAppProduksi" onclick="getIDProduksi('<%= rs("PDH_ID") %>', '1')">Ajukan</button>
+                        <% else %>
+                           Yes
+                        <% end if %>
                      <% end if %>
                   </td>
                   <td>
-                     <% if rs("PDH_Approve2") = "N" then %>
-                        <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalAppProduksi" onclick="getIDProduksi('<%= rs("PDH_ID") %>', '2')">Ajukan</button>
-                     <% else %>
-                        Yes
+                     <% if session("ENG1E") = true then %>
+                        <% if rs("PDH_Approve2") = "N" then %>
+                           <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalAppProduksi" onclick="getIDProduksi('<%= rs("PDH_ID") %>', '2')">Ajukan</button>
+                        <% else %>
+                           Yes
+                        <% end if %>
                      <% end if %>
                   </td>
                   <td>
@@ -197,12 +213,16 @@
                         <% if not p.eof then %>
                            <a href="detail.asp?id=<%= rs("PDH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
                         <% end if %>
-                        <a href="prod_u.asp?id=<%= rs("PDH_ID") %>" class="btn badge text-bg-primary" >Update</a>
-                        <% if p.eof then %>
-                           <% if rs("PDH_AktifYN") = "Y" then %>
-                           <a href="aktifh.asp?id=<%= rs("PDH_ID") %>&p=N" class="btn badge text-bg-danger" onclick="deleteItem(event,'DELETE HEADER PRODUKSI')">Delete</a>
-                           <% else %>
-                           <a href="aktifh.asp?id=<%= rs("PDH_ID") %>&p=Y" class="btn badge text-bg-light-emphasis text-dark" onclick="deleteItem(event,'AKTIF HEADER PRODUKSI')">Aktif</a>
+                        <% if session("ENG1B") = true then %>
+                           <a href="prod_u.asp?id=<%= rs("PDH_ID") %>" class="btn badge text-bg-primary" >Update</a>
+                        <% end if %>   
+                        <% if session("ENG1C") = true then %>
+                           <% if p.eof then %>
+                              <% if rs("PDH_AktifYN") = "Y" then %>
+                              <a href="aktifh.asp?id=<%= rs("PDH_ID") %>&p=N" class="btn badge text-bg-danger" onclick="deleteItem(event,'DELETE HEADER PRODUKSI')">Delete</a>
+                              <% else %>
+                              <a href="aktifh.asp?id=<%= rs("PDH_ID") %>&p=Y" class="btn badge text-bg-light-emphasis text-dark" onclick="deleteItem(event,'AKTIF HEADER PRODUKSI')">Aktif</a>
+                              <% end if %>
                            <% end if %>
                         <% end if %>
                      </div>

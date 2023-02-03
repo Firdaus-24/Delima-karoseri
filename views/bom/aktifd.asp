@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+if session("ENG2C") = false then
+   Response.Redirect("index.asp")
+end if
 id = trim(Request.QueryString("id"))
 p = trim(Request.QueryString("p"))
 

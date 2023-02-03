@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+        if session("PR2C") = false then
+                Response.Redirect("index.asp")
+        end if
         id = Request.QueryString("id")
         str = left(id,13)
         call header("aktif")

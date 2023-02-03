@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("PR2D") = false then
+        Response.Redirect("index.asp")
+    end if
     ' Response.ContentType = "application/vnd.ms-excel"
     ' Response.AddHeader "content-disposition", "filename=Purchase Order "& Request.QueryString("id")&" .xls"
 

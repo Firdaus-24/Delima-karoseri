@@ -116,7 +116,9 @@
         <div class="col-lg-12">
             <div class="d-flex mb-3">
                 <div class="me-auto p-2">
+                    <% if session("PR2D") = true then %>
                     <button type="button" class="btn btn-secondary" onClick="window.open('export-XlsPurchase.asp?id=<%=id%>','_self')">EXPORT</button>
+                    <% end if %>
                 </div>
                 <div class="p-2">
                     <a href="purcesDetail.asp" type="button" class="btn btn-primary">Kembali</a>

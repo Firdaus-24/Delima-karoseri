@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("HR2") = false then
+        Response.Redirect("../index.asp")
+    end if
+
     nama = trim(Request.Form("nama"))
 
     set conn = Server.CreateObject("ADODB.Connection")
@@ -70,6 +74,7 @@
             <h3>MASTER DIVISI</h3>
         </div>
     </div>
+    <% if session("HR2A") = true then %>
     <div class="row mt-3 mb-3">
         <div class="col-lg-2">
             <!-- Button trigger modal -->
@@ -78,6 +83,7 @@
             </button>
         </div>
     </div>
+    <% end if %>
     <div class="row">
         <div class="col-lg-4 mb-3">
         <form action="index.asp" method="post">
@@ -117,8 +123,12 @@
                         <td><%if rs("DivAktifYN") = "Y" then%>Aktif <% end if %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
+                                <% if session("HR2B") = true then %>
                                 <a href="#" class="btn badge text-bg-primary updatediv" data="<%= rs("DivId") %>" valname="<%= rs("DivNama") %>" data-bs-toggle="modal" data-bs-target="#staticBackdrop">update</a> 
+                                <% end if %>
+                                <% if session("HR2C") = true then %>
                                 <a href="aktif.asp?id=<%= rs("DivId") %>" class="btn badge text-bg-danger btn-aktifdiv">delete</a>
+                                <% end if %>
                             </div>
                         </td>
                     </tr>

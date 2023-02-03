@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("M3") = false then
+        Response.Redirect("../index.asp")
+    end if
+
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
 
@@ -73,11 +77,13 @@
             <h3>MASTER JENIS BARANG</h3>
         </div>
     </div>
+    <% if session("M3A") = true then %>
     <div class="row mt-3 mb-3">
         <div class="col-lg-2">
             <a href="jen_add.asp" class="btn btn-primary">Tambah</a>
         </div>
     </div>
+    <% end if %>
     <div class="row">
         <div class="col-lg-4 mb-3">
         <form action="index.asp" method="post">
@@ -115,8 +121,12 @@
                         <td><%if rs("jenisAktifYN") = "Y" then%>Aktif <% end if %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
+                                <% if session("M3B") = true then %>
                                 <a href="jen_u.asp?id=<%= rs("jenisId") %>" class="btn badge text-bg-primary">update</a>
+                                <% end if %>
+                                <% if session("M3C") = true then %>
                                 <a href="aktif.asp?id=<%= rs("jenisId") %>" class="btn badge text-bg-danger btn-aktifkat">delete</a>
+                                <% end if %>
                             </div>
                         </td>
                     </tr>

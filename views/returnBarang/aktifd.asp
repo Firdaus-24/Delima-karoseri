@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+        if session("PR5C") = false then
+                Response.Redirect("index.asp")
+        end if
+
         id = Request.QueryString("id")
         strapi = Request.QueryString("p")
 

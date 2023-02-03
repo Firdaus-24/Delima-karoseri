@@ -2,6 +2,10 @@
 <!--#include file="../../functions/func_produksi.asp"-->
 <!--#include file="../../functions/func_DateDiffWeekDays.asp"-->  
 <% 
+   if session("ENG1A") = false then
+      Response.Redirect("index.asp")
+   end if
+
    id = trim(Request.QueryString("id"))
 
    set data_cmd =  Server.CreateObject ("ADODB.Command")

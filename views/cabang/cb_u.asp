@@ -1,6 +1,9 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_cabang.asp"-->
 <% 
+    if session("HR4B") = false then
+        Response.Redirect("index.asp")
+    end if
     id = Request.QueryString("id")
 
     set data =  Server.CreateObject ("ADODB.Command")

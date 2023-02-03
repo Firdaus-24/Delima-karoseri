@@ -1,6 +1,11 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_satuan.asp"-->
-<%  call header("Form Satuan Barang") %>
+<%  
+    if session("M6A") = false then 
+        Response.Redirect("index.asp")
+    end if
+    call header("Form Satuan Barang") 
+%>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row mt-3 mb-3">

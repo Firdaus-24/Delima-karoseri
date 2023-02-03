@@ -1,6 +1,10 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_divisi.asp"-->
-<%  call header("Form Divisi") %>
+<%  
+    if session("HR2B") = false then
+        Response.Redirect("index.asp")
+    end if
+call header("Form Divisi") %>
 <!--#include file="../../navbar.asp"-->
 <% 
 if Request.ServerVariables("REQUEST_METHOD") = "POST" then 

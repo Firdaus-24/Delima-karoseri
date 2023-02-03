@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("PR1") = false then
+        Response.Redirect("../index.asp")
+    end if
     call header("PURCHASE ORDER") 
 %>
 <!--#include file="../../navbar.asp"-->

@@ -3,6 +3,11 @@
 <!--#include file="../functions/md5.asp"-->
 <!--#include file="../functions/func_alert.asp"-->
 <% 
+   ' cek hakakses 
+   if Ucase(session("username")) <> "DAUSIT" AND Ucase(session("username")) <> Ucase("ADMINISTRATOR") then
+      Response.Redirect(url&"login.asp")
+   end if
+
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
 
@@ -87,7 +92,7 @@
 
          id = p("ID")
 
-         call alert("USER", "berhasil di tambahkan", "success","pAkses_add.asp?id="&id) 
+         call alert("USER", "berhasil di tambahkan", "success","pakses_add.asp?id="&id) 
       end if
    end if
 

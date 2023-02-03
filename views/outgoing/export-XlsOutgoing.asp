@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("INV4D") = false then
+        Response.Redirect("index.asp")
+    end if
+
     id = trim(Request.QueryString("id"))
     Response.ContentType = "application/vnd.ms-excel"
     Response.AddHeader "content-disposition", "filename=Outgoing No:"&left(id,2)&"-"& mid(id,3,3) &"/"& mid(id,6,4) &"/"&  right(id,4) &".xls"

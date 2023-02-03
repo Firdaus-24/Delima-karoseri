@@ -1,6 +1,9 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_perkiraan.asp"-->
 <% 
+   if session("GL3C") = false then
+      Response.Redirect("perkiraan.asp")
+   end if
    id = trim(Request.QueryString("id"))
 
    set data_cmd =  Server.CreateObject ("ADODB.Command")

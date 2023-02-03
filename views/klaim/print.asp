@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->   
 <% 
+    if session("INV3D") = false then
+        Response.Redirect("../index.asp")
+    end if
+
     id = trim(Request.QueryString("id"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")

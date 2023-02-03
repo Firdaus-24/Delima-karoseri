@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("INV2B") = false then
+      Response.Redirect("index.asp")
+   end if
+
    id = trim(Request.Form("id"))
    trans = trim(Request.Form("trans"))
    rak = trim(Request.Form("rak"))

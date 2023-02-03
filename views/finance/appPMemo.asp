@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+        if session("FN1E") = false then
+                Response.Redirect("appmemo.asp")
+        end if
         id = Request.QueryString("id")
         call header("Appove Memo")
  %>

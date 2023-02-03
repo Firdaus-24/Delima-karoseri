@@ -89,7 +89,12 @@ function SaveFiles
 end function
 %>
 <!--#include file="../../init.asp"-->
-<% call header("UPLOAD DOCUMENT") %>
+<% 
+	if session("INV3F") = false then
+		Response.Redirect("index.asp")
+	end if
+	call header("UPLOAD DOCUMENT") 
+%>
 <!--#include file="../../navbar.asp"-->	
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

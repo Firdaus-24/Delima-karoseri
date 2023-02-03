@@ -1,6 +1,9 @@
 <% response.buffer = true %>
 <!--#include file="../../init.asp"-->
 <% 
+   if session("INV7A") = false then
+      Response.Redirect("index.asp")
+   end if
    call header("Proses Mutasi")
 
    response.write "<div class='loader' style='width:100%;height:100%;line-height:200px;text-align:center;line-height: 3.5;display:inline-block;vertical-align: middle;'><img src='../../public/img/DLL.gif'></div>"

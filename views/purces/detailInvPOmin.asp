@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("PR6") = false then
+        Response.Redirect("index.asp")
+    end if
     id = trim(Request.QueryString("id"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
@@ -72,9 +75,11 @@
     </div>
     <div class="row">
         <div class="d-flex mb-3">
+        <% if session("PR6D") = false then %>
             <div class="me-auto p-2">
                 <button type="button" class="btn btn-secondary" onClick="window.open('export-XlsdetailinvPOmin.asp?id=<%=id%>','_self')">EXPORT</button>
             </div>
+        <% end if %>
             <div class="p-2">
                 <a href="invPOmin.asp" type="button" class="btn btn-danger">Kembali</a>
             </div>

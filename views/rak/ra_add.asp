@@ -1,6 +1,10 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_rak.asp"-->
 <% 
+    if session("M5A") = false then 
+        Response.Redirect("../index.asp")
+    end if
+
     ' query cabang
     set cabang_cmd =  Server.CreateObject ("ADODB.Command")
     cabang_cmd.ActiveConnection = mm_delima_string

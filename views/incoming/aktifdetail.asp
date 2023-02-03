@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("INV2C") = false then
+      Response.Redirect("index.asp")
+   end if
+
    id = Request.QueryString("id")
    trans1 = trim(Request.QueryString("trans1"))
    trans2 = trim(Request.QueryString("trans2"))

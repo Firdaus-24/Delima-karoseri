@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("GL3C") = false then
+      Response.Redirect("../index.asp")
+   end if
    id = trim(Ucase(Request.QueryString("id")))
    call header("aktif")
  %>

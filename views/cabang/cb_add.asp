@@ -1,6 +1,9 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_cabang.asp"-->
 <% 
+    if session("HR4A") = false then
+        Response.Redirect("index.asp")
+    end if
 call header("Form Cabang")
 
 %>

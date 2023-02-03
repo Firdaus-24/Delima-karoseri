@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("INV3") = false then
+        Response.Redirect("../index.asp")
+    end if
+
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
@@ -145,11 +149,13 @@
             <h3>DATA BARANG RUSAK</h3>
         </div>
     </div>
+    <% if session("INV3A") = true then %>
     <div class="row mt-3 mb-3">
         <div class="col-lg-2">
             <a href="klaim_add.asp" class="btn btn-primary">Tambah</a>
         </div>
     </div>
+    <% end if %>
     <form action="index.asp" method="post">
         <div class="row">
             <div class="col-lg-3 mb-3">
@@ -223,46 +229,58 @@
                         <td><%= rs("Sat_Nama") %></td>
                         <td><%= rs("DB_Keterangan") %></td>
                         <td class="text-center p-3">
-                            <% 
-                            set fs = server.createObject("Scripting.FileSystemObject")
-                            path =  "D:Delima\document\pdf\"& rs("DB_ID") &".pdf"
-                            if fs.FileExists(path) then
-                            %>
-                                <a href="openPdf.asp?id=<%= rs("DB_ID") %>" class="btn badge text-bg-light" target="_blank"><i class="bi bi-caret-right"></i></a>
-                            <% 
-                            else
-                            %>
-                                <a href="uploadtest.asp?id=<%= rs("DB_ID") %>&p=pdf&T=pdf" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
-                            <%end if
-                            set fs = Nothing
-                            %>
+                            <% if session("INV3F") = true then%>
+                                <% 
+                                set fs = server.createObject("Scripting.FileSystemObject")
+                                path =  "D:Delima\document\pdf\"& rs("DB_ID") &".pdf"
+                                if fs.FileExists(path) then
+                                %>
+                                    <a href="openPdf.asp?id=<%= rs("DB_ID") %>" class="btn badge text-bg-light" target="_blank"><i class="bi bi-caret-right"></i></a>
+                                <% 
+                                else
+                                %>
+                                    <a href="uploadtest.asp?id=<%= rs("DB_ID") %>&p=pdf&T=pdf" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
+                                <%end if
+                                set fs = Nothing
+                                %>
+                            <% end if %>
                         </td>
                         <td class="text-center">
+                            <% if session("INV3F") = true then%>
                             <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#modalImgDeleteBrg" onclick="getIDdestroy('<%=rs("DB_ID")%>', '<%=url%>', '<%=rs("DB_Image1")%>', '<%=rs("DB_Image2")%>', '<%=rs("DB_Image3")%>')">
                                 See
                             </button>
-                        </td>
-                        <td>
-                            <% if rs("DB_Acc1") = "N" then%>
-                                <button type="button" class="btn badge btn-info" data-bs-toggle="modal" data-bs-target="#modalAccDelbarang" onclick="getIDDelBarang('<%= rs("DB_ID") %>', '1')">Ajukan</button>
-                            <% else %>
-                                yes
                             <% end if %>
                         </td>
                         <td>
-                            <% if rs("DB_Acc2") = "N" then%>
-                                <button type="button" class="btn badge btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalAccDelbarang" onclick="getIDDelBarang('<%= rs("DB_ID") %>', '2')">Ajukan</button>
-                            <% else %>
-                                yes
+                            <% if session("INV3E") = true then  %>
+                                <% if rs("DB_Acc1") = "N" then%>
+                                    <button type="button" class="btn badge btn-info" data-bs-toggle="modal" data-bs-target="#modalAccDelbarang" onclick="getIDDelBarang('<%= rs("DB_ID") %>', '1')">Ajukan</button>
+                                <% else %>
+                                    yes
+                                <% end if %>
+                            <% end if %>
+                        </td>
+                        <td>
+                            <% if session("INV3E") = true then  %>
+                                <% if rs("DB_Acc2") = "N" then%>
+                                    <button type="button" class="btn badge btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalAccDelbarang" onclick="getIDDelBarang('<%= rs("DB_ID") %>', '2')">Ajukan</button>
+                                <% else %>
+                                    yes
+                                <% end if %>
                             <% end if %>
                         </td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
+                                <% if session("INV3D") = true then %>
                                 <button class="btn badge bg-warning" onclick="printIt('print.asp?id=<%= rs("DB_ID") %>')">print</button>
+                                <% end if %>
                                 <!-- 
                                 <a href="klaim_u.asp?id=<%'= rs("DB_ID") %>" class="btn badge text-bg-primary">update</a>
                                  -->
-                                <a href="aktif.asp?id=<%= rs("DB_ID") %>" class="btn badge bg-danger" onclick="deleteItem(event,'delete barang')">delete</a>
+                                <% if session("INV3C") = true then %>
+                                    <a href="aktif.asp?id=<%= rs("DB_ID") %>" class="btn badge bg-danger" onclick="deleteItem(event,'delete barang')">delete</a>
+                                <% end if %>
                             </div>
                         </td>
                     </tr>

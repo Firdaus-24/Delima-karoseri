@@ -1,6 +1,10 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_barang.asp"-->
 <% 
+    if session("M1") = false then
+        Response.Redirect("../index.asp")
+    end if
+
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = MM_Delima_string
 
@@ -109,6 +113,7 @@
             <h3>MASTER BARANG</h3>
         </div>
     </div>
+    <% if session("M1A") = true then%>
     <div class="row mt-3 mb-3">
         <div class="col-lg-2">
             <!-- Button trigger modal -->
@@ -117,6 +122,7 @@
             </a>
         </div>
     </div>
+    <% end if %>
     <div class="row">
         <div class="col-lg mb-3">
         <form action="index.asp" method="post">
@@ -199,8 +205,12 @@
                         <td><%if rs("Brg_AktifYN") = "Y" then%>Aktif <% end if %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="br_u.asp?id=<%= rs("brg_id") %>" class="btn badge text-bg-primary">update</a> 
-                                <a href="aktif.asp?id=<%= rs("brg_id") %>" class="btn badge text-bg-danger btn-aktifbrg">delete</a>
+                                <% if session("M1B") = true then%>
+                                    <a href="br_u.asp?id=<%= rs("brg_id") %>" class="btn badge text-bg-primary">update</a> 
+                                <% end if %>
+                                <% if session("M1B") = true then%>
+                                    <a href="aktif.asp?id=<%= rs("brg_id") %>" class="btn badge text-bg-danger btn-aktifbrg">delete</a>
+                                <% end if %>
                             </div>
                         </td>
                     </tr>

@@ -1,6 +1,10 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_typeBarang.asp"-->
-<%  call header("Form TypeBarang") %>
+<%  
+    if session("M7A") = false then 
+        Response.Redirect("index.asp")
+    end if
+call header("Form TypeBarang") %>
 <style>
 
     hr{

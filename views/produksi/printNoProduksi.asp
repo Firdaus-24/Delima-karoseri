@@ -1,11 +1,15 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("ENG1D") = false then
+      Response.Redirect("index.asp")
+   end if   
+
    id = trim(Request.QueryString("id"))
 
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
 
-   data_cmd.commandText = "SELECT dbo.DLK_T_ProduksiD.PDD_BMID, dbo.DLK_T_ProduksiH.PDH_ID, dbo.DLK_T_ProduksiH.PDH_StartDate, dbo.DLK_T_ProduksiH.PDH_EndDate FROM dbo.DLK_T_ProduksiH LEFT OUTER JOIN dbo.DLK_T_ProduksiD ON dbo.DLK_T_ProduksiH.PDH_ID = LEFT(dbo.DLK_T_ProduksiD.PDD_ID, 13) GROUP BY dbo.DLK_T_ProduksiD.PDD_BMID, dbo.DLK_T_ProduksiH.PDH_ID,  dbo.DLK_T_ProduksiH.PDH_StartDate, dbo.DLK_T_ProduksiH.PDH_EndDate, dbo.DLK_T_ProduksiH.PDH_Approve1, dbo.DLK_T_ProduksiH.PDH_Approve2, dbo.DLK_T_ProduksiH.PDH_AktifYN HAVING (dbo.DLK_T_ProduksiH.PDH_AktifYN = 'Y') AND (dbo.DLK_T_ProduksiH.PDH_Approve2 = 'Y') AND (dbo.DLK_T_ProduksiH.PDH_Approve1 = 'Y') AND (dbo.DLK_T_ProduksiH.PDH_ID = '"& id &"') ORDER BY DLK_T_ProduksiD.PDD_BMID ASC"
+   data_cmd.commandText = "SELECT dbo.DLK_T_ProduksiD.PDD_BMID, dbo.DLK_T_ProduksiH.PDH_ID, dbo.DLK_T_ProduksiH.PDH_StartDate, dbo.DLK_T_ProduksiH.PDH_EndDate FROM dbo.DLK_T_ProduksiH LEFT OUTER JOIN dbo.DLK_T_ProduksiD ON dbo.DLK_T_ProduksiH.PDH_ID = LEFT(dbo.DLK_T_ProduksiD.PDD_ID, 13) GROUP BY dbo.DLK_T_ProduksiD.PDD_BMID, dbo.DLK_T_ProduksiH.PDH_ID,  dbo.DLK_T_ProduksiH.PDH_StartDate, dbo.DLK_T_ProduksiH.PDH_EndDate, dbo.DLK_T_ProduksiH.PDH_Approve1, dbo.DLK_T_ProduksiH.PDH_Approve2, dbo.DLK_T_ProduksiH.PDH_AktifYN HAVING (dbo.DLK_T_ProduksiH.PDH_AktifYN = 'Y') AND (dbo.DLK_T_ProduksiH.PDH_ID = '"& id &"') ORDER BY DLK_T_ProduksiD.PDD_BMID ASC"
 
    set data = data_cmd.execute
 

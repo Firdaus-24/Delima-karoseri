@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("INV4") = false then
+        Response.Redirect("../index.asp")
+    end if
+
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
@@ -112,11 +116,13 @@
             <h3>TRANSAKSI OUTGOING INVENTORY</h3>
         </div>
     </div>
+    <% if session("INV4A") = true then %>
     <div class="row">
         <div class="col-lg-12 mb-3">
             <a href="out_add.asp" class="btn btn-primary ">Tambah</a>
         </div>
     </div>
+    <% end if %>
     <form action="index.asp" method="post">
         <div class="row">
             <div class="col-lg-4 mb-3">
@@ -196,12 +202,16 @@
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <% if not p.eof then %>
-                                <a href="detailOutGoing.asp?id=<%= rs("MO_ID") %>" class="btn badge text-light bg-warning">Detail</a>
+                                    <a href="detailOutGoing.asp?id=<%= rs("MO_ID") %>" class="btn badge text-light bg-warning">Detail</a>
                                 <% end if %>
-                                <a href="out_u.asp?id=<%= rs("MO_ID") %>" class="btn badge text-bg-primary" >Update</a>
+                                <% if session("INV4B") = true then %>
+                                    <a href="out_u.asp?id=<%= rs("MO_ID") %>" class="btn badge text-bg-primary" >Update</a>
+                                <% end if %>
 
-                                <% if p.eof then %>
-                                <a href="aktifh.asp?id=<%= rs("MO_ID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'DELETE MATERIAL OUT HEADER')">Delete</a>
+                                <% if session("INV4C") = true then %>
+                                    <% if p.eof then %>
+                                        <a href="aktifh.asp?id=<%= rs("MO_ID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'DELETE MATERIAL OUT HEADER')">Delete</a>
+                                    <% end if %>
                                 <% end if %>
                             </div>
                         </td>

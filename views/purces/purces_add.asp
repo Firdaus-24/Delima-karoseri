@@ -1,5 +1,10 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("PR2A") = false then
+        Response.Redirect("index.asp")
+    end if
+
+
     cabang = trim(Request.form("agenPotoMemo"))
     id = trim(Request.form("idmemo"))
 

@@ -1,5 +1,10 @@
 <!--#include file="../../init.asp"-->
-<% call header("Email Destroy Barang") %>
+<% 
+   if session("INV3E") = false then
+      Response.Redirect("index.asp")
+   end if
+   call header("Email Destroy Barang") 
+%>
 <!--#include file="../../navbar.asp"-->
 <style>
    .gambar{

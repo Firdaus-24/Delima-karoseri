@@ -1,5 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("FN1") = false then
+        Response.Redirect("../index.asp")
+    end if
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
@@ -191,6 +194,7 @@
                         <td><%= rs("DivNama") %></td>
                         <td><%= rs("DepNama")%></td>
                         <td class="text-center">
+                        <%  if session("FN1E") = true then %>
                             <% if not ddetail.eof then %>
                                 Call Purchase
                             <% else %>  
@@ -203,6 +207,7 @@
                                     </div>
                                 <% end if %>    
                             <% end if %>
+                        <% end if %>
                         </td>
                     </tr>
                     <% 

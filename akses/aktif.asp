@@ -3,6 +3,11 @@
 <!--#include file="../functions/func_alert.asp"-->
 <!--#include file="../functions/func_query.asp"-->
 <% 
+   ' cek hakakses 
+   if Ucase(session("username")) <> "DAUSIT" AND Ucase(session("username")) <> Ucase("ADMINISTRATOR") then
+      Response.Redirect(url&"login.asp")
+   end if
+
    id = trim(Request.QueryString("id"))
    server.Execute("../header.asp")
    response.write "<title>Aktif</title><body>"
