@@ -35,13 +35,13 @@
 
     ' query seach 
     if agen <> "" and nama <> "" then
-        strquery = "SELECT * FROM DLK_M_Rak WHERE Rak_AktifYN = 'Y' AND left(Rak_id,3) = '"& agen &"' AND Rak_Nama LIKE '%"& nama &"%'"
+        strquery = "SELECT DLK_M_Rak.*, DLK_M_WebLogin.userName FROM DLK_M_Rak LEFT OUTER JOIN DLK_M_WebLogin ON DLK_M_Rak.Rak_updateID = DLK_M_Weblogin.userID WHERE Rak_AktifYN = 'Y' AND left(Rak_id,3) = '"& agen &"' AND Rak_Nama LIKE '%"& nama &"%'"
     elseif agen <> "" then
-        strquery = "SELECT * FROM DLK_M_Rak WHERE Rak_AktifYN = 'Y' AND left(Rak_id,3) = '"& agen &"'"
+        strquery = "SELECT DLK_M_Rak.*, DLK_M_WebLogin.userName FROM DLK_M_Rak LEFT OUTER JOIN DLK_M_WebLogin ON DLK_M_Rak.Rak_updateID = DLK_M_Weblogin.userID WHERE Rak_AktifYN = 'Y' AND left(Rak_id,3) = '"& agen &"'"
     elseif nama <> "" then
-        strquery = "SELECT * FROM DLK_M_Rak WHERE Rak_AktifYN = 'Y' AND Rak_Nama LIKE '%"& nama &"%'"
+        strquery = "SELECT DLK_M_Rak.*, DLK_M_WebLogin.userName FROM DLK_M_Rak LEFT OUTER JOIN DLK_M_WebLogin ON DLK_M_Rak.Rak_updateID = DLK_M_Weblogin.userID WHERE Rak_AktifYN = 'Y' AND Rak_Nama LIKE '%"& nama &"%'"
     else
-        strquery = "SELECT * FROM DLK_M_Rak WHERE Rak_AktifYN = 'Y'"
+        strquery = "SELECT DLK_M_Rak.*, DLK_M_WebLogin.userName FROM DLK_M_Rak LEFT OUTER JOIN DLK_M_WebLogin ON DLK_M_Rak.Rak_updateID = DLK_M_Weblogin.userID WHERE Rak_AktifYN = 'Y'"
     end if
 
     ' untuk data paggination
@@ -147,7 +147,7 @@
                         <th scope="row"><%= recordcounter %> </th>
                         <td><%= rs("Rak_Nama") %></td>
                         <td><%= rs("Rak_updateTime") %></td>
-                        <td><%= rs("Rak_UpdateID") %></td>
+                        <td><%= rs("username") %></td>
                         <td><%= rs("Rak_Keterangan") %></td>
                         <td><%if rs("Rak_AktifYN") = "Y" then %>Aktif <% end if %></td>
                         <td class="text-center">

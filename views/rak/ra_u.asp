@@ -56,10 +56,6 @@
                 <input type="hidden" class="form-control" id="oldnama" name="oldnama" maxlength="20" autocomplete="off" value="<%= rak("Rak_Nama") %>" required>
                 <input type="text" class="form-control" id="nama" name="nama" maxlength="20" autocomplete="off" value="<%= rak("Rak_Nama") %>" required>
             </div>
-            <div class="col-lg-2 mb-3">
-                <label for="updatetime" class="form-label">Update Time</label>
-                <input type="text" class="form-control" id="updatetime" name="updatetime" value="<%= rak("Rak_UpdateTime") %>" onfocus="(this.type='date')" required>
-            </div>
         </div>
         <div class="row">
             <div class="col-lg mb-3">

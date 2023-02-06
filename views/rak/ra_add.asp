@@ -39,10 +39,6 @@
                 <label for="nama" class="form-label">Nama</label>
                 <input type="text" class="form-control" id="nama" name="nama" maxlength="20" autocomplete="off" required>
             </div>
-            <div class="col-lg-2 mb-3">
-                <label for="updatetime" class="form-label">Update Time</label>
-                <input type="date" class="form-control" id="updatetime" name="updatetime" required>
-            </div>
         </div>
         <div class="row">
             <div class="col-lg mb-3">

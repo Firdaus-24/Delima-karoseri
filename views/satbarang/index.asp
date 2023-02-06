@@ -22,9 +22,9 @@
 
     ' query seach 
     if nama <> "" then
-        strquery = "SELECT * FROM DLK_M_SatuanBarang WHERE Sat_AktifYN = 'Y' AND Sat_Nama LIKE '%"& nama &"%'"
+        strquery = "SELECT DLK_M_SatuanBarang.*, DLK_M_WebLogin.username FROM DLK_M_SatuanBarang LEFT OUTER JOIN DLK_M_WebLogin ON DLK_M_SatuanBarang.Sat_updateID = DLK_M_WebLogin.userID WHERE Sat_AktifYN = 'Y' AND Sat_Nama LIKE '%"& nama &"%'"
     else
-        strquery = "SELECT * FROM DLK_M_SatuanBarang WHERE Sat_AktifYN = 'Y'"
+        strquery = "SELECT DLK_M_SatuanBarang.*, DLK_M_WebLogin.username FROM DLK_M_SatuanBarang LEFT OUTER JOIN DLK_M_WebLogin ON DLK_M_SatuanBarang.Sat_updateID = DLK_M_WebLogin.userID WHERE Sat_AktifYN = 'Y'"
     end if
 
     ' untuk data paggination
@@ -118,7 +118,7 @@
                         <th scope="row"><%= recordcounter %> </th>
                         <td><%= rs("sat_Nama") %></td>
                         <td><%= rs("sat_updateTime") %></td>
-                        <td><%= rs("sat_UpdateID") %></td>
+                        <td><%= rs("username") %></td>
                         <td><%if rs("Sat_AktifYN") = "Y" then%>Aktif <% end if %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">

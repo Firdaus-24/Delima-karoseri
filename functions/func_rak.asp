@@ -12,7 +12,7 @@ sub tambahRak()
     set data = data_cmd.execute
 
     if data.eof then
-        call query("exec sp_AddDLK_M_Rak '"& cabang &"','"& nama &"','"& updatetime &"','"& keterangan &"','admin'")
+        call query("exec sp_AddDLK_M_Rak '"& cabang &"','"& nama &"','"& updatetime &"','"& keterangan &"','"&session("userid")&"'")
         value = 1 'case untuk insert data
     else
         value = 2 'case jika gagal insert 
@@ -34,7 +34,7 @@ sub updateRak()
     set data = data_cmd.execute
 
     if not data.eof then
-        call query("UPDATE DLK_M_Rak SET Rak_Nama = '"& nama &"', Rak_Keterangan = '"& keterangan &"', Rak_updateTime = '"& updatetime &"' WHERE Rak_Id = '"& id &"'")
+        call query("UPDATE DLK_M_Rak SET Rak_Nama = '"& nama &"', Rak_Keterangan = '"& keterangan &"', Rak_updateTime = '"& now &"', Rak_updateID = '"& session("updateId") &"' WHERE Rak_Id = '"& id &"'")
         value = 1 'case untuk insert data
     else
         value = 2 'case jika gagal insert 

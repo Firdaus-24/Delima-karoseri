@@ -9,7 +9,7 @@ sub tambahSatuanBarang()
     set data = data_cmd.execute
 
     if data.eof then
-        call query("exec sp_AddDLK_M_SatuanBarang '"& nama &"','"& session("username") &"'")
+        call query("exec sp_AddDLK_M_SatuanBarang '"& nama &"','"& session("userID") &"'")
         value = 1 'case untuk insert data
     else
         value = 2 'case jika gagal insert 
@@ -28,7 +28,7 @@ sub updateSatuanBarang()
     set data = data_cmd.execute
 
     if not data.eof then
-        call query("UPDATE DLK_M_SatuanBarang SET Sat_Nama = '"& nama &"', Sat_updateID = '"& session("username") &"' WHERE Sat_ID = '"& id &"'")
+        call query("UPDATE DLK_M_SatuanBarang SET Sat_Nama = '"& nama &"', Sat_updateID = '"& session("userID") &"' WHERE Sat_ID = '"& id &"'")
         value = 1 'case untuk insert data
     else
         value = 2 'case jika gagal insert 
