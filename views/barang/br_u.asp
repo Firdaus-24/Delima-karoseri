@@ -10,8 +10,9 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
     ' get data by id
-    data_cmd.commandText = "SELECT DLK_M_Barang.*, DLK_M_typeBarang.T_Nama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_TYpeBarang ON DLK_M_Barang.Brg_Type = DLK_M_TypeBarang.T_ID WHERE Brg_ID = '"& id &"' AND Brg_AktifYN = 'Y'"
+    data_cmd.commandText = "SELECT DLK_M_Barang.*, DLK_M_typeBarang.T_Nama, DLK_M_TypeBarang.T_Nama, DLK_M_kategori.KategoriNama, DLK_M_JenisBarang.jenisNama, DLK_M_TypeBarang.T_Nama, DLK_M_kategori.KategoriID, DLK_M_JenisBarang.jenisID FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_TYpeBarang ON DLK_M_Barang.Brg_Type = DLK_M_TypeBarang.T_ID LEFT OUTER JOIN DLK_M_KAtegori ON DLK_M_Barang.kategoriID = DLK_M_Kategori.kategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.jenisID = DLK_M_JenisBarang.JenisID WHERE Brg_ID = '"& id &"' AND Brg_AktifYN = 'Y'"
     set barang = data_cmd.execute
+
     ' kategori
     data_cmd.commandText = "SELECT KategoriId, KategoriNama FROM DLK_M_Kategori where KategoriAktifYN = 'Y' ORDER BY KategoriNama ASC"
     set pkategori = data_cmd.execute
@@ -57,7 +58,7 @@
             <label for="kategori" class="col-sm-2 col-form-label offset-sm-1">Kategori</label>
             <div class="col-sm-8">
                 <select class="form-select" aria-label="Default select example" name="kategori" id="kategori" required> 
-                    <option value="<%= barang("KategoriID") %>"><% call getKategori(barang("KategoriID")) %></option>
+                    <option value="<%= barang("KategoriID") %>"><%= barang("KategoriNama") %></option>
                     <% 
                     do while not pkategori.eof %>
                         <option value="<%= pkategori("kategoriID") %>"><%= pkategori("kategoriNama") %></option>
@@ -72,7 +73,7 @@
             <label for="jenis" class="col-sm-2 col-form-label offset-sm-1">Jenis</label>
             <div class="col-sm-8">
                 <select class="form-select" aria-label="Default select example" name="jenis" id="jenis" required>
-                    <option value="<%= barang("JenisID") %>"><% call getJenis(barang("JenisID")) %></option>
+                    <option value="<%= barang("JenisID") %>"><%= barang("jenisNama") %></option>
                     <% do while not pjenis.eof %>
                         <option value="<%= pjenis("JenisID") %>"><%= pjenis("JenisNama") %></option>
                     <% 

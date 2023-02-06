@@ -63,7 +63,7 @@
         filterAgen = " AND LEFT(Brg_ID,3) = '"& pagen &"'"
     end if
     ' real query
-    strquery = "SELECT DLK_M_Barang.*, DLK_M_TypeBarang.T_Nama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_TypeBarang ON DLK_M_Barang.Brg_Type = DLK_M_TypeBarang.T_ID WHERE Brg_AktifYN = 'Y' "& filterNama &""& filterKat &""& filterJen &" "& filterAgen &""
+    strquery = "SELECT DLK_M_Barang.*, DLK_M_TypeBarang.T_Nama, DLK_M_kategori.KategoriNama, DLK_M_JenisBarang.jenisNama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_TypeBarang ON DLK_M_Barang.Brg_Type = DLK_M_TypeBarang.T_ID LEFT OUTER JOIN DLK_M_KAtegori ON DLK_M_Barang.kategoriID = DLK_M_Kategori.kategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.jenisID = DLK_M_JenisBarang.JenisID WHERE Brg_AktifYN = 'Y' "& filterNama &""& filterKat &""& filterJen &" "& filterAgen &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
@@ -193,8 +193,8 @@
                     <tr>
                         <td><%= rs("Brg_Nama") %></td>
                         <td><%= rs("Brg_Tanggal") %></td>
-                        <td><% call getKategori(rs("KategoriID")) %></td>
-                        <td><% call getJenis(rs("JenisID")) %></td>
+                        <td><%= rs("kategoriNama") %></td>
+                        <td><%= rs("JenisNama") %></td>
                         <td class="text-center">
                             <%if rs("Brg_StokYN") = "Y" then %><i class="bi bi-file-earmark-check"></i><% else %><i class="bi bi-file-earmark-excel"></i><% end if %>
                         </td>
