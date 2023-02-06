@@ -7,15 +7,15 @@ sub tambahDep()
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "select * from dlk_m_Departement WHERE DepID = '"& id &"' AND DepNama = '"& nama &"' OR DepID = '"& id &"' AND DepNama = '"& nama &"'"
+    data_cmd.commandText = "select * from dlk_m_Departement WHERE DepID = '"& id &"'"
     ' response.write data_cmd.commandText
     set data = data_cmd.execute
 
-    if data.eof then
-        call query("insert into dlk_m_Departement (DepID, DepNama, DepDivID,DepupdateID,DepAktifYN) VALUES ('"& id &"', '"& nama &"', '"& divid &"','"& session("username") &"','Y')")
-        value = 1 'case untuk insert data
-    else
+    if not data.eof then
         value = 2 'case jika gagal insert 
+    else
+        call query ("insert into dlk_m_Departement (DepID, DepNama, DepDivID,DepupdateID,DepAktifYN) VALUES ('"& id &"', '"& nama &"', '"& divid &"','"& session("username") &"','Y')")
+        value = 1 'case untuk insert data
     end if
 end sub
 

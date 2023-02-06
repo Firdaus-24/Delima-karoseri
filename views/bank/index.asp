@@ -126,9 +126,7 @@
                 <thead class="bg-secondary text-light">
                     <tr>
                     <th scope="col">Nama</th>
-                    <th scope="col">Kota</th>
-                    <th scope="col">Phone</th>
-                    <th scope="col">Email</th>
+                    <th scope="col">Keterangan</th>
                     <th scope="col">Update Time</th>
                     <th scope="col">Update ID</th>
                     <th scope="col" class="text-center">Aksi</th>
@@ -144,9 +142,7 @@
                     %>
                     <tr>
                         <td><%= rs("Bank_Name") %></td>
-                        <td><%= rs("Bank_Kota") %></td>
-                        <td><%= rs("Bank_Phone") %></td>
-                        <td><%= rs("Bank_Email") %></td>
+                        <td><%= rs("Bank_Keterangan") %></td>
                         <td><%= rs("Bank_updateTime") %></td>
                         <td><%= rs("username") %></td>
                         <td class="text-center">
