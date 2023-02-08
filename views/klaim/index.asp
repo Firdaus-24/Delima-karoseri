@@ -232,7 +232,7 @@
                             <% if session("INV3F") = true then%>
                                 <% 
                                 set fs = server.createObject("Scripting.FileSystemObject")
-                                path =  "D:Delima\document\pdf\"& rs("DB_ID") &".pdf"
+                                path =  url&"document\pdf\"& rs("DB_ID") &".pdf"
                                 if fs.FileExists(path) then
                                 %>
                                     <a href="openPdf.asp?id=<%= rs("DB_ID") %>" class="btn badge text-bg-light" target="_blank"><i class="bi bi-caret-right"></i></a>

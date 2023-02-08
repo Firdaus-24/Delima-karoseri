@@ -2,6 +2,7 @@
 sub tambahbomH()
    barang = trim(Request.Form("barang"))
    cabang = trim(Request.Form("cabang"))
+   sasisid = trim(Request.Form("sasisid"))
    tgl = trim(Request.Form("tgl"))
    approve = trim(Request.Form("approve"))
    keterangan = trim(Request.Form("keterangan"))
@@ -9,12 +10,12 @@ sub tambahbomH()
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
 
-   data_cmd.commandText = "SELECT * FROM DLK_M_bomH WHERE BMBrgID = '"& barang &"' AND BMAgenID = '"& cabang &"'"
+   data_cmd.commandText = "SELECT * FROM DLK_M_bomH WHERE BMBrgID = '"& barang &"' AND BMAgenID = '"& cabang &"' AND BMSasisID = '"& sasisid &"'"
    ' response.write data_cmd.commandText & "<br>"
    set data = data_cmd.execute
 
    if data.eof then
-      data_cmd.commandText = "exec SP_AddDLK_M_bomH '"& barang &"', '"& tgl &"', '"& cabang &"', '"& approve &"', '', '','','"& keterangan &"'"
+      data_cmd.commandText = "exec SP_AddDLK_M_bomH '"& barang &"', '"& tgl &"', '"& cabang &"', '"& approve &"', '"& sasisid &"', '"& keterangan &"'"
 
       set p = data_cmd.execute
 

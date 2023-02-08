@@ -13,8 +13,8 @@
    set pcabang = data.execute    
 
    ' get kode akun
-   data.commandText = "SELECT CA_id, CA_Name FROM GL_M_ChartAccount WHERE CA_AktifYN = 'Y' ORDER BY CA_Name ASC"
-   set kodeakun = data.execute    
+   data.commandText = "SELECT SasisID, SasisType, dbo.DLK_M_Brand.BrandName, dbo.DLK_M_Class.ClassName FROM dbo.DLK_M_Sasis LEFT OUTER JOIN dbo.DLK_M_Brand ON dbo.DLK_M_Sasis.SasisBrandID = dbo.DLK_M_Brand.BrandID LEFT OUTER JOIN dbo.DLK_M_Class ON dbo.DLK_M_Sasis.SasisClassID = dbo.DLK_M_Class.ClassID WHERE SasisAktifYN = 'Y' ORDER BY SasisID ASC"
+   set getSasis = data.execute    
 
    call header("From B.O.M") 
 %>
@@ -74,9 +74,24 @@
       </div>
       <div class="row">
          <div class="col-sm-2">
+            <label for="sasisid" class="col-form-label">No. Drawing</label>
+         </div>
+         <div class="col-sm-4 mb-3">
+            <select class="form-select" aria-label="Default select example" id="sasisid" name="sasisid" required>
+               <option value="">Pilih</option>
+               <% do while not getsasis.eof %>
+               <option value="<%= getsasis("sasisID") %>"><%= getsasis("className") &" | "& getsasis("brandName") &" | "& getsasis("SasisType") %></option>
+               <% 
+               response.flush
+               getsasis.movenext
+               loop
+               %>
+            </select>
+         </div>
+         <div class="col-sm-2">
             <label for="keterangan" class="col-form-label">Keterangan</label>
          </div>
-         <div class="col-sm-10 mb-3 keterangan">
+         <div class="col-sm-4 mb-3">
             <input type="text" class="form-control" name="keterangan" id="keterangan" maxlength="50" autocomplete="off" required>
          </div>
       </div>

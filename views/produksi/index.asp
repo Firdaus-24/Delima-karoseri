@@ -311,8 +311,8 @@
       </div>
       <div class="modal-body">
          <form action="sendEmail.asp" method="post" onsubmit="validasiForm(this,event,'Kirim Email','info')">
-            <input type="text" id="idproduksi" name="idproduksi" class="form-control" required>
-            <input type="text" id="typeapp" name="typeapp" class="form-control" required>
+            <input type="hidden" id="idproduksi" name="idproduksi" class="form-control" required>
+            <input type="hidden" id="typeapp" name="typeapp" class="form-control" required>
             <div class="row mb-3">
                <div class="col-sm-3">
                   <label for="userEmail" class="col-form-label">Email TO</label>

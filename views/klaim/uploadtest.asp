@@ -121,7 +121,7 @@ function onSubmitForm(objForm) {
 	}
 	
 	if (!blnExists)
-		alert("Only upload Photo with JPG extension only","File Upload Failed");
+		alert("Only upload Photo with PDF extension only","File Upload Failed");
 	return blnExists;
 	
     if (formDOMObj.attach1.value == "" && formDOMObj.attach2.value == "" && formDOMObj.attach3.value == "" && formDOMObj.attach4.value == "" )

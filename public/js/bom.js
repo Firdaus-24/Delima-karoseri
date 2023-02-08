@@ -20,7 +20,7 @@ $(document).ready(function () {
    $("#cdetailbom").keyup(function () {
       let nama = $("#cdetailbom").val()
       let cabang = $("#bomdCabang").val()
-      let bomid = $("#bmid").val()
+      let bomid = $("#notbrgid").val()
       let tbodylama = $(".contentBOMD").html()
       if (nama.length > 0) {
          $(".clearfixbom").show()

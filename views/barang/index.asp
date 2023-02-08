@@ -33,31 +33,31 @@
         angka = Request.form("urut") + 1
     end if
     nama = Ucase(request.QueryString("nama"))
-    if nama = "" then 
+    if len(nama) = 0 then 
         nama = Ucase(request.form("nama"))
     end if
     kat = request.QueryString("kat")
-    if kat = "" then 
+    if len(kat) = 0 then 
         kat = request.form("kat")
     end if
     jen = request.QueryString("jen")
-    if jen = "" then 
+    if len(jen) = 0 then 
         jen = request.form("jen")
     end if
     pagen = request.QueryString("pagen")
-    if pagen = "" then 
+    if len(pagen) = 0 then 
         pagen = request.form("pagen")
     end if
 
     ' query seach 
     if nama <> "" then
-        filterNama = " AND UPPER(Brg_Nama) LIKE '%"& nama &"%' "
+        filterNama = " AND UPPER(DLK_M_Barang.Brg_Nama) LIKE '%"& nama &"%' "
     end if
     if kat <> "" then
-        filterKat = " AND KategoriId = '"& kat &"'"
+        filterKat = " AND DLK_M_Barang.KategoriId = '"& kat &"'"
     end if
     if jen <> "" then
-        filterJen = " AND jenisID = '"& jen &"'"
+        filterJen = " AND DLK_M_Barang.jenisID = '"& jen &"'"
     end if
     if pagen <> "" then
         filterAgen = " AND LEFT(Brg_ID,3) = '"& pagen &"'"
@@ -140,7 +140,7 @@
             </select>
         </div>
         <div class="col-lg mb-3">
-            <select class="form-select" aria-label="Default select example" name="kategori" id="kategori">
+            <select class="form-select" aria-label="Default select example" name="kat" id="kategori">
                 <option value="">Pilih kategori</option>
                 <% do while not fkategori.eof %>
                 <option value="<%= fkategori("KategoriID") %>"><%= fkategori("KategoriNama") %></option>
@@ -151,7 +151,7 @@
             </select>
         </div>
         <div class="col-lg mb-3">
-            <select class="form-select" aria-label="Default select example" name="jenis" id="jenis">
+            <select class="form-select" aria-label="Default select example" name="jen" id="jenis">
                 <option value="">Pilih Jenis</option>
                 <% do while not fjenis.eof %>
                 <option value="<%= fjenis("jenisID") %>"><%= fjenis("jenisNama") %></option>

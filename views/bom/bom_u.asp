@@ -96,9 +96,15 @@
    </div>
    <div class="row">
       <div class="col-sm-2">
+         <label for="sasisid" class="col-form-label">No. Drawing</label>
+      </div>
+      <div class="col-sm-4 mb-3">
+         <input type="text" class="form-control" name="sasisid" id="sasisid" maxlength="50" autocomplete="off" value="<%= LEft(data("BMSasisID"),5) &"-"& mid(data("BMSasisID"),6,4) &"-"& right(data("BMSasisID"),3) %>" readonly>
+      </div>
+      <div class="col-sm-2">
          <label for="keterangan" class="col-form-label">Keterangan</label>
       </div>
-      <div class="col-sm-10 mb-3 keterangan">
+      <div class="col-sm-4 mb-3">
          <input type="text" class="form-control" name="keterangan" id="keterangan" maxlength="50" autocomplete="off" value="<%= data("BMKeterangan") %>" readonly>
       </div>
    </div>
@@ -171,6 +177,7 @@
          </div>
       <form action="bom_u.asp?id=<%= id %>" method="post" id="formbomd" onsubmit="validasiForm(this,event,'Detail Barang B.O.M','warning')">
       <input type="hidden" name="bmid" id="bmid" value="<%= id %>">
+      <input type="hidden" name="notbrgid" id="notbrgid" value="<%= data("BMBrgID") %>">
          <div class="modal-body">
          <!-- table barang -->
          <div class="row">

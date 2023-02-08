@@ -18,7 +18,7 @@
         filterCabang = ""
     end if
 
-    data_cmd.commandText = "SELECT DLK_M_Barang.*, dbo.DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama, DLK_M_TypeBarang.T_Nama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.JenisID LEFT OUTER JOIN DLK_M_TypeBarang ON DLK_M_Barang.BRg_Type = DLK_M_TypeBarang.T_ID WHERE Brg_AktifYN = 'Y' AND T_Nama <> 'ROW MATERIAL' "& filterCabang &" "& filterNama &" ORDER BY Brg_Nama ASC"
+    data_cmd.commandText = "SELECT DLK_M_Barang.*, dbo.DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama, DLK_M_TypeBarang.T_Nama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.JenisID LEFT OUTER JOIN DLK_M_TypeBarang ON DLK_M_Barang.BRg_Type = DLK_M_TypeBarang.T_ID WHERE Brg_AktifYN = 'Y' AND (T_Nama = 'PRODUKSI' OR T_Nama = 'SUB PART' )"& filterCabang &" "& filterNama &" ORDER BY Brg_Nama ASC"
 
     set barang = data_cmd.execute
 

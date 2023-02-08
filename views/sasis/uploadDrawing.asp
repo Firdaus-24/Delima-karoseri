@@ -7,85 +7,104 @@ Server.ScriptTimeout = 600
 ' Change the value of the variable below to the pathname
 ' of a directory with write permissions, for example "C:\Inetpub\wwwroot"
 Dim uploadsDirVar
-   response.AddHeader "REFRESH","0:URL=index.asp?id=000000000"
-uploadsDirVar = "D:\Delima\document\stack\"
+' dim id
+' 	id = request("id")
+' 	if id = "" then
+' 		response.AddHeader "REFRESH","0:URL=uploadtest.asp?id=000000000"
+' 	end if
+dim id, p, t, db, accept, a
+id = request.querystring("id")
+p = "pdf"
+t = trim(Request.QueryString("t"))
+db = trim(Request.QueryString("db"))
+accept = ".pdf"
+
+if t = "pdf" then
+	a = "pdf\"
+else
+	a = "stack\"
+end if
+uploadsDirVar = "D:\Delima\document\"&a
 ' ****************************************************
-dim id, data_cmd,img, strid
-strid = Request.QueryString("id")
-img = Request.QueryString("img")
-
-id = strid&img
-
 function OutputForm()
+%>
 
+
+<%
 end function
-
 function TestEnvironment()
-   Dim fso, fileName, testFile, streamTest
-   TestEnvironment = ""
-   Set fso = Server.CreateObject("Scripting.FileSystemObject")
-   if not fso.FolderExists(uploadsDirVar) then
-      TestEnvironment = "<B>Folder " & uploadsDirVar & " does not exist.</B><br>"
-      exit function
-   end if
-   fileName = uploadsDirVar & id
-   on error resume next
-   Set testFile = fso.CreateTextFile(fileName, true)
-   If Err.Number<>0 then
-      TestEnvironment = "<B>Folder " & uploadsDirVar & " does not have write permissions.</B><br>The value of your uploadsDirVar is incorrect. Open uploadTester.asp in an editor and change the value of uploadsDirVar to the pathname of a directory with write permissions."
-      exit function
-   end if
-   Err.Clear
-   testFile.Close
-   fso.DeleteFile(fileName)
-   If Err.Number<>0 then
-      TestEnvironment = "<B>Folder " & uploadsDirVar & " does not have delete permissions</B>, although it does have write permissions.<br>Change the permissions for IUSR_<I>computername</I> on this folder."
-      exit function
-   end if
-   Err.Clear
-   Set streamTest = Server.CreateObject("ADODB.Stream")
-   If Err.Number<>0 then
-      TestEnvironment = "<B>The ADODB object <I>Stream</I> is not available in your server.</B><br>Check the Requirements page for information about upgrading your ADODB libraries."
-      exit function
-   end if
-   Set streamTest = Nothing
+    Dim fso, fileName, testFile, streamTest
+    TestEnvironment = ""
+    Set fso = Server.CreateObject("Scripting.FileSystemObject")
+    if not fso.FolderExists(uploadsDirVar) then
+        TestEnvironment = "<B>Folder " & uploadsDirVar & " does not exist.</B><br>"
+        exit function
+    end if
+    fileName = uploadsDirVar & id
+    on error resume next
+    Set testFile = fso.CreateTextFile(fileName, true)
+    If Err.Number<>0 then
+        TestEnvironment = "<B>Folder " & uploadsDirVar & " does not have write permissions.</B><br>The value of your uploadsDirVar is incorrect. Open uploadTester.asp in an editor and change the value of uploadsDirVar to the pathname of a directory with write permissions."
+        exit function
+    end if
+    Err.Clear
+    testFile.Close
+    fso.DeleteFile(fileName)
+    If Err.Number<>0 then
+        TestEnvironment = "<B>Folder " & uploadsDirVar & " does not have delete permissions</B>, although it does have write permissions.<br>Change the permissions for IUSR_<I>computername</I> on this folder."
+        exit function
+    end if
+    Err.Clear
+    Set streamTest = Server.CreateObject("ADODB.Stream")
+    If Err.Number<>0 then
+        TestEnvironment = "<B>The ADODB object <I>Stream</I> is not available in your server.</B><br>Check the Requirements page for information about upgrading your ADODB libraries."
+        exit function
+    end if
+    Set streamTest = Nothing
 end function
-
 function SaveFiles
-   Dim Upload, fileName, fileSize, ks, i, fileKey
-
-
-   Set Upload = New FreeASPUpload
-   Upload.Save(uploadsDirVar)
+    Dim Upload, fileName, fileSize, ks, i, fileKey
+	
+	
+    Set Upload = New FreeASPUpload
+    Upload.Save(uploadsDirVar)
 	' If something fails inside the script, but the exception is handled
 	If Err.Number<>0 then Exit function
-
-   SaveFiles = ""
-   ks = Upload.UploadedFiles.keys
-   if (UBound(ks) <> -1) then
-      SaveFiles = "<B>Files uploaded Success : </B> "
-      for each fileKey in Upload.UploadedFiles.keys
-         SaveFiles = SaveFiles & Upload.UploadedFiles(fileKey).FileName & " (" & Upload.UploadedFiles(fileKey).Length & "B) "
-      
-      next
-      
-      Response.Redirect("drawing_u.asp?id="&strid&"&img="&img)
-   else
-      SaveFiles = "The file name specified in the upload form does not correspond to a valid file in the system."
-   end if
+    SaveFiles = ""
+    ks = Upload.UploadedFiles.keys
+    if (UBound(ks) <> -1) then
+        SaveFiles = "<B>Files uploaded Success : </B> "
+        for each fileKey in Upload.UploadedFiles.keys
+            SaveFiles = SaveFiles & Upload.UploadedFiles(fileKey).FileName & " (" & Upload.UploadedFiles(fileKey).Length & "B) "
+			
+        next
+		if db <> "" then
+			Response.Redirect("drawing_u.asp?id="&id&"&db="&db)
+		else
+			Response.Redirect("index.asp")	
+		end if
+    else
+        SaveFiles = "The file name specified in the upload form does not correspond to a valid file in the system."
+    end if
 	
 end function
 %>
 <!--#include file="../../init.asp"-->
-<% call header("UPLOAD DRAWING") %>
+<% 
+	if session("INV3F") = false then
+		Response.Redirect("index.asp")
+	end if
+	call header("UPLOAD DOCUMENT") 
+%>
 <!--#include file="../../navbar.asp"-->	
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ 
 
 <script>
 function onSubmitForm(objForm) {
-   var formDOMObj = document.frmSend;
-   var arrExtensions=new Array("jpg");
+    var formDOMObj = document.frmSend;
+    var arrExtensions=new Array("jpg");
 	var objInput = objForm.elements["filter"];
 	var strFilePath = objInput.value;
 	var arrTmp = strFilePath.split(".");
@@ -103,51 +122,47 @@ function onSubmitForm(objForm) {
 	}
 	
 	if (!blnExists)
-		alert("Only upload Photo with JPG extension only","File Upload Failed");
+		alert("Only upload Photo with PDF extension only","File Upload Failed");
 	return blnExists;
 	
     if (formDOMObj.attach1.value == "" && formDOMObj.attach2.value == "" && formDOMObj.attach3.value == "" && formDOMObj.attach4.value == "" )
-      alert("Please press the Browse button and pick a file.")
+        alert("Please press the Browse button and pick a file.")
     else
-      return true;
+        return true;
     return false;
 }
 </script>
 
 <style>
-   .container{
-      margin-top:25vh;
-      background-color:whitesmoke;
-      border:2px solid black;
-      border-radius:20px;
-   }
-   .upload{
-      margin-left:30%;
-   }
-   .upload button[type=button]{
-      margin-left:-34px;
-   }
-   .upload img{
-      max-width:15%;
-      margin-top:-8%;
-      float: right;
-   }
+    .container{
+        margin-top:25vh;
+        background-color:whitesmoke;
+        border:2px solid black;
+        border-radius:20px;
+    }
+    .upload{
+        margin-left:30%;
+    }
+    .upload button[type=button]{
+        margin-left:-34px;
+    }
+    .upload img{
+        max-width:15%;
+        margin-top:-8%;
+        float: right;
+    }
 </style>
-
-</HEAD>
-
-<BODY>
 <div class="container">
     <div class='row'>
         <div class='col text-center'>
-            <h3>UPLOAD DRAWING</h3>
+            <h3>UPLOAD DOCUMENT PENDUKUNG</h3>
         </div>
     </div>
     <div class="upload">
-        <form name="frmSend" method="POST" enctype="multipart/form-data" action="uploadDrawing.asp?id=<%=request.querystring("id")%>&img=<%= img %>" onSubmit="return onSubmitForm(this);">   	<p style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
+        <form name="frmSend" method="POST" enctype="multipart/form-data" action="uploadDrawing.asp?id=<%=id%>&t=<%= t %>&db=<%= db %>" >   	<p style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
         
         <p style="margin-top: 0; margin-bottom: 0"><b>File To Upload : </b>
-        <input name="filter" type="file" size="20" />
+        <input name="filter" type="file" size="20" accept="<%= accept %>" required/>
         <button type="submit" class="btn btn-primary" value="submit">UPLOAD</button>
         </p>
         </form> 
@@ -166,26 +181,26 @@ function onSubmitForm(objForm) {
                 response.write "</div>"
             end if
         else
-			
             response.write "<div style=""margin-left:150"">"
             OutputForm()
             response.write SaveFiles()
             response.write "<br><br></div>"
-			response.redirect "../index.asp?id=" & request.querystring("id")
+			response.redirect "index.asp"
         end if
         %>
         <u><b>Ketentuan :</b></u><ul>
-        <li>Pastikan name dari dwaring harus sama dengan ID product.</li>
-        <li>CONTOH : 0010821003.jpg</li>
-        <li>Kami hanya menerima foto dalam bentuk format file *.jpg</li>
+        <li>Pastikan nama file sudah sesuai dengan nomor transaksi</li>
+        <li>CONTOH : 0010821003.pdf</li>
+        <li>Kami hanya menerima document dalam bentuk format file *.pdf</li>
 
-        <button type="button" onclick="window.location.href='produksi.asp'" class="btn btn-danger mt-4">Kembali</button>
+        <button type="button" onclick="window.location.href='index.asp'" class="btn btn-danger mt-4">Kembali</button>
         <img src="../../public/img/delimalogo.png">
     </div>
 </div>
+<% call footer() %>
+
 
 <%
-   call footer()
 '  For examples, documentation, and your own free copy, go to:
 '  http://www.freeaspupload.net
 '  Note: You can copy and use this script for free and you can make changes
@@ -481,7 +496,7 @@ Class UploadedFile
         nameOfFile = SubstNoReg(nameOfFile, "|", "_")
     End Property
     Public Property Get FileName()
-        FileName = id & ".jpg"
+        FileName = request.querystring("id") & "."&p
     End Property
     'Public Property Get FileN()ame
 	

@@ -241,9 +241,7 @@
                <th>Nama</th>
                <th>Tanggal</th>
                <th>Cabang</th>
-               <th>Draw 1</th>
-               <th>Draw 2</th>
-               <th>Draw 3</th>
+               <th>No Drawing</th>
                <th class="text-center">Aksi</th>
             </thead>
             <tbody>
@@ -264,43 +262,7 @@
                   <td><%= Cdate(rs("BMDate")) %></td>
                   <td><%= rs("agenName") %></td>
                   <td>
-                        <% if rs("BMimg1") <> "" then%>
-                           <img src="<%= url %>document/stack/<%= rs("BMimg1") &".jpg" %>" id="myImg<%= recordcounter %>" width="30px" onclick="openDrawing('mymodal<%= recordcounter %>', this.src,'img<%= recordcounter %>','caption<%= recordcounter %>','close<%= recordcounter %>','<%= rs("BMId") %>', '1')">
-                           <!-- The Modal -->
-                           <div class="modal" id="mymodal<%= recordcounter %>">
-                              <span class="close" id="close<%= recordcounter %>">&times;</span>
-                              <div id="caption<%= recordcounter %>"></div>
-                              <img class="modal-content" id="img<%= recordcounter %>">
-                           </div>
-                        <% else %>
-                           <a href="uploadDrawing.asp?id=<%= rs("BMId") %>&img=1" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
-                        <% end if %>
-                  </td>
-                  <td>
-                        <% if rs("BMimg2") <> "" then%>
-                           <img src="<%= url %>document/stack/<%= rs("BMimg2") &".jpg" %>" id="myImg<%= recordcounter %>" width="30px" onclick="openDrawing('mymodal<%= recordcounter %>', this.src,'img<%= recordcounter %>','caption<%= recordcounter %>','close<%= recordcounter %>','<%= rs("BMId") %>', '2')">
-                           <!-- The Modal -->
-                           <div class="modal" id="mymodal<%= recordcounter %>">
-                              <span class="close" id="close<%= recordcounter %>">&times;</span>
-                              <div id="caption<%= recordcounter %>"></div>
-                              <img class="modal-content" id="img<%= recordcounter %>">
-                           </div>
-                        <% else %>
-                           <a href="uploadDrawing.asp?id=<%= rs("BMId") %>&img=2" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
-                        <% end if %>
-                  </td>
-                  <td>
-                        <% if rs("BMimg3") <> "" then%>
-                           <img src="<%= url %>document/stack/<%= rs("BMimg3") &".jpg" %>" id="myImg<%= recordcounter %>" width="30px" onclick="openDrawing('mymodal<%= recordcounter %>', this.src,'img<%= recordcounter %>','caption<%= recordcounter %>','close<%= recordcounter %>','<%= rs("BMId") %>', '3')">
-                           <!-- The Modal -->
-                           <div class="modal" id="mymodal<%= recordcounter %>">
-                              <span class="close" id="close<%= recordcounter %>">&times;</span>
-                              <div id="caption<%= recordcounter %>"></div>
-                              <img class="modal-content" id="img<%= recordcounter %>">
-                           </div>
-                        <% else %>
-                           <a href="uploadDrawing.asp?id=<%= rs("BMId") %>&img=3" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
-                        <% end if %>
+                     <%= LEft(rs("BMSasisID"),5) &"-"& mid(rs("BMSasisID"),6,4) &"-"& right(rs("BMSasisID"),3) %>
                   </td>
                   <td class="text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">

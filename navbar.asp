@@ -118,6 +118,15 @@
               <li>
                 <a class="link-name" href="<%= url %>views/bom/">Master B.O.M</a>
               </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/brand/">Master Brand</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/class/">Master Class</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/sasis/">Standart Product</a>
+              </li>
             </ul>
           <!-- ppic -->
           <li class="nav-text">
