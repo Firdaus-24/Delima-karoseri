@@ -18,6 +18,10 @@
    ' response.write data_cmd.commandText & "<br>"
    set data = data_cmd.execute
 
+   data_cmd.commandTExt = "SELECT ISNULL(dbo.DLK_M_Sasis.SasisType, '') AS type, ISNULL(dbo.DLK_M_Brand.BrandName, '') AS brand, ISNULL(dbo.DLK_M_Sasis.SasisDrawing, '') AS drawing FROM dbo.DLK_M_Brand INNER JOIN dbo.DLK_M_Sasis ON dbo.DLK_M_Brand.BrandID = dbo.DLK_M_Sasis.SasisBrandID RIGHT OUTER JOIN dbo.DLK_M_BOMH ON dbo.DLK_M_Sasis.SasisID = dbo.DLK_M_BOMH.BMSasisID WHERE (dbo.DLK_M_BOMH.BMAktifYN = 'Y') AND (dbo.DLK_M_BOMH.BMID = '"& data("PDD_BMID") &"') "
+
+   set getsasis = data_cmd.execute
+
    ' qty = data("IPD_Qtysatuan")
    strid = id & data("PDD_Item")
 %> 
@@ -88,6 +92,8 @@
                <p><%= data("Brg_Nama") %></p>
                </br>
                <p>Kode : <%= data("KategoriNama") &"-"& data("JenisNama") %></p>
+               </br>
+               <p><%= getsasis("brand") &"-"& getsasis("type") %></p>
                </br>
                <span>www.delimakaroseriindonesia.co.id</span>
             </td>

@@ -88,11 +88,17 @@
    <tr>
       <th style="background-color: #0000a0;color:#fff;">ID</th>
       <th style="background-color: #0000a0;color:#fff;">B.O.M ID</th>
+      <th style="background-color: #0000a0;color:#fff;">No. Drawing</th>
       <th style="background-color: #0000a0;color:#fff;">Kode</th>
       <th style="background-color: #0000a0;color:#fff;">Item</th>
+      <th style="background-color: #0000a0;color:#fff;">Type</th>
+      <th style="background-color: #0000a0;color:#fff;">Brand</th>
    </tr>
    <% 
    do while not ddata.eof 
+   ' cek nomor drawing
+   data_cmd.commandTExt = "SELECT ISNULL(dbo.DLK_M_Sasis.SasisType, '') AS type, ISNULL(dbo.DLK_M_Brand.BrandName, '') AS brand, ISNULL(dbo.DLK_M_Sasis.SasisDrawing, '') AS drawing FROM dbo.DLK_M_Brand INNER JOIN dbo.DLK_M_Sasis ON dbo.DLK_M_Brand.BrandID = dbo.DLK_M_Sasis.SasisBrandID RIGHT OUTER JOIN dbo.DLK_M_BOMH ON dbo.DLK_M_Sasis.SasisID = dbo.DLK_M_BOMH.BMSasisID WHERE (dbo.DLK_M_BOMH.BMAktifYN = 'Y') AND (dbo.DLK_M_BOMH.BMID = '"& ddata("PDD_BMID") &"') "
+   set getsasis = data_cmd.execute
    %>
       <tr>
          <th>
@@ -102,10 +108,21 @@
             <%= left(ddata("PDD_BMID"),2) %>-<% call getAgen(mid(ddata("PDD_BMID"),3,3),"") %>/<%= mid(ddata("PDD_BMID"),6,4) %>/<%= right(ddata("PDD_BMID"),3)  %>
          </td>
          <td>
+            <% if getsasis("drawing") <> "" then %>
+            <%= LEft(getsasis("drawing"),5) &"-"& mid(getsasis("drawing"),6,4) &"-"& right(getsasis("drawing"),3)  %>
+            <%  end if %>
+         </td>
+         <td>
             <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
          </td>
          <td>
             <%= ddata("brg_nama")%>
+         </td>
+         <td>
+            <%= getsasis("brand")%>
+         </td>
+         <td>
+            <%= getsasis("type")%>
          </td>
       </tr>
    <% 

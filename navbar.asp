@@ -130,9 +130,14 @@
             </ul>
           <!-- ppic -->
           <li class="nav-text">
-            <a href="#"><i class="bi bi-layers"></i> PPIC/Prod Dev</a>
+            <a href="#" onclick="toggle('sublist-ppic')"><i class="bi bi-layers"></i> PPIC/Prod Dev</a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
+            <ul class="sub-menu" id="sublist-ppic">
+              <li>
+                <a class="link-name" href="<%= url %>views/rc/">Produksi Received</a>
+              </li>
+            </ul>
           <!-- purchase -->
           <li class="nav-text">
             <a href="#" onclick="toggle('sublist-purces')"><i class="bi bi-cash-stack"></i> Purchase</a>

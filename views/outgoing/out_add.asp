@@ -37,7 +37,7 @@
                 </select>
             </div>
             <div class="col-lg-2 mb-3">
-                <label for="bmhid" class="col-form-label">No B.O.M</label>
+                <label for="bmhid" class="col-form-label">No Produksi</label>
             </div>
             <div class="col-lg-4 mb-3 lbomlama">
                 <select class="form-select" aria-label="Default select example" name="lbom" id="lbom" > 

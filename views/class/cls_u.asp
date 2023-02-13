@@ -12,7 +12,7 @@
    data_cmd.commandText = "SELECT * FROM DLK_M_Class WHERE ClassID = '"& id &"' AND ClassAktifYN = 'Y'"
    set data = data_cmd.execute
 
-   call header("From Class")
+   call header("Update Class")
 %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">

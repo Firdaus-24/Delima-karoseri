@@ -4,7 +4,7 @@
       Response.Redirect("index.asp")
    end if 
 
-   call header("Update Class")
+   call header("Tambah Class")
 %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">

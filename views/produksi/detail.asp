@@ -119,14 +119,21 @@
                <tr>
                   <th scope="col">ID</th>
                   <th scope="col">B.O.M ID</th>
+                  <th scope="col">No. Drawing</th>
                   <th scope="col">Kode</th>
                   <th scope="col">Item</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Brand</th>
                   <th scope="col" class="text-center">Aksi</th>
                </tr>
             </thead>
             <tbody>
                <% 
                do while not ddata.eof 
+
+               ' cek nomor drawing
+               data_cmd.commandTExt = "SELECT ISNULL(dbo.DLK_M_Sasis.SasisType, '') AS type, ISNULL(dbo.DLK_M_Brand.BrandName, '') AS brand, ISNULL(dbo.DLK_M_Sasis.SasisDrawing, '') AS drawing FROM dbo.DLK_M_Brand INNER JOIN dbo.DLK_M_Sasis ON dbo.DLK_M_Brand.BrandID = dbo.DLK_M_Sasis.SasisBrandID RIGHT OUTER JOIN dbo.DLK_M_BOMH ON dbo.DLK_M_Sasis.SasisID = dbo.DLK_M_BOMH.BMSasisID WHERE (dbo.DLK_M_BOMH.BMAktifYN = 'Y') AND (dbo.DLK_M_BOMH.BMID = '"& ddata("PDD_BMID") &"') "
+               set getsasis = data_cmd.execute
                %>
                   <tr>
                      <th>
@@ -136,15 +143,28 @@
                         <%= left(ddata("PDD_BMID"),2) %>-<%= mid(ddata("PDD_BMID"),3,3) %>/<%= mid(ddata("PDD_BMID"),6,4) %>/<%= right(ddata("PDD_BMID"),3)  %>
                      </td>
                      <td>
+                        <% if getsasis("drawing") <> "" then  %>
+                        <a href="../sasis/openpdf.asp?id=<%= getsasis("drawing") %>&p=draw" style="text-decoration:none;">
+                        <%= LEft(getsasis("drawing"),5) &"-"& mid(getsasis("drawing"),6,4) &"-"& right(getsasis("drawing"),3)  %>
+                        </a>
+                        <% end if %>
+                     </td>
+                     <td>
                         <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
                      </td>
                      <td>
                         <%= ddata("brg_nama")%>
                      </td>
+                     <td>
+                        <%= getsasis("type")%>
+                     </td>
+                     <td>
+                        <%= getsasis("Brand")%>
+                     </td>
                      <td class="text-center">
                         <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
                            <button type="button" class="btn btn-outline-dark" onclick="window.location.href='export-Dproduksi.asp?id=<%= ddata("PDD_ID") %>'">Cetak</button>
-                           <% if session("ENG1F") = false then %>
+                           <% if session("ENG1F") = true then %>
                               <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVoucher" onclick="getDataBOM('<%=ddata("PDD_id")%>')">Voucher</button>
                            <% end if %>
                         </div>

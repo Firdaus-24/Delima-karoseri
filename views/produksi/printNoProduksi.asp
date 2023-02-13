@@ -46,6 +46,11 @@ set hbom = data_cmd.execute
 data_cmd.commandText = "SELECT dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_BOMD.BMDQtty, dbo.DLK_M_BOMD.BMDBMID, dbo.DLK_M_BOMH.BMID, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_SatuanBarang.Sat_Nama FROM dbo.DLK_M_SatuanBarang INNER JOIN dbo.DLK_M_BOMD ON dbo.DLK_M_SatuanBarang.Sat_ID = dbo.DLK_M_BOMD.BMDJenisSat LEFT OUTER JOIN dbo.DLK_M_Barang INNER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId INNER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID ON dbo.DLK_M_BOMD.BMDItem = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_BOMH ON LEFT(dbo.DLK_M_BOMD.BMDBMID, 12) = dbo.DLK_M_BOMH.BMID WHERE (dbo.DLK_M_BOMH.BMID = '"& data("PDD_BMID") &"') AND (dbo.DLK_M_BOMH.BMAktifYN = 'Y') AND (dbo.DLK_M_BOMH.BMApproveYN = 'Y')"
 
 set dbom = data_cmd.execute
+
+' get nomor drawing
+data_cmd.commandTExt = "SELECT ISNULL(dbo.DLK_M_Sasis.SasisType, '') AS type, ISNULL(dbo.DLK_M_Brand.BrandName, '') AS brand, ISNULL(dbo.DLK_M_Sasis.SasisDrawing, '') AS drawing FROM dbo.DLK_M_Brand INNER JOIN dbo.DLK_M_Sasis ON dbo.DLK_M_Brand.BrandID = dbo.DLK_M_Sasis.SasisBrandID RIGHT OUTER JOIN dbo.DLK_M_BOMH ON dbo.DLK_M_Sasis.SasisID = dbo.DLK_M_BOMH.BMSasisID WHERE (dbo.DLK_M_BOMH.BMAktifYN = 'Y') AND (dbo.DLK_M_BOMH.BMID = '"& data("PDD_BMID") &"') "
+
+set getsasis = data_cmd.execute
 %>
 <table width=""100%>
    <tr>  
@@ -64,6 +69,24 @@ set dbom = data_cmd.execute
       <td >Capaity</td>
       <td colspan="3">
          : <%= hbom("capacty") %>
+      </td>
+   </tr>
+   <tr>
+      <td >Type</td>
+      <td colspan="3">
+         : <%= getsasis("type") %>
+      </td>
+   </tr>
+   <tr>
+      <td >Brand</td>
+      <td colspan="3">
+         : <%= getsasis("brand") %>
+      </td>
+   </tr>
+   <tr>
+      <td >No.Drawing</td>
+      <td colspan="3">
+         : <%= LEft(getsasis("drawing"),5) &"-"& mid(getsasis("drawing"),6,4) &"-"& right(getsasis("drawing"),3) %>
       </td>
    </tr>
    <tr>
