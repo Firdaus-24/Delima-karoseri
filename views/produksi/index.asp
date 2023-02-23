@@ -176,9 +176,9 @@
                   <tr><TH><%= recordcounter %></TH>
                   <th>
                      <% if session("ENG1D") = true then %>
-                        <a href="printNoProduksi.asp?id=<%= rs("PDH_ID") %>" class="btn btn-outline-info badge text-dark" style="text-decoration:none"><%= left(rs("PDH_ID"),2) %>-<%= mid(rs("PDH_ID"),3,3) %>/<%= mid(rs("PDH_ID"),6,4) %>/<%= right(rs("PDH_ID"),3)  %></a>
+                        <a href="printNoProduksi.asp?id=<%= rs("PDH_ID") %>" class="btn btn-outline-info badge text-dark" style="text-decoration:none"><%= left(rs("PDH_ID"),2) %>-<%= mid(rs("PDH_ID"),3,3) %>/<%= mid(rs("PDH_ID"),6,4) %>/<%= right(rs("PDH_ID"),4)  %></a>
                      <% else %>
-                        <%= left(rs("PDH_ID"),2) %>-<%= mid(rs("PDH_ID"),3,3) %>/<%= mid(rs("PDH_ID"),6,4) %>/<%= right(rs("PDH_ID"),3)  %>
+                        <%= left(rs("PDH_ID"),2) %>-<%= mid(rs("PDH_ID"),3,3) %>/<%= mid(rs("PDH_ID"),6,4) %>/<%= right(rs("PDH_ID"),4)  %>
                      <% end if %>
                   </th>
                   <td><%= rs("AgenNAme")%></td>

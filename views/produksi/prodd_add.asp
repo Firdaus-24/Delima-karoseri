@@ -129,6 +129,7 @@
                   <th scope="col">B.O.M ID</th>
                   <th scope="col">Kode</th>
                   <th scope="col">Item</th>
+                  <th scope="col">PPIC</th>
                   <th scope="col" class="text-center">Aksi</th>
                </tr>
             </thead>
@@ -148,6 +149,9 @@
                      </td>
                      <td>
                         <%= ddata("brg_nama")%>
+                     </td>
+                     <td>
+                        <%= ddata("PDD_PicName")%>
                      </td>
                      <td class="text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">
@@ -215,6 +219,16 @@
                </div>
                <div class="col-sm-4 mb-3">
                   <input type="number" name="capacity" id="capacity" class="form-control" required>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col-sm-2 mb-3">
+                  <label class="form-check-label" for="picname">
+                     picname
+                  </label>
+               </div>
+               <div class="col-sm-10 mb-3">
+                  <input type="text" name="picname" id="picname" class="form-control" maxlength="100" autocomplete="off" required>
                </div>
             </div>
          </div>

@@ -9,7 +9,7 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT DivID, DivNama FROM DLK_M_Divisi WHERE DivAktifYN = 'Y' ORDER BY DivNama ASC"
+    data_cmd.commandText = "SELECT DivID, DivNama FROM HRD_M_Divisi WHERE DivAktifYN = 'Y' ORDER BY DivNama ASC"
     set divisi = data_cmd.execute
 
     set conn = Server.CreateObject("ADODB.Connection")
@@ -30,7 +30,7 @@
     else
         strnama = ""
     end if
-    strquery = "SELECT DLK_M_Departement.*, DLK_M_Divisi.DivNama FROM DLK_M_Departement LEFT OUTER JOIN DLK_M_Divisi ON DLK_M_Departement.DepDivid = DLK_M_Divisi.DivID WHERE DepAktifYN = 'Y' "& strnama &""
+    strquery = "SELECT HRD_M_Departement.*, HRD_M_Divisi.DivNama FROM HRD_M_Departement LEFT OUTER JOIN HRD_M_Divisi ON HRD_M_Departement.DepDivid = HRD_M_Divisi.DivID WHERE DepAktifYN = 'Y' "& strnama &""
 
     ' untuk data paggination
     page = Request.QueryString("page")

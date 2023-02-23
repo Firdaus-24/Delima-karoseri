@@ -86,18 +86,16 @@
                 <a class="link-name" href="<%= url %>views/inventory/">Stok Barang</a>
               </li>
             </ul>
-          <!-- repair -->
+          <!-- marketing -->
           <li class="nav-text">
-            <a href="#" onclick="toggle('sublist-repair')"><i class="bi bi-activity"></i> Repair</a>
+            <a href="#" onclick="toggle('sublist-marketing')"><i class="bi bi-activity"></i> Marketing</a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
-            <!-- 
-            <ul class="sub-menu" id="sublist-repair">
+            <ul class="sub-menu" id="sublist-marketing">
               <li>
-                <a class="link-name" href="<%= url %>views/repair/">Repair</a>
+                <a class="link-name" href="<%= url %>views/so/">Sales Order</a>
               </li>
             </ul>
-             -->
           <!-- qc -->
           <li class="nav-text">
             <a href="#"><i class="bi bi-check2-all"></i> QR/QC</a>
@@ -136,6 +134,12 @@
             <ul class="sub-menu" id="sublist-ppic">
               <li>
                 <a class="link-name" href="<%= url %>views/rc/">Produksi Received</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/manpower/">Man Power</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/finishgood/">Produksi Finish</a>
               </li>
             </ul>
           <!-- purchase -->
@@ -212,6 +216,15 @@
               </li>
               <li>
                 <a href="<%= url %>views/departement/">Departement</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/jabatan/">Jabatan</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/jenjang/">Jenjang</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/karyawan/">Karyawan</a>
               </li>
             </ul>
         </div>

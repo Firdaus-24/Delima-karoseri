@@ -37,6 +37,7 @@ End Sub
 sub tambahProduksiD()
     id = trim(Request.Form("id"))
     bomid = trim(Request.Form("bomid"))
+    picname = trim(Request.Form("picname"))
     capacity = Cint(trim(Request.Form("capacity")))
 
     a = split(bomid,",")
@@ -59,7 +60,7 @@ sub tambahProduksiD()
 
             set getID = data_cmd.execute
 
-            call query("INSERT INTO DLK_T_ProduksiD (PDD_ID,PDD_BMID,PDD_Item) VALUES ('"& getID("id") &"','"& strbomid &"', '"& strbrgid &"') ")
+            call query("INSERT INTO DLK_T_ProduksiD (PDD_ID,PDD_BMID,PDD_Item,PDD_PICName) VALUES ('"& getID("id") &"','"& strbomid &"', '"& strbrgid &"', '"& picname &"') ")
         response.flush
         next
         call alert("FORM DETAIL PRODUKSI", "berhasil didaftarkan", "success","prodd_add.asp?id="&id)
@@ -68,6 +69,7 @@ end sub
 sub updateProduksiD()
     id = trim(Request.Form("id"))
     bomid = trim(Request.Form("bomid"))
+    picname = trim(Request.Form("picname"))
     capacity = Cint(trim(Request.Form("capacity")))
 
     a = split(bomid,",")
@@ -90,7 +92,7 @@ sub updateProduksiD()
 
             set getID = data_cmd.execute
 
-            call query("INSERT INTO DLK_T_ProduksiD (PDD_ID,PDD_BMID,PDD_Item) VALUES ('"& getID("id") &"','"& strbomid &"', '"& strbrgid &"') ")
+            call query("INSERT INTO DLK_T_ProduksiD (PDD_ID,PDD_BMID,PDD_Item,PDD_PICName) VALUES ('"& getID("id") &"','"& strbomid &"', '"& strbrgid &"','"& picname &"') ")
         response.flush
         next
         call alert("FORM DETAIL PRODUKSI", "berhasil didaftarkan", "success","prod_u.asp?id="&id)

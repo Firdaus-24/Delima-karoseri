@@ -10,13 +10,18 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT DLK_M_Customer.*, GL_M_CategoryItem.Cat_Name FROM DLK_M_Customer LEFT OUTER JOIN GL_M_CategoryItem ON DLK_M_Customer.custKodeAkun = GL_M_CategoryItem.Cat_ID WHERE CustID = '"& id &"' AND custAktifYN = 'Y'"
+    data_cmd.commandText = "SELECT DLK_M_Customer.*, GL_M_ChartAccount.CA_Name, ISNULL(dbo.GL_M_Bank.Bank_Name,'') as bank FROM DLK_M_Customer LEFT OUTER JOIN GL_M_ChartAccount ON DLK_M_Customer.custKodeAkun = GL_M_ChartAccount.CA_ID LEFT OUTER JOIN dbo.GL_M_Bank ON dbo.DLK_M_Customer.custBankID = dbo.GL_M_Bank.Bank_ID WHERE CustID = '"& id &"' AND custAktifYN = 'Y'"
 
     set data = data_cmd.execute
 
-    data_cmd.commandText = "SELECT Cat_ID,Cat_Name FROM GL_M_CategoryItem WHERE Cat_AKtifYN = 'Y' ORDER BY Cat_Name"
+    data_cmd.commandText = "SELECT GL_M_chartAccount.CA_ID, GL_M_chartAccount.CA_Name FROM GL_M_chartAccount WHERE CA_AktifYN = 'Y' ORDER BY CA_id ASC"
 
     set dataakun = data_cmd.execute
+
+    ' bank
+    data_cmd.commandText = "SELECT Bank_ID, Bank_Name FROM GL_M_Bank WHERE Bank_AktifYN = 'Y' ORDER BY Bank_Name ASC"
+    set databank = data_cmd.execute
+
 
     call header("Form Customer")
 %>
@@ -35,54 +40,91 @@
     </div>
     <form action="cust_u.asp?id=<%= id %>" method="post" id="formcust">
         <input type="hidden" class="form-control" id="id" name="id" autocomplete="off" value="<%= data("custid") %>">
-        <div class="mb-3 row">
-            <label for="tgl" class="col-sm-2 col-form-label offset-sm-1">Tanggal</label>
-            <div class="col-sm-3">
-                <input type="text" class="form-control" id="tgl" name="tgl" autocomplete="off" value="<%= Cdate(data("custTgl")) %>" onfocus="(this.type='date')" required>
+        <div class="row">
+            <div class="col-sm-12 text-center p-2 rounded mb-3" style="background:#ddd;">
+                <label>DETAIL CUSTOMER</label>
             </div>
         </div>
-        <div class="mb-3 row">
-            <label for="nama" class="col-sm-2 col-form-label offset-sm-1">Nama</label>
-            <div class="col-sm-8">
-                <input type="text" class="form-control" id="nama" name="nama" autocomplete="off" maxlength="150" value="<%= data("custNama") %>" required>
+        <div class="row">
+            <div class="col-lg-6 mb-3">
+                <label for="nama" class="col-form-label">Nama</label>
+                <input type="text" class="form-control" id="nama" name="nama" autocomplete="off" autofocus maxlength="150" value="<%= data("custNama") %>" required>
+            </div>
+            <div class="col-lg-6 mb-3">
+                <label for="email" class="col-form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" autocomplete="off" maxlength="150" value="<%= data("custEmail") %>" placeholder="Ex.ptdelima@gmail.com" required>
             </div>
         </div>
-        <div class="mb-3 row">
-            <label for="email" class="col-sm-2 col-form-label offset-sm-1">Email</label>
-            <div class="col-sm-8">
-                <input type="email" class="form-control" id="email" name="email" autocomplete="off" maxlength="150" placeholder="Ex.ptdelima@gmail.com" value="<%= data("custEmail") %>" required>
-            </div>
-        </div>
-        <div class="mb-3 row">
-            <label for="Alamat" class="col-sm-2 col-form-label offset-sm-1">Alamat</label>
-            <div class="col-sm-8">
+        <div class="row">
+            <div class="col-lg-6 mb-3">
+                <label for="Alamat" class="col-form-label">Alamat</label>
                 <input type="text" class="form-control" id="alamat" name="alamat" autocomplete="off" maxlength="150" value="<%= data("custAlamat") %>" required>
             </div>
+            <div class="col-lg-6 mb-3">
+                <label for="phone" class="col-form-label">Phone</label>
+                <input type="tel" class="form-control" id="phone" name="phone" autocomplete="off" maxlength="15" value="<%= data("custPhone1") %>" required>
+            </div>
         </div>  
-        <div class="mb-3 row">
-            <label for="phone1" class="col-sm-2 col-form-label offset-sm-1">Phone 1</label>
-            <div class="col-sm-8">
-                <input type="tel" class="form-control" id="phone1" name="phone1" autocomplete="off" maxlength="15" placeholder="Ex.0856-20018377" pattern="[0-9]{4}-[0-9]{8}" value="<%= data("custPhone1") %>" required>
+        <div class="row">
+            <div class="col-lg-6 mb-3">
+                <label for="typet" class="col-form-label">Type Transaksi</label>
+                <select class="form-select" aria-label="Default select example" name="typet" id="typet" required>
+                    <option value="<%= data("custtypetransaksi") %>">
+                        <% if data("custTypetransaksi") = 1 then%>
+                            CBD
+                        <% elseif data("custTypetransaksi") = 2 then%>
+                            COD
+                        <% elseif data("custTypetransaksi") = 3 then%>
+                            TOP
+                        <% else %>
+                        <% end if %>
+                    </option>
+                    <option value="1">CBD</option>
+                    <option value="2">COD</option>
+                    <option value="3">TOP</option>
+                </select>
             </div>
-        </div>
-        <div class="mb-3 row">
-            <label for="phone2" class="col-sm-2 col-form-label offset-sm-1">Phone 2</label>
-            <div class="col-sm-8">
-                <input type="tel" class="form-control" id="phone2" name="phone2" maxlength="15" value="<%= data("custPhone2") %>" autocomplete="off">
-            </div>
-        </div>
-        <div class="mb-3 row">
-            <label for="kdakun" class="col-sm-2 col-form-label offset-sm-1">Kode Akun</label>
-            <div class="col-sm-8">
-                <select class="form-select" aria-label="Default select example" id="kdakun" name="kdakun" required>
-                    <option value="<%= data("custkodeakun") %>"><%= data("cat_name") %></option>
+            <div class="col-lg-6 mb-3">
+                <label for="kdakun" class="col-form-label">Kode Akun</label>
+                <select class="form-select" aria-label="Default select example" id="kdakun" name="kdakun">
+                    <option value="<%= data("custKodeAkun") %>"><%= data("CA_Name") %></option>
                     <% do while not dataakun.eof %>
-                    <option value="<%= dataakun("cat_id") %>"><%= dataakun("cat_Name") %></option>
+                    <option value="<%= dataakun("CA_ID") %>"><%= dataakun("CA_Name") %></option>
                     <% 
+                    Response.flush
                     dataakun.movenext
                     loop
                     %>
                 </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 text-center p-2 rounded mb-3" style="background:#ddd;">
+                <label>AKUN BANK</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 mb-3">
+                <label for="bank" class="form-label">Bank</label>
+                <select class="form-select" aria-label="Default select example" name="bank" id="bank">
+                    <option value="<%= data("custBankID") %>"><%= data("bank") %></option>
+                    <% do while not databank.eof %>
+                    <option value="<%= databank("bank_ID") %>"><%= databank("Bank_Name") %></option>
+                    <% 
+                    databank.movenext
+                    loop
+                    %>
+                </select>
+            </div>
+            <div class="col-lg-6 mb-3">
+                <label for="norek" class="form-label">No.Rekening</label>
+                <input type="number" maxlength="20" class="form-control" id="norek" name="norek" autocomplete="off" value="<%= data("custNorek") %>" >
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-lg-6 mb-3">
+                <label for="rekName" class="form-label">Nama Pemilik Rekening</label>
+                <input type="text" class="form-control" id="rekName" name="rekName" maxlength="50" autocomplete="off" value="<%= data("custRekName") %>">
             </div>
         </div>
         <div class="row">

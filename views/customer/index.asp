@@ -5,9 +5,6 @@
         Response.Redirect("../index.asp")
     end if
 
-    nama = Ucase(trim(Request.Form("nama")))
-    alamat = trim(Request.Form("alamat"))
-
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
 
@@ -19,17 +16,26 @@
     if len(angka) = 0 then 
         angka = Request.form("urut") + 1
     end if
+    
+    nama = request.QueryString("nama")
+    if len(nama) = 0 then 
+        nama = Ucase(trim(Request.Form("nama")))
+    end if
+    typet = request.QueryString("typet")
+    if len(typet) = 0 then 
+        typet = trim(Request.Form("typet"))
+    end if
 
     ' query seach 
     if nama <> "" then
         filterNama = " AND UPPER(custNama) LIKE '%"& nama &"%' "
     end if
-    if alamat <> "" then
-        filteralamat = " AND custAlamat LIKE '%"& alamat &"%'"
+    if typet <> "" then
+        filtertypet = " AND custTypeTransaksi = "& typet &""
     end if
 
     ' real query
-    strquery = "SELECT DLK_M_Customer.*, GL_M_CategoryItem.cat_Name FROM DLK_M_Customer LEFT OUTER JOIN GL_M_CategoryItem ON DLK_M_Customer.custkodeakun = GL_M_CategoryItem.cat_ID WHERE custAktifYN = 'Y' "& filterNama &" "& filteralamat &""
+    strquery = "SELECT dbo.DLK_M_Customer.custId, dbo.DLK_M_Customer.custNama, dbo.DLK_M_Customer.custEmail, dbo.DLK_M_Customer.custAlamat, dbo.DLK_M_Customer.custPhone1,(CASE WHEN dbo.DLK_M_Customer.custTypeTransaksi = 1 THEN 'CBD' WHEN dbo.DLK_M_Customer.custTypeTransaksi = 2 THEN 'COD' WHEN dbo.DLK_M_Customer.custTypeTransaksi = 3 THEN 'TOP' ELSE '' END) AS ttrans, dbo.DLK_M_Customer.custNorek, dbo.DLK_M_Customer.custBankID, dbo.DLK_M_Customer.custRekName, dbo.GL_M_Bank.Bank_Name FROM dbo.DLK_M_Customer LEFT OUTER JOIN dbo.GL_M_Bank ON dbo.DLK_M_Customer.custBankID = dbo.GL_M_Bank.Bank_ID WHERE custAktifYN = 'Y' "& filterNama &" "& filtertypet &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
@@ -95,7 +101,12 @@
                 <input type="text" class="form-control" name="nama" id="nama" autocomplete="off" placeholder="cari nama customer">
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="text" class="form-control" name="alamat" id="alamat" autocomplete="off" placeholder="cari alamat">
+                <select class="form-select" aria-label="Default select example" name="typet" id="typet">
+                    <option value="">Pilih Type Pembayaran</option>
+                    <option value="1">CBD</option>
+                    <option value="2">COD</option>
+                    <option value="3">TOP</option>
+                </select>
             </div>
             <div class="col-lg mb-3">
                 <button type="submit" class="btn btn-primary">Cari</button>
@@ -107,15 +118,13 @@
             <table class="table">
                 <thead class="bg-secondary text-light">
                     <tr>
+                        <th scope="col">ID</th>
                         <th scope="col">Nama</th>
-                        <th scope="col">Tanggal</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Alamat</th>
                         <th scope="col">Phone1</th>
-                        <th scope="col">Phone2</th>
-                        <th scope="col">UpdateId</th>
-                        <th scope="col" >UpdateTime</th>
-                        <th scope="col" >Kode akun</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Bank ID</th>
+                        <th scope="col" >Type Pembayaran</th>
+                        <th scope="col">Alamat</th>
                         <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -128,15 +137,13 @@
                     recordcounter = recordcounter + 1
                     %>
                     <tr>
+                        <th><%= rs("custID") %></th>
                         <td><%= rs("custNama") %></td>
-                        <td><%= rs("custTgl") %></td>
-                        <td><%= rs("custEmail") %></td>
-                        <td><%= rs("custAlamat") %></td>
                         <td><%= rs("custPhone1") %></td>
-                        <td><%= rs("custPhone2") %></td>
-                        <td><%= rs("custUpdateID") %></td>
-                        <td><%= rs("custUpdateTime") %></td>
-                        <td><%=rs("cat_Name") %></td>
+                        <td><%= rs("custEmail") %></td>
+                        <td><%= rs("bank_name") %></td>
+                        <td><%= rs("ttrans") %></td>
+                        <td><%= rs("custAlamat") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <% if session("M2B") = true then  %>

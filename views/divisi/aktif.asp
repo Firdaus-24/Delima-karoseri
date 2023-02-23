@@ -8,7 +8,7 @@
  %>
 <!--#include file="../../navbar.asp"-->
 <%      
-        call query("UPDATE DLK_M_Divisi SET DivaktifYN = 'N' WHERE DivId = '"& id &"'")
+        call query("UPDATE HRD_M_Divisi SET DivaktifYN = 'N' WHERE DivId = '"& id &"'")
         call alert("DIVISI ID "&id&" ", "berhasil non aktifkan", "success","index.asp") 
 call footer() 
 %>

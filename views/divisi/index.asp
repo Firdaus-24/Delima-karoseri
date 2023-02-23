@@ -20,9 +20,9 @@
 
     ' query seach 
     if nama <> "" then
-        strquery = "SELECT * FROM DLK_M_Divisi WHERE DivAktifYN = 'Y' AND DivNama LIKE '%"& nama &"%'"
+        strquery = "SELECT * FROM HRD_M_Divisi WHERE DivAktifYN = 'Y' AND DivNama LIKE '%"& nama &"%'"
     else
-        strquery = "SELECT * FROM DLK_M_Divisi WHERE DivAktifYN = 'Y'"
+        strquery = "SELECT * FROM HRD_M_Divisi WHERE DivAktifYN = 'Y'"
     end if
 
     ' untuk data paggination

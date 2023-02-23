@@ -8,7 +8,7 @@
  %>
 <!--#include file="../../navbar.asp"-->
 <%      
-        call query("UPDATE DLK_M_Departement SET DepaktifYN = 'N' WHERE DepId = '"& id &"'")
+        call query("UPDATE HRD_M_Departement SET DepaktifYN = 'N' WHERE DepId = '"& id &"'")
         call alert("KEBUTUHAN ID "&id&" ", "berhasil non aktifkan", "success","index.asp") 
 call footer() 
 %>

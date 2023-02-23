@@ -124,6 +124,7 @@
                   <th scope="col">Item</th>
                   <th scope="col">Type</th>
                   <th scope="col">Brand</th>
+                  <th scope="col">PPIC</th>
                   <th scope="col" class="text-center">Aksi</th>
                </tr>
             </thead>
@@ -161,8 +162,11 @@
                      <td>
                         <%= getsasis("Brand")%>
                      </td>
+                     <td>
+                        <%= ddata("PDD_PICName")%>
+                     </td>
                      <td class="text-center">
-                        <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+                        <div class="btn-group btn-group-sm" role="group">
                            <button type="button" class="btn btn-outline-dark" onclick="window.location.href='export-Dproduksi.asp?id=<%= ddata("PDD_ID") %>'">Cetak</button>
                            <% if session("ENG1F") = true then %>
                               <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVoucher" onclick="getDataBOM('<%=ddata("PDD_id")%>')">Voucher</button>

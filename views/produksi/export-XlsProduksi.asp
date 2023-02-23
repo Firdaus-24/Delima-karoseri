@@ -93,6 +93,7 @@
       <th style="background-color: #0000a0;color:#fff;">Item</th>
       <th style="background-color: #0000a0;color:#fff;">Type</th>
       <th style="background-color: #0000a0;color:#fff;">Brand</th>
+      <th style="background-color: #0000a0;color:#fff;">PPIC</th>
    </tr>
    <% 
    do while not ddata.eof 
@@ -123,6 +124,9 @@
          </td>
          <td>
             <%= getsasis("type")%>
+         </td>
+         <td>
+            <%= ddata("PDD_PICName")%>
          </td>
       </tr>
    <% 

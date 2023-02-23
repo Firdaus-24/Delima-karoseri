@@ -2,7 +2,7 @@
 <% 
   ' cek hakakses 
     if Ucase(session("username")) <> "DAUSIT" AND Ucase(session("username")) <> Ucase("ADMINISTRATOR") then
-        Response.Redirect(url&"login.asp")
+      Response.Redirect(url&"login.asp")
     end if
   id = trim(Request.QueryString("id"))
 
@@ -15,6 +15,9 @@
 call header("Hak Akses") %>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 <style>
+  .accordion__container::-webkit-scrollbar{
+    display: none;
+  }
   /*=============== GOOGLE FONTS ===============*/
   @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
   /*=============== VARIABLES CSS ===============*/
@@ -65,12 +68,13 @@ call header("Hak Akses") %>
   /*=============== ACCORDION ===============*/
   .accordion {
     display: grid;
-    align-content: center;
+    /* align-content: center; */
     height: 100vh;
   }
 
   .accordion__container {
-    margin-top:8em;
+    overflow-x:auto;
+    /* margin-top:8em; */
     display: grid;
     row-gap: .75rem;
     padding: 2rem 1rem;
@@ -133,75 +137,31 @@ call header("Hak Akses") %>
     border-radius: .25rem 0 0 .25rem;
   }
 
-  .accordion__item:nth-child(1) {
+  #accordion__itempertama{
     background-color: #fff7f0;
   }
-
-  .accordion__item:nth-child(1)::after {
+  #accordion__itempertama::after{
     background-color: #ffc08a;
   }
 
-  .accordion__item:nth-child(2) {
+  #accordion__itemkedua{
     background-color: #f0f0ff;
   }
-
-  .accordion__item:nth-child(2)::after {
+  #accordion__itemkedua::after{
     background-color: #8a8aff;
   }
 
-  .accordion__item:nth-child(3) {
+  #accordion__itemtiga{
     background-color: #fff0f3;
   }
-
-  .accordion__item:nth-child(3)::after {
+  #accordion__itemtiga::after{
     background-color: #ff8aa1;
   }
-
-  .accordion__item:nth-child(4) {
+  #accordion__itemempat{
     background-color: #f0faff;
   }
-
-  .accordion__item:nth-child(4)::after {
+  #accordion__itemempat::after{
     background-color: #8ad8ff;
-  }
-  .accordion__item:nth-child(5) {
-    background-color: #fff7f0;
-  }
-
-  .accordion__item:nth-child(5)::after {
-    background-color: #ffc08a;
-  }
-
-  .accordion__item:nth-child(6) {
-    background-color: #f0f0ff;
-  }
-
-  .accordion__item:nth-child(6)::after {
-    background-color: #8a8aff;
-  }
-
-  .accordion__item:nth-child(7) {
-    background-color: #fff0f3;
-  }
-
-  .accordion__item:nth-child(7)::after {
-    background-color: #ff8aa1;
-  }
-  
-  .accordion__item:nth-child(8) {
-    background-color: #f0faff;
-  }
-
-  .accordion__item:nth-child(8)::after {
-    background-color: #8ad8ff;
-  }
-
-  .accordion__item:nth-child(9) {
-    background-color: #fff7f0;
-  }
-
-  .accordion__item:nth-child(9)::after {
-    background-color: #ffc08a;
   }
 
   .accordion__content {
@@ -249,6 +209,7 @@ call header("Hak Akses") %>
 </style>
 <section class="accordion container">
   <div class="accordion__container">
+    <!-- header -->
     <div class="row" style="position: static;">
       <div class="col-sm-4 text-start">
         <a href="index.asp" style="text-decoration:none;font-size:12px;"><i class="bi bi-chevron-double-left"></i>Kembali</a>
@@ -258,7 +219,7 @@ call header("Hak Akses") %>
       </div>
     </div>
     <!-- master -->
-    <div class="accordion__item">
+    <div class="accordion__item" id="accordion__itempertama">
       <header class="accordion__header">
         <i class='bx bx-plus accordion__icon'></i>
         <h3 class="accordion__title">Master</h3>
@@ -608,7 +569,7 @@ call header("Hak Akses") %>
       </div>
     </div>
     <!-- customer & vendor -->
-    <div class="accordion__item">
+    <div class="accordion__item" id="accordion__itemkedua">
       <header class="accordion__header">
         <i class='bx bx-plus accordion__icon'></i>
         <h3 class="accordion__title">Customers & Vendors</h3>
@@ -716,7 +677,7 @@ call header("Hak Akses") %>
       </div>
     </div>
     <!-- inventory -->
-    <div class="accordion__item">
+    <div class="accordion__item" id="accordion__itemtiga">
       <header class="accordion__header">
         <i class='bx bx-plus accordion__icon'></i>
         <h3 class="accordion__title">Inventory</h3>
@@ -1011,7 +972,7 @@ call header("Hak Akses") %>
       </div>
     </div>
 
-    <div class="accordion__item">
+    <div class="accordion__item" id="accordion__itemempat">
       <header class="accordion__header">
         <i class='bx bx-plus accordion__icon'></i>
         <h3 class="accordion__title">Engeneering</h3>
@@ -1254,7 +1215,7 @@ call header("Hak Akses") %>
       </div>
     </div>
     <!-- purchasing -->
-    <div class="accordion__item">
+    <div class="accordion__item" id="accordion__itempertama">
       <header class="accordion__header">
         <i class='bx bx-plus accordion__icon'></i>
         <h3 class="accordion__title">Purchasing</h3>
@@ -1481,7 +1442,7 @@ call header("Hak Akses") %>
     </div>
 
     <!-- General Ledger -->
-    <div class="accordion__item">
+    <div class="accordion__item" id="accordion__itemkedua">
       <header class="accordion__header">
         <i class='bx bx-plus accordion__icon'></i>
         <h3 class="accordion__title">General Ledger</h3>
@@ -1688,7 +1649,7 @@ call header("Hak Akses") %>
     </div>
 
     <!-- Finance -->
-    <div class="accordion__item">
+    <div class="accordion__item" id="accordion__itemtiga">
       <header class="accordion__header">
         <i class='bx bx-plus accordion__icon'></i>
         <h3 class="accordion__title">Finance</h3>
@@ -1779,7 +1740,7 @@ call header("Hak Akses") %>
     </div>
 
     <!-- HR / GA -->
-    <div class="accordion__item">
+    <div class="accordion__item" id="accordion__itemempat">
       <header class="accordion__header">
         <i class='bx bx-plus accordion__icon'></i>
         <h3 class="accordion__title">HR / GA</h3>
@@ -1970,12 +1931,129 @@ call header("Hak Akses") %>
                 <label for="HR4C">Delete</label>
               </li>
             </ul>
+          <!-- master karyawan -->
+          <li>
+            <%
+            data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HR5'"
+
+            set app = data_cmd.execute
+            %>
+            <input class="form-check-input" type="checkbox" name="HR5" id="HR5" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HR5');" >
+            <label for="HR5">Master Karyawan</label>
+          </li>
+            <ul>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HR5A'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="HR5A" id="HR5A" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HR5A');" >
+                <label for="HR5A">Tambah</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HR5B'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="HR5B" id="HR5B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HR5B');" >
+                <label for="HR5B">Update</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HR5C'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="HR5C" id="HR5C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HR5C');" >
+                <label for="HR5C">Delete</label>
+              </li>
+            </ul>
+          <!-- master Jabatan -->
+          <li>
+            <%
+            data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HR6'"
+
+            set app = data_cmd.execute
+            %>
+            <input class="form-check-input" type="checkbox" name="HR6" id="HR6" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HR6');" >
+            <label for="HR6">Master Jabatan</label>
+          </li>
+            <ul>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HR6A'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="HR6A" id="HR6A" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HR6A');" >
+                <label for="HR6A">Tambah</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HR6B'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="HR6B" id="HR6B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HR6B');" >
+                <label for="HR6B">Update</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HR6C'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="HR6C" id="HR6C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HR6C');" >
+                <label for="HR6C">Delete</label>
+              </li>
+            </ul>
+          <!-- master Jenjang -->
+          <li>
+            <%
+            data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HR7'"
+
+            set app = data_cmd.execute
+            %>
+            <input class="form-check-input" type="checkbox" name="HR7" id="HR7" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HR7');" >
+            <label for="HR7">Master Jenjang</label>
+          </li>
+            <ul>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HR7A'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="HR7A" id="HR7A" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HR7A');" >
+                <label for="HR7A">Tambah</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HR7B'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="HR7B" id="HR7B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HR7B');" >
+                <label for="HR7B">Update</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HR7C'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="HR7C" id="HR7C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HR7C');" >
+                <label for="HR7C">Delete</label>
+              </li>
+            </ul>
         </ul>
       </div>
     </div>
 
     <!-- ppic -->
-    <div class="accordion__item">
+    <div class="accordion__item" id="accordion__itempertama">
       <header class="accordion__header">
         <i class='bx bx-plus accordion__icon'></i>
         <h3 class="accordion__title">PPIC/ Prod dev</h3>
@@ -2033,6 +2111,65 @@ call header("Hak Akses") %>
         </ul>
       </div>
     </div>
+    <!-- marketing -->
+    <div class="accordion__item" id="accordion__itemkedua">
+      <header class="accordion__header">
+        <i class='bx bx-plus accordion__icon'></i>
+        <h3 class="accordion__title">Marketing</h3>
+      </header>
+
+      <div class="accordion__content">
+        <ul class="accordion__description">
+          <li>
+            <%
+            data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MK1'"
+
+            set app = data_cmd.execute
+            %>
+            <input class="form-check-input" type="checkbox" name="MK1" id="MK1" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MK1');" >
+            <label for="MK1">Sales Order</label>
+          </li>
+            <ul>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MK1A'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="MK1A" id="MK1A" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MK1A');" >
+                <label for="MK1A">Tambah</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MK1B'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="MK1B" id="MK1B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MK1B');" >
+                <label for="MK1B">Update</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MK1C'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="MK1C" id="MK1C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MK1C');" >
+                <label for="MK1C">Delete</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MK1D'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="MK1D" id="MK1D" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MK1D');" >
+                <label for="MK1D">Export</label>
+              </li>
+            </ul>
+        </ul>
+      </div>
+    </div>
   </div>
 </section>
 <script>
@@ -2074,16 +2211,16 @@ call header("Hak Akses") %>
     }
   }
 
-function updateRights(u,s,p){   
-  let user = u
-  let serverID = s
-  let app = p
+  function updateRights(u,s,p){   
+    let user = u
+    let serverID = s
+    let app = p
 
-  $.ajax({
-    method: "post",
-    url: "getApps.asp",
-    data: { user, serverID, app }}).done(function(ms){console.log(ms);
-  })
-}
+    $.ajax({
+      method: "post",
+      url: "getApps.asp",
+      data: { user, serverID, app }}).done(function(ms){console.log(ms);
+    })
+  }
 </script>
 <% call footer() %>
