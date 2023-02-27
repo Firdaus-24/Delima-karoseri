@@ -321,19 +321,22 @@
                                  <input type="text" name="username" class="form-style" placeholder="Username" id="username" autocomplete="off" required>
                                  <i class="input-icon bi bi-person"></i>
                               </div>	
+                              <input type="hidden" name="agen" class="form-style" placeholder="agen" id="agen" autocomplete="off" value="001" required>
+                              <!-- 
                               <div class="form-group mt-2">
                                  <select class="form-select form-style" name="agen" id="agen" required>
                                     <option value="">Pilih Server</option>
-                                    <% do while not serverid.eof %>
-                                    <option value="<%= serverid("agenID") %>"><%= serverID("agenName") %></option>
+                                    <%' do while not serverid.eof %>
+                                    <option value="<%'= serverid("agenID") %>"><%'= serverID("agenName") %></option>
                                     <% 
-                                    response.flush
-                                    serverid.movenext
-                                    loop
+                                    ' response.flush
+                                    ' serverid.movenext
+                                    ' loop
                                     %>
                                  </select>
                                  <i class="input-icon bi bi-house-door"></i>
                               </div>
+                               -->
                               <div class="form-group mt-2">
                                  <input type="password" name="password" class="form-style" placeholder="Your Password" id="password" autocomplete="off" required>
                                  <i class="input-icon bi bi-lock"></i>

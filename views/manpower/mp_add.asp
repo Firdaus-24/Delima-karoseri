@@ -1,9 +1,9 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_manpower.asp"-->
 <% 
-  ' if session("ENG5A") = false then
-  '   Response.Redirect("index.asp")
-  ' end if
+  if session("PP2A") = false then
+    Response.Redirect("index.asp")
+  end if
 
   set data_cmd =  Server.CreateObject ("ADODB.Command")
   data_cmd.ActiveConnection = mm_delima_string

@@ -30,4 +30,5 @@
     <script src="../../public/js/returnBarang.js"></script>
     <script src="../../public/js/bom.js"></script>
     <script src="../../public/js/finishgood.js"></script>
+    <script src="../../public/js/manpower.js"></script>
 </html>

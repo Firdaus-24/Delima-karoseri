@@ -1,72 +1,72 @@
 <!--#include file="../../init.asp"-->
 <% 
-'    if session("MK1") = false then
-'       Response.Redirect("../index.asp")
-'    end if
+    if session("PP2") = false then
+        Response.Redirect("../index.asp")
+    end if
 
-   set data_cmd =  Server.CreateObject ("ADODB.Command")
-   data_cmd.ActiveConnection = mm_delima_string
+    set data_cmd =  Server.CreateObject ("ADODB.Command")
+    data_cmd.ActiveConnection = mm_delima_string
 
-   ' filter agen
-'    data_cmd.commandText = "SELECT dbo.GLB_M_Agen.AgenName, dbo.GLB_M_Agen.AgenID FROM dbo.DLK_T_OrJulH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_OrJulH.OJH_AgenID = dbo.GLB_M_Agen.AgenID WHERE DLK_T_OrJulH.OJH_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
-'    set agendata = data_cmd.execute
-   
-   ' filter customer
-'    data_cmd.commandTExt = "SELECT CustID, CustNama FROM DLK_T_OrjulH LEFT OUTER JOIN DLK_M_CUstomer ON DLK_T_OrjulH.OJH_CustID = DLK_M_Customer.custID WHERE OJH_AktifYN = 'Y' ORDER BY CustNAma"
+    '    filter agen
+    data_cmd.commandText = "SELECT dbo.GLB_M_Agen.AgenName, dbo.GLB_M_Agen.AgenID FROM dbo.DLK_T_ManpowerH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_ManpowerH.MP_AgenID = dbo.GLB_M_Agen.AgenID GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    set agendata = data_cmd.execute
+    
+    ' filter produksi
+    data_cmd.commandTExt = "SELECT dbo.DLK_T_ProduksiH.PDH_ID FROM dbo.DLK_T_ManPowerH LEFT OUTER JOIN dbo.DLK_T_ProduksiH ON dbo.DLK_T_ManPowerH.MP_PDHID = dbo.DLK_T_ProduksiH.PDH_ID GROUP BY dbo.DLK_T_ProduksiH.PDH_ID ORDER BY dbo.DLK_T_ProduksiH.PDH_ID"
 
-'    set custdata = data_cmd.execute
+    set proddata = data_cmd.execute
 
-   set conn = Server.CreateObject("ADODB.Connection")
-   conn.open MM_Delima_string
+    set conn = Server.CreateObject("ADODB.Connection")
+    conn.open MM_Delima_string
 
-   dim recordsonpage, requestrecords, allrecords, hiddenrecords, showrecords, lastrecord, recordconter, pagelist, pagelistcounter, sqlawal
-   dim angka
-   dim code, nama, aktifId, UpdateId, uTIme, orderBy
+    dim recordsonpage, requestrecords, allrecords, hiddenrecords, showrecords, lastrecord, recordconter, pagelist, pagelistcounter, sqlawal
+    dim angka
+    dim code, nama, aktifId, UpdateId, uTIme, orderBy
    
    ' untuk angka
-   angka = request.QueryString("angka")
-   if len(angka) = 0 then 
-      angka = Request.form("urut") + 1
-   end if
-'    agen = request.QueryString("agen")
-'    if len(agen) = 0 then 
-'       agen = trim(Request.Form("agen"))
-'    end if
-'    cust = request.QueryString("cust")
-'    if len(cust) = 0 then 
-'       cust = trim(Request.Form("cust"))
-'    end if
-'    tgla = request.QueryString("tgla")
-'    if len(tgla) = 0 then 
-'       tgla = trim(Request.Form("tgla"))
-'    end if
-'    tgle = request.QueryString("tgle")
-'    if len(tgle) = 0 then 
-'       tgle = trim(Request.Form("tgle"))
-'    end if
-   
-'    if agen <> "" then
-'       filterAgen = "AND DLK_T_OrJulH.OJH_AgenID = '"& agen &"'"
-'    else
-'       filterAgen = ""
-'    end if
-'    if cust <> "" then
-'       filtercust = "AND DLK_T_OrJulH.OJH_custID = '"& cust &"'"
-'    else
-'       filtercust = ""
-'    end if
+    angka = request.QueryString("angka")
+    if len(angka) = 0 then 
+        angka = Request.form("urut") + 1
+    end if
+    agen = request.QueryString("agen")
+    if len(agen) = 0 then 
+        agen = trim(Request.Form("agen"))
+    end if
+    prodmp = request.QueryString("prodmp")
+    if len(prodmp) = 0 then 
+        prodmp = trim(Request.Form("prodmp"))
+    end if
+    tgla = request.QueryString("tgla")
+    if len(tgla) = 0 then 
+        tgla = trim(Request.Form("tgla"))
+    end if
+    tgle = request.QueryString("tgle")
+    if len(tgle) = 0 then 
+        tgle = trim(Request.Form("tgle"))
+    end if
+    
+    if agen <> "" then
+        filterAgen = "AND DLK_T_ManpowerH.MP_AgenID = '"& agen &"'"
+    else
+        filterAgen = ""
+    end if
+    if prodmp <> "" then
+        filterprodmp = "AND DLK_T_ManpowerH.MP_PDHID = '"& prodmp &"'"
+    else
+        filterprodmp = ""
+    end if
 
 
-'    if tgla <> "" AND tgle <> "" then
-'       filtertgl = "AND dbo.DLK_T_OrJulH.OJH_Date BETWEEN '"& tgla &"' AND '"& tgle &"'"
-'    elseIf tgla <> "" AND tgle = "" then
-'       filtertgl = "AND dbo.DLK_T_OrJulH.OJH_Date = '"& tgla &"'"
-'    else 
-'       filtertgl = ""
-'    end if
+    if tgla <> "" AND tgle <> "" then
+        filtertgl = "AND dbo.DLK_T_ManpowerH.MP_Date BETWEEN '"& tgla &"' AND '"& tgle &"'"
+    elseIf tgla <> "" AND tgle = "" then
+        filtertgl = "AND dbo.DLK_T_ManpowerH.MP_Date = '"& tgla &"'"
+    else 
+        filtertgl = ""
+    end if
 
    ' query seach 
-   strquery = "SELECT dbo.DLK_T_ManPowerH.*, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_WebLogin.UserName FROM dbo.DLK_T_ManPowerH LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_ManPowerH.MP_Updateid = dbo.DLK_M_WebLogin.UserID LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_ManPowerH.MP_AgenID = dbo.GLB_M_Agen.AgenID WHERE (dbo.DLK_T_ManPowerH.MP_AktifYN = 'Y') "
+   strquery = "SELECT dbo.DLK_T_ManPowerH.*, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_WebLogin.UserName FROM dbo.DLK_T_ManPowerH LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_ManPowerH.MP_Updateid = dbo.DLK_M_WebLogin.UserID LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_ManPowerH.MP_AgenID = dbo.GLB_M_Agen.AgenID WHERE ((dbo.DLK_T_ManPowerH.MP_AktifYN = 'Y') OR (dbo.DLK_T_ManPowerH.MP_AktifYN = 'N')) "& filterAgen &""& filterprodmp &""& filtertgl &""
    ' untuk data paggination
    page = Request.QueryString("page")
 
@@ -115,38 +115,40 @@
             <h3>MAN POWER</h3>
         </div>
     </div>
-    <%' if session("MK1A") = true then %>
+    <% if session("PP2A") = true then %>
     <div class="row">
         <div class="col-lg-12 mb-3">
             <a href="mp_add.asp" class="btn btn-primary ">Tambah</a>
         </div>
     </div>
-   <%' end if %>
+   <% end if %>
     <form action="index.asp" method="post">
         <div class="row">
             <div class="col-lg-4 mb-3">
                 <label for="Agen">Cabang</label>
                 <select class="form-select" aria-label="Default select example" name="agen" id="agen">
                 <option value="">Pilih</option>
-                <%' do while not agendata.eof %>
-                <option value="<%'= agendata("agenID") %>"><%'= agendata("agenNAme") %></option>
+                <%do while not agendata.eof %>
+                <option value="<%= agendata("agenID") %>"><%= agendata("agenNAme") %></option>
                 <% 
-                ' Response.flush
-                ' agendata.movenext
-                'loop
+                Response.flush
+                agendata.movenext
+                loop
                 %>
                 </select>
             </div>
             <div class="col-lg-4 mb-3">
-                <label for="cust">Customer</label>
-                <select class="form-select" aria-label="Default select example" name="cust" id="cust">
+                <label for="prodmp">No.Produksi</label>
+                <select class="form-select" aria-label="Default select example" name="prodmp" id="prodmp">
                 <option value="">Pilih</option>
-                <%' do while not custdata.eof %>
-                <option value="<%'= custdata("custID") %>"><%'= custdata("custnama") %></option>
+                <% do while not proddata.eof %>
+                <option value="<%= proddata("PDH_ID") %>">
+                    <%= left(proddata("PDH_ID"),2) %>-<%= mid(proddata("PDH_ID"),3,3) %>/<%= mid(proddata("PDH_ID"),6,4) %>/<%= right(proddata("PDH_ID"),4)  %>
+                </option>
                 <% 
-                ' Response.flush
-                ' custdata.movenext
-                ' loop
+                Response.flush
+                proddata.movenext
+                loop
                 %>
                 </select>
             </div>
@@ -162,11 +164,11 @@
             </div>
             <div class="col-lg-2 mt-4 mb-3">
                 <button type="submit" class="btn btn-primary">Cari</button>
-                <% if session("MK1D") = true then %>
-                <% if agen <> "" OR tgla <> "" OR tgle <> "" OR cust <> "" then %>
-                    <button type="button" class="btn btn-secondary" onclick="window.location.href='export-XLSHeader.asp?la=<%=tgla%>&le=<%=tgle%>&en=<%=agen%>&st=<%=cust%>'">Export</button>
+                <% if session("PP2D") = true then %>
+                <% if agen <> "" OR tgla <> "" OR tgle <> "" OR prodmp <> "" then %>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='export-XLSMpH.asp?tgla=<%=tgla%>&tgle=<%=tgle%>&agen=<%=agen%>&prodmp=<%=prodmp%>'">Export</button>
                 <% end if %>
-                <% end if %>
+                <%end if %>
             </div>
         </div>
     </form>
@@ -190,12 +192,12 @@
                 do until showrecords = 0 OR  rs.EOF
                 recordcounter = recordcounter + 1
 
-                data_cmd.commandTExt = "SELECT MP_ID FROM DLK_T_ManPowerD WHERE LEFT(MP_ID,11) = '"& rs("MP_ID") &"'"
+                data_cmd.commandTExt = "SELECT MP_ID FROM DLK_T_ManPowerD WHERE LEFT(MP_ID,4) = '"& LEFT(rs("MP_ID"),4) &"' AND RIGHT(MP_ID,7) = '"& RIGHT(rs("MP_ID"),7) &"'"
                 set p = data_cmd.execute
                 %>
                     <tr><TH><%= recordcounter %></TH>
                     <th>
-                        <%= left(rs("MP_ID"),2) %>-<%= mid(rs("MP_ID"),3,3) %>/<%= mid(rs("MP_ID"),6,4) %>/<%= right(rs("MP_ID"),4)  %>
+                        <%= left(rs("MP_ID"),2) %>-<%= mid(rs("MP_ID"),3,2) %>/<%= mid(rs("MP_ID"),5,4) %>/<%= right(rs("MP_ID"),3)  %>
                     </th>
                     <th>
                         <%= left(rs("MP_PDHID"),2) %>-<%= mid(rs("MP_PDHID"),3,3) %>/<%= mid(rs("MP_PDHID"),6,4) %>/<%= right(rs("MP_PDHID"),4)  %>
@@ -208,12 +210,16 @@
                             <% if not p.eof then %>
                             <a href="detail.asp?id=<%= rs("MP_ID") %>" class="btn badge text-light bg-warning">Detail</a>
                             <% end if %>
-                            <% if session("MK1B") = true then %>
-                            <a href="so_u.asp?id=<%= rs("MP_ID") %>" class="btn badge text-bg-primary" >Update</a>
+                            <% if session("PP2B") = true then %>
+                            <a href="mpd_u.asp?id=<%= rs("MP_ID") %>" class="btn badge text-bg-primary" >Update</a>
                             <% end if %>   
-                            <% if session("MK1C") = true then %>
+                            <% if session("PP2C") = true then %>
                             <% if p.eof then %>
-                                <a href="aktifh.asp?id=<%= rs("MP_ID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'DELETE TRANSAKSI MANPOWER')">Delete</a>
+                                <% if rs("MP_AktifYN") = "Y" then%>
+                                    <a href="aktifh.asp?id=<%= rs("MP_ID") %>&p=N" class="btn badge text-bg-danger" onclick="deleteItem(event,'DELETE TRANSAKSI MANPOWER')">Delete</a>
+                                <% else %>
+                                    <a href="aktifh.asp?id=<%= rs("MP_ID") %>&p=Y" class="btn badge text-bg-light" onclick="deleteItem(event,'AKTIF TRANSAKSI MANPOWER')">Aktif</a>
+                                <% end if %>
                             <% end if %>
                             <%end if %>
                         </div>
@@ -246,7 +252,7 @@
                     end if
                     if requestrecords <> 0 then 
                 %>
-                    <a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&agen=<%=agen%>&cust=<%=cust%>&tgla=<%=tgla%>&tgle=<%=tgle%>">&#x25C4; Prev </a>
+                    <a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&agen=<%=agen%>&prodmp=<%=prodmp%>&tgla=<%=tgla%>&tgle=<%=tgle%>">&#x25C4; Prev </a>
                 <% else %>
                     <p class="page-link prev-p">&#x25C4; Prev </p>
                 <% end if %>
@@ -264,9 +270,9 @@
                     end if
                     if Cint(page) = pagelistcounter then
                     %>
-                        <a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&cust=<%=cust%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
+                        <a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&prodmp=<%=prodmp%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
                     <%else%>
-                        <a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&cust=<%=cust%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
+                        <a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&prodmp=<%=prodmp%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
                     <%
                     end if
                     pagelist = pagelist + recordsonpage
@@ -282,7 +288,7 @@
                     end if
                     %>
                     <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                        <a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&agen=<%=agen%>&cust=<%=cust%>&tgla=<%=tgla%>&tgle=<%=tgle%>">Next &#x25BA;</a>
+                        <a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&agen=<%=agen%>&prodmp=<%=prodmp%>&tgla=<%=tgla%>&tgle=<%=tgle%>">Next &#x25BA;</a>
                     <% else %>
                         <p class="page-link next-p">Next &#x25BA;</p>
                     <% end if %>

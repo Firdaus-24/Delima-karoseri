@@ -32,28 +32,25 @@ sub ManpowerH()
 
 end sub
 
-sub tambahOrjulD()
+sub manpowerD()
   id = trim(Request.Form("id"))
-  itemSo = trim(Request.Form("itemSo"))
-  qty = trim(Request.Form("qty"))
-  satuan = trim(Request.Form("satuan"))
-  harga = trim(Request.Form("harga"))
-  diskon = trim(Request.Form("diskon"))
-  keterangan = trim(Request.Form("keterangan"))
+  kryNip = trim(Request.Form("kryNip"))
+  salary = trim(Request.Form("salary"))
   
   set data_cmd =  Server.CreateObject ("ADODB.Command")
   data_cmd.ActiveConnection = mm_delima_string
 
-  data_cmd.commandText = "SELECT * FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID, 13) = '"& id &"' AND OJD_item = '"& itemSo &"'"
+  data_cmd.commandText = "SELECT * FROM DLK_T_ManpowerD WHERE LEFT(MP_ID, 4) = '"& left(id,4) &"' AND RIGHT(MP_ID,7) = '"& right(id,7) &"' AND MP_Nip = '"& kryNip &"'"
   ' response.write data_cmd.commandText & "<br>"
-  set orjul = data_cmd.execute
-
-  if orjul.eof then
-    data_cmd.commandText = "SELECT ('"&id&"' + Right('000' + Convert(varchar,Convert(int,(Right(isnull(Max(OJD_OJHID),'000'),3)))+1),3)) as id From DLK_T_OrjulD Where Left(OJD_OJHID,13) = '"& id &"'"
-
+  set powerd = data_cmd.execute
+  
+  if powerd.eof then
+    
+    data_cmd.commandTExt = "SELECT '"& left(id,4) &"' + Right('00' + Convert(varchar,Convert(int,(SUBSTRING(isnull(Max(MP_ID),'00'),5,2)))+1),2) + '"&right(id,7)&"' as id FROM DLK_T_ManPowerD WHERE LEFT(MP_ID, 4) = '"& left(id,4) &"' AND RIGHT(MP_ID,7) = '"& right(id,7) &"'"
+    ' response.write data_cmd.commandText & "<br>"
     set a = data_cmd.execute
 
-    call query ("INSERT INTO DLK_T_OrjulD (OJD_OJHID, OJD_Item,OJD_Qtysatuan, OJD_JenisSat,OJD_Harga,OJD_Diskon,OJD_Keterangan,OJD_Updatetime,OJD_Updateid) VALUES ('"& a("id") &"','"& itemSo &"', "& qty &",'"& satuan &"','"& harga &"','"& diskon &"','"& keterangan &"','"& now &"','"& session("userid") &"')")
+    call query  ("INSERT INTO DLK_T_ManpowerD (MP_ID, MP_Nip,MP_Salary, MP_UpdateID,MP_Updatetime) VALUES ('"& a("id") &"','"& kryNip &"', '"& salary &"','"& session("userid") &"','"& now &"')")
 
     value = 1 'case untuk insert data
   else
@@ -61,50 +58,47 @@ sub tambahOrjulD()
   end if
 
   if value = 1 then
-    call alert("DETAIL SALES ORDER", "berhasil di tambahkan", "success","sod_add.asp?id="&id) 
+    call alert("DETAIL MANPOWER", "berhasil di tambahkan", "success","mpd_add.asp?id="&id) 
   elseif value = 2 then
-    call alert("DETAIL SALES ORDER", "sudah terdaftar", "warning","sod_add.asp?id="&id)
+    call alert("DETAIL MANPOWER", "sudah terdaftar", "warning","mpd_add.asp?id="&id)
   else
     value = 0
   end if
 end sub
 
-    sub updatedetailOrjul()
-        id = trim(Request.Form("id"))
-        itemSo = trim(Request.Form("itemSo"))
-        qty = trim(Request.Form("qty"))
-        satuan = trim(Request.Form("satuan"))
-        harga = trim(Request.Form("harga"))
-        diskon = trim(Request.Form("diskon"))
-        keterangan = trim(Request.Form("keterangan"))
-        
-        set data_cmd =  Server.CreateObject ("ADODB.Command")
-        data_cmd.ActiveConnection = mm_delima_string
+sub updatemanpowerD()
+  id = trim(Request.Form("id"))
+  kryNip = trim(Request.Form("kryNip"))
+  salary = trim(Request.Form("salary"))
+  
+  set data_cmd =  Server.CreateObject ("ADODB.Command")
+  data_cmd.ActiveConnection = mm_delima_string
 
-        data_cmd.commandText = "SELECT * FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID, 13) = '"& id &"' AND OJD_item = '"& itemSo &"'"
-        ' response.write data_cmd.commandText & "<br>"
-        set orjul = data_cmd.execute
+  data_cmd.commandText = "SELECT * FROM DLK_T_ManpowerD WHERE LEFT(MP_ID, 4) = '"& left(id,4) &"' AND RIGHT(MP_ID,7) = '"& right(id,7) &"' AND MP_Nip = '"& kryNip &"'"
+  ' response.write data_cmd.commandText & "<br>"
+  set powerd = data_cmd.execute
+  
+  if powerd.eof then
+    
+    data_cmd.commandTExt = "SELECT '"& left(id,4) &"' + Right('00' + Convert(varchar,Convert(int,(SUBSTRING(isnull(Max(MP_ID),'00'),5,2)))+1),2) + '"&right(id,7)&"' as id FROM DLK_T_ManPowerD WHERE LEFT(MP_ID, 4) = '"& left(id,4) &"' AND RIGHT(MP_ID,7) = '"& right(id,7) &"'"
+    ' response.write data_cmd.commandText & "<br>"
+    set a = data_cmd.execute
 
-        if orjul.eof then
-            data_cmd.commandText = "SELECT ('"&id&"' + Right('000' + Convert(varchar,Convert(int,(Right(isnull(Max(OJD_OJHID),'000'),3)))+1),3)) as id From DLK_T_OrjulD Where Left(OJD_OJHID,13) = '"& id &"'"
+    call query  ("INSERT INTO DLK_T_ManpowerD (MP_ID, MP_Nip,MP_Salary, MP_UpdateID,MP_Updatetime) VALUES ('"& a("id") &"','"& kryNip &"', '"& salary &"','"& session("userid") &"','"& now &"')")
 
-            set a = data_cmd.execute
+    value = 1 'case untuk insert data
+  else
+    value = 2 'case jika gagal insert 
+  end if
 
-            call query ("INSERT INTO DLK_T_OrjulD (OJD_OJHID, OJD_Item,OJD_Qtysatuan, OJD_JenisSat,OJD_Harga,OJD_Diskon,OJD_Keterangan,OJD_Updatetime,OJD_Updateid) VALUES ('"& a("id") &"','"& itemSo &"', "& qty &",'"& satuan &"','"& harga &"','"& diskon &"','"& keterangan &"','"& now &"','"& session("userid") &"')")
-
-            value = 1 'case untuk insert data
-        else
-            value = 2 'case jika gagal insert 
-        end if
-
-        if value = 1 then
-            call alert("DETAIL SALES ORDER", "berhasil di tambahkan", "success","so_u.asp?id="&id) 
-        elseif value = 2 then
-            call alert("DETAIL SALES ORDER", "sudah terdaftar", "warning","so_u.asp?id="&id)
-        else
-            value = 0
-        end if
-    end sub
+  if value = 1 then
+    call alert("DETAIL MANPOWER", "berhasil di tambahkan", "success","mpd_u.asp?id="&id) 
+  elseif value = 2 then
+    call alert("DETAIL MANPOWER", "sudah terdaftar", "warning","mpd_u.asp?id="&id)
+  else
+    value = 0
+  end if
+end sub
 
 
 %>
