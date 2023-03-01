@@ -2157,6 +2157,15 @@ call header("Hak Akses") %>
                 <input class="form-check-input" type="checkbox" name="PP2D" id="PP2D" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','PP2D');" >
                 <label for="PP2D">Export</label>
               </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'PP2E'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="PP2E" id="PP2E" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','PP2E');" >
+                <label for="PP2E">Work Time</label>
+              </li>
             </ul>
         </ul>
       </div>

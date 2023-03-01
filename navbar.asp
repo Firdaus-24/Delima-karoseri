@@ -125,6 +125,9 @@
               <li>
                 <a class="link-name" href="<%= url %>views/sasis/">Standart Product</a>
               </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/produksi/report.asp">Report Proses Produksi</a>
+              </li>
             </ul>
           <!-- ppic -->
           <li class="nav-text">

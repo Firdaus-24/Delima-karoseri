@@ -111,11 +111,19 @@
     <td><%= Cdate(data("MP_Date")) %></td>
     <td><%= data("username")%></td>
   </tr>
+  <tr>
+    <td></td>
+    <td>Nip</td>
+    <td>Nama</td>
+    <td>Deskripsi</td>
+    <td>Salary</td>
+  </tr>
     <% do while not ddata.eof %>
       <tr>
         <td></td>
         <td><%= ddata("MP_Nip") %></td>
-        <td colspan="2"><%= ddata("Kry_Nama") %></td>
+        <td><%= ddata("Kry_Nama") %></td>
+        <td><%= ddata("MP_Deskripsi") %></td>
         <td><%= replace(formatcurrency(ddata("MP_Salary")),"$","") %></td>
         <td><%= ddata("username") %></td>
       </tr>

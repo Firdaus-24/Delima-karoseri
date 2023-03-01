@@ -36,6 +36,7 @@ sub manpowerD()
   id = trim(Request.Form("id"))
   kryNip = trim(Request.Form("kryNip"))
   salary = trim(Request.Form("salary"))
+  deskripsi = trim(Request.Form("deskripsi"))
   
   set data_cmd =  Server.CreateObject ("ADODB.Command")
   data_cmd.ActiveConnection = mm_delima_string
@@ -50,7 +51,7 @@ sub manpowerD()
     ' response.write data_cmd.commandText & "<br>"
     set a = data_cmd.execute
 
-    call query  ("INSERT INTO DLK_T_ManpowerD (MP_ID, MP_Nip,MP_Salary, MP_UpdateID,MP_Updatetime) VALUES ('"& a("id") &"','"& kryNip &"', '"& salary &"','"& session("userid") &"','"& now &"')")
+    call query  ("INSERT INTO DLK_T_ManpowerD (MP_ID, MP_Nip,MP_Salary, MP_Deskripsi, MP_UpdateID,MP_Updatetime) VALUES ('"& a("id") &"','"& kryNip &"', '"& salary &"', '"& deskripsi &"', '"& session("userid") &"','"& now &"')")
 
     value = 1 'case untuk insert data
   else
@@ -70,6 +71,7 @@ sub updatemanpowerD()
   id = trim(Request.Form("id"))
   kryNip = trim(Request.Form("kryNip"))
   salary = trim(Request.Form("salary"))
+  deskripsi = trim(Request.Form("deskripsi"))
   
   set data_cmd =  Server.CreateObject ("ADODB.Command")
   data_cmd.ActiveConnection = mm_delima_string
@@ -84,7 +86,7 @@ sub updatemanpowerD()
     ' response.write data_cmd.commandText & "<br>"
     set a = data_cmd.execute
 
-    call query  ("INSERT INTO DLK_T_ManpowerD (MP_ID, MP_Nip,MP_Salary, MP_UpdateID,MP_Updatetime) VALUES ('"& a("id") &"','"& kryNip &"', '"& salary &"','"& session("userid") &"','"& now &"')")
+    call query  ("INSERT INTO DLK_T_ManpowerD (MP_ID, MP_Nip,MP_Salary, MP_Deskripsi, MP_UpdateID,MP_Updatetime) VALUES ('"& a("id") &"','"& kryNip &"', '"& salary &"', '"& deskripsi &"','"& session("userid") &"','"& now &"')")
 
     value = 1 'case untuk insert data
   else

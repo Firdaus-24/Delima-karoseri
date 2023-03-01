@@ -14,11 +14,11 @@
 
   set data = data_cmd.execute
   ' detail data
-  data_cmd.commandText = "SELECT dbo.HRD_M_Karyawan.Kry_Nama, dbo.DLK_M_WebLogin.UserName, dbo.DLK_T_ManPowerD.* FROM dbo.DLK_T_ManPowerD LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_ManPowerD.MP_UpdateID = dbo.DLK_M_WebLogin.UserID LEFT OUTER JOIN dbo.HRD_M_Karyawan ON dbo.DLK_T_ManPowerD.MP_Nip = dbo.HRD_M_Karyawan.Kry_NIP WHERE LEFT(MP_ID,4) = '"& left(data("MP_ID"),4) &"' AND RIGHT(MP_ID,7)= '"& RIGHT(data("MP_ID"),7) &"'"
+  data_cmd.commandText = "SELECT dbo.HRD_M_Karyawan.Kry_Nama, dbo.DLK_M_WebLogin.UserName, dbo.DLK_T_ManPowerD.* FROM dbo.DLK_T_ManPowerD LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_ManPowerD.MP_UpdateID = dbo.DLK_M_WebLogin.UserID LEFT OUTER JOIN dbo.HRD_M_Karyawan ON dbo.DLK_T_ManPowerD.MP_Nip = dbo.HRD_M_Karyawan.Kry_NIP WHERE LEFT(MP_ID,4) = '"& left(data("MP_ID"),4) &"' AND RIGHT(MP_ID,7)= '"& RIGHT(data("MP_ID"),7) &"' ORDER BY Kry_Nama"
   ' response.write data_cmd.commandText & "<br>"
   set ddata = data_cmd.execute
   ' karyawan data
-  data_cmd.commandText = "SELECT kry_Nip,Kry_Nama FROM HRD_M_Karyawan WHERE Kry_AktifYN = 'Y' AND Kry_agenID = '"& data("MP_AgenID") &"' ORDER BY Kry_Nama ASC"
+  data_cmd.commandText = "SELECT kry_Nip,Kry_Nama, Kry_SttKerja FROM HRD_M_Karyawan WHERE Kry_AktifYN = 'Y' AND Kry_agenID = '"& data("MP_AgenID") &"' ORDER BY Kry_Nama ASC"
 
   set karyawan = data_cmd.execute
 
@@ -71,6 +71,7 @@
             <th scope="col">Nip</th>
             <th scope="col">Nama</th>
             <th scope="col">Salary</th>
+            <th scope="col">Deskripsi</th>
             <th scope="col">UpdateID</th>
             <th scope="col" class="text-center">Aksi</th>
           </tr>
@@ -86,10 +87,17 @@
             <td><%= ddata("MP_Nip") %></td>
             <td><%= ddata("Kry_Nama") %></td>
             <td><%= replace(formatcurrency(ddata("MP_Salary")),"$","") %></td>
+            <td><%= ddata("MP_Deskripsi") %></td>
             <td><%= ddata("username") %></td>
             <td class="text-center">
               <div class="btn-group" role="group" aria-label="Basic example">
-              <a href="aktifd.asp?id=<%= ddata("MP_ID") %>&p=mpd_u" class="btn badge text-bg-danger btn-fakturd">Delete</a>
+                <% if session("PP2C") =  true then %>
+                  <a href="aktifd.asp?id=<%= ddata("MP_ID") %>&p=mpd_u" class="btn badge text-bg-danger" onclick="deleteItem(event,'Karyawan ManPower')">Delete</a>
+                <% end if %>
+                <% if session("PP2E") =  true then %>
+                  <a href="../TW/?id=<%= ddata("MP_ID") %>" class="btn badge text-bg-light">Time Work</a>
+                <% end if %>
+              </div>
             </td>
           </tr>
           <% 
@@ -138,6 +146,7 @@
                   <th scope="col">No</th>
                   <th scope="col">Nip</th>
                   <th scope="col">Nama</th>
+                  <th scope="col">Status Kerja</th>
                   <th scope="col" class="text-center">Pilih</th>
                 </tr>
               </thead>
@@ -146,11 +155,25 @@
                 angka = 0
                 do while not karyawan.eof
                 angka = angka + 1
+
+                ' cek status kerja
+                if karyawan("Kry_SttKerja") = 1 then
+                  sttkerja = "Borongan"
+                elseif karyawan("Kry_SttKerja") = 2 then
+                  sttkerja = "Harian"
+                elseif karyawan("Kry_SttKerja") = 3 then
+                  sttkerja = "Kontrak"
+                elseif karyawan("Kry_SttKerja") = 4 then
+                  sttkerja = "Magang"
+                else
+                  sttkerja = ""
+                end if
                 %>
                 <tr>
                   <td><%= angka %></td>
                   <td><%= karyawan("Kry_Nip") %></td>
                   <td><%= karyawan("Kry_Nama") %></td>
+                  <td><%= sttkerja %></td>
                   <td class="text-center">
                     <div class="form-check">
                       <input class="form-check-input" type="radio" value="<%= karyawan("Kry_Nip") %>" id="kryNip" name="kryNip" required>
@@ -167,11 +190,19 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-2 mb-3">
+          <div class="col-sm-2 ">
             <label for="salary">Salary</label>
           </div>
-          <div class="col-sm">
+          <div class="col-sm mb-3">
             <input type="number" id="salary" name="salary" class="form-control" autocomplete="off" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-2">
+            <label for="deskripsi">Deskripsi</label>
+          </div>
+          <div class="col-sm  mb-3">
+            <textarea class="form-control" rows="3" name="deskripsi" id="deskripsi" autocomplete="off" required></textarea>
           </div>
         </div>
       </div>
