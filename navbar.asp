@@ -142,6 +142,9 @@
                 <a class="link-name" href="<%= url %>views/manpower/">Man Power</a>
               </li>
               <li>
+                <a class="link-name" href="<%= url %>views/ReturnMaterial/">Return Material</a>
+              </li>
+              <li>
                 <a class="link-name" href="<%= url %>views/finishgood/">Produksi Finish</a>
               </li>
             </ul>

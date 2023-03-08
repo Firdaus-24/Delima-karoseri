@@ -31,4 +31,5 @@
     <script src="../../public/js/bom.js"></script>
     <script src="../../public/js/finishgood.js"></script>
     <script src="../../public/js/manpower.js"></script>
+    <script src="../../public/js/returnMaterial.js"></script>
 </html>
