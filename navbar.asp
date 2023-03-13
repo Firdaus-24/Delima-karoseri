@@ -47,6 +47,9 @@
                 <a href="<%= url %>views/satbarang/">Master Satuan Barang</a>
               </li>
               <li>
+                <a href="<%= url %>views/satpanjang/">Master Satuan Panjang</a>
+              </li>
+              <li>
                 <a href="<%= url %>views/type/">Master Type Barang</a>
               </li>
               <li>
@@ -127,6 +130,9 @@
               </li>
               <li>
                 <a class="link-name" href="<%= url %>views/produksi/report.asp">Report Proses Produksi</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/engineering/predBom.asp">Report Prediksi Harga</a>
               </li>
             </ul>
           <!-- ppic -->

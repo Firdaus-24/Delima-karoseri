@@ -1,28 +1,28 @@
-function validasiForm(data, e, te, ic){
+function validasiForm(data, e, te, ic) {
     let form = data;
     e.preventDefault(); // <--- prevent form from submitting
-   
+
     swal({
         title: "APAKAH ANDA SUDAH YAKIN??",
         text: te,
         icon: ic,
         buttons: [
-        'No',
-        'Yes'
+            'No',
+            'Yes'
         ],
         dangerMode: true,
-    }).then(function(isConfirm) {
+    }).then(function (isConfirm) {
         if (isConfirm) {
             form.submit(); // <--- submit form programmatically
         } else {
-        swal("Form gagal di kirim");
+            swal("Form gagal di kirim");
         }
-    })  
+    })
 }
 
-function deleteItem(e,tex){
+function deleteItem(e, tex) {
     e.preventDefault(); // <--- prevent click
-    
+
     swal({
         title: "YAKIN UNTUK DI HAPUS??",
         text: tex,
@@ -32,7 +32,7 @@ function deleteItem(e,tex){
             'Yes'
         ],
         dangerMode: true,
-    }).then(function(isConfirm) {
+    }).then(function (isConfirm) {
         if (isConfirm) {
             window.location.href = e.target.href // <--- submit form programmatically
         } else {
@@ -41,9 +41,9 @@ function deleteItem(e,tex){
     })
 }
 
-function ApproveYN(e,title, tex,icon){
+function ApproveYN(e, title, tex, icon) {
     e.preventDefault(); // <--- prevent click
-    
+
     swal({
         title: title,
         text: tex,
@@ -53,7 +53,7 @@ function ApproveYN(e,title, tex,icon){
             'Yes'
         ],
         dangerMode: true,
-    }).then(function(isConfirm) {
+    }).then(function (isConfirm) {
         if (isConfirm) {
             window.location.href = e.target.href // <--- submit form programmatically
         } else {
@@ -67,14 +67,21 @@ function printIt(url) {
     wnd.print();
 }
 
-function generateQrcode(urlId){
-    let finalURL ='https://chart.googleapis.com/chart?cht=qr&chl=' + htmlEncode(urlId) + '&chs=160x160&chld=L|0'
+function generateQrcode(urlId) {
+    let finalURL = 'https://chart.googleapis.com/chart?cht=qr&chl=' + htmlEncode(urlId) + '&chs=160x160&chld=L|0'
 
-    return finalURL 
+    return finalURL
 }
-function formatRupiah(number){
+function formatRupiah(number) {
     var rupiah = '';
     var angkarev = number.toString().split('').reverse().join('');
     for (var i = 0; i < angkarev.length; i++) if (i % 3 === 0) rupiah += angkarev.substr(i, 3) + '.';
-        return rupiah.split('', rupiah.length - 1).reverse().join('') + ',-';
+    return rupiah.split('', rupiah.length - 1).reverse().join('') + ',-';
+}
+
+function format(number) {
+    var rupiah = '';
+    var angkarev = number.toString().split('').reverse().join('');
+    for (var i = 0; i < angkarev.length; i++) if (i % 3 === 0) rupiah += angkarev.substr(i, 3) + '.';
+    return rupiah.split('', rupiah.length - 1).reverse().join('') + ',-';
 }

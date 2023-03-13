@@ -47,7 +47,7 @@
    </div>
    <div class="row">
         <div class="col-lg-12 text-center labelId">
-            <h3><%= data("MR_ID") %></h3>
+            <h3><%= LEFT(data("MR_ID"),2) &"-"& mid(data("MR_ID"),3,3) &"/"& mid(data("MR_ID"),6,4) &"/"& right(data("MR_ID"),4)%></h3>
         </div>
     </div>
     <div class="row">
@@ -131,7 +131,7 @@
                %>
                <tr>
                   <td colspan="2">Document :</td>
-                  <td><%= data1("MR_Transaksi") %></td>
+                  <td><%= LEFT(data1("MR_Transaksi"),2) &"-"& mid(data1("MR_Transaksi"),3,3) &"/"& mid(data1("MR_Transaksi"),6,4) &"/"& right(data1("MR_Transaksi"),4)%></td>
                   <td>User :</td>
                   <td colspan="5"><%= data1("username") %></td>
                </tr>
@@ -239,8 +239,9 @@ const updateData = (id,trans) => {
    let rak = $(`#rakIncome${trans}`).val()
    
    $.post( "updateMRD2.asp", { id, trans, rak, qty }).done(function( data ) {
-      if(data == "ERROR"){
-         swal("Data tidak Valid")
+      if(data != "DONE"){
+         swal(`PERHATIAN ${data}`)
+         return false
       }else{
          swal({title: 'Data Berhasil Diubah',text: 'Update Rak & Quantity',icon: 'success',button: 'OK',}).then(function() {window.location = 'incomed_add.asp?id='+ id})
       }

@@ -197,7 +197,7 @@
                     set ddata = data_cmd.execute
                     %>
                         <tr><TH><%= recordcounter %></TH>
-                        <th><%= rs("OPH_ID") %></th>
+                        <th><%= LEFT(rs("OPH_ID"),2) &"-"& mid(rs("OPH_ID"),3,3) &"/"& mid(rs("OPH_ID"),6,4) &"/"& right(rs("OPH_ID"),4) %></th>
                         <td><% call getAgen(rs("OPH_AgenID"),"P") %></td>
                         <td><%= Cdate(rs("OPH_Date")) %></td>
                         <td><% call getVendor(rs("OPH_VenID")) %></td>

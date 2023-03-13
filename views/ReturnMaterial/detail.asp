@@ -3,6 +3,7 @@
   ' if session("PR5A") = false then
   '   Response.Redirect("index.asp")
   ' end if
+  
   id = trim(Request.QueryString("id"))
 
   set data_cmd =  Server.CreateObject ("ADODB.Command")
@@ -13,15 +14,9 @@
   set data = data_cmd.execute
 
   ' detail
-  data_cmd.commandText = "SELECT dbo.DLK_T_ReturnMaterialD.*, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_WebLogin.UserName, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_SatuanBarang.Sat_Nama FROM dbo.DLK_M_WebLogin RIGHT OUTER JOIN dbo.DLK_T_ReturnMaterialD INNER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_ReturnMaterialD.RM_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID ON dbo.DLK_M_WebLogin.UserID = dbo.DLK_T_ReturnMaterialD.RM_UpdateID LEFT OUTER JOIN dbo.DLK_M_Kategori INNER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_Kategori.KategoriId = dbo.DLK_M_Barang.KategoriID INNER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID ON dbo.DLK_T_ReturnMaterialD.RM_Item = dbo.DLK_M_Barang.brg_ID WHERE LEFT(DLK_T_ReturnMaterialD.RM_ID,13) = '"& data("RM_ID") &"' ORDER BY dbo.DLK_M_Barang.Brg_Nama"
+  data_cmd.commandText = "SELECT dbo.DLK_T_ReturnMaterialD.*, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_WebLogin.UserName, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_SatuanBarang.Sat_Nama, DLK_M_SatuanPanjang.SP_Nama FROM dbo.DLK_M_WebLogin RIGHT OUTER JOIN dbo.DLK_T_ReturnMaterialD INNER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_ReturnMaterialD.RM_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID ON dbo.DLK_M_WebLogin.UserID = dbo.DLK_T_ReturnMaterialD.RM_UpdateID LEFT OUTER JOIN dbo.DLK_M_Kategori INNER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_Kategori.KategoriId = dbo.DLK_M_Barang.KategoriID INNER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID ON dbo.DLK_T_ReturnMaterialD.RM_Item = dbo.DLK_M_Barang.brg_ID LEFT OUTER JOIN DLK_M_SatuanPanjang ON DLK_T_ReturnMaterialD.RM_SPID = SP_ID WHERE LEFT(DLK_T_ReturnMaterialD.RM_ID,13) = '"& data("RM_ID") &"' ORDER BY dbo.DLK_M_Barang.Brg_Nama"
   ' response.write data_cmd.commandTExt & "<br>"
   set ddata = data_cmd.execute
-
-  ' penerimaan barang produksi
-  data_cmd.commandTExt = "SELECT (ISNULL(SUM(dbo.DLK_T_RCProdD.RCD_QtySatuan), 0) - ISNULL((SELECT SUM(dbo.DLK_T_ReturnMaterialD.RM_QtySatuan) AS qtyrm FROM dbo.DLK_T_ReturnMaterialH RIGHT OUTER JOIN dbo.DLK_T_ReturnMaterialD ON dbo.DLK_T_ReturnMaterialH.RM_ID = LEFT(dbo.DLK_T_ReturnMaterialD.RM_ID, 13) WHERE DLK_T_ReturnMaterialD.RM_Item =dbo.DLK_T_RCProdD.RCD_Item AND DLK_T_ReturnMaterialH.RM_PDHID = '"& data("RM_PDHID") &"' AND DLK_T_ReturnMaterialH.RM_AktifYN = 'Y' GROUP BY dbo.DLK_T_ReturnMaterialD.RM_item),0) )  AS qty, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_T_RCProdD.RCD_Item FROM dbo.DLK_M_JenisBarang INNER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_JenisBarang.JenisID = dbo.DLK_M_Barang.JenisID INNER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId RIGHT OUTER JOIN dbo.DLK_T_RCProdD ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_RCProdD.RCD_Item LEFT OUTER JOIN dbo.DLK_T_RCProdH ON LEFT(dbo.DLK_T_RCProdD.RCD_ID, 10) = dbo.DLK_T_RCProdH.RC_ID WHERE (LEFT(dbo.DLK_T_RCProdH.RC_PDDID, 13) = '"& data("RM_PDHID") &"') AND DLK_T_RCProdH.RC_AktifYN = 'Y' GROUP BY dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_RCProdH.RC_AktifYN, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_T_RCProdD.RCD_Item HAVING (ISNULL(SUM(dbo.DLK_T_RCProdD.RCD_QtySatuan), 0) - ISNULL((SELECT SUM(dbo.DLK_T_ReturnMaterialD.RM_QtySatuan) AS qtyrm FROM dbo.DLK_T_ReturnMaterialH RIGHT OUTER JOIN dbo.DLK_T_ReturnMaterialD ON dbo.DLK_T_ReturnMaterialH.RM_ID = LEFT(dbo.DLK_T_ReturnMaterialD.RM_ID, 13) WHERE DLK_T_ReturnMaterialD.RM_Item =dbo.DLK_T_RCProdD.RCD_Item AND DLK_T_ReturnMaterialH.RM_PDHID = '"& data("RM_PDHID") &"' AND DLK_T_ReturnMaterialH.RM_AktifYN = 'Y' GROUP BY dbo.DLK_T_ReturnMaterialD.RM_item),0) ) > 0 ORDER BY BRG_NAma"
-  ' response.write data_cmd.commandText & "<br>"
-  set getbarang = data_cmd.execute   
-
 
   call header("DETAIL RETURN MATERIAL")
 
@@ -90,9 +85,9 @@
   </div>
   <div class="row">
     <div class="col-sm-12 d-flex justify-content-between">
-      <%' if session("MK1D") = true then %>
+      <% if session("PP3D") = true then %>
         <button type="button" class="btn btn-secondary" onclick="window.open('export-XlsRM.asp?id=<%=id%>','_self')">Export</button>
-      <%' end if %>
+      <% end if %>
       <button type="button" class="btn btn-danger" onclick="window.location.href='index.asp'">Kembali</button>
     </div>
   </div>
@@ -104,8 +99,10 @@
             <th scope="col">No</th>
             <th scope="col">Kode</th>
             <th scope="col">Item</th>
+            <th scope="col">Dimension</th>
             <th scope="col">Quantity</th>
             <th scope="col">Satuan</th>
+            <th scope="col">Total Qty</th>
             <th scope="col">Harga</th>
             <th scope="col">UpdateID</th>
           </tr> 
@@ -122,8 +119,10 @@
             <td>
               <%= ddata("Brg_Nama") %>
             </td>
+            <td><%= ddata("RM_Dimension") %></td>
             <td><%= ddata("RM_qtysatuan") %></td>
             <td><%= ddata("sat_nama") %></td>
+            <td class="text-end"><%= ddata("RM_TotalQtyMM") &" "& ddata("SP_Nama") %></td>
             <td>
               <%= replace(formatCurrency(ddata("RM_Harga")),"$","") %>
             </td>

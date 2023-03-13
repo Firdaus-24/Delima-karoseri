@@ -269,7 +269,7 @@
                     set p = data_cmd.execute
                     %>
                         <tr><TH><%= recordcounter %></TH>
-                        <th><%= rs("IPH_ID") %></th>
+                        <th><%= LEFT(rs("IPH_ID"),2) &"-"& mid(rs("IPH_ID"),3,3) &"/"& mid(rs("IPH_ID"),6,4) &"/"& right(rs("IPH_ID"),4)%></th>
                         <td><%= rs("AgenNAme")%></td>
                         <td><%= Cdate(rs("IPH_Date")) %></td>
                         <td>

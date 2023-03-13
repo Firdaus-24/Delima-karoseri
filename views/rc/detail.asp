@@ -41,7 +41,7 @@
    </div>
    <div class="row">
       <div class="col-lg-12 text-center mb-3 labelId">
-         <h3><%= left(id,2) &"-"& mid(id,2,4) &"-"& right(id,4) %></h3>
+         <h3><%= left(id,2) &"-"& mid(id,3,4) &"-"& right(id,4) %></h3>
       </div>
    </div>
    <div class="row">

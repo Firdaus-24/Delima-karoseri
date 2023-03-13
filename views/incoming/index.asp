@@ -202,7 +202,7 @@
                set detail = data_cmd.execute
                %>
                <tr>
-                  <th><%= rs("MR_ID") %></th>
+                  <th> <%= LEFT(rs("MR_ID"),2) &"-"& mid(rs("MR_ID"),3,3) &"/"& mid(rs("MR_ID"),6,4) &"/"& right(rs("MR_ID"),4)%></th>
                   <td><%= rs("AgenName") %></td>
                   <td><%= Cdate(rs("MR_Date")) %></td>
                   <td><%= rs("username") %></td>

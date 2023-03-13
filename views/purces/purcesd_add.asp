@@ -42,7 +42,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12 text-center mb-3 labelId">
-            <h3><%= id %></h3>
+            <h3><%= LEFT(id,2) &"-"& mid(id,3,3) &"/"& mid(id,6,4) &"/"& right(id,4) %></h3>
         </div>
     </div>
     <div class="row align-items-center">
@@ -185,7 +185,7 @@
                     %>
                         <tr>
                             <th>
-                                <%= ddata("OPD_OPHID") %>
+                                <%= LEFT(ddata("OPD_OPHID"),2) &"-"& mid(ddata("OPD_OPHID"),3,3) &"/"& mid(ddata("OPD_OPHID"),6,4) &"/"& mid(ddata("OPD_OPHID"),10,4) &"/"& right(ddata("OPD_OPHID"),3) %>
                             </th>
                             <th>
                                 <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>

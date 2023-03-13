@@ -24,7 +24,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12 mb-3 text-center labelId">
-            <h3><%= data("IPH_ID") %></h3>
+            <h3><%= LEFT(data("IPH_ID"),2) &"-"& mid(data("IPH_ID"),3,3) &"/"& mid(data("IPH_ID"),6,4) &"/"& right(data("IPH_ID"),4)%></h3>
         </div>
     </div>
     <div class="row">
@@ -75,7 +75,7 @@
     </div>
     <div class="row">
         <div class="d-flex mb-3">
-        <% if session("PR6D") = false then %>
+        <% if session("PR6D") = true then %>
             <div class="me-auto p-2">
                 <button type="button" class="btn btn-secondary" onClick="window.open('export-XlsdetailinvPOmin.asp?id=<%=id%>','_self')">EXPORT</button>
             </div>

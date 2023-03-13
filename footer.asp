@@ -32,4 +32,5 @@
     <script src="../../public/js/finishgood.js"></script>
     <script src="../../public/js/manpower.js"></script>
     <script src="../../public/js/returnMaterial.js"></script>
+    <script src="../../public/js/satuanpanjang.js"></script>
 </html>

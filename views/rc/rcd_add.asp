@@ -21,7 +21,7 @@
    set ddata = data_cmd.execute
 
    ' get barang keluar dari inventory
-   data_cmd.commandText = "SELECT dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_MaterialOutD.MO_Harga, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_T_MaterialOutD.MO_Item FROM dbo.DLK_T_MaterialOutH RIGHT OUTER JOIN dbo.DLK_T_MaterialOutD ON dbo.DLK_T_MaterialOutH.MO_ID = dbo.DLK_T_MaterialOutD.MO_ID LEFT OUTER JOIN  dbo.DLK_M_Barang INNER JOIN  dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID INNER JOIN  dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId ON dbo.DLK_T_MaterialOutD.MO_Item = dbo.DLK_M_Barang.Brg_Id GROUP BY dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_MaterialOutD.MO_Harga, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_T_MaterialOutH.MO_AktifYN, dbo.DLK_T_MaterialOutH.MO_PDDID, dbo.DLK_T_MaterialOutD.MO_Item HAVING (dbo.DLK_T_MaterialOutH.MO_AktifYN = 'Y') AND (dbo.DLK_T_MaterialOutH.MO_PDDID = '"& data("RC_PDDID") &"')"
+   data_cmd.commandText = "SELECT dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_T_MaterialOutD.MO_Item FROM dbo.DLK_T_MaterialOutH RIGHT OUTER JOIN dbo.DLK_T_MaterialOutD ON dbo.DLK_T_MaterialOutH.MO_ID = dbo.DLK_T_MaterialOutD.MO_ID LEFT OUTER JOIN  dbo.DLK_M_Barang INNER JOIN  dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID INNER JOIN  dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId ON dbo.DLK_T_MaterialOutD.MO_Item = dbo.DLK_M_Barang.Brg_Id GROUP BY dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_T_MaterialOutH.MO_AktifYN, dbo.DLK_T_MaterialOutH.MO_PDDID, dbo.DLK_T_MaterialOutD.MO_Item HAVING (dbo.DLK_T_MaterialOutH.MO_AktifYN = 'Y') AND (dbo.DLK_T_MaterialOutH.MO_PDDID = '"& data("RC_PDDID") &"')"
 
    set getbarang = data_cmd.execute
 
@@ -41,7 +41,7 @@
    </div>
    <div class="row">
       <div class="col-lg-12 text-center mb-3 labelId">
-         <h3><%= left(id,2) &"-"& mid(id,2,4) &"-"& right(id,4) %></h3>
+         <h3><%= left(id,2) &"-"& mid(id,3,4) &"-"& right(id,4) %></h3>
       </div>
    </div>
    <div class="row">
@@ -180,7 +180,7 @@
                            <%= getbarang("Brg_Nama") %>
                         </td>
                         <td>
-                           <input class="form-check-input" type="radio" value="<%= getbarang("MO_Item") %>" name="item" id="item" onchange="getHarga('<%= getbarang("MO_harga") %>')" required>
+                           <input class="form-check-input" type="radio" value="<%= getbarang("MO_Item") %>" name="item" id="item" required>
                         </td>
                      </tr>
                      <% 
@@ -243,12 +243,6 @@
       </div>
    </div>
 </div>
-<script>
-const getHarga = (e) => {
-   $("#harga").val(e)
-}
-
-</script>
 
 <% 
    if Request.ServerVariables("REQUEST_METHOD") = "POST" then 

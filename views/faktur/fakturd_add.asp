@@ -38,7 +38,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12 mb-3 text-center labelId">
-            <h3><%= data("IPH_ID") %></h3>
+            <h3><%= LEFT(data("IPH_ID"),2) &"-"& mid(data("IPH_ID"),3,3) &"/"& mid(data("IPH_ID"),6,4) &"/"& right(data("IPH_ID"),4)%></h3>
         </div>
     </div>
     <div class="row">
@@ -169,29 +169,10 @@
 
                     set ddata = data_cmd.execute
                     do while not ddata.eof 
-                    ' cek total harga 
-                    ' jml = ddata("IPD_QtySatuan") * ddata("IPD_Harga")
-                    ' cek diskon peritem
-                    ' if ddata("IPD_Disc1") <> 0 and ddata("IPD_Disc2") <> 0  then
-                    '     dis1 = (ddata("IPD_Disc1")/100) * ddata("IPD_Harga")
-                    '     dis2 = (ddata("IPD_Disc2")/100) * ddata("IPD_Harga")
-                    ' elseif ddata("IPD_Disc1") <> 0 then
-                    '     dis1 = (ddata("IPD_Disc1")/100) * ddata("IPD_Harga")
-                    ' elseIf ddata("IPD_Disc2") <> 0 then
-                    '     dis2 = (ddata("IPD_Disc2")/100) * ddata("IPD_Harga")
-                    ' else    
-                    '     dis1 = 0
-                    '     dis2 = 0
-                    ' end if
-                    ' ' total dikon peritem
-                    ' hargadiskon = ddata("IPD_Harga") - dis1 - dis2
-                    ' realharga = hargadiskon * ddata("IPD_QtySatuan")  
-
-                    ' grantotal = grantotal + realharga
                     %>
                         <tr>
                             <th>
-                                <%= ddata("IPD_IPHID") %>
+                               <%= LEFT(ddata("IPD_IPHID"),2) &"-"& mid(ddata("IPD_IPHID"),3,3) &"/"& mid(ddata("IPD_IPHID"),6,4) &"/"& mid(ddata("IPD_IPHID"),10,4) &"/"& right(ddata("IPD_IPHID"),3)%>
                             </th>
                             <th>
                                 <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>

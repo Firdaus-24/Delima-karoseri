@@ -1,8 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
-  ' if session("PR5A") = false then
-  '   Response.Redirect("index.asp")
-  ' end if
+  if session("PP3D") = false then
+    Response.Redirect("index.asp")
+  end if
   id = trim(Request.QueryString("id"))
 
   Response.ContentType = "application/vnd.ms-excel"
@@ -16,57 +16,53 @@
   set data = data_cmd.execute
 
   ' detail
-  data_cmd.commandText = "SELECT dbo.DLK_T_ReturnMaterialD.*, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_WebLogin.UserName, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_SatuanBarang.Sat_Nama FROM dbo.DLK_M_WebLogin RIGHT OUTER JOIN dbo.DLK_T_ReturnMaterialD INNER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_ReturnMaterialD.RM_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID ON dbo.DLK_M_WebLogin.UserID = dbo.DLK_T_ReturnMaterialD.RM_UpdateID LEFT OUTER JOIN dbo.DLK_M_Kategori INNER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_Kategori.KategoriId = dbo.DLK_M_Barang.KategoriID INNER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID ON dbo.DLK_T_ReturnMaterialD.RM_Item = dbo.DLK_M_Barang.brg_ID WHERE LEFT(DLK_T_ReturnMaterialD.RM_ID,13) = '"& data("RM_ID") &"' ORDER BY dbo.DLK_M_Barang.Brg_Nama"
+  data_cmd.commandText = "SELECT dbo.DLK_T_ReturnMaterialD.*, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_WebLogin.UserName, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_SatuanBarang.Sat_Nama, DLK_M_SatuanPanjang.SP_Nama FROM dbo.DLK_M_WebLogin RIGHT OUTER JOIN dbo.DLK_T_ReturnMaterialD INNER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_ReturnMaterialD.RM_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID ON dbo.DLK_M_WebLogin.UserID = dbo.DLK_T_ReturnMaterialD.RM_UpdateID LEFT OUTER JOIN dbo.DLK_M_Kategori INNER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_Kategori.KategoriId = dbo.DLK_M_Barang.KategoriID INNER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID ON dbo.DLK_T_ReturnMaterialD.RM_Item = dbo.DLK_M_Barang.brg_ID LEFT OUTER JOIN DLK_M_SatuanPanjang ON DLK_T_ReturnMaterialD.RM_SPID = SP_ID WHERE LEFT(DLK_T_ReturnMaterialD.RM_ID,13) = '"& data("RM_ID") &"' ORDER BY dbo.DLK_M_Barang.Brg_Nama"
   ' response.write data_cmd.commandTExt & "<br>"
   set ddata = data_cmd.execute
-
-  ' penerimaan barang produksi
-  data_cmd.commandTExt = "SELECT (ISNULL(SUM(dbo.DLK_T_RCProdD.RCD_QtySatuan), 0) - ISNULL((SELECT SUM(dbo.DLK_T_ReturnMaterialD.RM_QtySatuan) AS qtyrm FROM dbo.DLK_T_ReturnMaterialH RIGHT OUTER JOIN dbo.DLK_T_ReturnMaterialD ON dbo.DLK_T_ReturnMaterialH.RM_ID = LEFT(dbo.DLK_T_ReturnMaterialD.RM_ID, 13) WHERE DLK_T_ReturnMaterialD.RM_Item =dbo.DLK_T_RCProdD.RCD_Item AND DLK_T_ReturnMaterialH.RM_PDHID = '"& data("RM_PDHID") &"' AND DLK_T_ReturnMaterialH.RM_AktifYN = 'Y' GROUP BY dbo.DLK_T_ReturnMaterialD.RM_item),0) )  AS qty, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_T_RCProdD.RCD_Item FROM dbo.DLK_M_JenisBarang INNER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_JenisBarang.JenisID = dbo.DLK_M_Barang.JenisID INNER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId RIGHT OUTER JOIN dbo.DLK_T_RCProdD ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_RCProdD.RCD_Item LEFT OUTER JOIN dbo.DLK_T_RCProdH ON LEFT(dbo.DLK_T_RCProdD.RCD_ID, 10) = dbo.DLK_T_RCProdH.RC_ID WHERE (LEFT(dbo.DLK_T_RCProdH.RC_PDDID, 13) = '"& data("RM_PDHID") &"') AND DLK_T_RCProdH.RC_AktifYN = 'Y' GROUP BY dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_RCProdH.RC_AktifYN, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_T_RCProdD.RCD_Item HAVING (ISNULL(SUM(dbo.DLK_T_RCProdD.RCD_QtySatuan), 0) - ISNULL((SELECT SUM(dbo.DLK_T_ReturnMaterialD.RM_QtySatuan) AS qtyrm FROM dbo.DLK_T_ReturnMaterialH RIGHT OUTER JOIN dbo.DLK_T_ReturnMaterialD ON dbo.DLK_T_ReturnMaterialH.RM_ID = LEFT(dbo.DLK_T_ReturnMaterialD.RM_ID, 13) WHERE DLK_T_ReturnMaterialD.RM_Item =dbo.DLK_T_RCProdD.RCD_Item AND DLK_T_ReturnMaterialH.RM_PDHID = '"& data("RM_PDHID") &"' AND DLK_T_ReturnMaterialH.RM_AktifYN = 'Y' GROUP BY dbo.DLK_T_ReturnMaterialD.RM_item),0) ) > 0 ORDER BY BRG_NAma"
-  ' response.write data_cmd.commandText & "<br>"
-  set getbarang = data_cmd.execute   
-
 
   call header("DETAIL RETURN MATERIAL")
 
 %>
 <table width="100%">
   <tr>
-    <td colspan="7" align="center">DETAIL RETURN MATERIAL PRODUKSI</td>
+    <td colspan="9" align="center">DETAIL RETURN MATERIAL PRODUKSI</td>
   </tr>
   <tr>
-    <td colspan="7" align="center"><%= left(data("RM_ID") ,2)%>-<%= mid(data("RM_ID") ,3,3)%>/<%= mid(data("RM_ID") ,6,4) %>/<%= right(data("RM_ID"),4) %></td>
+    <td colspan="9" align="center"><%= left(data("RM_ID") ,2)%>-<%= mid(data("RM_ID") ,3,3)%>/<%= mid(data("RM_ID") ,6,4) %>/<%= right(data("RM_ID"),4) %></td>
   </tr>
 
   <tr>
     <td colspan="2">Cabang / Agen</td>
-    <td>: <%= data("AgenName") %></td>
+    <td colspan="2">: <%= data("AgenName") %></td>
     <td colspan="2">Tanggal</td>
-    <td>: <%= Cdate(data("RM_Date")) %></td>
+    <td colspan="3">: <%= Cdate(data("RM_Date")) %></td>
   </tr>
   <tr>
     <td colspan="2">No.Produksi</td>
-    <td>: <%= left(data("RM_PDHID"),2) %>-<%= mid(data("RM_PDHID"),3,3) %>/<%= mid(data("RM_PDHID"),6,4) %>/<%= right(data("RM_PDHID"),4)  %></td>
+    <td colspan="2">: <%= left(data("RM_PDHID"),2) %>-<%= mid(data("RM_PDHID"),3,3) %>/<%= mid(data("RM_PDHID"),6,4) %>/<%= right(data("RM_PDHID"),4)  %></td>
     <td colspan="2">UpdateID</td>
-    <td>: <%= data("username") %></td>
+    <td colspan="3">: <%= data("username") %></td>
   </tr>
   <tr>
     <td colspan="2">Serah Terima</td>
-    <td >
+    <td colspan="2">
       : <% if data("RM_TerimaYN") = "Y" then%>Done <%  else %>Waiting <% end if %>
     </td>
     <td colspan="2">Keterangan</td>
-    <td>: <%= data("RM_Keterangan") %></td>
+    <td colspan="3">: <%= data("RM_Keterangan") %></td>
   </tr>
 
   <tr>
-    <td colspan="7" align="center">&nbsp</td>
+    <td colspan="9" align="center">&nbsp</td>
   </tr>
   <tr>
     <th scope="col" style="background-color: #0000a0;color:#fff;">No</th>
     <th scope="col" style="background-color: #0000a0;color:#fff;">Kode</th>
     <th scope="col" style="background-color: #0000a0;color:#fff;">Item</th>
+    <th scope="col" style="background-color: #0000a0;color:#fff;">Dimension</th>
     <th scope="col" style="background-color: #0000a0;color:#fff;">Quantity</th>
     <th scope="col" style="background-color: #0000a0;color:#fff;">Satuan</th>
+    <th scope="col" style="background-color: #0000a0;color:#fff;">Total Qty</th>
     <th scope="col" style="background-color: #0000a0;color:#fff;">Harga</th>
     <th scope="col" style="background-color: #0000a0;color:#fff;">UpdateID</th>
   </tr> 
@@ -81,8 +77,10 @@
         <td>
           <%= ddata("Brg_Nama") %>
         </td>
+        <td><%= ddata("RM_Dimension") %></td>
         <td><%= ddata("RM_qtysatuan") %></td>
         <td><%= ddata("sat_nama") %></td>
+        <td class="text-end"><%= ddata("RM_TotalQtyMM") &" "& ddata("SP_Nama") %></td>
         <td>
           <%= replace(formatCurrency(ddata("RM_Harga")),"$","") %>
         </td>

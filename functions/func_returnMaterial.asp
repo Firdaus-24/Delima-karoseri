@@ -31,11 +31,14 @@
 
   rmid = trim(Request.Form("rmid"))
   item = trim(Request.Form("item"))
+  dimensi = trim(Request.Form("dimensi"))
   harga = trim(Request.Form("harga"))
   qtty = trim(Request.Form("qtty"))
   satuan = trim(Request.Form("satuan"))
+  totalqtty = CDbl(trim(Request.Form("totalqtty")))
+  panjang = trim(Request.Form("panjang"))
 
-  data_cmd.commandTExt = "SELECT * FROM DLK_T_ReturnMaterialD WHERE RM_Item = '"& item &"' AND LEFT(RM_ID,13) = '"& rmid &"'"
+  data_cmd.commandTExt = "SELECT * FROM DLK_T_ReturnMaterialD WHERE RM_Item = '"& item &"' AND LEFT(RM_ID,13) = '"& rmid &"' AND RM_DImension = '"& dimensi &"' AND RM_TotalQtyMM = "& totalqtty &" AND RM_Harga = '"& harga &"' AND RM_SPID = "& panjang &""
 
   set data = data_cmd.execute
 
@@ -44,7 +47,7 @@
     ' response.write data_cmd.commandText & "<br>"
     set p = data_cmd.execute
 
-    call query("INSERT INTO DLK_T_ReturnMaterialD ( RM_ID, RM_Item, RM_QtySatuan, RM_Harga, RM_Jenissat, RM_UpdateID ) VALUES ( '"& p("ID") &"', '"& item &"', '"& qtty &"', '"& harga &"', '"& satuan &"', '"& session("userID") &"') ")
+    call query("INSERT INTO DLK_T_ReturnMaterialD ( RM_ID, RM_Item, RM_QtySatuan, RM_Harga, RM_Jenissat, RM_UpdateID, RM_Dimension, RM_TotalQtyMM, RM_SPID ) VALUES ( '"& p("ID") &"', '"& item &"', '"& qtty &"', '"& harga &"', '"& satuan &"', '"& session("userID") &"', '"& dimensi &"', "& totalqtty &", "& panjang &") ")
 
     call alert("DETAIL TRANSAKSI RETURN MATERIAL PRODUKSI", "berhasil di tambahkan", "success","rmd_add.asp?id="&left(rmid,13))
   else
@@ -58,11 +61,14 @@
 
   rmid = trim(Request.Form("rmid"))
   item = trim(Request.Form("item"))
+  dimensi = trim(Request.Form("dimensi"))
   harga = trim(Request.Form("harga"))
   qtty = trim(Request.Form("qtty"))
   satuan = trim(Request.Form("satuan"))
-
-  data_cmd.commandTExt = "SELECT * FROM DLK_T_ReturnMaterialD WHERE RM_Item = '"& item &"' AND LEFT(RM_ID,13) = '"& rmid &"'"
+  totalqtty = CDbl(trim(Request.Form("totalqtty")))
+  panjang = trim(Request.Form("panjang"))
+  
+  data_cmd.commandTExt = "SELECT * FROM DLK_T_ReturnMaterialD WHERE RM_Item = '"& item &"' AND LEFT(RM_ID,13) = '"& rmid &"' AND RM_DImension = '"& dimensi &"' AND RM_TotalQtyMM = "& totalqtty &" AND RM_Harga = '"& harga &"' AND RM_SPID = "& panjang &""
 
   set data = data_cmd.execute
 
@@ -71,7 +77,7 @@
     ' response.write data_cmd.commandText & "<br>"
     set p = data_cmd.execute
 
-    call query("INSERT INTO DLK_T_ReturnMaterialD ( RM_ID, RM_Item, RM_QtySatuan, RM_Harga, RM_Jenissat, RM_UpdateID ) VALUES ( '"& p("ID") &"', '"& item &"', '"& qtty &"', '"& harga &"', '"& satuan &"', '"& session("userID") &"') ")
+    call query("INSERT INTO DLK_T_ReturnMaterialD ( RM_ID, RM_Item, RM_QtySatuan, RM_Harga, RM_Jenissat, RM_UpdateID, RM_Dimension, RM_TotalQtyMM, RM_SPID ) VALUES ( '"& p("ID") &"', '"& item &"', '"& qtty &"', '"& harga &"', '"& satuan &"', '"& session("userID") &"', '"& dimensi &"', "& totalqtty &", "& panjang &") ")
 
     call alert("DETAIL TRANSAKSI RETURN MATERIAL PRODUKSI", "berhasil di tambahkan", "success","rmd_u.asp?id="&left(rmid,13))
   else

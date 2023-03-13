@@ -30,7 +30,6 @@ sub detailrc()
    brg = trim(Request.Form("item"))
    qtty = trim(Request.Form("qtty"))
    satuan = trim(Request.Form("satuan"))
-   harga = trim(Request.Form("harga"))
    penerima = trim(Request.Form("penerima"))
 
    data_cmd.commandText = "SELECT * FROM DLK_T_RCProdD WHERE LEFT(RCD_ID,10) = '"&rcid&"' AND RCD_Date = '"& tgl &"' AND RCD_Item = '"& brg &"'"
@@ -43,7 +42,7 @@ sub detailrc()
 
       set p = data_cmd.execute
 
-      call query ("INSERT INTO DLK_T_RCProdD (RCD_ID, RCD_Date, RCD_Item, RCD_Qtysatuan,RCD_SatID,RCD_Received, RCD_Harga) VALUES ('"& p("newid") &"', '"& tgl &"', '"& brg &"', "& qtty &", '"& satuan &"', '"& penerima &"', '"& harga &"')")
+      call query ("INSERT INTO DLK_T_RCProdD (RCD_ID, RCD_Date, RCD_Item, RCD_Qtysatuan,RCD_SatID,RCD_Received) VALUES ('"& p("newid") &"', '"& tgl &"', '"& brg &"', "& qtty &", '"& satuan &"', '"& penerima &"')")
       call alert("DETAIL TRANSAKSI PENERIMAAN BARANG", "berhasil di tambahkan", "success","rcd_add.asp?id="&rcid)
    else
       call alert("DETAIL TRANSAKSI PENERIMAAN BARANG", "sudah terdaftar!!", "error","rcd_add.asp?id="&rcid)
@@ -55,7 +54,6 @@ sub updaterc()
    tgl = Cdate(trim(Request.Form("tgl")))
    brg = trim(Request.Form("item"))
    qtty = trim(Request.Form("qtty"))
-   harga = trim(Request.Form("harga"))
    satuan = trim(Request.Form("satuan"))
    penerima = trim(Request.Form("penerima"))
 
@@ -69,7 +67,7 @@ sub updaterc()
 
       set p = data_cmd.execute
 
-      call query ("INSERT INTO DLK_T_RCProdD (RCD_ID, RCD_Date, RCD_Item, RCD_Qtysatuan,RCD_SatID,RCD_Received, RC_harga) VALUES ('"& p("newid") &"', '"& tgl &"', '"& brg &"', "& qtty &", '"& satuan &"', '"& penerima &"', '"& harga &"')")
+      call query ("INSERT INTO DLK_T_RCProdD (RCD_ID, RCD_Date, RCD_Item, RCD_Qtysatuan,RCD_SatID,RCD_Received) VALUES ('"& p("newid") &"', '"& tgl &"', '"& brg &"', "& qtty &", '"& satuan &"', '"& penerima &"')")
       call alert("DETAIL TRANSAKSI PENERIMAAN BARANG", "berhasil di tambahkan", "success","rcd_u.asp?id="&rcid)
    else
       call alert("DETAIL TRANSAKSI PENERIMAAN BARANG", "sudah terdaftar!!", "error","rcd_u.asp?id="&rcid)

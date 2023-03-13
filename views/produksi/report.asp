@@ -35,7 +35,7 @@
 
     if not returnmaterial.eof then
       ' detail returnmaterial
-      data_cmd.commandText = "SELECT dbo.DLK_T_ReturnMaterialD.*, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_WebLogin.UserName, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_SatuanBarang.Sat_Nama FROM dbo.DLK_M_WebLogin RIGHT OUTER JOIN dbo.DLK_T_ReturnMaterialD INNER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_ReturnMaterialD.RM_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID ON dbo.DLK_M_WebLogin.UserID = dbo.DLK_T_ReturnMaterialD.RM_UpdateID LEFT OUTER JOIN dbo.DLK_M_Kategori INNER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_Kategori.KategoriId = dbo.DLK_M_Barang.KategoriID INNER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID ON dbo.DLK_T_ReturnMaterialD.RM_Item = dbo.DLK_M_Barang.brg_ID WHERE LEFT(DLK_T_ReturnMaterialD.RM_ID,13) = '"& returnmaterial("RM_ID") &"' ORDER BY dbo.DLK_M_Barang.Brg_Nama"
+      data_cmd.commandTExt = "SELECT DLK_T_ReturnMaterialD.RM_Item, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama FROM DLK_T_ReturnMaterialD LEFT OUTER JOIN DLK_M_Barang ON DLK_T_ReturnMaterialD.RM_Item = DLK_M_Barang.Brg_ID INNER JOIN DLK_M_Kategori ON dbo.DLK_M_Kategori.KategoriId = dbo.DLK_M_Barang.KategoriID INNER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID WHERE LEFT(DLK_T_ReturnMaterialD.RM_ID,13) = '"& returnmaterial("RM_ID") &"' GROUP BY DLK_T_ReturnMaterialD.RM_Item, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama ORDER BY dbo.DLK_M_Barang.Brg_Nama"
 
       set detailreturnM = data_cmd.execute
     end if
@@ -213,25 +213,39 @@
               <th scope="col">Kode</th>
               <th scope="col">Item</th>
               <th scope="col">Quantity</th>
-              <th scope="col">Satuan</th>
+              <th scope="col">Total Qty</th>
               <th scope="col">Harga</th>
               <th scope="col">Total Harga </th>
             </tr>
             <% 
-            jreturn = 0
+            ' jreturn = 0
             treturn = 0
             do while not detailreturnM.eof 
-            jreturn = detailreturnM("RM_Harga") * Cint(detailreturnM("RM_qtysatuan"))
+              ' rincial barang
+              data_cmd.commandText = "  SELECT dbo.DLK_T_ReturnMaterialD.RM_Item, dbo.DLK_T_ReturnMaterialD.RM_QtySatuan, dbo.DLK_T_ReturnMaterialD.RM_Harga, dbo.DLK_T_ReturnMaterialD.RM_Dimension, dbo.DLK_T_ReturnMaterialD.RM_TotalQtyMM, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanPanjang.SP_Nama FROM dbo.DLK_T_ReturnMaterialD LEFT OUTER JOIN dbo.DLK_M_SatuanPanjang ON dbo.DLK_T_ReturnMaterialD.RM_SPID = dbo.DLK_M_SatuanPanjang.SP_ID LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_ReturnMaterialD.RM_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID WHERE (RM_Item = '"& detailreturnM("RM_Item") &"')"
+
+              set rincianRM  = data_cmd.execute
+
             %>
             <tr>
                <th><%= detailreturnM("KategoriNama") %>-<%= detailreturnM("jenisNama") %></th>
-              <td>
+              <td colspan="5">
                 <%= detailreturnM("Brg_Nama") %>
               </td>
-              <td><%= detailreturnM("RM_qtysatuan") %></td>
-              <td><%= detailreturnM("sat_nama") %></td>
+            </tr>
+            <% 
+            jreturn = 0
+            
+            do while not rincianRM.eof 
+            jreturn = rincianRM("RM_Harga") * Cint(rincianRM("RM_qtysatuan"))
+            %>
+            <tr>
+              <td>Dimension</td>
+              <td><%= rincianRM("RM_Dimension") %></td>
+              <td align="right"><%= rincianRM("RM_qtysatuan") &"  "& rincianRM("Sat_Nama") %></td>
+              <td align="right"><%= rincianRM("RM_TotalQtyMM") &"  "& rincianRM("SP_Nama") %></td>
               <td align="right">
-                <%= replace(formatCurrency(detailreturnM("RM_Harga")),"$","") %>
+                <%= replace(formatCurrency(rincianRM("RM_Harga")),"$","") %>
               </td>
               <td align="right">
                 <%= replace(formatCurrency(jreturn),"$","") %>
@@ -240,16 +254,21 @@
             <% 
             treturn = treturn + jreturn
             response.flush
+            rincianRM.movenext
+            loop
+            response.flush
             detailreturnM.movenext
             loop
-
-            thpp = thpp + hppitem + tmanpower - treturn
             %>
             <tr style="background-color:#FFFFE0">
               <th colspan="5">Grand Total Return Material</th>
               <th style="text-align:right"><%= replace(formatcurrency(treturn),"$","") %></th>
             </tr>
-          <% end if %>
+          <% end if 
+
+          ' cek total hpp produksi
+          thpp = (hppitem + tmanpower) - treturn
+          %>
             <tr>
               <td colspan="6">&nbsp</td>
             </tr>

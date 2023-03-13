@@ -110,7 +110,7 @@
 <div class="container">
     <div class="row mt-3 mb-3 text-center">
         <div class="col-lg-12">
-            <h3>PERMINTAAN ANGGARAN INVENTORY</h3>
+            <h3>PERMINTAAN ANGGARAN PEMBELANJAAN</h3>
         </div>
     </div>
     <% if session("INV1A") = true then %>

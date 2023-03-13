@@ -70,11 +70,11 @@
     </div>
    <table width="100%">
       <tr>
-         <td align="center"><h3>FORM PROSES INCOMMING DETAIL</h3></td>
+         <td align="center">FORM PROSES INCOMMING DETAIL</td>
       </tr>
       <tr>
-         <td>
-            &nbsp
+         <td align="center">
+           <%= LEFT(data("MR_ID"),2) &"-"& mid(data("MR_ID"),3,3) &"/"& mid(data("MR_ID"),6,4) &"/"& right(data("MR_ID"),4)%>
          </td>
       </tr>
    </table>
@@ -140,7 +140,7 @@
          %>
          <tr style="background-color: blue;color:#fff;">
             <td colspan="2">Document :</td>
-            <td><%= data1("MR_Transaksi") %></td>
+            <td><%= LEFT(data1("MR_Transaksi"),2) &"-"& mid(data1("MR_Transaksi"),3,3) &"/"& mid(data1("MR_Transaksi"),6,4) &"/"& right(data1("MR_Transaksi"),4)%></td>
             <td>User :</td>
             <td colspan="4"><%= data1("username") %></td>
          </tr>

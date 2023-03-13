@@ -24,13 +24,13 @@ $(document).ready(function () {
 const getHargaRC = (item, qty) => {
   $("#nqty").val(qty)
   $.post("./getharga.asp", { item }, function (data) {
-    $("#hargaRC").val(data)
+    $("#hargaRC").val(format(data))
   })
 }
 
 const validasiReturnMaterial = (data, e) => {
-  let stok = parseInt($("#nqty").val())
-  let qty = parseInt($("#qtty").val())
+  // let stok = parseInt($("#nqty").val())
+  // let qty = parseInt($("#qtty").val())
 
   let form = data;
   e.preventDefault(); // <--- prevent form from submitting
@@ -46,10 +46,10 @@ const validasiReturnMaterial = (data, e) => {
     dangerMode: true,
   }).then(function (isConfirm) {
     if (isConfirm) {
-      if (stok < qty) {
-        swal("Permintaan yang anda masukan melebihi quantity");
-        return false
-      }
+      // if (stok < qty) {
+      //   swal("Permintaan yang anda masukan melebihi quantity");
+      //   return false
+      // }
       form.submit(); // <--- submit form programmatically
     } else {
       swal("Form gagal di kirim");

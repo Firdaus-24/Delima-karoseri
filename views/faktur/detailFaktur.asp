@@ -37,7 +37,7 @@
     </div> 
     <div class="row">
         <div class="col-lg-12 text-center labelId">
-            <h3><%= data("IPH_ID") %></h3>
+            <h3><%= LEFT(data("IPH_ID"),2) &"-"& mid(data("IPH_ID"),3,3) &"/"& mid(data("IPH_ID"),6,4) &"/"& right(data("IPH_ID"),4)%></h3>
         </div>
     </div>
     <div class="row">
@@ -185,7 +185,7 @@
                     %>
                         <tr>
                             <th>
-                                <button type="button" class="btn btn-outline-primary" onclick="window.location.href='printBarcode.asp?id=<%= ddata("IPD_IPHID")%>'"><%= ddata("IPD_IPHID") %></button>
+                                <button type="button" class="btn btn-outline-primary" onclick="window.location.href='printBarcode.asp?id=<%= ddata("IPD_IPHID")%>'"><%= LEFT(ddata("IPD_IPHID"),2) &"-"& mid(ddata("IPD_IPHID"),3,3) &"/"& mid(ddata("IPD_IPHID"),6,4) &"/"& mid(ddata("IPD_IPHID"),10,4) &"/"& right(ddata("IPD_IPHID"),3)%></button>
                                 
                             </th>
                             <td>    

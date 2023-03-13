@@ -39,7 +39,7 @@
       <td align="center" colspan="6"><b>DETAIL TRANSAKSI PENERIMAAN BARANG PRODUKSI</b></td>
    </tr>
    <tr>
-      <td align="center" colspan="6"><b><%= left(id,2) &"-"& mid(id,2,4) &"-"& right(id,4) %></b></td>
+      <td align="center" colspan="6"><b><%= left(id,2) &"-"& mid(id,3,4) &"-"& right(id,4) %></b></td>
    </tr>
    <tr>
       <td>

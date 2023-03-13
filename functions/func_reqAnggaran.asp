@@ -16,7 +16,7 @@ sub tambahAnggaranH()
     set data = data_cmd.execute
 
     if data.eof then
-        data_cmd.commandText = "sp_addDLK_T_Memo_H '"& tgl &"','"& agen &"','"& departement &"', '"& divisi &"', '"& keterangan &"', '"& session("username") &"', "& kebutuhan &" "
+        data_cmd.commandText = "sp_addDLK_T_Memo_H '"& tgl &"','"& agen &"','"& departement &"', '"& divisi &"', '"& keterangan &"', '"& session("userid") &"', "& kebutuhan &" "
         set data = data_cmd.execute
 
         id = data("ID")

@@ -48,8 +48,7 @@
     end if
 
     ' query seach 
-    strquery = "SELECT dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_AgenId, dbo.DLK_T_InvPemH.IPH_OphId, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_VenId, dbo.DLK_T_InvPemH.IPH_JTDate, dbo.DLK_T_InvPemH.IPH_Keterangan, dbo.DLK_T_InvPemH.IPH_DiskonAll, dbo.DLK_T_InvPemH.IPH_Ppn, GLB_M_Agen.AgenNAme, DLK_M_Vendor.Ven_Nama, SUM(dbo.DLK_T_InvPemD.IPD_QtySatuan) AS beli FROM dbo.DLK_T_InvPemD RIGHT OUTER JOIN dbo.DLK_T_InvPemH ON LEFT(dbo.DLK_T_InvPemD.IPD_IphID, 13) = dbo.DLK_T_InvPemH.IPH_ID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_InvPemH.IPH_AgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Vendor ON DLK_T_InvPemH.IPH_VenID = DLK_M_vendor.Ven_ID WHERE dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y' GROUP BY dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_AgenId, dbo.DLK_T_InvPemH.IPH_OphId, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_VenId, dbo.DLK_T_InvPemH.IPH_JTDate, dbo.DLK_T_InvPemH.IPH_Keterangan, dbo.DLK_T_InvPemH.IPH_DiskonAll, dbo.DLK_T_InvPemH.IPH_Ppn,GLB_M_Agen.AgenNAme, DLK_M_Vendor.Ven_Nama HAVING (SUM(isnull(dbo.DLK_T_InvPemD.IPD_QtySatuan,0)) < (SELECT SUM(ISNULL(dbo.DLK_T_OrPemD.OPD_QtySatuan,0)) AS pesen FROM dbo.DLK_T_OrPemH RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID, 13) WHERE OPH_ID = dbo.DLK_T_InvPemH.IPH_OphId AND OPH_AktifYN = 'Y' "& filterAgen &"  "& filtervendor &" GROUP BY dbo.DLK_T_OrPemH.OPH_ID))"
-
+    strquery = "SELECT dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_AgenId, dbo.DLK_T_InvPemH.IPH_OphId, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_VenId, dbo.DLK_T_InvPemH.IPH_JTDate, dbo.DLK_T_InvPemH.IPH_Keterangan, dbo.DLK_T_InvPemH.IPH_DiskonAll, dbo.DLK_T_InvPemH.IPH_Ppn, GLB_M_Agen.AgenNAme, DLK_M_Vendor.Ven_Nama, ISNULL(SUM(dbo.DLK_T_InvPemD.IPD_QtySatuan),0) AS beli FROM dbo.DLK_T_InvPemD RIGHT OUTER JOIN dbo.DLK_T_InvPemH ON LEFT(dbo.DLK_T_InvPemD.IPD_IphID, 13) = dbo.DLK_T_InvPemH.IPH_ID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_InvPemH.IPH_AgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Vendor ON DLK_T_InvPemH.IPH_VenID = DLK_M_vendor.Ven_ID WHERE dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y' GROUP BY dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_AgenId, dbo.DLK_T_InvPemH.IPH_OphId, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_VenId, dbo.DLK_T_InvPemH.IPH_JTDate, dbo.DLK_T_InvPemH.IPH_Keterangan, dbo.DLK_T_InvPemH.IPH_DiskonAll, dbo.DLK_T_InvPemH.IPH_Ppn,GLB_M_Agen.AgenNAme, DLK_M_Vendor.Ven_Nama HAVING (SUM(isnull(dbo.DLK_T_InvPemD.IPD_QtySatuan,0)) < (SELECT SUM(ISNULL(dbo.DLK_T_OrPemD.OPD_QtySatuan,0)) AS pesen FROM dbo.DLK_T_OrPemH RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID, 13) WHERE OPH_ID = dbo.DLK_T_InvPemH.IPH_OphId AND OPH_AktifYN = 'Y' "& filterAgen &"  "& filtervendor &" GROUP BY dbo.DLK_T_OrPemH.OPH_ID))"
     ' untuk data paggination
     page = Request.QueryString("page")
 
@@ -166,7 +165,7 @@
                     tbarang = dpo - rs("beli")
                     %>
                         <tr><TH><%= recordcounter %></TH>
-                        <th><%= rs("IPH_ID") %></th>
+                        <th><%= LEFT(rs("IPH_ID"),2) &"-"& mid(rs("IPH_ID"),3,3) &"/"& mid(rs("IPH_ID"),6,4) &"/"& right(rs("IPH_ID"),4)%></th>
                         <td><%= rs("AgenName") %></td>
                         <td><%= Cdate(rs("IPH_Date")) %></td>
                         <td>
