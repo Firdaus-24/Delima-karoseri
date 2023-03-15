@@ -21,7 +21,7 @@
 <div class="container">
   <div class="row">
     <div class="col-lg-12  mt-3 text-center">
-      <h3>DETAIL PREDIKSI B.O.M</h3>
+      <h3>DETAIL PREDIKSI HARGA B.O.M</h3>
     </div>
   </div>
   <div class="row">
@@ -50,7 +50,7 @@
   </div>
   <div class="row">
     <div class="col-sm-2">
-      <label for="barang" class="col-form-label">Barang</label>
+      <label for="barang" class="col-form-label">Item</label>
     </div>
     <div class="col-sm-4 mb-3">
       <input type="text" id="barang" class="form-control" name="barang" value="<%= data("Brg_Nama") %>" readonly>
@@ -88,7 +88,7 @@
       <div class="d-flex mb-3">
         <% 'if session("ENG2D") = true then %>
         <div class="me-auto p-2">
-          <button type="button" class="btn btn-secondary" onClick="window.open('export-detailbom.asp?id=<%=id%>')" >Export</button>
+          <button type="button" class="btn btn-secondary" onClick="window.open('export-XlspredBom.asp?id=<%=id%>')" >Export</button>
         </div>
         <%' end if %>
         <div class="p-2">
@@ -107,16 +107,22 @@
             <th scope="col" rowspan="2">Item</th>
             <th scope="col" rowspan="2">Quantity</th>
             <th scope="col" rowspan="2">Satuan</th>
-            <th scope="col" colspan="2">Harga</th>
+            <th scope="col" colspan="2">Harga Satuan</th>
+            <th scope="col" colspan="2">Total Harga</th>
           </tr>
           <tr>
             <th scope="col">inventory</th>
             <th scope="col">Purchase</th>
+            <th scope="col">inventory</th>
+            <th scope="col">Purchase</th>
           </tr>
+         
         </thead>
         <tbody>
           <% 
           no = 0
+          totalinv = 0
+          totalpcs = 0
           do while not ddata.eof 
           no = no + 1
 
@@ -125,10 +131,26 @@
 
           set invharga = data_cmd.execute
 
+          if not invharga.eof then  
+            hargainventory = invharga("MR_Harga")
+          else
+            hargainventory = 0
+          end if
+
           ' cek harga purchase
           data_cmd.commandText = "SELECT TOP 1 IPD_Harga FROM DLK_T_InvPemD WHERE IPD_Item = '"& ddata("BMDItem") &"' ORDER BY IPD_Harga DESC"
 
           set pcsHarga = data_cmd.execute
+
+          if not pcsHarga.eof then
+            hargapurchase = pcsHarga("IPD_Harga")
+          else
+            hargapurchase = 0
+          end if
+
+          ' total harga 
+          tinv = hargainventory * Cint(ddata("BMDQtty"))
+          tpcs = hargapurchase * Cint(ddata("BMDQtty"))
           %>
             <tr>
               <th>
@@ -147,16 +169,35 @@
                 <%= ddata("sat_nama") %>
               </td>
               <td class="text-end">
-                <%= replace(formatCurrency(invharga("MR_Harga")),"$","") %>
+                <%= replace(formatCurrency(hargainventory),"$","") %>
               </td>
               <td class="text-end">
-                <%= replace(formatCurrency(pcsHarga("IPD_Harga")),"$","") %>
+                <%= replace(formatCurrency(hargapurchase),"$","") %>
+              </td>
+              <td class="text-end">
+                <%= replace(formatCurrency(tinv),"$","") %>
+              </td>
+              <td class="text-end">
+                <%= replace(formatCurrency(tpcs),"$","") %>
               </td>
             </tr>
           <% 
+          totalinv = totalinv + tinv
+          totalpcs = totalpcs + tpcs
           ddata.movenext
           loop
           %>
+            <tr>
+              <td colspan="7">
+                Total
+              </td>
+              <td class="text-end">
+                <%= replace(formatCurrency(totalinv),"$","") %>
+              </td>
+              <td class="text-end">
+                <%= replace(formatCurrency(totalpcs),"$","") %>
+              </td>
+            </tr>
         </tbody>
       </table>
     </div>

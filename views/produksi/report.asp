@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+   if session("ENG6") = false then
+    Response.Redirect("../index.asp")
+  end if
+
   noprod = trim(Request.Form("noprod"))
   thpp = 0
 
@@ -69,7 +73,9 @@
       </select>
     </div>
     <div class="col-sm-2 mb-3">
+      <% if session("ENG6") =  true then%>
       <button type="button" class="btn btn-secondary" onClick="window.open('export-XlsReport.asp?noprod=<%=noprod%>','_self')">Export</button>
+      <%  end if %>
       <button type="submit" class="btn btn-primary">Refresh</button>
     </div>
   </div>

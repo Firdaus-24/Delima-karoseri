@@ -139,6 +139,12 @@
         </tr>
         <tr>
             <td>
+                No.Drawing
+            </td>
+            <td>
+                : <%= LEft(data("BMSasisID"),5) &"-"& mid(data("BMSasisID"),6,4) &"-"& right(data("BMSasisID"),3) %>
+            </td>
+            <td>
                 Keterangan
             </td>
             <td colspan="4">
@@ -182,26 +188,6 @@
         loop
         %>
     </table>
-    <div class="drawing">
-        <div class="images">
-            <span>Drawing 1 </span>
-            <% if data("BMimg1") <> "" then%>
-            <img src="<%= url %>document/stack/<%= data("BMimg1") &".jpg" %>">
-            <% end if %>
-        </div>
-        <div class="images">
-            <span>Drawing 2 </span>
-            <% if data("BMimg2") <> "" then%>
-            <img src="<%= url %>document/stack/<%= data("BMimg2") &".jpg" %>">
-            <% end if %>
-        </div>
-        <div class="images">
-            <span>Drawing 3 </span>
-            <% if data("BMimg3") <> "" then%>
-            <img src="<%= url %>document/stack/<%= data("BMimg3") &".jpg" %>">
-            <% end if %>
-        </div>
-    </div>
 <% 
     call footer()
 %>

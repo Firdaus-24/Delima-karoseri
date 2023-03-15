@@ -101,9 +101,14 @@
             </ul>
           <!-- qc -->
           <li class="nav-text">
-            <a href="#"><i class="bi bi-check2-all"></i> QR/QC</a>
+            <a href="#" onclick="toggle('sublist-qc')"><i class="bi bi-activity"></i> QR/QC</a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
+             <ul class="sub-menu" id="sublist-qc">
+              <li>
+                <a class="link-name" href="<%= url %>views/unit/">Kedangan Unit</a>
+              </li>
+            </ul>
           <!-- engineering -->
           <li class="nav-text">
             <a href="#" onclick="toggle('sublist-engineering')"><i class="bi bi-easel3"></i> Engineering</a>

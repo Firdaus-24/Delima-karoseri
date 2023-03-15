@@ -142,7 +142,9 @@
                         <%= left(ddata("PDD_id"),2) %>-<%=mid(ddata("PDD_id"),3,3) %>/<%= mid(ddata("PDD_id"),6,4) %>/<%= mid(ddata("PDD_id"),10,4) %>/<%= right(ddata("PDD_id"),3)  %>
                      </th>
                      <td>
-                        <%= left(ddata("PDD_BMID"),2) %>-<%=mid(ddata("PDD_BMID"),3,3) %>/<%= mid(ddata("PDD_BMID"),6,4) %>/<%= right(ddata("PDD_BMID"),3)  %>
+                        <a href="<%=url%>views/bom/detailBom.asp?id=<%= ddata("PDD_BMID") %>" style="cursor:pointer;text-decoration:none;color:black;" target="blank">
+                           <%= left(ddata("PDD_BMID"),2) %>-<%= mid(ddata("PDD_BMID"),3,3) %>/<%= mid(ddata("PDD_BMID"),6,4) %>/<%= right(ddata("PDD_BMID"),3)  %>
+                        </a>
                      </td>
                      <td>
                         <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>

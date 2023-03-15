@@ -99,7 +99,7 @@
          <label for="sasisid" class="col-form-label">No. Drawing</label>
       </div>
       <div class="col-sm-4 mb-3">
-         <input type="text" class="form-control" name="sasisid" id="sasisid" maxlength="50" autocomplete="off" value="<%= LEft(data("BMSasisID"),5) &"-"& mid(data("BMSasisID"),6,4) &"-"& right(data("BMSasisID"),3) %>" readonly>
+         <input type="text" class="form-control" name="sasisid" id="sasisid" maxlength="50" autocomplete="off" value="<%= LEft(data("BMSasisID"),5) &"-"& mid(data("BMSasisID"),6,4) &"-"& right(data("BMSasisID"),3) %>" onclick="window.open('<%=url%>views/sasis/openPdf.asp?id=CL0020001002&p=draw')" style="cursor:pointer;" readonly>
       </div>
       <div class="col-sm-2">
          <label for="keterangan" class="col-form-label">Keterangan</label>

@@ -1258,7 +1258,7 @@ call header("Hak Akses") %>
             set app = data_cmd.execute
             %>
             <input class="form-check-input" type="checkbox" name="ENG6" id="ENG6" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','ENG6');" >
-            <label for="ENG6">Master Sasis</label>
+            <label for="ENG6">HPP berjalan</label>
           </li>
             <ul>
               <li>
@@ -1268,7 +1268,29 @@ call header("Hak Akses") %>
                 set app = data_cmd.execute
                 %>
                 <input class="form-check-input" type="checkbox" name="ENG6D" id="ENG6D" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','ENG6D');" >
-                <label for="ENG6D">Tambah</label>
+                <label for="ENG6D">Export</label>
+              </li>
+              <li>
+            </ul>
+          <!-- Prediksi BOM -->
+          <li>
+            <%
+            data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'ENG7'"
+
+            set app = data_cmd.execute
+            %>
+            <input class="form-check-input" type="checkbox" name="ENG7" id="ENG7" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','ENG7');" >
+            <label for="ENG7">Prediksi BOM</label>
+          </li>
+            <ul>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'ENG7D'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="ENG7D" id="ENG7D" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','ENG7D');" >
+                <label for="ENG7D">Export</label>
               </li>
               <li>
             </ul>

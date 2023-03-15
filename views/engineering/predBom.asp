@@ -1,8 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
-  '  if session("ENG2") = false then
-  '     Response.Redirect("../index.asp")
-  '  end if
+  if session("ENG7") = false then
+    Response.Redirect("../index.asp")
+  end if
 
   set data_cmd =  Server.CreateObject ("ADODB.Command")
   data_cmd.ActiveConnection = mm_delima_string
@@ -104,7 +104,6 @@
   call header("Report Harga B.O.M") 
 %>
 <style>
-
     /* The Modal (background) */
     .modal {
     display: none; /* Hidden by default */
