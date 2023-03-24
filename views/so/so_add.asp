@@ -22,7 +22,7 @@
 <div class="container">
    <div class="row">
       <div class="col-lg-12 mb-3 mt-3 text-center">
-         <h3>FORM TAMBAH SALES ORDER</h3>
+         <h3>FORM TAMBAH SALES ORDER PROJECT</h3>
       </div>
    </div>
    <form action="so_add.asp" method="post" onsubmit="validasiForm(this,event,'Sales Order','warning')">
@@ -74,20 +74,20 @@
          <div class="col-lg-2 mb-3">
             <label for="diskon" class="col-form-label">Diskon All</label>
          </div>
-         <div class="col-lg-3 mb-3">
-            <input type="number" id="diskon" name="diskon" class="form-control">
-         </div>
-         <div class="col-lg-1 mb-3 p-0">
-            <label class="col-form-label">%</label>
+         <div class="col-lg-4 mb-3">
+            <div class="input-group ">
+               <input type="number" class="form-control" id="diskon" name="diskon" required>
+               <span class="input-group-text" >%</span>
+            </div>
          </div>
          <div class="col-lg-2 mb-3">
             <label for="ppn" class="col-form-label">PPn</label>
          </div>
-         <div class="col-lg-3 mb-3">
-            <input type="number" id="ppn" name="ppn" class="form-control">
-         </div>
-         <div class="col-lg-1 mb-3 p-0">
-            <label class="col-form-label">%</label>
+         <div class="col-lg-4 mb-3">
+            <div class="input-group ">
+               <input type="number" class="form-control" id="ppn" name="ppn" required>
+               <span class="input-group-text" >%</span>
+            </div>
          </div>
       </div>
       <div class="row">
@@ -95,7 +95,10 @@
             <label for="timeWork" class="col-form-label">Lama Pengerjaan</label>
          </div>
          <div class="col-lg-4 mb-3">
-            <input type="number" id="timeWork" name="timeWork" class="form-control" required>
+            <div class="input-group ">
+               <input type="number" class="form-control" id="timeWork" name="timeWork" required>
+               <span class="input-group-text">/ Hari</span>
+            </div>
          </div>
          <div class="col-lg-2 mb-3">
             <label for="keterangan" class="col-form-label">Keterangan</label>

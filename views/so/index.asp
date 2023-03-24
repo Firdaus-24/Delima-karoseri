@@ -112,7 +112,7 @@
 <div class="container">
    <div class="row">
       <div class="col-lg-12 mb-3 mt-3 text-center">
-         <h3>SALES ORDER</h3>
+         <h3>SALES ORDER PROJECT</h3>
       </div>
    </div>
    <% if session("MK1A") = true then %>
