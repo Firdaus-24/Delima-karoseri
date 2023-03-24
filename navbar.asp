@@ -106,7 +106,10 @@
           </li>
              <ul class="sub-menu" id="sublist-qc">
               <li>
-                <a class="link-name" href="<%= url %>views/unit/">Kedangan Unit</a>
+                <a class="link-name" href="<%= url %>views/unit/">Item Penunjang Unit</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/serteruni/">Serah Terima Unit</a>
               </li>
             </ul>
           <!-- engineering -->

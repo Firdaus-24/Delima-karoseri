@@ -1,6 +1,6 @@
 <!-- #include file='../../init.asp' -->
 <% 
-  if session("HR7") = false then  
+  if session("MQ1") = false then  
     Response.Redirect("../index.asp")
   end if
 
@@ -30,16 +30,16 @@
   end if
 
   if nama <> "" then
-    filterNama = "WHERE UPPER(JJ_Nama) LIKE '%"& nama &"%'"
+    filterNama = "WHERE UPPER(FK_Nama) LIKE '%"& nama &"%'"
   else
     filterNama = ""
   end if
 
-  orderBy = " order by JJ_ID, JJ_Nama, JJ_AktifYN, JJ_UpdateID, JJ_UpdateTime"
+  orderBy = " order by FK_ID, FK_Nama, FK_AktifYN, FK_UpdateID, FK_UpdateTime"
 
   set rs = Server.CreateObject("ADODB.Recordset")
 
-  sqlawal = "SELECT HRD_M_Jenjang.*, DLK_M_webLogin.username FROM HRD_M_Jenjang LEFT OUTER JOIN DLK_M_Weblogin ON HRD_M_Jenjang.JJ_UpdateID = DLK_M_webLogin.userid "& filterNama &""
+  sqlawal = "SELECT DLK_M_ItemKendaraan.*, DLK_M_webLogin.username FROM DLK_M_ItemKendaraan LEFT OUTER JOIN DLK_M_Weblogin ON DLK_M_ItemKendaraan.FK_UpdateID = DLK_M_webLogin.userid "& filterNama &""
 
   sql=sqlawal + orderBy
 
@@ -67,7 +67,7 @@
 
   set rs = server.CreateObject("ADODB.RecordSet")
 
-  sqlawal = "SELECT HRD_M_Jenjang.*, DLK_M_webLogin.username from HRD_M_Jenjang LEFT OUTER JOIN DLK_M_Weblogin ON HRD_M_Jenjang.JJ_UpdateID = DLK_M_webLogin.userid "& filterNama &""
+  sqlawal = "SELECT DLK_M_ItemKendaraan.*, DLK_M_webLogin.username from DLK_M_ItemKendaraan LEFT OUTER JOIN DLK_M_Weblogin ON DLK_M_ItemKendaraan.FK_UpdateID = DLK_M_webLogin.userid "& filterNama &""
   sql=sqlawal + orderBy
 
   rs.open sql, conn
@@ -82,7 +82,7 @@
     end if	
   loop
 
-  call header("Jenjang")
+  call header("Item Kendaraan")
 
 %> 
 
@@ -90,13 +90,13 @@
 <div class="container">
   <div class="row">
     <div class="col-md-12 mt-3 mb-3">   
-      <h3 class="text-uppercase text-center">  JENJANG </h3>
+      <h3 class="text-uppercase text-center">ITEM PENUNJANG KENDARAAN CUSTOMER</h3>
     </div>
   </div>
   <div class="row">
     <div class="col">
-      <%if session("HR7A") = true then%>
-        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#formModalJenjang" onclick="return tambahJenjang()">
+      <%if session("MQ1A") = true then%>
+        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#formModalItemKendaraan" onclick="return tambahItemKendaraan()">
           Tambah
         </button>
       <%end if%>
@@ -106,7 +106,7 @@
   <div class="row">
     <div class="col-sm-6">
       <div class="input-group mb-3">
-        <input type="text" class="form-control" name="nama" id="key" placeholder="Cari Berdasarkan Nama...." autocomplate="off">
+        <input type="text" class="form-control" name="nama" id="key" placeholder="Cari Berdasarkan Nama...." autocomplete="off">
       </div>
     </div>
     <div class="col-sm-2">
@@ -124,9 +124,9 @@
           <tr>
             <th class="text-center" scope="col">ID</th>
             <th class="text-center" scope="col">Nama</th>
-            <th class="text-center" scope="col">Aktif ID</th>
             <th class="text-center" scope="col">Update ID</th>
             <th class="text-center" scope="col">Terakhir Update</th>
+            <th class="text-center" scope="col">Aktif</th>
             <th class="text-center" scope="col">Aksi</th>
           </tr>
         </thead>
@@ -138,21 +138,21 @@
 					recordcounter = recordcounter + 1
 				%>
           <tr class="text-center"> 
-            <td><%= rs("JJ_ID") %> </td>
-            <td><%= rs("JJ_Nama") %> </td>
-            <td><%= rs("JJ_AktifYN") %> </td>
+            <td><%= rs("FK_ID") %> </td>
+            <td><%= rs("FK_Nama") %> </td>
             <td><%= rs("username") %> </td>
-            <td><%= rs("JJ_UpdateTime") %> </td>
+            <td><%= rs("FK_UpdateTime") %> </td>
+            <td><% if rs("FK_AktifYN") = "Y" then %>Aktif <% else %>Off <% end if %> </td>
             <td> 
-              <div class="btn-group" role="group" aria-label="Basic mixed styles example" id="buttonjenjang">
-                <%if session("HR7B") = true then%>
-                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#formModalJenjang" onclick="return ubahJenjang('<%= rs("JJ_ID") %>','<%= rs("JJ_Nama") %>')" >UPDATE</button>
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <%if session("MQ1B") = true then%>
+                  <button type="button" class="badge text-bg-primary" data-bs-toggle="modal" data-bs-target="#formModalItemKendaraan" onclick="return ubahItemKendaraan('<%= rs("FK_ID") %>','<%= rs("FK_Nama") %>')" >Update</button>
                 <%end if%>
-                <%if session("HR7C") = true then%>
-                  <% if rs("JJ_AktifYN") = "Y" then %>
-                    <button type="button" class="btn btn-danger btn-sm" onclick="return jjAktif('<%= rs("JJ_ID") %>','N')">NO</button>
+                <%if session("MQ1C") = true then%>
+                  <% if rs("FK_AktifYN") = "Y" then %>
+                    <button type="button" class="badge text-bg-danger" onclick="return FKaktif('<%= rs("FK_ID") %>','N')">NO</button>
                   <% else %>  
-                    <button type="button" class="btn btn-warning btn-sm" onclick="return jjAktif('<%= rs("JJ_ID") %>','Y')">YES</button>
+                    <button type="button" class="badge text-bg-warning" onclick="return FKaktif('<%= rs("FK_ID") %>','Y')">YES</button>
                   <% end if %>      
                 <%end if%>
               </div>
@@ -235,20 +235,20 @@
 </div>
     
 <!-- tampil modal -->
-<div class="modal fade" id="formModalJenjang" tabindex="-1" aria-labelledby="formModalJenjangLabel" aria-hidden="true">
+<div class="modal fade" id="formModalItemKendaraan" tabindex="-1" aria-labelledby="formModalItemKendaraanLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="formModalJenjangLabel">Update Data</h5>
+        <h5 class="modal-title" id="formModalItemKendaraanLabel">Update Data</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form method="post" action="tambah.asp">
-        <input type="hidden" name="code" id="code">
-            <div class="mb-3">
-                <label for="nama" class="form-label">Nama</label>
-                <input type="text" class="form-control" name="nama" id="nama" maxlength="30" autofocus="on" autocomplate="off" required>
-            </div>
+        <form method="post" action="fk_add.asp">
+        <input type="hidden" name="id" id="id">
+          <div class="mb-3">
+            <label for="nama" class="form-label">Nama</label>
+            <input type="text" class="form-control" name="nama" id="nama" maxlength="100" autofocus="on" autocomplate="off" required>
+          </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -259,25 +259,23 @@
   </div>
 </div>
 <script>
-  function tambahJenjang() {
-    $('#formModalJenjangLabel').html('TAMBAH DATA');
+  function tambahItemKendaraan() {
+    $('#formModalItemKendaraanLabel').html('TAMBAH DATA');
     $('.modal-footer button[type=submit]').html('Save');
-    $('.modal-body form').attr('action', 'tambah.asp');
-    // $('#labelID').hide();
-    $('#code').attr('readonly', false);
-    $('#code').val('');
+    $('.modal-body form').attr('action', 'fk_add.asp');
+   
+    $('#id').val('');
     $('#nama').val('');
   }
-  function ubahJenjang(id, data) {
-    $('#ModallabelJabatan').html('UPDATE DATA');
-    $('.modal-footer button[type=submit]').html('UPDATE');
-    $('.modal-body form').attr('action', 'update.asp');
-    // $('#labelID').hide();
-    $('#code').attr('readonly', true);
-    $('#code').val(id);
-    $('#nama').val(data);
+  function ubahItemKendaraan(id, e) {
+    $('#formModalItemKendaraanLabel').html('UPDATE ITEM');
+    $('.modal-footer button[type=submit]').html('Update');
+    $('.modal-body form').attr('action', 'fk_u.asp');
+  
+    $('#id').val(id);
+    $('#nama').val(e);
   }
-  function jjAktif(id,aktif){
+  function FKaktif(id,aktif){
     let str
     if (aktif == 'Y'){
       str = 'HAPUS'
@@ -286,7 +284,7 @@
     }
     swal({
       title: `YAKIN UNTUK DI ${str}??`,
-      text: "MASTER JENJANG",
+      text: "MASTER ITEM PENUNJANG KENDARAAN",
       icon: "warning",
       buttons: [
           'No',
