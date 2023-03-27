@@ -64,17 +64,17 @@
                   set dtrans2 = data_cmd.execute
 
                   ' update harga sisa stok by hpp
-                  if stokMaster("stok") <> 0 then
-                     ' get harga baru
-                     data_cmd.commandText = "SELECT MR_Harga FROM DLK_T_MaterialREceiptD2 WHERE MR_ID = '"& id &"' AND MR_Item = '"& ckurut2("IPD_Item") &"'"
+                  ' if stokMaster("stok") <> 0 then
+                  '    ' get harga baru
+                  '    data_cmd.commandText = "SELECT MR_Harga FROM DLK_T_MaterialREceiptD2 WHERE MR_ID = '"& id &"' AND MR_Item = '"& ckurut2("IPD_Item") &"'"
 
-                     set hargabaru = data_cmd.execute
+                  '    set hargabaru = data_cmd.execute
 
                      ' update harga smua item sisa stok
-                     data_cmd.commandText = "UPDATE DLK_T_MaterialReceiptD2 SET MR_Harga = '"& hargabaru("MR_Harga") &"' WHERE MR_Item = '"& ckurut2("IPD_Item") &"'"
-
+                     data_cmd.commandText = "UPDATE DLK_T_MaterialReceiptD2 SET MR_Harga = '"& hpp &"' WHERE MR_Item = '"& ckurut2("IPD_Item") &"'"
+                     ' response.write data_cmd.commandText & "<br>"
                      set updateharga = data_cmd.execute
-                  end if
+                  ' end if
 
                response.flush
                ckurut2.movenext

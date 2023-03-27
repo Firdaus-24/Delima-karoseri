@@ -29,6 +29,9 @@
                 <a href="<%= url %>views/Barang/">Master Barang</a>
               </li>
               <li>
+                <a href="<%= url %>views/b_biaya/">Master Beban Biaya</a>
+              </li>
+              <li>
                 <a href="<%= url %>views/customer/">Master Customer</a>
               </li>
               <li>
@@ -154,6 +157,9 @@
               </li>
               <li>
                 <a class="link-name" href="<%= url %>views/manpower/">Man Power</a>
+              </li>
+              <li>
+                <a class="link-name" href="<%= url %>views/bbtp/">Beban Biaya Proses</a>
               </li>
               <li>
                 <a class="link-name" href="<%= url %>views/ReturnMaterial/">Return Material</a>

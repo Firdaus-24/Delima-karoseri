@@ -87,7 +87,7 @@
     <div class="row">
         <div class="col-lg-4 mb-3">
         <form action="index.asp" method="post">
-            <input type="text" class="form-control" name="nama" id="nama" autocomplete="off" placeholder="cari Aset">
+            <input type="text" class="form-control" name="nama" id="nama" autocomplete="off" placeholder="cari divisi">
         </div>
         <div class="col-lg mb-3">
             <button type="submit" class="btn btn-primary">Cari</button>
