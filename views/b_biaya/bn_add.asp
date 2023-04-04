@@ -1,8 +1,8 @@
 <!--#include file="../../init.asp"-->
 <%  
-  ' if session("HR2A") = false then
-  '   Response.Redirect("index.asp")
-  ' end if
+  if session("M12A") = false then
+    Response.Redirect("index.asp")
+  end if
 
   call header("Tambah beban") %>
 <!--#include file="../../navbar.asp"-->

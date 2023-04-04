@@ -34,4 +34,6 @@
     <script src="../../public/js/returnMaterial.js"></script>
     <script src="../../public/js/satuanpanjang.js"></script>
     <script src="../../public/js/bebanBiaya.js"></script>
+    <script src="../../public/js/bbtp.js"></script>
+    <script src="../../public/js/pdi.js"></script>
 </html>

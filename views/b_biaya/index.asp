@@ -1,8 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
-  ' if session("HR2") = false then
-  '   Response.Redirect("../index.asp")
-  ' end if
+  if session("M12") = false then
+    Response.Redirect("../index.asp")
+  end if
 
 
   set conn = Server.CreateObject("ADODB.Connection")
@@ -77,7 +77,7 @@
       <h3>MASTER BEBAN BIAYA PRODUKSI</h3>
     </div>
   </div>
-  <%' if session("HR2A") = true then %>
+  <% if session("M12A") = true then %>
   <div class="row mt-3 mb-3">
     <div class="col-lg-2">
       <!-- Button trigger modal -->
@@ -86,7 +86,7 @@
       </button>
     </div>
   </div>
-  <%' end if %>
+  <% end if %>
   <div class="row">
     <div class="col-lg-4 mb-3">
     <form action="index.asp" method="post">
@@ -124,16 +124,16 @@
               <td><%= rs("BN_UpdateTime") %></td>
               <td class="text-center">
                 <div class="btn-group" role="group" aria-label="Basic example">
-                  <%' if session("HR2B") = true then %>
+                  <% if session("M12B") = true then %>
                     <a href="#" class="btn badge text-bg-primary updatebebanBiaya" data="<%= rs("BN_ID") %>" valname="<%= rs("BN_Nama") %>" data-bs-toggle="modal" data-bs-target="#modalBbiaya">update</a> 
-                  <%' end if %>
-                  <%' if session("HR2C") = true then %>
+                  <% end if %>
+                  <% if session("M12C") = true then %>
                     <% if rs("BN_AktifYN") = "Y" then %>
                       <a href="aktif.asp?id=<%= rs("BN_ID") %>&p=N" class="btn badge text-bg-danger" onclick="ApproveYN(event,'APA ANDA YAKIN?', 'Menonaktifkan data ini','warning')">delete</a>
                     <% else%>
                       <a href="aktif.asp?id=<%= rs("BN_ID") %>&p=Y" class="btn badge text-bg-warning" onclick="ApproveYN(event,'APA ANDA YAKIN?', 'Mengaktifkan data ini','warning')">Aktif</a>
                     <% end if %>
-                  <%' end if %>
+                  <% end if %>
                 </div>
               </td>
           </tr>

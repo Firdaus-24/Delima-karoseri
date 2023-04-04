@@ -10,11 +10,6 @@
    ' filter agen
    data_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_ProduksiH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_ProduksiH.PDH_AgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_ProduksiH.PDH_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
    set agendata = data_cmd.execute
-   
-   ' filter bom
-   ' data_cmd.commandTExt = "SELECT dbo.DLK_M_BOMH.BMID, dbo.DLK_M_Barang.Brg_Nama FROM dbo.DLK_M_Barang INNER JOIN dbo.DLK_M_BOMH ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_M_BOMH.BMBrgID RIGHT OUTER JOIN dbo.DLK_T_ProduksiH ON dbo.DLK_M_BOMH.BMID = dbo.DLK_T_ProduksiH.PDH_BMID GROUP BY dbo.DLK_M_BOMH.BMID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_ProduksiH.PDH_AktifYN HAVING (dbo.DLK_T_ProduksiH.PDH_AktifYN = 'Y') ORDER BY Brg_Nama ASC"
-   ' ' response.write data_cmd.commandText & "<br>"
-   ' set dataproduk = data_cmd.execute
 
    set conn = Server.CreateObject("ADODB.Connection")
    conn.open MM_Delima_string
@@ -174,13 +169,13 @@
                set p = data_cmd.execute
                %>
                   <tr><TH><%= recordcounter %></TH>
-                  <th>
+                  <td>
                      <% if session("ENG1D") = true then %>
-                        <a href="printNoProduksi.asp?id=<%= rs("PDH_ID") %>" class="btn btn-outline-info badge text-dark" style="text-decoration:none"><%= left(rs("PDH_ID"),2) %>-<%= mid(rs("PDH_ID"),3,3) %>/<%= mid(rs("PDH_ID"),6,4) %>/<%= right(rs("PDH_ID"),4)  %></a>
+                        <a href="printNoProduksi.asp?id=<%= rs("PDH_ID") %>" class="btn btn-outline-info badge text-dark" style="text-decoration:none;font-size:14px;"><%= left(rs("PDH_ID"),2) %>-<%= mid(rs("PDH_ID"),3,3) %>/<%= mid(rs("PDH_ID"),6,4) %>/<%= right(rs("PDH_ID"),4)  %></a>
                      <% else %>
                         <%= left(rs("PDH_ID"),2) %>-<%= mid(rs("PDH_ID"),3,3) %>/<%= mid(rs("PDH_ID"),6,4) %>/<%= right(rs("PDH_ID"),4)  %>
                      <% end if %>
-                  </th>
+                  </td>
                   <td><%= rs("AgenNAme")%></td>
                   <td><%= Cdate(rs("PDH_Date")) %></td>
                   <td>
