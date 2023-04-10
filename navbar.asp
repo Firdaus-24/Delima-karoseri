@@ -131,7 +131,12 @@
             <ul class="sub-menu" id="sublist-marketing">
               <% if session("MK1") = true then %>
               <li>
-                <a class="link-name" href="<%= url %>views/so/">Sales Order</a>
+                <a class="link-name" href="<%= url %>views/so/">Sales Order New</a>
+              </li>
+              <% end if %>
+              <% if session("MK2") = true then %>
+              <li>
+                <a class="link-name" href="<%= url %>views/salesrep/">Sales Order Repair</a>
               </li>
               <% end if %>
             </ul>

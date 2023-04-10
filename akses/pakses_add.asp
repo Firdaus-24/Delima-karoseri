@@ -2400,6 +2400,7 @@ call header("Hak Akses") %>
 
       <div class="accordion__content">
         <ul class="accordion__description">
+          <!-- sales order project -->
           <li>
             <%
             data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MK1'"
@@ -2407,7 +2408,7 @@ call header("Hak Akses") %>
             set app = data_cmd.execute
             %>
             <input class="form-check-input" type="checkbox" name="MK1" id="MK1" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MK1');" >
-            <label for="MK1">Sales Order</label>
+            <label for="MK1">Sales Order New</label>
           </li>
             <ul>
               <li>
@@ -2445,6 +2446,55 @@ call header("Hak Akses") %>
                 %>
                 <input class="form-check-input" type="checkbox" name="MK1D" id="MK1D" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MK1D');" >
                 <label for="MK1D">Export</label>
+              </li>
+            </ul>
+          
+          <!-- sales order repairt -->
+          <li>
+            <%
+            data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MK2'"
+
+            set app = data_cmd.execute
+            %>
+            <input class="form-check-input" type="checkbox" name="MK2" id="MK2" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MK2');" >
+            <label for="MK2">Sales Order repairt</label>
+          </li>
+            <ul>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MK2A'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="MK2A" id="MK2A" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MK2A');" >
+                <label for="MK2A">Tambah</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MK2B'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="MK2B" id="MK2B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MK2B');" >
+                <label for="MK2B">Update</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MK2C'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="MK2C" id="MK2C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MK2C');" >
+                <label for="MK2C">Delete</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MK2D'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="MK2D" id="MK2D" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MK2D');" >
+                <label for="MK2D">Export</label>
               </li>
             </ul>
         </ul>
