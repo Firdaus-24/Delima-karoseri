@@ -22,12 +22,12 @@
     set getuser = data_cmd.execute
 
     ' get divisi
-    data_cmd.commandTExt = "SELECT divID, divnama FROM DLK_T_AsetH LEFT OUTER JOIN DLK_M_divisi ON DLK_T_AsetH.ASetdivID = DLK_M_divisi.divID WHERE DLK_T_AsetH.AsetAktifYN = 'Y' GROUP BY divID, divnama ORDER BY divnama"
+    data_cmd.commandTExt = "SELECT divID, divnama FROM DLK_T_AsetH LEFT OUTER JOIN HRD_M_divisi ON DLK_T_AsetH.ASetdivID = HRD_M_divisi.divID WHERE DLK_T_AsetH.AsetAktifYN = 'Y' GROUP BY divID, divnama ORDER BY divnama"
     
     set divaset = data_cmd.execute
     
     ' get departement
-    data_cmd.commandTExt = "SELECT depID, depnama FROM DLK_T_AsetH LEFT OUTER JOIN DLK_M_Departement ON DLK_T_AsetH.ASetdepID = DLK_M_Departement.depID WHERE DLK_T_AsetH.AsetAktifYN = 'Y' GROUP BY depID, depnama ORDER BY depnama"
+    data_cmd.commandTExt = "SELECT depID, depnama FROM DLK_T_AsetH LEFT OUTER JOIN HRD_M_Departement ON DLK_T_AsetH.ASetdepID = HRD_M_Departement.depID WHERE DLK_T_AsetH.AsetAktifYN = 'Y' GROUP BY depID, depnama ORDER BY depnama"
     
     set depaset = data_cmd.execute
 
@@ -67,7 +67,7 @@
         filterdep = ""
     end if
     ' query seach 
-    strquery = "SELECT dbo.DLK_M_Departement.DepNama, dbo.DLK_M_Divisi.DivNama, dbo.DLK_T_AsetH.AsetId, dbo.DLK_T_AsetH.AsetAgenID, dbo.DLK_T_AsetH.AsetPJawab, dbo.DLK_T_AsetH.AsetKeterangan, dbo.DLK_T_AsetH.AsetUpdateID, dbo.DLK_T_AsetH.AsetUpdateTime, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_WebLogin.UserName, dbo.DLK_M_Divisi.DivId, dbo.DLK_M_WebLogin.UserID FROM dbo.DLK_T_AsetH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_AsetH.AsetAgenID = dbo.GLB_M_Agen.AgenID RIGHT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_AsetH.AsetPJawab = dbo.DLK_M_WebLogin.UserID LEFT OUTER JOIN dbo.DLK_M_Departement ON dbo.DLK_T_AsetH.AsetDepID = dbo.DLK_M_Departement.DepID LEFT OUTER JOIN dbo.DLK_M_Divisi ON dbo.DLK_T_AsetH.AsetDivID = dbo.DLK_M_Divisi.DivId WHERE (dbo.DLK_T_AsetH.AsetAktifYN = 'Y') "& filterCabang &" "& filteruser &" "& filterdivisi &""
+    strquery = "SELECT dbo.HRD_M_Departement.DepNama, dbo.HRD_M_Divisi.DivNama, dbo.DLK_T_AsetH.AsetId, dbo.DLK_T_AsetH.AsetAgenID, dbo.DLK_T_AsetH.AsetPJawab, dbo.DLK_T_AsetH.AsetKeterangan, dbo.DLK_T_AsetH.AsetUpdateID, dbo.DLK_T_AsetH.AsetUpdateTime, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_WebLogin.UserName, dbo.HRD_M_Divisi.DivId, dbo.DLK_M_WebLogin.UserID FROM dbo.DLK_T_AsetH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_AsetH.AsetAgenID = dbo.GLB_M_Agen.AgenID RIGHT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_AsetH.AsetPJawab = dbo.DLK_M_WebLogin.UserID LEFT OUTER JOIN dbo.HRD_M_Departement ON dbo.DLK_T_AsetH.AsetDepID = dbo.HRD_M_Departement.DepID LEFT OUTER JOIN dbo.HRD_M_Divisi ON dbo.DLK_T_AsetH.AsetDivID = dbo.HRD_M_Divisi.DivId WHERE (dbo.DLK_T_AsetH.AsetAktifYN = 'Y') "& filterCabang &" "& filteruser &" "& filterdivisi &""
 
     ' untuk data paggination
     page = Request.QueryString("page")

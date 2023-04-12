@@ -206,6 +206,11 @@
                 <a class="link-name" href="<%= url %>views/engineering/predBom.asp">Report Prediksi Harga</a>
               </li>
               <% end if %>
+              <% if session("ENG8") = true then %>
+              <li>
+                <a class="link-name" href="<%= url %>views/suratjalan/">Surat Jalan</a>
+              </li>
+              <% end if %>
             </ul>
           <!-- ppic -->
           <li class="nav-text">
