@@ -36,4 +36,5 @@
     <script src="../../public/js/bebanBiaya.js"></script>
     <script src="../../public/js/bbtp.js"></script>
     <script src="../../public/js/pdi.js"></script>
+    <script src="../../public/js/invnew.js"></script>
 </html>

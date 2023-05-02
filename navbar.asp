@@ -139,6 +139,9 @@
                 <a class="link-name" href="<%= url %>views/salesrep/">Sales Order Repair</a>
               </li>
               <% end if %>
+              <li>
+                <a class="link-name" href="<%= url %>views/invnew/">Invoice New</a>
+              </li>
             </ul>
           <!-- qc -->
           <li class="nav-text">
