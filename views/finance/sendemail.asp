@@ -56,7 +56,7 @@
     "<table width='100%' style='font-size:16px'>"&_
         "<tbody>"&_
         "<tr>"&_
-            "<td align='center'>DETAIL ANGGARAN INVENTORY</td>"&_
+            "<td align='center'>DETAIL ANGGARAN</td>"&_
         "</tr>"&_
         "</tbody>"&_
     "</table>"&_ 
@@ -113,15 +113,6 @@
                 "<td width='6%'>Note</td>"&_
                 "<td width='10px'>:</td>"&_
                 "<td>"& data("memoketerangan")&"</td>"&_
-            "</tr>"&_
-        "</tbody>"&_
-    "</table>"&_
-    "<table width='50%' style='font-size:20px;'>"&_
-        "<tbody>"&_
-            "<tr>"&_
-                "<td style='padding:10px;' >"&_ 
-                    "Formulir Pengajuan Anggaran "& data("DepNama")&""&_
-                "</td>"&_
             "</tr>"&_
         "</tbody>"&_
     "</table>"&_

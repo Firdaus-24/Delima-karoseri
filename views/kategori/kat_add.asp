@@ -24,7 +24,7 @@
         <div class="row d-flex justify-content-center">
             <div class="col-lg-5 mb-3">
                 <label for="keterangan" class="form-label">Keterangan</label>
-                <textarea class="form-control" id="keterangan" name="keterangan" maxlength="50" style="height: 100px" required></textarea>
+                <textarea class="form-control" id="keterangan" name="keterangan" maxlength="50" style="height: 100px"></textarea>
             </div>
         </div>
         <div class="row text-center">

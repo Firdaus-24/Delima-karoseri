@@ -9,9 +9,6 @@
     ' cabang / agen
     cabang_cmd.commandText = "SELECT GLB_M_Agen.AgenName, AgenID FROM GLB_M_Agen WHERE AgenAktifYN = 'Y' ORDER BY AgenName ASC"
     set cabang = cabang_cmd.execute
-    ' kode akun
-    cabang_cmd.commandText = "SELECT GL_M_chartAccount.CA_ID, GL_M_chartAccount.CA_Name FROM GL_M_chartAccount WHERE CA_AktifYN = 'Y' ORDER BY CA_Name ASC"
-    set dataakun = cabang_cmd.execute
     ' bank
     cabang_cmd.commandText = "SELECT Bank_ID, Bank_Name FROM GL_M_Bank WHERE Bank_AktifYN = 'Y' ORDER BY Bank_Name ASC"
     set databank = cabang_cmd.execute
@@ -25,11 +22,11 @@
             <h3>FORM TAMBAH VENDOR</h3>
         </div>
     </div>
-    <div class="row d-flex justify-content-center">
+    <div class="row d-flex justify-content-center border border-primary rounded p-4 mb-3" style="background-color:rgba(137, 196, 244, 0.2);">
         <div class="col-lg-10">
             <form action="ven_add.asp" method="post" id="formVendor">
                 <div class="row">
-                    <div class="col-sm-12 text-center p-2 rounded mb-3" style="background:#ddd;">
+                    <div class="col-sm-12 text-center p-2 rounded mb-3 fw-bolder" style="background-color:#87ceeb;color:#fff;">
                         <label>DETAIL VENDOR</label>
                     </div>
                 </div>
@@ -47,16 +44,8 @@
                         </select>
                     </div>
                     <div class="col-lg-6 mb-3">
-                        <label for="kdakun" class="form-label">Kode Akun</label>
-                        <select class="form-select" aria-label="Default select example" id="kdakun" name="kdakun" required>
-                            <option value="">Pilih</option>
-                            <% do while not dataakun.eof %>
-                                <option value="<%= dataakun("CA_ID") %>"><%= dataakun("CA_Name") %></option>
-                            <% 
-                            dataakun.movenext
-                            loop
-                            %>
-                        </select>
+                        <label for="nama" class="form-label">Nama</label>
+                        <input type="text" class="form-control" id="nama" name="nama" maxlength="30" autocomplete="off" required>
                     </div>
                 </div> 
                 <div class="row">
@@ -70,8 +59,8 @@
                         </select>
                     </div>
                     <div class="col-lg-6 mb-3">
-                        <label for="nama" class="form-label">Nama</label>
-                        <input type="text" class="form-control" id="nama" name="nama" maxlength="30" autocomplete="off" required>
+                        <label for="top" class="form-label">Payment Term</label>
+                        <input type="number" class="form-control" id="top" name="top" autocomplete="off">
                     </div>
                 </div>
                 <div class="row">
@@ -102,17 +91,13 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-6 mb-3">
+                    <div class="col-lg-12 mb-3">
                         <label for="alamat" class="form-label">Detail Alamat</label>
                         <input type="text" class="form-control" id="alamat" name="alamat" maxlength="50" autocomplete="off" required>
                     </div>
-                    <div class="col-lg-6 mb-3">
-                        <label for="top" class="form-label">Payment Term</label>
-                        <input type="number" class="form-control" id="top" name="top" autocomplete="off">
-                    </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-12 text-center p-2 rounded mb-3" style="background:#ddd;">
+                    <div class="col-sm-12 text-center p-2 rounded mb-3 fw-bolder" style="background-color:#87ceeb;color:#fff;">
                         <label>AKUN BANK</label>
                     </div>
                 </div>
@@ -135,13 +120,13 @@
                     </div>
                 </div>
                 <div class="row ">
-                    <div class="col-lg-6 mb-3">
+                    <div class="col-lg-12 mb-3">
                         <label for="rekName" class="form-label">Nama Pemilik Rekening</label>
                         <input type="text" class="form-control" id="rekName" name="rekName" maxlength="50" autocomplete="off" required>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-12 text-center p-2 rounded mb-3" style="background:#ddd;">
+                    <div class="col-sm-12 text-center p-2 rounded mb-3 fw-bolder" style="background-color:#87ceeb;color:#fff;">
                         <label>ORANG YANG DAPAT DI HUBUNGI</label>
                     </div>
                 </div>
@@ -156,7 +141,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg text-center">
+                    <div class="col-lg text-center mb-3">
                         <a href="index.asp"><button type="button" class="btn btn-danger">kembali</button></a>
                         <button type="submit" class="btn btn-primary">Tambah</button>
                     </div>

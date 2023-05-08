@@ -29,7 +29,7 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-12 mt-3 text-center">
-            <h3>DETAIL PERMINTAAN ANGGARAN INVENTORY</h3>
+            <h3>DETAIL PERMINTAAN ANGGARAN</h3>
         </div>  
     </div> 
     <div class="row">

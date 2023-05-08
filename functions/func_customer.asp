@@ -10,6 +10,7 @@ sub tambahCust()
     bank = trim(Request.Form("bank"))
     norek = trim(Request.Form("norek"))
     rekName = trim(Request.Form("rekName"))
+    ptern = trim(Request.Form("ptern"))
     updatetime = now()
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
@@ -19,7 +20,7 @@ sub tambahCust()
     set data = data_cmd.execute
 
     if data.eof then
-        call query ("exec sp_AddDLK_M_customer '"& nama &"', '"& email &"', '"& alamat &"', '"& phone &"', '"& session("username") &"', '"& updatetime &"','"& tgl &"', '"& typet &"','"& norek &"', '"& bank &"', '"& rekName &"', '"& kdakun &"'")
+        call query ("exec sp_AddDLK_M_customer '"& nama &"', '"& email &"', '"& alamat &"', '"& phone &"', '"& session("username") &"', '"& updatetime &"','"& tgl &"', '"& typet &"','"& norek &"', '"& bank &"', '"& rekName &"', '"& kdakun &"', "& ptern &"")
         value = 1 'case untuk insert data
     else
         value = 2 'case jika gagal insert 
@@ -38,6 +39,7 @@ sub updateCust()
     bank = trim(Request.Form("bank"))
     norek = trim(Request.Form("norek"))
     rekName = trim(Request.Form("rekName"))
+    ptern = trim(Request.Form("ptern"))
     updatetime = now()
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
@@ -47,7 +49,7 @@ sub updateCust()
     set data = data_cmd.execute
 
     if not data.eof then
-        call query ("UPDATE DLK_M_customer SET custnama = '"& nama &"', custEmail = '"& email &"', custAlamat = '"& alamat &"', custPhone1 = '"& phone &"', custUpdateId = '"& session("username") &"', custUpdateTime = '"& updatetime &"', custKodeAkun = '"& kdakun &"', custTypetransaksi = '"& typet &"', custBankID = '"& bank &"', custNorek = '"& norek &"', custRekName = '"& rekName &"' WHERE custID  = '"& id &"'")
+        call query ("UPDATE DLK_M_customer SET custnama = '"& nama &"', custEmail = '"& email &"', custAlamat = '"& alamat &"', custPhone1 = '"& phone &"', custUpdateId = '"& session("username") &"', custUpdateTime = '"& updatetime &"', custKodeAkun = '"& kdakun &"', custTypetransaksi = '"& typet &"', custBankID = '"& bank &"', custNorek = '"& norek &"', custRekName = '"& rekName &"', custPaytern = "& ptern &" WHERE custID  = '"& id &"'")
         value = 1 'case untuk insert data
     else
         value = 2 'case jika gagal insert 

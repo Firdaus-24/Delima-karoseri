@@ -14,10 +14,6 @@
 
     set data = data_cmd.execute
 
-    data_cmd.commandText = "SELECT GL_M_chartAccount.CA_ID, GL_M_chartAccount.CA_Name FROM GL_M_chartAccount WHERE CA_AktifYN = 'Y' ORDER BY CA_id ASC"
-
-    set dataakun = data_cmd.execute
-
     ' bank
     data_cmd.commandText = "SELECT Bank_ID, Bank_Name FROM GL_M_Bank WHERE Bank_AktifYN = 'Y' ORDER BY Bank_Name ASC"
     set databank = data_cmd.execute
@@ -35,7 +31,7 @@
     </div>
     <div class="row mb-3">
         <div class="col-lg text-center labelId">
-            <h3><%= id %></h3>
+            <h3><%= left(id,1) &"-"& mid(id,2,4) &"/"& right(id,6) %></h3>
         </div>
     </div>
     <form action="cust_u.asp?id=<%= id %>" method="post" id="formcust">
@@ -57,16 +53,6 @@
         </div>
         <div class="row">
             <div class="col-lg-6 mb-3">
-                <label for="Alamat" class="col-form-label">Alamat</label>
-                <input type="text" class="form-control" id="alamat" name="alamat" autocomplete="off" maxlength="150" value="<%= data("custAlamat") %>" required>
-            </div>
-            <div class="col-lg-6 mb-3">
-                <label for="phone" class="col-form-label">Phone</label>
-                <input type="tel" class="form-control" id="phone" name="phone" autocomplete="off" maxlength="15" value="<%= data("custPhone1") %>" required>
-            </div>
-        </div>  
-        <div class="row">
-            <div class="col-lg-6 mb-3">
                 <label for="typet" class="col-form-label">Type Transaksi</label>
                 <select class="form-select" aria-label="Default select example" name="typet" id="typet" required>
                     <option value="<%= data("custtypetransaksi") %>">
@@ -85,18 +71,20 @@
                 </select>
             </div>
             <div class="col-lg-6 mb-3">
-                <label for="kdakun" class="col-form-label">Kode Akun</label>
-                <select class="form-select" aria-label="Default select example" id="kdakun" name="kdakun">
-                    <option value="<%= data("custKodeAkun") %>"><%= data("CA_Name") %></option>
-                    <% do while not dataakun.eof %>
-                    <option value="<%= dataakun("CA_ID") %>"><%= dataakun("CA_Name") %></option>
-                    <% 
-                    Response.flush
-                    dataakun.movenext
-                    loop
-                    %>
-                </select>
+                <label for="phone" class="col-form-label">Phone</label>
+                <input type="tel" class="form-control" id="phone" name="phone" autocomplete="off" maxlength="15" value="<%= data("custPhone1") %>" required>
             </div>
+        </div>  
+        <div class="row">
+            <div class="col-lg-6 mb-3">
+                <label for="ptern" class="col-form-label">PayTern</label>
+                <input type="number" class="form-control" id="ptern" name="ptern" autocomplete="off" value="<%= data("custpaytern") %>" required>
+            </div>
+            <div class="col-lg-6 mb-3">
+                <label for="Alamat" class="col-form-label">Alamat</label>
+                <input type="text" class="form-control" id="alamat" name="alamat" autocomplete="off" maxlength="150" value="<%= data("custAlamat") %>" required>
+            </div>
+            
         </div>
         <div class="row">
             <div class="col-sm-12 text-center p-2 rounded mb-3" style="background:#ddd;">

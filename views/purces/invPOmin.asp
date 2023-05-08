@@ -36,23 +36,23 @@
     end if
     
     if agen <> "" then
-        filterAgen = "AND DLK_T_InvPemH.IPH_AgenID = '"& agen &"'"
+        filterAgen = "AND DLK_T_OrPemH.OPH_AgenID = '"& agen &"'"
     else
         filterAgen = ""
     end if
 
     if vendor <> "" then
-        filtervendor = "AND dbo.DLK_T_InvPemH.IPH_VenID = '"& vendor &"'"
+        filtervendor = "AND dbo.DLK_T_OrPemH.OPH_VenID = '"& vendor &"'"
     else
         filtervendor = ""
     end if
 
     ' query seach 
-    strquery = "SELECT dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_AgenId, dbo.DLK_T_InvPemH.IPH_OphId, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_VenId, dbo.DLK_T_InvPemH.IPH_JTDate, dbo.DLK_T_InvPemH.IPH_Keterangan, dbo.DLK_T_InvPemH.IPH_DiskonAll, dbo.DLK_T_InvPemH.IPH_Ppn, GLB_M_Agen.AgenNAme, DLK_M_Vendor.Ven_Nama, ISNULL(SUM(dbo.DLK_T_InvPemD.IPD_QtySatuan),0) AS beli FROM dbo.DLK_T_InvPemD RIGHT OUTER JOIN dbo.DLK_T_InvPemH ON LEFT(dbo.DLK_T_InvPemD.IPD_IphID, 13) = dbo.DLK_T_InvPemH.IPH_ID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_InvPemH.IPH_AgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Vendor ON DLK_T_InvPemH.IPH_VenID = DLK_M_vendor.Ven_ID WHERE dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y' GROUP BY dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_AgenId, dbo.DLK_T_InvPemH.IPH_OphId, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_VenId, dbo.DLK_T_InvPemH.IPH_JTDate, dbo.DLK_T_InvPemH.IPH_Keterangan, dbo.DLK_T_InvPemH.IPH_DiskonAll, dbo.DLK_T_InvPemH.IPH_Ppn,GLB_M_Agen.AgenNAme, DLK_M_Vendor.Ven_Nama HAVING (SUM(isnull(dbo.DLK_T_InvPemD.IPD_QtySatuan,0)) < (SELECT SUM(ISNULL(dbo.DLK_T_OrPemD.OPD_QtySatuan,0)) AS pesen FROM dbo.DLK_T_OrPemH RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID, 13) WHERE OPH_ID = dbo.DLK_T_InvPemH.IPH_OphId AND OPH_AktifYN = 'Y' "& filterAgen &"  "& filtervendor &" GROUP BY dbo.DLK_T_OrPemH.OPH_ID))"
+    strquery = "SELECT SUM(ISNULL(dbo.DLK_T_OrPemD.OPD_QtySatuan,0) ) - (SELECT SUM(ISNULL(dbo.DLK_T_InvPemD.IPD_QtySatuan,0)) AS beli FROM dbo.DLK_T_InvPemH RIGHT OUTER JOIN dbo.DLK_T_InvPemD ON dbo.DLK_T_InvPemH.IPH_ID = LEFT(dbo.DLK_T_InvPemD.IPD_IphID, 13) GROUP BY dbo.DLK_T_InvPemH.IPH_OPHID HAVING (dbo.DLK_T_InvPemH.IPH_OPHID = dbo.DLK_T_OrPemH.OPH_ID))  AS kurang, dbo.DLK_T_OrPemH.OPH_ID, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_T_OrPemH.OPH_DiskonAll, dbo.DLK_T_OrPemH.OPH_PPn, dbo.DLK_T_OrPemH.OPH_Date, dbo.DLK_T_OrPemH.OPH_JTDate FROM dbo.DLK_T_OrPemD LEFT OUTER JOIN dbo.DLK_T_OrPemH INNER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_OrPemH.OPH_AgenID = dbo.GLB_M_Agen.AgenID INNER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_OrPemH.OPH_venID = dbo.DLK_M_Vendor.Ven_ID ON LEFT(dbo.DLK_T_OrPemD.OPD_OPHID, 13) = dbo.DLK_T_OrPemH.OPH_ID GROUP BY dbo.DLK_T_OrPemH.OPH_ID, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_T_OrPemH.OPH_DiskonAll, dbo.DLK_T_OrPemH.OPH_PPn, dbo.DLK_T_OrPemH.OPH_Date, dbo.DLK_T_OrPemH.OPH_JTDate, dbo.DLK_T_OrPemH.OPH_AktifYN, dbo.DLK_T_OrPemH.OPH_venID, dbo.DLK_T_OrPemH.OPH_AgenID HAVING (SUM(ISNULL(dbo.DLK_T_OrPemD.OPD_QtySatuan,0) ) - (SELECT SUM(ISNULL(dbo.DLK_T_InvPemD.IPD_QtySatuan,0)) AS beli FROM dbo.DLK_T_InvPemH RIGHT OUTER JOIN dbo.DLK_T_InvPemD ON dbo.DLK_T_InvPemH.IPH_ID = LEFT(dbo.DLK_T_InvPemD.IPD_IphID, 13) GROUP BY dbo.DLK_T_InvPemH.IPH_OPHID HAVING (dbo.DLK_T_InvPemH.IPH_OPHID = dbo.DLK_T_OrPemH.OPH_ID)) > 0) AND (dbo.DLK_T_OrPemH.OPH_AktifYN = 'Y') "& filterAgen &"  "& filtervendor &" "
     ' untuk data paggination
     page = Request.QueryString("page")
 
-    orderBy = " ORDER BY dbo.DLK_T_InvPemH.IPH_ID ASC"
+    orderBy = " ORDER BY dbo.DLK_T_OrPemH.OPH_Date ASC"
     set rs = Server.CreateObject("ADODB.Recordset")
     sqlawal = strquery
 
@@ -133,7 +133,7 @@
             <table class="table table-hover">
                 <thead class="bg-secondary text-light">
                     <th>No</th>
-                    <th>FakturID</th>
+                    <th>No.PO</th>
                     <th>Cabang</th>
                     <th>Vendor</th>
                     <th>Tanggal</th>
@@ -151,35 +151,23 @@
                     do until showrecords = 0 OR  rs.EOF
                     recordcounter = recordcounter + 1
 
-                    ' cek data PO 
-                    data_cmd.commandText = "SELECT SUM(dbo.DLK_T_OrPemD.OPD_QtySatuan) AS pesen, dbo.DLK_T_OrPemH.OPH_ID FROM dbo.DLK_T_OrPemH RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID, 13) WHERE OPH_ID = '"& rs("IPH_OPHID") &"' AND OPH_AktifYN = 'Y' GROUP BY dbo.DLK_T_OrPemH.OPH_ID"
-
-                    set datapo = data_cmd.execute
-
-                    if not datapo.eof then
-                        dpo = datapo("pesen")
-                    else 
-                        dpo = 0
-                    end if
-
-                    tbarang = dpo - rs("beli")
                     %>
                         <tr><TH><%= recordcounter %></TH>
-                        <th><%= LEFT(rs("IPH_ID"),2) &"-"& mid(rs("IPH_ID"),3,3) &"/"& mid(rs("IPH_ID"),6,4) &"/"& right(rs("IPH_ID"),4)%></th>
+                        <th><%= LEFT(rs("OPH_ID"),2) &"-"& mid(rs("OPH_ID"),3,3) &"/"& mid(rs("OPH_ID"),6,4) &"/"& right(rs("OPH_ID"),4)%></th>
                         <td><%= rs("AgenName") %></td>
-                        <td><%= Cdate(rs("IPH_Date")) %></td>
+                        <td><%= rs("Ven_Nama") %></td>
+                        <td><%= Cdate(rs("OPH_Date")) %></td>
                         <td>
-                            <% if Cdate(rs("IPH_JTDate")) <> Cdate("01/01/1900") then %>
-                            <%= Cdate(rs("IPH_JTDate")) %>
+                            <% if Cdate(rs("OPH_JTDate")) <> Cdate("01/01/1900") then %>
+                            <%= Cdate(rs("OPH_JTDate")) %>
                             <% end if %>
                         </td>
-                        <td><%= rs("Ven_Nama") %></td>
-                        <td><%= rs("IPH_DiskonAll") %></td>
-                        <td><%= rs("IPH_PPN") %></td>
-                        <td><%= tbarang %></td>
+                        <td><%= rs("OPH_DiskonAll") %></td>
+                        <td><%= rs("OPH_PPN") %></td>
+                        <td><%= rs("kurang") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="detailInvPOmin.asp?id=<%= rs("IPH_ID") %>" class="btn badge text-bg-warning" >Detail</a>
+                                <a href="detailInvPOmin.asp?id=<%= rs("OPH_ID") %>" class="btn badge text-bg-warning" >Detail</a>
                             </div>
                         </td>
                     </tr>

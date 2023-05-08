@@ -16,12 +16,9 @@
    ' detail1
    data_cmd.commandTExt = "SELECT DLK_T_MaterialReceiptD1.*, DLK_M_WebLogin.username FROM DLK_T_MaterialReceiptD1 LEFT OUTER JOIN DLK_M_WebLogin ON DLK_T_MaterialReceiptD1.MR_Updateid = DLK_M_Weblogin.userid WHERE MR_ID = '"& id &"'"
    set data1 = data_cmd.execute
-   ' detail2
-   ' data_cmd.commandTExt = "SELECT dbo.DLK_T_MaterialReceiptD2.*, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id, DLK_M_Rak.Rak_Nama FROM dbo.DLK_T_MaterialReceiptD2 LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialReceiptD2.MR_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialReceiptD2.MR_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_Rak ON DLK_T_MaterialReceiptD2.MR_RakID = DLK_M_Rak.Rak_ID WHERE dbo.DLK_T_MaterialReceiptD2.MR_ID = '"& id &"'"
-   ' set data2 = data_cmd.execute
 
-   ' get nomor menerimaan/faktur terhutang
-   data_cmd.commandTExt = "SELECT IPH_ID FROM DLK_T_InvPemH WHERE IPH_AktifYN = 'Y' AND IPH_KID = 1 AND NOT EXISTS (SELECT MR_Transaksi FROM DLK_T_MaterialReceiptD1 WHERE MR_Transaksi = IPH_ID)"
+   ' get nomor menerimaan barang
+   data_cmd.commandTExt = "SELECT OPH_ID FROM DLK_T_OrPemH WHERE OPH_AktifYN = 'Y' AND OPH_KID = 1 AND NOT EXISTS (SELECT MR_Transaksi FROM DLK_T_MaterialReceiptD1 WHERE MR_Transaksi = OPH_ID)"
 
    set fakturterhutang = data_cmd.execute
 
@@ -211,7 +208,7 @@
                      <select class="form-select" aria-label="Default select example" name="fakturH" id="fakturH" required>
                         <option value="">Pilih</option>
                         <% do while not fakturterhutang.eof %>
-                        <option value="<%= fakturterhutang("IPH_ID") %>"><%= left(fakturterhutang("IPH_ID"),2) %>-<% call getAgen(mid(fakturterhutang("IPH_ID"),3,3),"") %>/<%= mid(fakturterhutang("IPH_ID"),6,4) %>/<%= right(fakturterhutang("IPH_ID"),4) %></option>
+                        <option value="<%= fakturterhutang("OPH_ID") %>"><%= left(fakturterhutang("OPH_ID"),2) %>-<% call getAgen(mid(fakturterhutang("OPH_ID"),3,3),"") %>/<%= mid(fakturterhutang("OPH_ID"),6,4) %>/<%= right(fakturterhutang("OPH_ID"),4) %></option>
                         <% 
                         fakturterhutang.movenext
                         loop
@@ -246,7 +243,7 @@ const updateData = (id,trans) => {
 </script>
 <% 
    if Request.ServerVariables("REQUEST_METHOD") = "POST" then
-      call updateIncome()
+      call updateincomepo()
    end if
    call footer()
 %>

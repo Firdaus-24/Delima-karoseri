@@ -72,7 +72,7 @@
    set data = data_cmd.execute
 %>
 
-<table widht="100%" style="font-family: Calibri, Arial, sans-serif;">
+<table widht="100%" style="font-family: Calibri, Arial, sans-serif;font-size:12px;">
    <tr>
       <td colspan="11" align="center">MUTASI STOK INVENTORY</td> 
    </tr>

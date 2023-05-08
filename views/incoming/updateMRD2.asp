@@ -17,13 +17,13 @@
    set data = data_cmd.execute
 
    if not data.eof then
-      data_cmd.commandTExt = "SELECT IPD_Item, IPD_IPHID, IPD_Qtysatuan FROM DLK_T_InvPemD WHERE LEFT(IPD_IPHID,13) = '"& left(data("MR_Transaksi"),13) &"' AND IPD_Item = '"& data("MR_item") &"'"
+      data_cmd.commandTExt = "SELECT OPD_Item, OPD_OPHID, OPD_Qtysatuan FROM DLK_T_OrPemD WHERE LEFT(OPD_OPHID,13) = '"& left(data("MR_Transaksi"),13) &"' AND OPD_Item = '"& data("MR_item") &"'"
 
       set ckinvdata = data_cmd.execute
 
       if not ckinvdata.eof then
-         if Cint(ckinvdata("IPD_Qtysatuan")) >= Cint(qty) then
-            call query ("UPDATE DLK_T_MaterialReceiptD2 SET MR_Qtysatuan = "& qty &", MR_RakID = '"& rak &"', MR_transaksi = '"& ckinvdata("IPD_IPHID") &"' WHERE MR_ID = '"& id &"' AND MR_Transaksi = '"& trans &"'")
+         if Cint(ckinvdata("OPD_Qtysatuan")) >= Cint(qty) then
+            call query ("UPDATE DLK_T_MaterialReceiptD2 SET MR_Qtysatuan = "& qty &", MR_RakID = '"& rak &"', MR_transaksi = '"& ckinvdata("OPD_OPHID") &"' WHERE MR_ID = '"& id &"' AND MR_Transaksi = '"& trans &"'")
             response.write "DONE"
          else
             response.write "QTY MELEBIHI BATAS PEMBELIAN"

@@ -175,7 +175,7 @@
                 <label for="hargaumemo" class="col-form-label">Harga</label>
             </div>
             <div class="col-sm-4 mb-3">
-                <input type="number" id="hargaumemo" class="form-control" name="hargaumemo" autocomplete="off" required>
+                <input type="text" id="hargaumemo" class="form-control" name="hargaumemo" autocomplete="off" onchange="settingFormatRupiah(this.value, 'hargaumemo')" inputmode="Numeric" required>
             </div>
         </div>
         <div class="row">
@@ -203,7 +203,7 @@
 <% 
     if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
         memoiddetail = trim(Request.Form("memoiddetail"))
-        hargaumemo = trim(Request.Form("hargaumemo"))
+        hargaumemo = replace(replace(replace(trim(Request.Form("hargaumemo")),",",""),".",""),"-","")
         memoid = left(memoiddetail,17)
 
         set data_cmd =  Server.CreateObject ("ADODB.Command")

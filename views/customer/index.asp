@@ -1,5 +1,4 @@
 <!--#include file="../../init.asp"-->
-<!--#include file="../../functions/func_barang.asp"-->
 <% 
     if session("M2") = false then 
         Response.Redirect("../index.asp")
@@ -39,7 +38,7 @@
     ' untuk data paggination
     page = Request.QueryString("page")
 
-    orderBy = " order by custNama ASC"
+    orderBy = " order by custid ASC"
     set rs = Server.CreateObject("ADODB.Recordset")
     sqlawal = strquery
 
@@ -137,7 +136,7 @@
                     recordcounter = recordcounter + 1
                     %>
                     <tr>
-                        <th><%= rs("custID") %></th>
+                        <th><%= left(rs("custID"),1) &"-"& mid(rs("custID"),2,4) &"/"& right(rs("custID"),6)%></th>
                         <td><%= rs("custNama") %></td>
                         <td><%= rs("custPhone1") %></td>
                         <td><%= rs("custEmail") %></td>

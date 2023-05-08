@@ -88,13 +88,13 @@
                 <label for="asuransi" class="col-form-label">Asuransi</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="number" id="asuransi" name="asuransi" class="form-control" required>
+                <input type="text" id="asuransi" name="asuransi" class="form-control" onchange="settingFormatRupiah(this.value,'asuransi')" required>
             </div>
             <div class="col-lg-2 mb-3">
                 <label for="lain" class="col-form-label">Lain</label>
             </div>
             <div class="col-lg-4 mb-3">
-                <input type="number" id="lain" name="lain" class="form-control" required>
+                <input type="text" id="lainPurchase" name="lain" class="form-control" onchange="settingFormatRupiah(this.value,'lainPurchase')" required>
             </div>
         </div>
         <div class="row align-items-center">

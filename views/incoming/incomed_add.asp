@@ -17,14 +17,11 @@
    data_cmd.commandTExt = "SELECT DLK_T_MaterialReceiptD1.*, DLK_M_WebLogin.username FROM DLK_T_MaterialReceiptD1 LEFT OUTER JOIN DLK_M_WebLogin ON DLK_T_MaterialReceiptD1.MR_Updateid = DLK_M_Weblogin.userid WHERE MR_ID = '"& id &"'"
    set data1 = data_cmd.execute
 
-   ' get nomor menerimaan/faktur dan nomor produksi
-   ' if data("MR_Type") = 1 then
-   '    strfp = "SELECT IPH_ID FROM DLK_T_InvPemH WHERE IPH_AktifYN = 'Y' AND NOT EXISTS (SELECT MR_Transaksi FROM DLK_T_MaterialReceiptD1 WHERE MR_Transaksi = IPH_ID)"
-   ' else
-   '    strfp = "SELET * FROM DLK_M_ProductH WHERE PDAktifYN = 'Y' ORDER BY PDID ASC "
-   ' end if
 
-   data_cmd.commandTExt = "SELECT IPH_ID FROM DLK_T_InvPemH WHERE IPH_AktifYN = 'Y' AND IPH_KID = 1 AND NOT EXISTS (SELECT MR_Transaksi FROM DLK_T_MaterialReceiptD1 WHERE MR_Transaksi = IPH_ID)"
+   ' data_cmd.commandTExt = "SELECT IPH_ID FROM DLK_T_InvPemH WHERE IPH_AktifYN = 'Y' AND IPH_KID = 1 AND NOT EXISTS (SELECT MR_Transaksi FROM DLK_T_MaterialReceiptD1 WHERE MR_Transaksi = IPH_ID)"
+
+   ' get data po
+   data_cmd.commandTExt = "SELECT OPH_ID FROM DLK_T_OrPemH WHERE OPH_AktifYN = 'Y' AND OPH_KID = 1 AND NOT EXISTS (SELECT MR_Transaksi FROM DLK_T_MaterialReceiptD1 WHERE MR_Transaksi = OPH_ID) "
 
    set datafp = data_cmd.execute
 
@@ -215,7 +212,7 @@
                      <select class="form-select" aria-label="Default select example" name="fakturH" id="fakturH" required>
                         <option value="">Pilih</option>
                         <% do while not datafp.eof %>
-                        <option value="<%= datafp("IPH_ID") %>"><%= left(datafp("IPH_ID"),2) %>-<% call getAgen(mid(datafp("IPH_ID"),3,3),"") %>/<%= mid(datafp("IPH_ID"),6,4) %>/<%= right(datafp("IPH_ID"),4) %></option>
+                        <option value="<%= datafp("OPH_ID") %>"><%= left(datafp("OPH_ID"),2) %>-<% call getAgen(mid(datafp("OPH_ID"),3,3),"") %>/<%= mid(datafp("OPH_ID"),6,4) %>/<%= right(datafp("OPH_ID"),4) %></option>
                         <% 
                         datafp.movenext
                         loop
@@ -250,7 +247,8 @@ const updateData = (id,trans) => {
 </script>
 <% 
    if Request.ServerVariables("REQUEST_METHOD") = "POST" then
-      call tambahIncome()
+      ' call tambahIncome()
+      call incomePo()
    end if
    call footer()
 %>

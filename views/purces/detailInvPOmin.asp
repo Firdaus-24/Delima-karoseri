@@ -8,10 +8,13 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_OPHID, dbo.DLK_T_InvPemH.IPH_ppn, dbo.DLK_T_InvPemH.IPH_diskonall, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_JTDate, dbo.DLK_T_InvPemH.IPH_Keterangan, dbo.DLK_T_InvPemD.IPD_IPHID, dbo.DLK_T_InvPemD.IPD_Item, dbo.DLK_T_InvPemD.IPD_QtySatuan, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_JenisSat, dbo.DLK_T_InvPemD.IPD_Disc1,dbo.DLK_T_InvPemD.IPD_Disc2, dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_phone, DLK_M_Vendor.ven_Email, DLK_M_Barang.Brg_Nama, DLK_M_SatuanBarang.Sat_Nama, GLB_M_Agen.AgenName FROM dbo.DLK_T_InvPemH RIGHT OUTER JOIN dbo.DLK_T_InvPemD ON dbo.DLK_T_InvPemH.IPH_ID = LEFT(dbo.DLK_T_InvPemD.IPD_IPHID,13) LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_InvPemH.IPH_venID = dbo.DLK_M_Vendor.Ven_ID LEFT OUTER JOIN DLK_M_Barang ON DLK_T_InvPemD.IPD_Item = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_SatuanBarang ON DLK_T_InvPemD.IPD_JenisSat = DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_InvPemH.IPH_AgenID = GLB_M_Agen.AgenID WHERE dbo.DLK_T_InvPemH.IPH_ID = '"& id &"' AND dbo.DLK_T_InvPemH.IPH_AktifYN = 'Y' GROUP BY dbo.DLK_T_InvPemH.IPH_ID, dbo.DLK_T_InvPemH.IPH_OPHID, dbo.DLK_T_InvPemH.IPH_ppn, dbo.DLK_T_InvPemH.IPH_diskonall, dbo.DLK_T_InvPemH.IPH_Date, dbo.DLK_T_InvPemH.IPH_JTDate, dbo.DLK_T_InvPemH.IPH_Keterangan, dbo.DLK_T_InvPemD.IPD_IPHID, dbo.DLK_T_InvPemD.IPD_Item, dbo.DLK_T_InvPemD.IPD_QtySatuan, dbo.DLK_T_InvPemD.IPD_Harga, dbo.DLK_T_InvPemD.IPD_JenisSat,dbo.DLK_T_InvPemD.IPD_Disc1, dbo.DLK_T_InvPemD.IPD_Disc2,dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_M_Vendor.Ven_alamat, dbo.DLK_M_Vendor.Ven_phone, DLK_M_Vendor.ven_Email, DLK_M_Barang.Brg_Nama, DLK_M_SatuanBarang.Sat_Nama, GLB_M_Agen.AgenName"
+    data_cmd.commandText = "SELECT dbo.DLK_T_OrPemH.OPH_ID, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_T_OrPemH.OPH_DiskonAll, dbo.DLK_T_OrPemH.OPH_PPn, dbo.DLK_T_OrPemH.OPH_Date, dbo.DLK_T_OrPemH.OPH_JTDate, dbo.DLK_M_Vendor.Ven_phone, dbo.DLK_M_Vendor.Ven_Email, dbo.DLK_T_OrPemH.OPH_Keterangan, dbo.DLK_T_OrPemH.OPH_Asuransi, dbo.DLK_T_OrPemH.OPH_Lain, dbo.DLK_M_Kebutuhan.K_Name, dbo.DLK_T_OrPemH.OPH_AcpDate, dbo.DLK_T_OrPemH.OPH_AktifYN FROM dbo.DLK_T_OrPemH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_OrPemH.OPH_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN dbo.DLK_M_Vendor ON dbo.DLK_T_OrPemH.OPH_venID = dbo.DLK_M_Vendor.Ven_ID LEFT OUTER JOIN dbo.DLK_M_Kebutuhan ON dbo.DLK_T_OrPemH.OPH_KID = dbo.DLK_M_Kebutuhan.K_ID WHERE (dbo.DLK_T_OrPemH.OPH_ID = '"& id &"') AND (dbo.DLK_T_OrPemH.OPH_AktifYN = 'Y')"
 
     set data = data_cmd.execute
 
+    data_cmd.commandText = "SELECT dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_T_OrPemD.OPD_Harga, dbo.DLK_T_OrPemD.OPD_Disc1, dbo.DLK_T_OrPemD.OPD_Disc2, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_JenisBarang.JenisNama, DLK_M_SatuanBarang.Sat_nama FROM dbo.DLK_M_Kategori INNER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_Kategori.KategoriId = dbo.DLK_M_Barang.KategoriID INNER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_OrPemD.OPD_Item LEFT OUTER JOIN DLK_M_SatuanBarang ON dbo.DLK_T_OrPemD.OPD_JenisSat = DLK_M_SatuanBarang.Sat_ID WHERE LEFT(dbo.DLK_T_OrPemD.OPD_OPHID,13) = '"& data("OPH_ID") &"' ORDER BY Brg_nama ASC"
+    ' response.write data_cmd.commandText & "<br>"
+    set ddata = data_cmd.execute
     
     call header("Detail Barang Kurang")
 %>
@@ -24,7 +27,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12 mb-3 text-center labelId">
-            <h3><%= LEFT(data("IPH_ID"),2) &"-"& mid(data("IPH_ID"),3,3) &"/"& mid(data("IPH_ID"),6,4) &"/"& right(data("IPH_ID"),4)%></h3>
+            <h3><%= LEFT(data("OPH_ID"),2) &"-"& mid(data("OPH_ID"),3,3) &"/"& mid(data("OPH_ID"),6,4) &"/"& right(data("OPH_ID"),4)%></h3>
         </div>
     </div>
     <div class="row">
@@ -33,7 +36,7 @@
                 <tr>
                     <th>No P.O</th>
                     <td>
-                        : <%= left(data("IPH_OPHID"),2) %>-<% call getAgen(mid(data("IPH_OPHID"),3,3),"") %>/<%= mid(data("IPH_OPHID"),6,4) %>/<%= right(data("IPH_OPHID"),4) %>
+                        : <%= left(data("OPH_ID"),2) %>-<% call getAgen(mid(data("OPH_ID"),3,3),"") %>/<%= mid(data("OPH_ID"),6,4) %>/<%= right(data("OPH_ID"),4) %>
                     </td>
                     <th>Cabang / Agen</th>
                     <td>
@@ -43,11 +46,11 @@
                 <tr>
                     <th>Tanggal</th>
                     <td>
-                        : <%= Cdate(data("IPH_Date")) %>
+                        : <%= Cdate(data("OPH_Date")) %>
                     </td>
                     <th>Tanggal JT</th>
                     <td>
-                        : <% if Cdate(data("IPH_JTDate")) <> Cdate("01/01/1900") then%><%= Cdate(data("IPH_JTDate")) %> <% end if %>
+                        : <% if Cdate(data("OPH_JTDate")) <> Cdate("01/01/1900") then%><%= Cdate(data("OPH_JTDate")) %> <% end if %>
                     </td>
                 </tr>
                 <tr>
@@ -65,9 +68,15 @@
                     <td>
                         : <%= data("Ven_Email") %>
                     </td>
+                    <th>Kebutuhan</th>
+                    <td>
+                        : <%= data("K_Name") %>
+                    </td>
+                </tr>
+                <tr>
                     <th>Keterangan</th>
                     <td>
-                        : <%= data("IPH_Keterangan") %>
+                        : <%= data("OPH_Keterangan") %>
                     </td>
                 </tr>
             </table>
@@ -103,33 +112,33 @@
                 <tbody>
                     <% 
                     grantotal = 0
-                    do while not data.eof 
+                    do while not ddata.eof 
                     ' cek total harga 
-                    jml = data("IPD_QtySatuan") * data("IPD_Harga")
+                    jml = ddata("OPD_QtySatuan") * ddata("OPD_Harga")
                     ' cek diskon peritem
-                    if data("IPD_Disc1") <> 0 and data("IPD_Disc2") <> 0  then
-                        dis1 = (data("IPD_Disc1")/100) * data("IPD_Harga")
-                        dis2 = (data("IPD_Disc2")/100) * data("IPD_Harga")
-                    elseif data("IPD_Disc1") <> 0 then
-                        dis1 = (data("IPD_Disc1")/100) * data("IPD_Harga")
-                    elseIf data("IPD_Disc2") <> 0 then
-                        dis2 = (data("IPD_Disc2")/100) * data("IPD_Harga")
+                    if ddata("OPD_Disc1") <> 0 and ddata("OPD_Disc2") <> 0  then
+                        dis1 = (ddata("OPD_Disc1")/100) * ddata("OPD_Harga")
+                        dis2 = (ddata("OPD_Disc2")/100) * ddata("OPD_Harga")
+                    elseif ddata("OPD_Disc1") <> 0 then
+                        dis1 = (ddata("OPD_Disc1")/100) * ddata("OPD_Harga")
+                    elseIf ddata("OPD_Disc2") <> 0 then
+                        dis2 = (ddata("OPD_Disc2")/100) * ddata("OPD_Harga")
                     else    
                         dis1 = 0
                         dis2 = 0
                     end if
                     ' total dikon peritem
-                    hargadiskon = data("IPD_Harga") - dis1 - dis2
-                    realharga = hargadiskon * data("IPD_QtySatuan")  
+                    hargadiskon = ddata("OPD_Harga") - dis1 - dis2
+                    realharga = hargadiskon * ddata("OPD_QtySatuan")  
 
                     grantotal = grantotal + realharga
-
-                    ' cek barang pesenan PO 
-                    data_cmd.commandText = "SELECT OPD_QtySatuan FROM DLK_T_OrPemD WHERE LEFT(OPD_OPHID,13) = '"& data("IPH_OPHID") &"' AND OPD_Item = '"& data("IPD_Item") &"'"
+                    
+                    ' cek barang datang
+                    data_cmd.commandText = "SELECT SUM(ISNULL(dbo.DLK_T_InvPemD.IPD_QtySatuan, 0)) AS beli FROM dbo.DLK_T_InvPemH RIGHT OUTER JOIN dbo.DLK_T_InvPemD ON dbo.DLK_T_InvPemH.IPH_ID = LEFT(dbo.DLK_T_InvPemD.IPD_IphID, 13) WHERE (dbo.DLK_T_InvPemH.IPH_OPHID = '"& data("OPH_ID") &"') AND IPD_Item = '"& ddata("OPD_Item") &"' GROUP BY dbo.DLK_T_InvPemH.IPH_OPHID, dbo.DLK_T_InvPemD.IPD_Item"
                     ' response.write data_cmd.commandText & "<br>"
-                    set qttypo = data_cmd.execute
+                    set inv = data_cmd.execute
 
-                    if qttypo("OPD_QtySatuan") > data("IPD_QtySatuan") then
+                    if inv("beli") > ddata("OPD_QtySatuan") then
                         bgclass = "class='bg-danger text-light'"
                     else
                         bgclass =""
@@ -138,58 +147,65 @@
                     %>
                         <tr>
                             <td>
-                                <%= data("Brg_Nama") %>
+                                <%= ddata("Brg_Nama") %>
                             </td>
                             <td <%= bgclass %>>
-                                <%= qttypo("OPD_QtySatuan") %>
+                                <%= ddata("OPD_QtySatuan") %>
                             </td>
                             <td>
-                                <%= data("IPD_QtySatuan") %>
+                                <%= inv("beli") %>
                             </td>
                             <td class="text-end">
-                                <%= replace(formatCurrency(data("IPD_Harga")),"$","") %>
+                                <%= replace(formatCurrency(ddata("OPD_Harga")),"$","") %>
                             </td>
                             <td>
-                                <%= data("Sat_Nama") %>
+                                <%= ddata("Sat_Nama") %>
                             </td>
                             <td>
-                                <%= data("IPD_Disc1") %>%
+                                <%= ddata("OPD_Disc1") %>%
                             </td>
                             <td>
-                                <%= data("IPD_Disc2") %>%
+                                <%= ddata("OPD_Disc2") %>%
                             </td>
                             <td class="text-end">
                                 <%= replace(formatCurrency(realharga),"$","") %>
                             </td>
                         </tr>
                     <% 
-                    data.movenext
+                    ddata.movenext
                     loop
-                    data.movefirst
                     ' cek diskonall
-                    if data("IPH_diskonall") <> 0 OR data("IPH_Diskonall") <> "" then
-                        diskonall = (data("IPH_Diskonall")/100) * grantotal
+                    if data("OPH_diskonall") <> 0 OR data("OPH_Diskonall") <> "" then
+                        diskonall = (data("OPH_Diskonall")/100) * grantotal
                     else
                         diskonall = 0
                     end if
 
                     ' hitung ppn
-                    if data("IPH_ppn") <> 0 OR data("IPH_ppn") <> "" then
-                        ppn = (data("IPH_ppn")/100) * grantotal
+                    if data("OPH_ppn") <> 0 OR data("OPH_ppn") <> "" then
+                        ppn = (data("OPH_ppn")/100) * grantotal
                     else
                         ppn = 0
                     end if
-                    realgrantotal = (grantotal - diskonall) + ppn
+                    realgrantotal = (grantotal - diskonall) + ppn + data("OPH_Asuransi") + data("OPH_lain")
                     %>
                     <tr>
                         <th colspan="6">Diskon All</th>
-                        <th><%= data("IPH_Diskonall") %>%</th>
+                        <th><%= data("OPH_Diskonall") %>%</th>
                         <th class="text-end"><%= replace(formatCurrency(Round(diskonall)),"$","") %></th>
                     </tr>
                     <tr>
                         <th colspan="6">PPN</th>
-                        <th><%= data("IPH_PPN") %>%</th>
+                        <th><%= data("OPH_PPN") %>%</th>
                         <th class="text-end"><%= replace(formatCurrency(Round(ppn)),"$","") %></th>
+                    </tr>
+                    <tr>
+                        <th colspan="7">Asuransi</th>
+                        <th class="text-end"><%= replace(formatCurrency(Round(data("OPH_Asuransi"))),"$","") %></th>
+                    </tr>
+                    <tr>
+                        <th colspan="7">Lain-Lain</th>
+                        <th class="text-end"><%= replace(formatCurrency(Round(data("OPH_lain"))),"$","") %></th>
                     </tr>
                     <tr>
                         <th colspan="7">Total Pembayaran</th>

@@ -12,8 +12,8 @@
     tgljt = trim(Request.Form("tgljt"))
     acpdate = trim(Request.Form("acpdate"))
     diskon = trim(Request.Form("diskon"))
-    asuransi = trim(Request.Form("asuransi"))
-    lain = trim(Request.Form("lain"))
+    asuransi = replace(replace(replace(trim(Request.Form("asuransi")),".",""),",",""),"-","")
+    lain =  replace(replace(replace(trim(Request.Form("lain")),".",""),",",""),"-","")
     keterangan = trim(Request.Form("keterangan"))
     kebutuhan = trim(Request.Form("kebutuhan"))
     if diskon = "" then

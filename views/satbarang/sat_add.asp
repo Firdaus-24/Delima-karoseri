@@ -13,7 +13,12 @@
             <h3>FORM TAMBAH SATUAN BARANG</h3>
         </div>
     </div>
-    <form action="sat_add.asp" method="post" id="formsat" >
+    <div class="row border border-primary rounded p-1" style="display:flex;font-weight:600;position:absolute;margin-left:30px;margin-top:-10px;background-color:#fff;">
+        <div class="col-sm">
+            <label>SATUAN BARANG PT.DELIMA KAROSERI</label>
+        </div>
+    </div>
+    <form action="sat_add.asp" method="post" id="formsat" class="border border-primary rounded p-3" style="background-color:rgba(137, 196, 244, 0.2);">
         <div class="row d-flex justify-content-center">
             <div class="col-lg-5 mb-3 mt-3">
                 <label for="nama" class="form-label">Nama</label>

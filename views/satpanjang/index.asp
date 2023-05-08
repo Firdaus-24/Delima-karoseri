@@ -128,7 +128,7 @@
                 <% if session("M11B") = true then %>
                   <a href="#" class="btn badge text-bg-primary updateSatuanPanjang" data="<%= rs("SP_ID") %>" valname="<%= rs("SP_Nama") %>" data-bs-toggle="modal" data-bs-target="#modalSatuanPanjang">update</a> 
                 <% end if %>
-                <% if session("MM11C") = true then %>
+                <% if session("M11C") = true then %>
                   <a href="aktif.asp?id=<%= rs("SP_id") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'MASTER SATUAN PANJANG')">delete</a>
                 <% end if %>
               </div>

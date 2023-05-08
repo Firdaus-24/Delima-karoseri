@@ -31,7 +31,7 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-12 mb-3 mt-3 text-center">
-            <h3>FORM PERMINTAAN ANGGARAN INVENTORY</h3>
+            <h3>FORM PERMINTAAN ANGGARAN</h3>
         </div>
     </div>
     <form action="reqAnggaran_add.asp" method="post" id="formAnggaranH" onsubmit="validasiForm(this,event,'Permintaan Anggaran','warning')">

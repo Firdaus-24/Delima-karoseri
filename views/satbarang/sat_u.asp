@@ -23,14 +23,16 @@
             <h3>FORM UPDATE SATUAN BARANG</h3>
         </div>
     </div>
-    <form action="sat_u.asp?id=<%= id %>" method="post" id="formsat" >
-        
-        <div class="row d-flex justify-content-center">
-            <div class="col-lg-5 mb-3 mt-3">
-                <label for="id" class="form-label">ID</label>
-                <input type="text" class="form-control" id="id" name="id" value="<%= satuan("sat_id") %>" readonly required>
-            </div>
+    <div class="row position-relative text-center">
+        <div class="col-sm-3 border border-primary rounded position-absolute top-0 start-0 translate-middle offset-sm-2" style="font-weight:600;background-color:#fff;padding:5px">
+            <label>SATUAN BARANG PT.DELIMA KAROSERI</label>
         </div>
+        <div class="col-sm-1 border border-primary rounded position-absolute top-0 end-0 translate-middle" style="font-weight:600;background-color:#fff;">
+            <label>ID : <%= satuan("sat_id") %></label>
+        </div>
+    </div>
+    <form action="sat_u.asp?id=<%= id %>" method="post" id="formsat" class="border border-primary rounded p-3" style="background-color:rgba(137, 196, 244, 0.2);">
+        
         <div class="row d-flex justify-content-center">
             <div class="col-lg-5 mb-3">
                 <label for="nama" class="form-label">Nama</label>
