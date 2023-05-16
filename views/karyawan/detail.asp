@@ -1,8 +1,8 @@
 <!--#include file="../../init.asp"-->
 <%
-' if session("HA1") = false then
-'     Response.Redirect("../dashboard.asp")
-' end if
+  if session("HR5E") = false then
+    Response.Redirect("index.asp")
+  end if
   set nip = Request.QueryString("nip")
 
   Set karyawan_cmd = Server.CreateObject ("ADODB.Command")
@@ -16,11 +16,7 @@
 %>
 <!--#include file="../../navbar.asp"-->
 <div class="container mt-2 mb-3 px-4 data-detail" style="border-radius:5px;">   
-  <div class="row">
-    <div class="col-sm-12 text-center mt-3 mb-3">
-      <h3>DETAIL KARYAWAN</h3>
-    </div>
-  </div>
+  <!--#include file="template-detail.asp"-->
   <div class="row mt-3">
     <div class="col-md-2 image top-50"> 
       <a href="uploadfoto.asp?nip=<%= nip %>">

@@ -87,5 +87,10 @@ function format(number) {
 }
 
 function settingFormatRupiah(e, id) {
-    $(`#${id}`).val(format(e))
+    if (e !== "") {
+        $(`#${id}`).val(format(e))
+
+    } else {
+        $(`#${id}`).val(0)
+    }
 }

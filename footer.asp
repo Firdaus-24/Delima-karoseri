@@ -37,4 +37,7 @@
     <script src="../../public/js/bbtp.js"></script>
     <script src="../../public/js/pdi.js"></script>
     <script src="../../public/js/invnew.js"></script>
+    <script src="../../public/js/keluarga1.js"></script>
+    <script src="../../public/js/jenisusaha.js"></script>
+    <script src="../../public/js/invrepair.js"></script>
 </html>

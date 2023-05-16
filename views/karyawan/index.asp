@@ -198,11 +198,13 @@
 				</div>
 				<div class="col-sm-1">
 					<div class="form-check form-switch">
-						<%' if rs("Kry_AktifYN") = "Y" then%>
+						<% if not rs.eof then %>
+						<% if rs("Kry_AktifYN") = "Y" then%>
 							<input class="form-check-input" type="checkbox" name="aktif" id="keywordNonAktif" value="Y" onclick="return window.location.href='index.asp?p=N'" checked>
-						<%' else %>
+						<% else %>
 							<input class="form-check-input" type="checkbox" name="aktif" id="keywordNonAktif" value="N" onclick="return window.location.href='index.asp?p=Y'">
-						<%' end if %>
+						<% end if %>
+						<% end if %>
 						<label class="form-check-label" for="flexSwitchCheckChecked">Aktif </label>
 					</div>
 				</div>
@@ -291,8 +293,10 @@
 										<% end if %>
 									<% end if %>
 								</td>
-								<td>
-									<a href="detail.asp?nip=<%= rs("Kry_NIP")%>" class="btn btn-outline-info btn-sm btn-detail" name="detail">Detail</a>
+								<td class="text-center">
+									<% if session("HR5E") = true then %>
+										<a href="detail.asp?nip=<%= rs("Kry_NIP")%>" class="btn btn-outline-info btn-sm btn-detail" name="detail">Detail</a>
+									<% end if %>
 								</td>
 							</tr>
 						<%

@@ -2140,6 +2140,15 @@ call header("Hak Akses") %>
                 <input class="form-check-input" type="checkbox" name="HR5C" id="HR5C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HR5C');" >
                 <label for="HR5C">Delete</label>
               </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HR5E'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="HR5E" id="HR5E" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HR5E');" >
+                <label for="HR5E">Detail</label>
+              </li>
             </ul>
           <!-- master Jabatan -->
           <li>
@@ -2217,6 +2226,45 @@ call header("Hak Akses") %>
                 %>
                 <input class="form-check-input" type="checkbox" name="HR7C" id="HR7C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HR7C');" >
                 <label for="HR7C">Delete</label>
+              </li>
+            </ul>
+          <!-- master jenis usaha -->
+          <li>
+            <%
+            data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HR8'"
+
+            set app = data_cmd.execute
+            %>
+            <input class="form-check-input" type="checkbox" name="HR8" id="HR8" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HR8');" >
+            <label for="HR8">Master Jenis Usaha</label>
+          </li>
+            <ul>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HR8A'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="HR8A" id="HR8A" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HR8A');" >
+                <label for="HR8A">Tambah</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HR8B'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="HR8B" id="HR8B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HR8B');" >
+                <label for="HR8B">Update</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'HR8C'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="HR8C" id="HR8C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','HR8C');" >
+                <label for="HR8C">Delete</label>
               </li>
             </ul>
         </ul>
@@ -2593,6 +2641,56 @@ call header("Hak Akses") %>
                 %>
                 <input class="form-check-input" type="checkbox" name="MK3D" id="MK3D" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MK3D');" >
                 <label for="MK3D">Export</label>
+              </li>
+            </ul>
+
+
+          <!-- invoice customer repair -->
+          <li>
+            <%
+            data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MK4'"
+
+            set app = data_cmd.execute
+            %>
+            <input class="form-check-input" type="checkbox" name="MK4" id="MK4" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MK4');" >
+            <label for="MK4">Invoice  Repair</label>
+          </li>
+            <ul>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MK4A'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="MK4A" id="MK4A" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MK4A');" >
+                <label for="MK4A">Tambah</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MK4B'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="MK4B" id="MK4B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MK4B');" >
+                <label for="MK4B">Update</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MK4C'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="MK4C" id="MK4C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MK4C');" >
+                <label for="MK4C">Delete</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MK4D'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="MK4D" id="MK4D" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MK4D');" >
+                <label for="MK4D">Export</label>
               </li>
             </ul>
         </ul>

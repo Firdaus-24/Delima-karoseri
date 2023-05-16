@@ -139,9 +139,16 @@
                 <a class="link-name" href="<%= url %>views/salesrep/">Sales Order Repair</a>
               </li>
               <% end if %>
+              <% if session("MK3") = true then %>
               <li>
                 <a class="link-name" href="<%= url %>views/invnew/">Invoice New</a>
               </li>
+              <% end if %>
+              <% if session("MK4") = true then %>
+              <li>
+                <a class="link-name" href="<%= url %>views/invrepair/">Invoice Repair</a>
+              </li>
+              <% end if %>
             </ul>
           <!-- qc -->
           <li class="nav-text">
@@ -358,6 +365,11 @@
               <% if session("HR7") =  true then %>
               <li>
                 <a class="link-name" href="<%= url %>views/jenjang/">Jenjang</a>
+              </li>
+              <% end if %>
+              <% if session("HR5") =  true then %>
+              <li>
+                <a class="link-name" href="<%= url %>views/jnsusaha/">Jenis Usaha</a>
               </li>
               <% end if %>
               <% if session("HR5") =  true then %>

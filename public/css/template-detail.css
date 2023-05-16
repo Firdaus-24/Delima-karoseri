@@ -1,0 +1,66 @@
+.contentDetail {
+  background-color: #d3d3d3;
+  padding: 10px 10px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.accordion {
+  display: none;
+}
+
+.tombol-template {}
+
+@media (max-width:540px) {
+  .contentDetail {
+    padding: 10px 0 10px 0;
+  }
+
+  .accordion {
+    display: block;
+  }
+
+  .tombol-template {
+    display: none;
+  }
+
+  .accordion-body button {
+    display: block;
+    width: 100%;
+    text-transform: uppercase;
+    font-family: "roboto";
+    letter-spacing: 2px;
+  }
+
+  #hello {
+    margin-top: -3px;
+    width: 30px;
+  }
+}
+
+@media (min-width: 30em) and (max-width: 50em) {
+  .contentDetail {
+    padding: 10px 0 10px 0;
+  }
+
+  .accordion {
+    display: block;
+  }
+
+  .tombol-template {
+    display: none;
+  }
+
+  .accordion-body button {
+    display: block;
+    width: 100%;
+    text-transform: uppercase;
+    font-family: "roboto";
+    letter-spacing: 2px;
+  }
+
+  #hello {
+    margin-top: -3px;
+    width: 30px;
+  }
+}

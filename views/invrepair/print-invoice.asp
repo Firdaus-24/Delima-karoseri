@@ -1,20 +1,21 @@
 <!--#include file="../../init.asp"-->
 <% 
-  if session("MK3D") = false then
-    Response.Redirect("index.asp")
+  if session("MK4D") = false then
+    Response.Redirect("./")
   end if
-  Response.Buffer = TRUE
+  Response.Buffer = true
+
   id = trim(Request.QueryString("id"))
 
   set data_cmd =  Server.CreateObject ("ADODB.Command")
   data_cmd.ActiveConnection = mm_delima_string
 
-  data_cmd.commandText = "SELECT dbo.MKT_T_InvJulNewH.*, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_Customer.custNama FROM dbo.MKT_T_InvJulNewH LEFT OUTER JOIN dbo.DLK_M_Customer ON dbo.MKT_T_InvJulNewH.IPH_Custid = dbo.DLK_M_Customer.custId LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.MKT_T_InvJulNewH.IPH_AgenID = dbo.GLB_M_Agen.AgenID WHERE dbo.MKT_T_InvJulNewH.IPH_ID = '"& id &"' AND dbo.MKT_T_InvJulNewH.IPH_AktifYN = 'Y'"
+  data_cmd.commandText = "SELECT dbo.MKT_T_InvRepairH.*, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_Customer.custNama FROM dbo.MKT_T_InvRepairH LEFT OUTER JOIN dbo.DLK_M_Customer ON dbo.MKT_T_InvRepairH.INV_CustID = dbo.DLK_M_Customer.custId LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.MKT_T_InvRepairH.INV_Agenid = dbo.GLB_M_Agen.AgenID WHERE INV_AktifYN = 'Y' AND INV_ID = '"& id &"'"
   ' response.write data_cmd.commandText & "<br>"
   set data = data_cmd.execute
 
-  ' detail item
-  data_cmd.commandTExt = "SELECT dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.MKT_T_InvJulNewD.IPD_Harga, dbo.MKT_T_InvJulNewD.IPD_DIsc1, dbo.MKT_T_InvJulNewD.IPD_DIsc2, dbo.MKT_T_InvJulNewD.IPD_QtySatuan, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_JenisBarang.JenisNama, dbo.MKT_T_InvJulNewD.IPD_IPHID FROM dbo.DLK_M_Kategori INNER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_Kategori.KategoriId = dbo.DLK_M_Barang.KategoriID INNER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID RIGHT OUTER JOIN dbo.MKT_T_InvJulNewD LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.MKT_T_InvJulNewD.IPD_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID ON dbo.DLK_M_Barang.Brg_Id = dbo.MKT_T_InvJulNewD.IPD_Item WHERE LEFT(dbo.MKT_T_InvJulNewD.IPD_IPHID,13) = '"& data("IPH_ID") &"' ORDER BY Brg_Nama ASC"
+  ' detail invoice
+  data_cmd.commandText = "SELECT dbo.DLK_M_Class.ClassName, dbo.DLK_M_Brand.BrandName, dbo.MKT_T_InvRepairD.IRD_INVID, dbo.MKT_T_InvRepairD.IRD_Qtysatuan,dbo.MKT_T_InvRepairD.IRD_Harga, dbo.MKT_T_InvRepairD.IRD_Diskon, dbo.MKT_T_InvRepairD.IRD_Keterangan, dbo.MKT_T_InvRepairD.IRD_UpdateId, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_WebLogin.UserName FROM dbo.MKT_T_InvRepairD LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.MKT_T_InvRepairD.IRD_UpdateId = dbo.DLK_M_WebLogin.UserID LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.MKT_T_InvRepairD.IRD_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.DLK_M_Brand ON dbo.MKT_T_InvRepairD.IRD_BrandID = dbo.DLK_M_Brand.BrandID LEFT OUTER JOIN dbo.DLK_M_Class ON dbo.MKT_T_InvRepairD.IRD_ClassID = dbo.DLK_M_Class.ClassID WHERE LEFT(dbo.MKT_T_InvRepairD.IRD_INVID,13) = '"& data("INV_ID") &"' ORDER BY dbo.MKT_T_InvRepairD.IRD_INVID"
 
   set ddata = data_cmd.execute
 
@@ -115,11 +116,11 @@
     </div>
     <table style="font-size:12px;width:100%;">
       <tr>
-        <th colspan="8" style="text-align:center;border:none">INVOICE CUSTOMERS</th>
+        <th colspan="8" style="text-align:center;border:none">DETAIL INVOICE REPAIR</th>
       </tr>
       <tr>
         <th colspan="8" style="text-align:center;border:none">
-          <%= LEFT(data("IPH_ID"),2) &"-"& mid(data("IPH_ID"),3,3) &"/"& mid(data("IPH_ID"),6,4) &"/"& right(data("IPH_ID"),4)%>
+          <%= LEFT(id,2) &"-"& mid(id,3,3) &"/"& mid(id,6,4) &"/"&  right(id,4) %>
         </th>
       </tr>
       <tr>
@@ -133,7 +134,7 @@
           No P.O
         </td>
         <td colspan="2" style="text-align:left;border:none">
-          : <%= left(data("IPH_OJHID"),2) %>-<% call getAgen(mid(data("IPH_OJHID"),3,3),"") %>/<%= mid(data("IPH_OJHID"),6,4) %>/<%= right(data("IPH_OJHID"),4) %>
+          : <%= left(data("INV_ORHID"),2) %>-<%= mid(data("INV_ORHID"),3,3) %>/<%= mid(data("INV_ORHID"),6,4) %>/<%= right(data("INV_ORHID"),4) %>
         </td>
       </tr>
       <tr>
@@ -141,13 +142,13 @@
           Tanggal
         </td>
         <td colspan="2" style="text-align:left;border:none">
-          : <%= Cdate(data("IPH_DAte")) %>
+          : <%= Cdate(data("INV_DAte")) %>
         </td>
         <td colspan="2" style="text-align:left;border:none">
           Tanggal Jatuh Tempo
         </td>
         <td colspan="2" style="text-align:left;border:none">
-          : <% if data("IPH_JTDAte") <> "1900-01-01"  then%> <%= Cdate(data("IPH_JTDate")) %> <% end if %>
+          : <% if data("INV_JTDAte") <> "1900-01-01"  then%> <%= Cdate(data("INV_JTDate")) %> <% end if %>
         </td>
       </tr>
       <tr>
@@ -158,18 +159,24 @@
           : <%= data("custnama") %>
         </td>
         <td colspan="2" style="text-align:left;border:none">
-          Tukar Faktur
+          Uang Muka
         </td>
         <td colspan="2" style="text-align:left;border:none">
-          : <% if data("IPH_TukarYN") = "Y" then %>Yes <% else %>No <% end if %>
+          : <%= replace(formatcurrency(data("INV_Uangmuka")),"$","Rp.") %>
         </td>
       </tr>
       <tr>
         <td colspan="2" style="text-align:left;border:none">
           Keterangan
         </td>
-        <td colspan="6" style="text-align:left;border:none">
-          : <%= data("IPH_Keterangan") %>
+        <td colspan="2" style="text-align:left;border:none">
+          : <%= data("INV_Keterangan") %>
+        </td>
+        <td colspan="2" style="text-align:left;border:none">
+          Lama Pengerjaan
+        </td>
+        <td colspan="2" style="text-align:left;border:none">
+          : <%= data("INV_timework") %> hari
         </td>
       </tr>
       <tr>
@@ -180,52 +187,51 @@
       
 
       <tr style="page-break-inside:auto;page-break-after:auto;">
-        <th scope="col" style="">Kode</th>
-        <th scope="col" style="">Item</th>
-        <th scope="col" style="">Quantity</th>
-        <th scope="col" style="">Satuan</th>
-        <th scope="col" style="">Harga</th>
-        <th scope="col" style="">Disc1</th>
-        <th scope="col" style="">Disc2</th>
+        <th scope="col">No</th>
+        <th scope="col">Class</th>
+        <th scope="col">Brand</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Satuan</th>
+        <th scope="col">Harga</th>
+        <th scope="col">Diskon</th>
         <th scope="col" style="">Total</th>
       </tr>
       <% 
       grantotal = 0  
       realgrantotal = 0
       total = 0
-      diskon1 = 0
-      diskon2 = 0 
+      diskon = 0
+      no = 0 
       do while not ddata.eof 
+      no = no + 1
+      diskon = (ddata("IRD_Diskon")/100) * ddata("IRD_Harga")
 
-      diskon1 = (ddata("IPD_Disc1")/100) * ddata("IPD_Harga")
-      diskon2 = (ddata("IPD_Disc2")/100) * ddata("IPD_Harga")
-
-      hargadiskon = ddata("IPD_Harga") - diskon1 - diskon2
-      total = hargadiskon * ddata("IPD_Qtysatuan")
+      hargadiskon = ddata("IRD_Harga") - diskon 
+      total = hargadiskon * ddata("IRD_Qtysatuan")
       
       grantotal = grantotal + total
       %>
         <tr style="page-break-inside:auto;page-break-after:auto;">
           <th style="text-align:left;">
-            <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
+            <%= no %>
           </th>
           <td style="text-align:left;">
-            <%= ddata("Brg_Nama") %>
+            <%= ddata("className") %>
           </td>
           <td style="text-align:left;">
-            <%= ddata("IPD_QtySatuan") %>
+            <%= ddata("brandName") %>
+          </td>
+          <td style="text-align:left;">
+            <%= ddata("IRD_Qtysatuan")%>
           </td>
           <td style="text-align:left;">
             <%= ddata("Sat_nama") %>
           </td>
           <td style="text-align:right;">
-            <%= replace(formatCurrency(ddata("IPD_Harga")),"$","") %>
+            <%= replace(formatCurrency(ddata("IRD_Harga")),"$","") %>
           </td>
-          <td style="text-align:left;">
-            <%= ddata("IPD_Disc1") %> %
-          </td>
-          <td style="text-align:left;">
-            <%= ddata("IPD_Disc2") %> %
+          <td style="text-align:center;">
+            <%= ddata("IRD_Diskon") %> %
           </td>
           <td style="text-align:right;">
             <%= replace(formatCurrency(total),"$","") %>
@@ -236,15 +242,15 @@
         ddata.movenext
         loop
         ' cek diskonall
-        if data("IPH_diskonall") <> 0 OR data("IPH_Diskonall") <> "" then
-          diskonall = (data("IPH_Diskonall")/100) * grantotal
+        if data("INV_diskonall") <> 0 OR data("INV_Diskonall") <> "" then
+          diskonall = (data("INV_Diskonall")/100) * grantotal
         else
           diskonall = 0
         end if
 
         ' hitung ppn
-        if data("IPH_ppn") <> 0 OR data("IPH_ppn") <> "" then
-          ppn = (data("IPH_ppn")/100) * grantotal
+        if data("INV_PPN") <> 0 OR data("INV_PPN") <> "" then
+          ppn = (data("INV_PPN")/100) * grantotal
         else
           ppn = 0
         end if
@@ -253,12 +259,12 @@
         %>
         <tr style="page-break-inside:auto;page-break-after:auto;">
           <th colspan="6" style="text-align:left;">Diskon All</th>
-          <td style="text-align:left;"><%=data("IPH_diskonall") %> %</td>
+          <td style="text-align:center;"><%=data("INV_diskonall") %> %</td>
           <td style="text-align:right;"><%= replace(formatCurrency(diskonall),"$","") %></td>
         </tr>
         <tr style="page-break-inside:auto;page-break-after:auto;">
           <th colspan="6" style="text-align:left;">PPN</th>
-          <td style="text-align:left;"><%= data("IPH_ppn") %> %</td>
+          <td style="text-align:center;"><%= data("INV_PPN") %> %</td>
           <td style="text-align:right;"><%= replace(formatCurrency(ppn),"$","") %></td>
         </tr>
         <tr style="page-break-inside:auto;page-break-after:auto;">
