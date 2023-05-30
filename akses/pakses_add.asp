@@ -975,16 +975,6 @@ call header("Hak Akses") %>
                 <label for="INV4D">Export</label>
               </li>
             </ul>
-          <!-- Form Produksi -->
-          <li>
-            <%
-            data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'INV5'"
-
-            set app = data_cmd.execute
-            %>
-            <input class="form-check-input" type="checkbox" name="INV5" id="INV5" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','INV5');" >
-            <label for="INV5">Form Produksi</label>
-          </li>
           <!-- Permintaan kurang -->
           <li>
             <%
@@ -2840,6 +2830,72 @@ call header("Hak Akses") %>
                 %>
                 <input class="form-check-input" type="checkbox" name="MQ3D" id="MQ3D" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MQ3D');" >
                 <label for="MQ3D">Export</label>
+              </li>
+            </ul>
+          <!-- incomming unit repair -->
+          <li>
+            <%
+            data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MQ4'"
+
+            set app = data_cmd.execute
+            %>
+            <input class="form-check-input" type="checkbox" name="MQ4" id="MQ4" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MQ4');" >
+            <label for="MQ4">Incomming unit repair</label>
+          </li>
+            <ul>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MQ4A'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="MQ4A" id="MQ4A" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MQ4A');" >
+                <label for="MQ4A">Tambah</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MQ4B'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="MQ4B" id="MQ4B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MQ4B');" >
+                <label for="MQ4B">Update</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MQ4C'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="MQ4C" id="MQ4C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MQ4C');" >
+                <label for="MQ4C">Delete</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MQ4D'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="MQ4D" id="MQ4D" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MQ4D');" >
+                <label for="MQ4D">Export</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MQ4E'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="MQ4E" id="MQ4E" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MQ4E');" >
+                <label for="MQ4E">Upload Document</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'MQ4F'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="MQ4F" id="MQ4F" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','MQ4F');" >
+                <label for="MQ4F">Send Email</label>
               </li>
             </ul>
         </ul>

@@ -2,6 +2,7 @@
 'Variable declared in the global scope will be available to any procedure
 'wishing to use it.
 Dim value: value = 0
+dim data_cmd
 sub query(e)
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")

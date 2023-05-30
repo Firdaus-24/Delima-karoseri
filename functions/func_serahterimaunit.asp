@@ -6,13 +6,14 @@
     penerima = trim(Request.Form("penerima"))
     penyerah = trim(Request.Form("penyerah"))
     keterangan = trim(Request.Form("keterangan"))
+    jenisUnit = trim(Request.Form("jenisUnit"))
 
-    data_cmd.commandText = "SELECT * FROM DLK_T_UnitCustomerH WHERE TFK_OJHID = '"& salesorder &"' AND TFK_custid = '"& custid &"'"
+    data_cmd.commandText = "SELECT * FROM DLK_T_UnitCustomerH WHERE TFK_OJHORHID = '"& salesorder &"' AND TFK_custid = '"& custid &"'"
     ' response.write data_cmd.commandtext & "<br>"
     set st = data_cmd.execute
 
     if st.eof then
-      data_cmd.commandtext = "exec sp_addDLK_T_UnitCustomerH '"& salesorder &"', '"& custid &"','"& tgl &"','"& keterangan &"','"& penyerah &"', '"& penerima &"', '"& session("userid") &"'"
+      data_cmd.commandtext = "exec sp_addDLK_T_UnitCustomerH '"& salesorder &"', '"& custid &"','"& tgl &"','"& keterangan &"','"& penyerah &"', '"& penerima &"', '"& session("userid") &"', "& jenisUnit &""
       ' response.write data_cmd.commandText & "<br>"
       set p = data_cmd.execute
 
@@ -34,7 +35,7 @@
     mesin = trim(Request.Form("mesin"))
     warna = trim(Request.Form("warna"))
 
-    data_cmd.commandText = "SELECT * FROM DLK_T_UnitCustomerD1 WHERE LEFT(TFK_ID,17) = '"& idtfk &"' AND TFK_Merk = '"& merek &"'  AND TFK_Type = '"& ltype &"' AND TFK_Nopol = '"& polisi &"'  AND TFK_Norangka = '"& rangka &"'  AND TFK_NoMesin = '"& mesin &"' "
+    data_cmd.commandText = "SELECT * FROM DLK_T_UnitCustomerD1 WHERE LEFT(TFK_ID,17) = '"& idtfk &"' AND TFK_BrandID = '"& merek &"'  AND TFK_Type = '"& ltype &"' AND TFK_Nopol = '"& polisi &"'  AND TFK_Norangka = '"& rangka &"'  AND TFK_NoMesin = '"& mesin &"' "
     ' response.write data_cmd.commandText & "<br>"
     set data = data_cmd.execute
     
@@ -43,7 +44,7 @@
       ' response.write data_cmd.commandText & "<br>"
       set ddata = data_cmd.execute
 
-      data_cmd.commandText = "INSERT INTO DLK_T_UnitCustomerD1 (TFK_ID,TFK_Date,TFK_Merk,TFK_Type,TFK_Nopol,TFK_Norangka,TFK_NoMesin,TFK_Color,TFK_UpdateID,TFK_UpdateTime) VALUES ( '"& ddata("id") &"', '"& tgl &"', '"& merek &"', '"& ltype &"','"& polisi &"', '"& rangka &"', '"& mesin &"','"& warna &"', '"& session("userid") &"', '"& now &"')"
+      data_cmd.commandText = "INSERT INTO DLK_T_UnitCustomerD1 (TFK_ID,TFK_Date,TFK_BrandID,TFK_Type,TFK_Nopol,TFK_Norangka,TFK_NoMesin,TFK_Color,TFK_UpdateID,TFK_UpdateTime) VALUES ( '"& ddata("id") &"', '"& tgl &"', '"& merek &"', '"& ltype &"','"& polisi &"', '"& rangka &"', '"& mesin &"','"& warna &"', '"& session("userid") &"', '"& now &"')"
       ' response.write data_cmd.commandText & "<br>"
       set p = data_cmd.execute
 

@@ -10,7 +10,7 @@
   set data_cmd =  Server.CreateObject ("ADODB.Command")
   data_cmd.ActiveConnection = mm_delima_string
 
-  data_cmd.commandText = "SELECT dbo.DLK_T_UnitCustomerD1.*, dbo.DLK_M_WebLogin.UserName, dbo.DLK_M_Brand.BrandName FROM dbo.DLK_T_UnitCustomerD1 LEFT OUTER JOIN dbo.DLK_M_Brand ON dbo.DLK_T_UnitCustomerD1.TFK_Merk = dbo.DLK_M_Brand.BrandID LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_UnitCustomerD1.TFK_UpdateID = dbo.DLK_M_WebLogin.UserID WHERE TFK_ID = '"& id &"'"
+  data_cmd.commandText = "SELECT dbo.DLK_T_UnitCustomerD1.*, dbo.DLK_M_WebLogin.UserName, dbo.DLK_M_Brand.BrandName FROM dbo.DLK_T_UnitCustomerD1 LEFT OUTER JOIN dbo.DLK_M_Brand ON dbo.DLK_T_UnitCustomerD1.TFK_BrandID = dbo.DLK_M_Brand.BrandID LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_UnitCustomerD1.TFK_UpdateID = dbo.DLK_M_WebLogin.UserID WHERE TFK_ID = '"& id &"'"
   set data = data_cmd.execute
 
 

@@ -10,7 +10,7 @@
   set data = data_cmd.execute
 
   ' data detail1
-  data_cmd.commandText = "SELECT dbo.DLK_T_UnitCustomerD1.*, dbo.DLK_M_WebLogin.UserName, dbo.DLK_M_Brand.BrandName FROM dbo.DLK_T_UnitCustomerD1 LEFT OUTER JOIN dbo.DLK_M_Brand ON dbo.DLK_T_UnitCustomerD1.TFK_Merk = dbo.DLK_M_Brand.BrandID LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_UnitCustomerD1.TFK_UpdateID = dbo.DLK_M_WebLogin.UserID WHERE LEFT(TFK_ID,17) = '"& data("TFK_ID") &"'"
+  data_cmd.commandText = "SELECT dbo.DLK_T_UnitCustomerD1.*, dbo.DLK_M_WebLogin.UserName, dbo.DLK_M_Brand.BrandName FROM dbo.DLK_T_UnitCustomerD1 LEFT OUTER JOIN dbo.DLK_M_Brand ON dbo.DLK_T_UnitCustomerD1.TFK_BrandID = dbo.DLK_M_Brand.BrandID LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_UnitCustomerD1.TFK_UpdateID = dbo.DLK_M_WebLogin.UserID WHERE LEFT(TFK_ID,17) = '"& data("TFK_ID") &"'"
   ' response.write data_cmd.commandtext & "<br>"
   set ddata = data_cmd.execute
 
@@ -28,12 +28,33 @@
       <h3><%= LEFT(data("TFK_ID"),11) &"/"& MID(data("TFK_ID"),12,4) &"/"& Right(data("TFK_ID"),2) %></h3>
     </div>
   </div>
+  <div class="row">
+    <div class="col-lg-2 mb-3">
+      <label for="ltgl" class="col-form-label">Tanggal</label>
+    </div>
+    <div class="col-lg-4 mb-3">
+      <input type="text" id="ltgl" name="ltgl" value="<%= Cdate(data("TFK_Date")) %>" class="form-control" readonly>
+    </div>
+    <div class="col-lg-2 mb-2">
+        <label for="salesorder" class="col-form-label">Jenis Unit</label>
+      </div>
+      <div class="col-lg-4 mb-2">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="jenisUnit" id="baru" value="1" <% if data("TFK_Jenis") = 1 then%>checked <% end if %> disabled>
+          <label class="form-check-label" for="baru">Baru</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="jenisUnit" id="repair" value="2" <% if data("TFK_Jenis") = 2 then%>checked <% end if %> disabled>
+          <label class="form-check-label" for="repair">Repair</label>
+        </div>
+      </div>
+  </div>
   <div class="row align-items-center">
     <div class="col-lg-2 mb-3">
       <label for="salesorder" class="col-form-label">Sales Order</label>
     </div>
     <div class="col-lg-4 mb-3">
-      <input type="text" id="salesorder" name="salesorder" class="form-control" value="<%= left(data("TFK_OJHID") ,2)%>-<%=  mid(data("TFK_OJHID") ,3,3)%>/<%= mid(data("TFK_OJHID") ,6,4) %>/<%= right(data("TFK_OJHID"),4) %>" readonly>
+      <input type="text" id="salesorder" name="salesorder" class="form-control" value="<%= left(data("TFK_OJHORHID") ,2)%>-<%=  mid(data("TFK_OJHORHID") ,3,3)%>/<%= mid(data("TFK_OJHORHID") ,6,4) %>/<%= right(data("TFK_OJHORHID"),4) %>" readonly>
     </div>
     <div class="col-lg-2 mb-3">
       <label for="customer" class="col-form-label">Customer</label>
@@ -50,23 +71,17 @@
       <input type="text" id="penerima" name="penerima" class="form-control" maxlength="50" value="<%= data("TFK_Penerima") %>" readonly>
     </div>
     <div class="col-lg-2 mb-3">
-      <label for="ltgl" class="col-form-label">Tanggal</label>
-    </div>
-    <div class="col-lg-4 mb-3">
-      <input type="text" id="ltgl" name="ltgl" value="<%= data("TFK_Date") %>" class="form-control" readonly>
-    </div>
-  </div>
-  <div class="row align-items-center">
-    <div class="col-lg-2 mb-3">
       <label for="penyerah" class="col-form-label">Penyerah</label>
     </div>
     <div class="col-lg-4 mb-3">
       <input type="text" id="penyerah" name="penyerah" class="form-control" maxlength="50" value="<%= data("TFK_penyerah") %>" readonly>
     </div>
+  </div>
+  <div class="row">
     <div class="col-lg-2 mb-3">
       <label for="keterangan" class="col-form-label">Keterangan</label>
     </div>
-    <div class="col-lg-4 mb-3">
+    <div class="col-lg-10 mb-3">
       <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" value="<%= data("TFK_Keterangan") %>" autocomplete="off" readonly>
     </div>
   </div>

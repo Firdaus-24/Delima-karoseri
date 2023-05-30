@@ -7,7 +7,7 @@
   id = trim(Request.QueryString("id"))
 
   Response.ContentType = "application/vnd.ms-excel"
-   Response.AddHeader "content-disposition", "filename=Kedatanagan Unit Customer "& left(id,11) &"/"& MID(id,12,4) &"/"& right(id,2)&" .xls"
+  Response.AddHeader "content-disposition", "filename=Kedatanagan Unit Customer "& left(id,11) &"/"& MID(id,12,4) &"/"& right(id,2)&" .xls"
 
   set data_cmd =  Server.CreateObject ("ADODB.Command")
   data_cmd.ActiveConnection = mm_delima_string
@@ -18,11 +18,10 @@
   set data = data_cmd.execute
 
   ' data detail1
-  data_cmd.commandText = "SELECT dbo.DLK_T_UnitCustomerD1.*, dbo.DLK_M_WebLogin.UserName, dbo.DLK_M_Brand.BrandName FROM dbo.DLK_T_UnitCustomerD1 LEFT OUTER JOIN dbo.DLK_M_Brand ON dbo.DLK_T_UnitCustomerD1.TFK_Merk = dbo.DLK_M_Brand.BrandID LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_UnitCustomerD1.TFK_UpdateID = dbo.DLK_M_WebLogin.UserID WHERE LEFT(TFK_ID,17) = '"& data("TFK_ID") &"'"
+  data_cmd.commandText = "SELECT dbo.DLK_T_UnitCustomerD1.*, dbo.DLK_M_WebLogin.UserName, dbo.DLK_M_Brand.BrandName FROM dbo.DLK_T_UnitCustomerD1 LEFT OUTER JOIN dbo.DLK_M_Brand ON dbo.DLK_T_UnitCustomerD1.TFK_BrandID = dbo.DLK_M_Brand.BrandID LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_UnitCustomerD1.TFK_UpdateID = dbo.DLK_M_WebLogin.UserID WHERE LEFT(TFK_ID,17) = '"& data("TFK_ID") &"'"
   ' response.write data_cmd.commandtext & "<br>"
   set ddata = data_cmd.execute
 
-  call header("Detail Serah Terima")
 %>
 <table width="100" >
   <tr>
@@ -37,10 +36,24 @@
   </tr>
   <tr>
     <td colspan="2">
+      Tanggal
+    </td>
+    <td colspan="2">
+      : <%= data("TFK_Date") %>
+    </td>
+    <td colspan="2">
+      Jenis Unit
+    </td>
+    <td colspan="2">
+      : <% if data("TFK_Jenis") = 1 then%>Baru <% else %>Repair <% end if %>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
       Sales Order
     </td>
     <td colspan="2">
-      : <%= left(data("TFK_OJHID") ,2)%>-<%=  mid(data("TFK_OJHID") ,3,3)%>/<%= mid(data("TFK_OJHID") ,6,4) %>/<%= right(data("TFK_OJHID"),4) %>
+      : <%= left(data("TFK_OJHORHID") ,2)%>-<%=  mid(data("TFK_OJHORHID") ,3,3)%>/<%= mid(data("TFK_OJHORHID") ,6,4) %>/<%= right(data("TFK_OJHORHID"),4) %>
     </td>
     <td colspan="2">
       Customer
@@ -57,23 +70,17 @@
       : <%= data("TFK_Penerima") %>
     </td>
     <td colspan="2">
-      Tanggal
-    </td>
-    <td colspan="2">
-      : <%= data("TFK_Date") %>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2">
       Penyerah
     </td>
     <td colspan="2">
       : <%= data("TFK_Penyerah") %>
     </td>
+  </tr>
+  <tr>
     <td colspan="2">
       Keterangan
     </td>
-    <td colspan="2">
+    <td colspan="5">
       : <%= data("TFK_Keterangan") %>
     </td>
   </tr>

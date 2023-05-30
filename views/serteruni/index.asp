@@ -11,7 +11,7 @@
 
   set custData = data_cmd.execute
   ' filter NO SO
-  data_cmd.commandText = "SELECT TFK_OJHID FROM DLK_T_UnitcustomerH WHERE TFK_aktifYN = 'Y' GROUP BY TFK_OJHID ORDER BY TFK_OJHID ASC"
+  data_cmd.commandText = "SELECT TFK_OJHORHID FROM DLK_T_UnitcustomerH WHERE TFK_aktifYN = 'Y' GROUP BY TFK_OJHORHID ORDER BY TFK_OJHORHID ASC"
 
   set sodata = data_cmd.execute
 
@@ -51,7 +51,7 @@
   end if
 
   if noprod <> "" then
-    filternoprod = "AND dbo.DLK_T_UnitcustomerH.TFK_OJHID = '"& noprod &"'"
+    filternoprod = "AND dbo.DLK_T_UnitcustomerH.TFK_OJHORHID = '"& noprod &"'"
   else
     filternoprod = ""
   end if
@@ -143,7 +143,7 @@
         <select class="form-select" aria-label="Default select example" name="noprod" id="noprod">
           <option value="">Pilih</option>
           <% do while not sodata.eof %>
-          <option value="<%= sodata("TFK_OJHID") %>"><%= left(sodata("TFK_OJHID") ,2)%>-<%= mid(sodata("TFK_OJHID") ,3,3)%>/<%= mid(sodata("TFK_OJHID") ,6,4) %>/<%= right(sodata("TFK_OJHID"),4) %></option>
+          <option value="<%= sodata("TFK_OJHORHID") %>"><%= left(sodata("TFK_OJHORHID") ,2)%>-<%= mid(sodata("TFK_OJHORHID") ,3,3)%>/<%= mid(sodata("TFK_OJHORHID") ,6,4) %>/<%= right(sodata("TFK_OJHORHID"),4) %></option>
           <% 
           response.flush
           sodata.movenext
@@ -177,6 +177,7 @@
             <th scope="col">Tanggal</th>
             <th scope="col">Penerima</th>
             <th scope="col">Penyerah</th>
+            <th scope="col">Jenis</th>
             <th scope="col">Keterangan</th>
             <th scope="col" class="text-center">Aksi</th>
           </tr>
@@ -196,11 +197,14 @@
           %>
           <tr>
             <th scope="row"><%= recordcounter %> </th>
-            <td><%= left(rs("TFK_OJHID") ,2)%>-<%=  mid(rs("TFK_OJHID") ,3,3)%>/<%= mid(rs("TFK_OJHID") ,6,4) %>/<%= right(rs("TFK_OJHID"),4) %></td>
+            <td><%= left(rs("TFK_OJHORHID") ,2)%>-<%=  mid(rs("TFK_OJHORHID") ,3,3)%>/<%= mid(rs("TFK_OJHORHID") ,6,4) %>/<%= right(rs("TFK_OJHORHID"),4) %></td>
             <td><%= rs("custnama") %></td>
             <td><%= Cdate(rs("TFK_Date")) %></td>
             <td><%= rs("TFK_Penerima") %></td>
             <td><%= rs("TFK_Penyerah") %></td>
+            <td>
+              <% if rs("TFK_Jenis") = 1 then %>Baru <% elseif rs("TFK_JEnis") = 2 then %>Repair <% else %> - <% end if %>
+            </td>
             <td><%= rs("TFK_Keterangan") %></td>
             <td class="text-center">
               <div class="btn-group" role="group" aria-label="Basic example">
@@ -208,11 +212,9 @@
                   <a href="tfkd_u.asp?id=<%= rs("TFK_ID") %>" class="btn badge text-bg-primary">update</a>
                 <%end if %>
                 <% if detail.eof then %>
-                  <% if rs("TFK_TerimaYN") = "N" then %>
                     <% if session("MQ2C") = true then %>
                     <a href="aktif.asp?id=<%= rs("TFK_ID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'RETURN BARANG HEADER')">delete</a>
                     <% end if %>
-                  <%end if %>
                 <% else %>
                   <a href="detail.asp?id=<%= rs("TFK_ID") %>" class="btn badge text-bg-warning">detail</a>
                 <% end if %>    

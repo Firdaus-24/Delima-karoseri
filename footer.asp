@@ -40,4 +40,6 @@
     <script src="../../public/js/keluarga1.js"></script>
     <script src="../../public/js/jenisusaha.js"></script>
     <script src="../../public/js/invrepair.js"></script>
+    <script src="../../public/js/serahterimaunit.js"></script>
+    <script src="../../public/js/incunitrepair.js"></script>
 </html>
