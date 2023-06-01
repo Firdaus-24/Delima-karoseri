@@ -1,0 +1,10 @@
+.tableupurchase .form-control{
+    padding-top:0;
+    padding-bottom:0;
+    border:none;
+    background:transparent;
+}
+.tableupurchase .form-control:focus{
+    outline: none !important;
+    border:none;
+}

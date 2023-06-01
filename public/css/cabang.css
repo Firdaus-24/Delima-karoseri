@@ -1,0 +1,7 @@
+.cbKdpos{
+    height: 200px;
+    overflow-x: scroll;
+}
+.loaderKdpos{
+    display: none;
+}

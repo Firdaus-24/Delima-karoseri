@@ -1,0 +1,211 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:wght@200&family=Oswald:wght@200&display=swap');
+
+@font-face {
+    font-family: firsans;
+    src: url(../font/FiraSansCondensed-Regular.ttf);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: firsans;
+}
+
+hr {
+    background-color: black;
+    height: 1px;
+    border: none;
+}
+
+#navbar {
+    background-color: #212121;
+    height: 100px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.menu-bars {
+    margin-left: 2rem;
+    font-size: 2rem;
+    color: #fff;
+}
+
+#nav-menu {
+    background-color: #212121;
+    width: 250px;
+    height: 100vh;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    transition: 400ms;
+    overflow-y: auto;
+}
+
+#nav-menu.active {
+    left: 0;
+    transition: 400ms;
+    z-index: 1000;
+}
+
+.nav-text {
+    display: flex;
+    list-style: none;
+    height: 50px;
+    padding: 1rem;
+    align-items: center;
+    justify-content: space-between;
+}
+.nav-text #iconDown{
+    color:#fff
+}
+.nav-text a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.2rem;
+    margin-left: 1rem;
+    width: 100%;
+}
+.nav-text:hover {
+    background-color: rgba(144, 144, 144, 0.219);
+    cursor: pointer;
+}
+
+.nav-menu-items {
+    width: 100%;
+    padding-left: 0;
+}
+
+.nav-icon {
+    padding-right: 1rem;
+    color: #909090;
+}
+
+#delima-logo {
+    padding-right: 0.2rem;
+    margin-left: 0.2rem;
+}
+
+#navbar-toggle {
+    background-color: #212121;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+#navbar-toggle h1 {
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+}
+
+#navbar-toggle a {
+    text-decoration: none;
+}
+
+.bi-bi {
+    color: #fff;
+}
+
+.sub-menu{
+  padding:6px 6px 14px 65px;
+  margin-top:-10px;
+  background: rgba(0, 0, 0, 0.5);
+  display:none;
+  list-style: none;
+  /* transition: all 0.3s; */
+}
+.sub-menu li{
+    padding:7px;
+}
+
+.sub-menu li:hover{
+    background-color: red;
+}
+
+.sub-menu a{
+  color:#fff;
+  font-size:15px;
+  text-decoration:none;
+  /* padding:5px 0; */
+  white-space:nowrap;
+  display: block;
+}  
+
+.open-list{
+    display: block;
+    transition: all 0.3s;
+}
+
+.nav-section.close .sub-menu a .link-name{
+  font-size:20px;
+}
+
+/* for disable screem */
+.overlay {
+    background-color: #EFEFEF;
+    opacity: .5;
+    /* in FireFox */
+    filter: alpha(opacity=50);
+    /* in IE */
+    pointer-events:none;
+}
+
+/* for scroll bar */
+/* width */
+::-webkit-scrollbar {
+    width: 1px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgb(96, 88, 88); 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #b30000; 
+  }
+
+  .table tr:nth-child(1){
+    white-space: nowrap;
+  }
+
+  /* labelID */
+  .labelId h3{
+    font-weight: 700;
+    color:rgb(12,182,17);
+  }
+    .footer {
+        clear: both;
+        position: fixed;
+        left: 0;
+        bottom: 10px;
+        width: 100%;
+        /* background-color: red; */
+        /* color: white; */
+        text-align: center;
+    }
+/* fortable data */
+@media (max-width:801px){
+    .table{
+        display: block;
+        overflow-x: scroll;
+    }
+    .table tr:nth-child(1){
+        white-space: nowrap;
+      }
+    ::-webkit-scrollbar {
+        width: 0.1;
+    }
+}
