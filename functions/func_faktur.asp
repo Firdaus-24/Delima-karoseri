@@ -26,6 +26,13 @@
             set p = data_cmd.execute
 
             id = p("ID")
+            
+            ' setting folder image
+            set filesys=CreateObject("Scripting.FileSystemObject")
+            If  Not filesys.FolderExists(pathDoc & id) Then      
+                filesys.CreateFolder (pathDoc & id)   
+            End If
+            
 
             value = 1 'case untuk insert data
         else
