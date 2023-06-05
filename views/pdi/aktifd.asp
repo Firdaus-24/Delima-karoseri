@@ -14,12 +14,12 @@ p = trim(Request.QueryString("p"))
 set data_cmd =  Server.CreateObject ("ADODB.Command")
 data_cmd.ActiveConnection = mm_delima_string
 
-data_cmd.commandtext = "SELECT * FROM DLK_T_PreDevInspectionD WHERE PDI_ID = '"& id &"' AND UPPER(PDI_Initial) = '"& ucase(initial) &"'"
+data_cmd.commandtext = "SELECT * FROM DLK_T_PreDevInspectionD WHERE PDI_ID = '"& id &"' AND UPPER(PDI_Description) = '"& ucase(initial) &"'"
 
 set data = data_cmd.execute
 
 if not data.eof then
-  call query("DELETE DLK_T_PreDevInspectionD WHERE PDI_ID = '"& id &"' AND UPPER(PDI_Initial) = '"& ucase(initial) &"'")
+  call query("DELETE DLK_T_PreDevInspectionD WHERE PDI_ID = '"& id &"' AND UPPER(PDI_Description) = '"& ucase(initial) &"'")
   call alert("DETAIL PRE DELIVERY INSPECTIONS", "berhasil di hapus", "success", p&".asp?id="&id)
 else 
   call alert("DETAIL PRE DELIVERY INSPECTIONS", "tidak terdaftar", "success", p&".asp?id="&id)

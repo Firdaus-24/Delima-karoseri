@@ -10,13 +10,9 @@
   ' filter agen
   data_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_PreDevInspectionH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_PreDevInspectionH.PDI_AgenID = GLB_M_Agen.AgenID WHERE DLK_T_PreDevInspectionH.PDI_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
   set agendata = data_cmd.execute
-  ' filter customer
-  data_cmd.commandText = "SELECT dbo.DLK_M_Customer.CustNama, dbo.DLK_M_Customer.custID FROM dbo.DLK_T_PreDevInspectionH LEFT OUTER JOIN dbo.DLK_M_Customer ON LEFT(dbo.DLK_T_PreDevInspectionH.PDI_TFKID,11) = dbo.DLK_M_Customer.custID WHERE DLK_T_PreDevInspectionH.PDI_AktifYN = 'Y' GROUP BY dbo.DLK_M_Customer.CustNama, dbo.DLK_M_Customer.custID ORDER BY CustNama ASC"
-  set vendata = data_cmd.execute
-
-	' filter sales order
-	data_cmd.commandText = "SELECT PDI_OJHID FROM DLK_T_PreDevInspectionH WHERE PDI_AktifYN = 'Y' GROUP BY PDI_OJHID "
-	set getsales = data_cmd.execute
+  ' filter nomor produksi
+  data_cmd.commandText = "SELECT DLK_T_PreDevInspectionH.PDI_PDDid FROM DLK_T_PreDevInspectionH WHERE DLK_T_PreDevInspectionH.PDI_AktifYN = 'Y' ORDER BY DLK_T_PreDevInspectionH.PDI_PDDid ASC"
+  set dprod = data_cmd.execute
 
   set conn = Server.CreateObject("ADODB.Connection")
   conn.open MM_Delima_string
@@ -34,9 +30,9 @@
   if len(agen) = 0 then 
     agen = trim(Request.Form("agen"))
   end if
-  cust = request.QueryString("cust")
-  if len(cust) = 0 then 
-    cust = trim(Request.Form("cust"))
+  prodid = request.QueryString("prodid")
+  if len(prodid) = 0 then 
+    prodid = trim(Request.Form("prodid"))
   end if
   tgla = request.QueryString("tgla")
   if len(tgla) = 0 then 
@@ -46,27 +42,17 @@
   if len(tgle) = 0 then 
     tgle = trim(Request.Form("tgle"))
   end if
-  sales = request.QueryString("sales")
-  if len(sales) = 0 then 
-    sales = trim(Request.Form("sales"))
-  end if
-  
+
   if agen <> "" then
     filterAgen = "AND DLK_T_PreDevInspectionH.PDI_AgenID = '"& agen &"'"
   else
     filterAgen = ""
   end if
 
-  if cust <> "" then
-    filtercust = "AND LEFT(dbo.DLK_T_PreDevInspectionH.PDI_TFKID,11) = '"& cust &"'"
+  if prodid <> "" then
+    filterprodid = "AND DLK_T_PreDevInspectionH.PDI_PDDID = '"& prodid &"'"
   else
-    filtercust = ""
-  end if
-
-  if sales <> "" then
-    filtersales = "AND dbo.DLK_T_PreDevInspectionH.PDI_OJHID = '"& sales &"'"
-  else
-    filtersales = ""
+    filterprodid = ""
   end if
 
   if tgla <> "" AND tgle <> "" then
@@ -78,7 +64,7 @@
   end if
 
   ' query seach 
-  strquery = "SELECT DLK_T_PreDevInspectionH.*, GLB_M_Agen.AgenName, DLK_M_Customer.CustNama FROM DLK_T_PreDevInspectionH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_PreDevInspectionH.PDI_AgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Customer ON LEFT(DLK_T_PreDevInspectionH.PDI_TFKID,11) = DLK_M_Customer.custID WHERE PDI_AktifYN = 'Y' "& filterAgen &"  "& filtercust &" "& filtertgl &" "& filtersales &""
+  strquery = "SELECT DLK_T_PreDevInspectionH.*, GLB_M_Agen.AgenName, dbo.HRD_M_Departement.DepNama, dbo.HRD_M_Divisi.DivNama FROM DLK_T_PreDevInspectionH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_PreDevInspectionH.PDI_AgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN dbo.HRD_M_Divisi ON dbo.DLK_T_PreDevInspectionH.PDI_DivId = dbo.HRD_M_Divisi.DivId LEFT OUTER JOIN dbo.HRD_M_Departement ON dbo.DLK_T_PreDevInspectionH.PDI_DepID = dbo.HRD_M_Departement.DepID WHERE PDI_AktifYN = 'Y' "& filterAgen &"  "& filtertgl &" "& filterprodid &""
   ' untuk data paggination
   page = Request.QueryString("page")
 
@@ -119,6 +105,7 @@
   loop
 
   call header("Pre Delivery Inspection")
+
 %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
@@ -149,27 +136,14 @@
 				</select>
 			</div>
 			<div class="col-lg-4 mb-3">
-				<label for="cust">Customer</label>
-				<select class="form-select" aria-label="Default select example" name="cust" id="cust">
+				<label for="prodid">No.Produksi</label>
+				<select class="form-select" aria-label="Default select example" name="prodid" id="prodid">
 					<option value="">Pilih</option>
-					<% do while not vendata.eof %>
-					<option value="<%= vendata("custid") %>"><%= vendata("Custnama") %></option>
-					<% 
-					vendata.movenext
-					loop
-					%>
-				</select>
-			</div>
-			<div class="col-lg-4 mb-3">
-				<label for="sales">Sales Order</label>
-				<select class="form-select" aria-label="Default select example" name="sales" id="sales">
-					<option value="">Pilih</option>
-					<% do while not getsales.eof %>
-					<option value="<%= getsales("PDI_OJHID") %>">
-						<%= left(getsales("PDI_OJHID"),2) %>-<%= mid(getsales("PDI_OJHID"),3,3) %>/<%= mid(getsales("PDI_OJHID"),6,4) %>/<%= right(getsales("PDI_OJHID"),4)  %>
-					</option>
-					<% 
-					getsales.movenext
+					<% Do While not dprod.eof%>
+					<option value="<%=dprod("PDI_PDDid")%>"><%= left(dprod("PDI_PDDid"),2) %>-<%= mid(dprod("PDI_PDDid"),3,3) %>/<%= mid(dprod("PDI_PDDid"),6,4) %>/<%= mid(dprod("PDI_PDDid"),10,4) %>/<%= right(dprod("PDI_PDDid"),3)  %></option>
+					<%
+					Response.flush
+					dprod.movenext
 					loop
 					%>
 				</select>
@@ -194,11 +168,10 @@
 				<table class="table table-hover">
 						<thead class="bg-secondary text-light">
 								<th>No</th>
+								<th>No.PDI</th>
 								<th>Tanggal</th>
-								<th>No.Produksi</th>
-								<th>Sales Order</th>
 								<th>Cabang</th>
-								<th>Customer</th>
+								<th>Keterangan</th>
 								<th class="text-center">Aksi</th>
 						</thead>
 						<tbody>
@@ -213,13 +186,12 @@
 								set p = data_cmd.execute
 								%>
 										<tr><TH><%= recordcounter %></TH>
-										<td><%= Cdate(rs("PDI_Date")) %></td>
-										<td><%= LEFT(rs("PDI_ID"),2) &"-"& mid(rs("PDI_ID"),3,3) &"/"& mid(rs("PDI_ID"),6,4) &"/"& right(rs("PDI_ID"),4)%></td>
 										<td>
-												<%= left(rs("PDI_OJHID"),2) %>-<%= mid(rs("PDI_OJHID"),3,3) %>/<%= mid(rs("PDI_OJHID"),6,4) %>/<%= right(rs("PDI_OJHID"),4)  %>
+											<%= LEFT(rs("PDI_ID"),3) &"-"& MID(rs("PDI_ID"),4,3) &"/"& "DKI-" & LEFT(UCase(rs("DivNama")),3) & "/" & rs("PDI_DepID") & "/" & MID(rs("PDI_ID"),7,4) & "/" & right("00" + cstr(rs("PDI_Revisi")),2)  & "/" &  right(rs("PDI_ID"),3) %>
 										</td>
+										<td><%= Cdate(rs("PDI_Date")) %></td>
 										<td><%= rs("AgenNAme")%></td>
-										<td><%= rs("CustNama") %></td>
+										<td><%= rs("PDI_Keterangan")%></td>
 										<td class="text-center">
 												<div class="btn-group" role="group" aria-label="Basic example">
 														<% if not p.eof then %>
@@ -264,7 +236,7 @@
 											end if
 											if requestrecords <> 0 then 
 									%>
-											<a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&agen=<%=agen%>&cust=<%=cust%>&tgla=<%=tgla%>&tgle=<%=tgle%>">&#x25C4; Prev </a>
+											<a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&agen=<%=agen%>&tgla=<%=tgla%>&tgle=<%=tgle%>">&#x25C4; Prev </a>
 									<% else %>
 											<p class="page-link prev-p">&#x25C4; Prev </p>
 									<% end if %>
@@ -282,9 +254,9 @@
 											end if
 											if Cint(page) = pagelistcounter then
 											%>
-													<a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&cust=<%=cust%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
+													<a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
 											<%else%>
-													<a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&cust=<%=cust%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
+													<a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
 											<%
 											end if
 											pagelist = pagelist + recordsonpage
@@ -300,7 +272,7 @@
 											end if
 											%>
 											<% if(recordcounter > 1) and (lastrecord <> 1) then %>
-													<a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&agen=<%=agen%>&cust=<%=cust%>&tgla=<%=tgla%>&tgle=<%=tgle%>">Next &#x25BA;</a>
+													<a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&agen=<%=agen%>&tgla=<%=tgla%>&tgle=<%=tgle%>">Next &#x25BA;</a>
 											<% else %>
 													<p class="page-link next-p">Next &#x25BA;</p>
 											<% end if %>

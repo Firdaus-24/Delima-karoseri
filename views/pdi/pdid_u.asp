@@ -11,12 +11,12 @@
   data_cmd.ActiveConnection = mm_delima_string
 
   ' header
-  data_cmd.commandTExt = "SELECT dbo.DLK_T_PreDevInspectionH.PDI_ID, dbo.DLK_T_PreDevInspectionH.PDI_Date, dbo.DLK_T_PreDevInspectionH.PDI_PDDID, dbo.DLK_T_PreDevInspectionH.PDI_TFKID, dbo.DLK_T_PreDevInspectionH.PDI_Keterangan,dbo.DLK_M_WebLogin.UserName, dbo.GLB_M_Agen.AgenName, dbo.DLK_T_OrJulH.OJH_ID, dbo.DLK_M_Customer.custNama, HRD_M_Divisi.DIvNama, dbo.DLK_T_PreDevInspectionH.PDI_DepID, dbo.DLK_T_PreDevInspectionH.PDI_Revisi, HRD_M_Departement.DepNama FROM dbo.DLK_M_Customer INNER JOIN dbo.DLK_T_OrJulH ON dbo.DLK_M_Customer.custId = dbo.DLK_T_OrJulH.OJH_CustID RIGHT OUTER JOIN dbo.DLK_T_PreDevInspectionH ON dbo.DLK_T_OrJulH.OJH_ID = dbo.DLK_T_PreDevInspectionH.PDI_OJHID LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_PreDevInspectionH.PDI_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_PreDevInspectionH.PDI_UpdateID = dbo.DLK_M_WebLogin.UserID LEFT OUTER JOIN HRD_M_Divisi ON DLK_T_PreDevInspectionH.PDI_Divid = HRD_M_DIvisi.diviD LEFT OUTER JOIN HRD_M_Departement ON DLK_T_PreDevInspectionH.PDI_DepID = HRD_M_Departement.Depid WHERE (dbo.DLK_T_PreDevInspectionH.PDI_AktifYN = 'Y') AND (dbo.DLK_T_PreDevInspectionH.PDI_ID = '"& id &"')"
+  data_cmd.commandTExt = "SELECT dbo.DLK_T_PreDevInspectionH.*, dbo.HRD_M_Departement.DepNama, dbo.HRD_M_Divisi.DivNama, dbo.GLB_M_Agen.AgenName FROM   dbo.DLK_T_PreDevInspectionH LEFT OUTER JOIN dbo.HRD_M_Divisi ON dbo.DLK_T_PreDevInspectionH.PDI_DivId = dbo.HRD_M_Divisi.DivId LEFT OUTER JOIN dbo.HRD_M_Departement ON dbo.DLK_T_PreDevInspectionH.PDI_DepID = dbo.HRD_M_Departement.DepID LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_PreDevInspectionH.PDI_AgenID = dbo.GLB_M_Agen.AgenID WHERE (dbo.DLK_T_PreDevInspectionH.PDI_AktifYN = 'Y') AND (dbo.DLK_T_PreDevInspectionH.PDI_ID = '"& id &"')"
   set data = data_cmd.execute
 
 
   ' detail
-  data_cmd.commandTExt = "SELECT * FROM DLK_T_PreDevInspectionD WHERE PDI_ID = '"& data("PDI_ID") &"' ORDER BY PDI_Initial ASC"
+  data_cmd.commandTExt = "SELECT * FROM DLK_T_PreDevInspectionD WHERE PDI_ID = '"& data("PDI_ID") &"' ORDER BY PDI_Description ASC"
   set ddata = data_cmd.execute
 
   
@@ -33,13 +33,13 @@
   angka = Request.form("urut") + 1
   end if
 
-  ckey1 = trim(Request.QueryString("ckey1"))
+ condition = trim(Request.QueryString("condition"))
   ckey2 = trim(Request.QueryString("ckey2"))
 
-  if ckey1 <> "" then
-    filterckey1 = "AND UPPER(PDI_Initial) LIKE '%"& ucase(ckey1) &"%'"
+  if condition <> "" then
+    filtercondition = "AND PDI_COndition = '"& ucase(condition) &"'"
   else
-    filterckey1 = ""
+    filtercondition = ""
   end if
   if ckey2 <> "" then
     filterckey2 = "AND UPPER(PDI_Description) LIKE '%"& ucase(ckey2) &"%'"
@@ -50,9 +50,9 @@
   ' untuk data paggination
   page = Request.QueryString("page")
 
-  strquery = "SELECT * FROM DLK_T_PreDevInspectionD WHERE PDI_ID = '"& data("PDI_ID") &"' "& filterckey1 &" "& filterckey2 &" "
+  strquery = "SELECT * FROM DLK_T_PreDevInspectionD WHERE PDI_ID = '"& data("PDI_ID") &"' "& filtercondition &" "& filterckey2 &" "
 
-  orderBy = " ORDER BY PDI_Initial ASC"
+  orderBy = " ORDER BY PDI_Description ASC"
   set rs = Server.CreateObject("ADODB.Recordset")
   sqlawal = strquery
 
@@ -90,7 +90,7 @@
     end if	
   loop
 
-  call header("UPdate Detail PDI")
+  call header("Update Detail PDI")
 %>
 <!--#include file="../../navbar.asp"--> 
 <style>
@@ -167,28 +167,6 @@
       <input type="text" id="tgl" name="tgl" class="form-control" value="<%= left(data("PDI_PDDid"),2) %>-<%= mid(data("PDI_PDDid"),3,3) %>/<%= mid(data("PDI_PDDid"),6,4) %>/<%= mid(data("PDI_PDDid"),10,4) %>/<%= right(data("PDI_PDDid"),3)  %>" readonly>
     </div>
     <div class="col-lg-2 mb-3">
-      <label for="noso" class="col-form-label">No.Sales Order</label>
-    </div>
-    <div class="col-lg-4 mb-3">
-      <input type="text" id="tgl" name="tgl" class="form-control" value="<%= left(data("OJH_ID"),2) %>-<%= mid(data("OJH_ID"),3,3) %>/<%= mid(data("OJH_ID"),6,4) %>/<%= right(data("OJH_ID"),4)  %>" readonly>
-    </div>
-  </div>
-  <div class="row align-items-center">
-    <div class="col-lg-2 mb-3">
-      <label for="tfkid" class="col-form-label">No.Unit</label>
-    </div>
-    <div class="col-lg-4 mb-3">
-      <input type="text" id="tgl" name="tgl" class="form-control" value="<%= LEFT(data("PDI_TFKID"),11) &"/"& MID(data("PDI_TFKID"),12,4) &"/"& MID(data("PDI_TFKID"),16,2) &"/"& Right(data("PDI_TFKID"),3) %>" readonly>
-    </div>
-    <div class="col-lg-2 mb-3">
-      <label for="customer" class="col-form-label">Customer</label>
-    </div>
-    <div class="col-lg-4 mb-3">
-      <input type="text" id="customer" name="customer" class="form-control" value="<%= data("custnama") %>" autocomplete="off" readonly>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-lg-2 mb-3">
       <label for="pdiaddrevisi" class="col-form-label">Refisi Ke -</label>
     </div>
     <div class="col-lg-4 mb-3">
@@ -198,16 +176,18 @@
         <span class="input-group-text p-0 m-0" id="basic-addon2"><button type="button" style="border:none;width:75px;" onclick="updateRevisiPdi()">Update</button></span>
       </div>
     </div>
+  </div>
+  <div class="row">
     <div class="col-lg-2 mb-3">
       <label for="keterangan" class="col-form-label">Keterangan</label>
     </div>
-    <div class="col-lg-4 mb-3">
+    <div class="col-lg-10 mb-3">
       <input type="text" id="keterangan" name="keterangan" class="form-control" value="<%= data("PDI_Keterangan") %>"  autocomplete="off" readonly>
     </div>
   </div>
   <div class="row">
     <div class="col-lg-12 text-center d-flex justify-content-between mb-3">
-      <a href="index.asp" type="button" class="btn btn-danger">Kembali</a>
+      <a href="./" type="button" class="btn btn-danger">Kembali</a>
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDetailPdi">Rincian</button>
     </div>
   </div>
@@ -216,14 +196,19 @@
   <form action="pdid_u.asp?id=<%= id %>" method="get" style="position:relative">
     <span id="key">From Pencarian</span>
     <div class="row formCariPdi">
-      <div class="col-lg-2 mb-3">
-        <label for="ckey1">Initial</label>
+      <div class="col-lg-5 mb-3">
+        <label for="ckey2">Description</label>
         <input type="hidden" class="form-control" name="id" id="id" value="<%= id %>" autocomplete="off" >
-        <input type="text" class="form-control" name="ckey1" id="ckey1" autocomplete="off" >
+        <input type="text" class="form-control" name="ckey2" id="ckey2" autocomplete="off" >
       </div>
-      <div class="col-lg-4 mb-3">
-          <label for="ckey2">Description</label>
-          <input type="text" class="form-control" name="ckey2" id="ckey2" autocomplete="off" >
+      <div class="col-lg-2 mb-3">
+        <label for="condition">Condition</label>
+        <select class="form-select" aria-label="Default select example" name="condition" id="condition">
+          <option value="">Pilih</option>
+          <option value="G">Good</option>
+          <option value="B">Bad</option>
+          <option value="N">Not</option>
+        </select>        
       </div>
       <div class="col-lg-2 mt-4 mb-3">
         <button type="submit" class="btn btn-secondary">Cari</button>
@@ -237,7 +222,6 @@
         <thead class="">
           <tr>
             <th scope="col" rowspan="2" class="text-center">No</th>
-            <th scope="col" rowspan="2" class="text-center">Inisial</th>
             <th scope="col" rowspan="2" class="text-center">Description</th>
             <th scope="col" colspan="3" class="text-center">Condition</th>
             <th scope="col" rowspan="2" class="text-center">Aksi</th>
@@ -257,33 +241,32 @@
           %>
           <tr>
             <th scope="row" class="text-center"><%= recordcounter %></th>
-            <td><%= rs("PDI_Initial") %></td>
             <td><%= rs("PDI_description") %></td>
               <!-- cek kondisi -->
               <td class="text-center">
                 <%if rs("PDI_Condition") = "G" then %>
                   <i class="bi bi-check-lg text-success"></i>
                 <% else %>
-                   <span onclick="ckUpdateCondition('<%=rs("PDI_id")%>', '<%= rs("PDI_Initial") %>', 'G')"><i class="bi bi-x-lg text-danger"></i></span>
+                   <span onclick="ckUpdateCondition('<%=rs("PDI_id")%>', '<%= rs("PDI_Description") %>', 'G')"><i class="bi bi-x-lg text-danger"></i></span>
                 <% end if %>
               </td>
               <td class="text-center">
                 <%if rs("PDI_Condition") = "B" then %>
                   <i class="bi bi-check-lg text-success"></i>
                 <% else %>
-                   <span onclick="ckUpdateCondition('<%=rs("PDI_id")%>', '<%= rs("PDI_Initial") %>', 'B')"><i class="bi bi-x-lg text-danger"></i></span>
+                   <span onclick="ckUpdateCondition('<%=rs("PDI_id")%>', '<%= rs("PDI_Description") %>', 'B')"><i class="bi bi-x-lg text-danger"></i></span>
                 <% end if %>
               </td>
               <td class="text-center">
                 <%if rs("PDI_Condition") = "N" then %>
                   <i class="bi bi-check-lg text-success"></i>
                 <% else %>
-                   <span onclick="ckUpdateCondition('<%=rs("PDI_id")%>', '<%= rs("PDI_Initial") %>', 'N')"><i class="bi bi-x-lg text-danger"></i></span>
+                   <span onclick="ckUpdateCondition('<%=rs("PDI_id")%>', '<%= rs("PDI_Description") %>', 'N')"><i class="bi bi-x-lg text-danger"></i></span>
                 <% end if %>
               </td>
             <td class="text-center">
               <div class="btn-group" role="group" aria-label="Basic example">
-                <a href="aktifd.asp?id=<%= rs("PDI_ID") %>&init=<%= rs("PDI_Initial") %>&p=pdid_u" class="btn badge text-bg-danger" onclick="deleteItem(event,'hapus detail PDI')">Delete</a>
+                <a href="aktifd.asp?id=<%= rs("PDI_ID") %>&init=<%= rs("PDI_Description") %>&p=pdid_u" class="btn badge text-bg-danger" onclick="deleteItem(event,'hapus detail PDI')">Delete</a>
               </div>
             </td>
           </tr>
@@ -316,7 +299,7 @@
             end if
             if requestrecords <> 0 then 
           %>
-            <a class="page-link prev" href="pdid_u.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&id=<%=id%>">&#x25C4; Prev </a>
+            <a class="page-link prev" href="pdid_u.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&id=<%=id%>&ckey2=<%=ckey2%>&condition=<%=condition%>">&#x25C4; Prev </a>
           <% else %>
             <p class="page-link prev-p">&#x25C4; Prev </p>
           <% end if %>
@@ -334,9 +317,9 @@
           end if
           if Cint(page) = pagelistcounter then
           %>
-            <a class="page-link hal bg-primary text-light" href="pdid_u.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&id=<%=id%>"><%= pagelistcounter %></a> 
+            <a class="page-link hal bg-primary text-light" href="pdid_u.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&id=<%=id%>&ckey2=<%=ckey2%>&condition=<%=condition%>"><%= pagelistcounter %></a> 
           <%else%>
-            <a class="page-link hal" href="pdid_u.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&id=<%=id%>"><%= pagelistcounter %></a> 
+            <a class="page-link hal" href="pdid_u.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&id=<%=id%>&ckey2=<%=ckey2%>&condition=<%=condition%>"><%= pagelistcounter %></a> 
           <%
           end if
           pagelist = pagelist + recordsonpage
@@ -352,7 +335,7 @@
             end if
             %>
             <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-              <a class="page-link next" href="pdid_u.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&id=<%=id%>">Next &#x25BA;</a>
+              <a class="page-link next" href="pdid_u.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&id=<%=id%>&ckey2=<%=ckey2%>&condition=<%=condition%>">Next &#x25BA;</a>
             <% else %>
               <p class="page-link next-p">Next &#x25BA;</p>
             <% end if %>
@@ -375,12 +358,6 @@
       <form action="pdid_u.asp?id=<%= data("PDI_ID") %>" method="post">
       <input type="hidden" name="id" value="<%= data("PDI_ID") %>">
       <div class="modal-body">
-        <div class="mb-3 row">
-          <label for="initial" class="col-sm-3 col-form-label">Initial</label>
-          <div class="col-sm-5">
-            <input type="text" class="form-control" id="initial" name="initial" maxlength="5" required>
-          </div>
-        </div>
         <div class="mb-3 row">
           <label for="desc" class="col-sm-3 col-form-label">Description</label>
           <div class="col-sm-9">

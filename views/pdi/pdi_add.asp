@@ -84,40 +84,13 @@
         <option value="" readonly disabled>Pilih Cabang dahulu</option>
       </select>
     </div>
-    <div class="col-lg-2 mb-3">
-      <label for="noso" class="col-form-label">No.Sales Order</label>
-    </div>
-    <div class="col-lg-4 mb-3 pdiojhid">
-      <select class="form-select" aria-label="Default select example" name="noso" id="noso" > 
-        <option value="" readonly disabled>Pilih Cabang dahulu</option>
-      </select>
-    </div>
-  </div>
-  <div class="row align-items-center">
-    <div class="col-lg-2 mb-3">
-      <label for="tfkid" class="col-form-label">No.Unit</label>
-    </div>
-    <div class="col-lg-4 mb-3 contentTfk">
-      <select class="form-select" aria-label="Default select example" id="tfkid" name="tfkid" required>
-        <option value="" readonly disabled>Pilih No Sales Order dahulu</option>
-      </select>
-    </div>
-    <div class="col-lg-2 mb-3">
-      <label for="refisi" class="col-form-label">Refisi Ke -</label>
-    </div>
-    <div class="col-lg-4 mb-3">
-      <input type="number" id="refisi" name="refisi" class="form-control" autocomplete="off" required>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-lg-2 mb-3">
+     <div class="col-lg-2 mb-3">
       <label for="keterangan" class="col-form-label">Keterangan</label>
     </div>
-    <div class="col-lg-10 mb-3">
+    <div class="col-lg-4 mb-3">
       <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="100" autocomplete="off" required>
     </div>
   </div>
-
   <div class="row">
     <div class="col-lg-12 text-center">
       <a href="index.asp" type="button" class="btn btn-danger">Kembali</a>
@@ -125,6 +98,15 @@
     </div>
   </div>
   </form>
+  <hr style="border-top: 1px dotted red;">
+   <footer style="font-size: 10px; text-align: center;">
+      <p style="margin:0;padding:0;"> 		
+         PT.DELIMA KAROSERI INDONESIA
+      </p>
+      <p style="text-transform: capitalize; color: #000;margin:0;padding:0;">User Login : <%= session("username") %>  | Cabang : <%= session("cabang") %> | <a href="<%=url%>logout.asp" target="_self">Logout</a></p>
+      <p style="margin:0;padding:0;">Copyright MuhamadFirdausIT Division©2022-2023S.O.No.Bns.Wo.Instv</p>
+      <p style="margin:0;padding:0;"> V.1 Mobile Responsive 2022 | V.2 On Progres 2023</p>
+   </footer>
 </div>  
 <% 
   if Request.ServerVariables("REQUEST_METHOD") = "POST" then 

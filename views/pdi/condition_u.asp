@@ -14,12 +14,12 @@
   set p = data_cmd.execute
 
   if not p.eof then
-    data_cmd.commandTExt = "SELECT * FROM DLK_T_PreDevInspectionD WHERE PDI_ID = '"& id &"' AND PDI_Initial = '"& initial &"'"
+    data_cmd.commandTExt = "SELECT * FROM DLK_T_PreDevInspectionD WHERE PDI_ID = '"& id &"' AND PDI_Description = '"& initial &"'"
     ' response.write data_cmd.commandText 
     set detail = data_cmd.execute
 
     if not detail.eof then
-      call query("UPDATE DLK_T_PreDevInspectionD SET PDI_Condition = '"& condition &"' WHERE PDI_ID = '"& id &"' AND PDI_Initial = '"& initial &"'")
+      call query("UPDATE DLK_T_PreDevInspectionD SET PDI_Condition = '"& condition &"' WHERE PDI_ID = '"& id &"' AND PDI_Description = '"& initial &"'")
       hasil = "data berhasil diupdate!!"
     else
       hasil = "data tidak terdaftar!!!"

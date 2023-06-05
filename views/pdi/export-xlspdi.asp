@@ -10,12 +10,12 @@
   data_cmd.ActiveConnection = mm_delima_string
 
   ' header
-  data_cmd.commandTExt = "SELECT dbo.DLK_T_PreDevInspectionH.PDI_ID, dbo.DLK_T_PreDevInspectionH.PDI_Date, dbo.DLK_T_PreDevInspectionH.PDI_PDDID, dbo.DLK_T_PreDevInspectionH.PDI_TFKID, dbo.DLK_T_PreDevInspectionH.PDI_Keterangan,dbo.DLK_M_WebLogin.UserName, dbo.GLB_M_Agen.AgenName, dbo.DLK_T_OrJulH.OJH_ID, dbo.DLK_M_Customer.custNama, HRD_M_Divisi.DIvNama, dbo.DLK_T_PreDevInspectionH.PDI_DepID, dbo.DLK_T_PreDevInspectionH.PDI_Revisi, HRD_M_Departement.DepNama FROM dbo.DLK_M_Customer INNER JOIN dbo.DLK_T_OrJulH ON dbo.DLK_M_Customer.custId = dbo.DLK_T_OrJulH.OJH_CustID RIGHT OUTER JOIN dbo.DLK_T_PreDevInspectionH ON dbo.DLK_T_OrJulH.OJH_ID = dbo.DLK_T_PreDevInspectionH.PDI_OJHID LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_PreDevInspectionH.PDI_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_PreDevInspectionH.PDI_UpdateID = dbo.DLK_M_WebLogin.UserID LEFT OUTER JOIN HRD_M_Divisi ON DLK_T_PreDevInspectionH.PDI_Divid = HRD_M_DIvisi.diviD LEFT OUTER JOIN HRD_M_Departement ON DLK_T_PreDevInspectionH.PDI_DepID = HRD_M_Departement.Depid WHERE (dbo.DLK_T_PreDevInspectionH.PDI_AktifYN = 'Y') AND (dbo.DLK_T_PreDevInspectionH.PDI_ID = '"& id &"')"
+  data_cmd.commandTExt = "SELECT dbo.DLK_T_PreDevInspectionH.*, dbo.HRD_M_Departement.DepNama, dbo.HRD_M_Divisi.DivNama, dbo.GLB_M_Agen.AgenName FROM   dbo.DLK_T_PreDevInspectionH LEFT OUTER JOIN dbo.HRD_M_Divisi ON dbo.DLK_T_PreDevInspectionH.PDI_DivId = dbo.HRD_M_Divisi.DivId LEFT OUTER JOIN dbo.HRD_M_Departement ON dbo.DLK_T_PreDevInspectionH.PDI_DepID = dbo.HRD_M_Departement.DepID LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_PreDevInspectionH.PDI_AgenID = dbo.GLB_M_Agen.AgenID WHERE (dbo.DLK_T_PreDevInspectionH.PDI_AktifYN = 'Y') AND (dbo.DLK_T_PreDevInspectionH.PDI_ID = '"& id &"')"
   set data = data_cmd.execute
 
 
   ' detail
-  data_cmd.commandTExt = "SELECT * FROM DLK_T_PreDevInspectionD WHERE PDI_ID = '"& data("PDI_ID") &"' ORDER BY PDI_Initial ASC"
+  data_cmd.commandTExt = "SELECT * FROM DLK_T_PreDevInspectionD WHERE PDI_ID = '"& data("PDI_ID") &"' ORDER BY PDI_Description ASC"
   set rs = data_cmd.execute
 
   Response.ContentType = "application/vnd.ms-excel"
@@ -49,13 +49,13 @@
     <td colspan="2">
       Cabang / Agen
     </td>
-    <td>
+    <td colspan="2">
       : <%= data("AgenName") %>
     </td>
     <td colspan="2">
       Tanggal
     </td>
-    <td>
+    <td colspan="2">
       : <%= Cdate(data("PDI_Date")) %>
     </td>
   </tr>
@@ -63,13 +63,13 @@
     <td colspan="2">
       Divisi
     </td>
-    <td>
+    <td colspan="2"> 
       : <%= data("divNama") %>
     </td>
     <td colspan="2">
       Departement
     </td>
-    <td>
+    <td colspan="2">
       : <%= data("depNama") %>
     </td>
   </tr>
@@ -77,41 +77,21 @@
     <td colspan="2">
       No.Produksi
     </td>
-    <td>
+    <td colspan="2">
       : <%= left(data("PDI_PDDid"),2) %>-<%= mid(data("PDI_PDDid"),3,3) %>/<%= mid(data("PDI_PDDid"),6,4) %>/<%= mid(data("PDI_PDDid"),10,4) %>/<%= right(data("PDI_PDDid"),3)  %>
     </td>
     <td colspan="2">
-      Sales Order
-    </td>
-    <td>
-      : <%= left(data("OJH_ID"),2) %>-<%= mid(data("OJH_ID"),3,3) %>/<%= mid(data("OJH_ID"),6,4) %>/<%= right(data("OJH_ID"),4)  %>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2">
-      No.Unit
-    </td>
-    <td>
-      : <%= LEFT(data("PDI_TFKID"),11) &"/"& MID(data("PDI_TFKID"),12,4) &"/"& MID(data("PDI_TFKID"),16,2) &"/"& Right(data("PDI_TFKID"),3) %>
-    </td>
-    <td colspan="2">
-      Customer
-    </td>
-    <td>
-      : <%= data("custnama") %>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2">
       Refisi Ke -
     </td>
-    <td>
+    <td colspan="2">
       : <%= data("PDI_Revisi") %>
     </td>
+  </tr>
+  <tr>
     <td colspan="2">
       Keterangan
     </td>
-    <td>
+    <td colspan="2">
       : <%= data("PDI_Keterangan") %>
     </td>
   </tr>
@@ -120,7 +100,6 @@
   </tr>
   <tr>
     <th scope="col" rowspan="2" class="borderd">No</th>
-    <th scope="col" rowspan="2" class="borderd">Inisial</th>
     <th scope="col" rowspan="2" class="borderd">Description</th>
     <th scope="col" colspan="3" class="borderd">Condition</th>
     <tr>
@@ -137,7 +116,6 @@
   %>
   <tr>
     <th scope="row" class="tbody"><%= no %></th>
-    <td class="tbody"><%= rs("PDI_Initial") %></td>
     <td class="tbody"><%= rs("PDI_description") %></td>
       <!-- cek kondisi -->
       <td class="tbody" style="text-align:center">
