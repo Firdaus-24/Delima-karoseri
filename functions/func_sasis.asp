@@ -7,7 +7,7 @@ sub tambahSasis()
    height = trim(Request.Form("height"))
    widht = trim(Request.Form("widht"))
    keterangan = trim(Request.Form("keterangan"))
-
+   
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
 
@@ -16,7 +16,19 @@ sub tambahSasis()
    set data= data_cmd.execute
 
    if data.eof then
-      call query("exec sp_AddDLK_M_Sasis '"& idclass &"', '"& brand &"','"& ttype &"','"& dlong &"', '"& widht &"', '"& height &"', '"& keterangan &"', '', '', '"& session("userID") &"'")
+      data_cmd.commandTExt =  "exec sp_AddDLK_M_Sasis '"& idclass &"', '"& brand &"','"& ttype &"','"& dlong &"', '"& widht &"', '"& height &"', '"& keterangan &"', '', '', '"& session("userID") &"'"
+
+      set p = data_cmd.execute
+
+      id = p("ID")
+
+
+      'create folder
+      set filesys=CreateObject("Scripting.FileSystemObject")
+      If  Not filesys.FolderExists(pathDoc & id) Then      
+         filesys.CreateFolder (pathDoc & id)   
+      End If
+      
       call alert("MATER SASIS", "berhasil di tambahkan", "success","sasis_add.asp") 
    else
       call alert("MATER SASIS", "sudah terdaftar!!", "error","sasis_add.asp") 

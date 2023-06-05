@@ -198,10 +198,11 @@
                            <% 
                            if rs("SasisDrawing") <> "" then
                            %>
-                              <a href="uploadDrawing.asp?id=<%= rs("SasisID") %>&t=stack&db=SasisDrawing" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
-                              <a href="openPdf.asp?id=<%= rs("SasisID") %>&p=draw" class="btn badge text-bg-light" target="_blank"><i class="bi bi-caret-right"></i></a>
+                              <a href="uploadDrawing.asp?id=<%= "D"&rs("SasisID") %>&pathidh=<%= rs("SasisID") %>&db=SasisDrawing" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
+
+                              <a href="<%= getpathdoc & rs("SasisID") &"/"& rs("SasisDrawing") & ".pdf"%>" class="btn badge text-bg-light" target="_blank"><i class="bi bi-caret-right"></i></a>
                            <%else%>
-                              <a href="uploadDrawing.asp?id=<%= rs("SasisID") %>&t=stack&db=SasisDrawing" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
+                              <a href="uploadDrawing.asp?id=<%= "D"&rs("SasisID") %>&pathidh=<%= rs("SasisID") %>&db=SasisDrawing" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
                            <%end if
                            set fs = Nothing
                            %>
@@ -210,10 +211,10 @@
                            <% 
                            if rs("SasisSKRB") <> "" then
                            %>
-                              <a href="uploadDrawing.asp?id=<%= rs("SasisID") %>&t=pdf&db=SasisSKRB" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
-                              <a href="openPdf.asp?id=<%= rs("SasisID") %>&p=skrb" class="btn badge text-bg-light" target="_blank"><i class="bi bi-caret-right"></i></a>
+                              <a href="uploadDrawing.asp?id=<%= "S"&rs("SasisID") %>&pathidh=<%= rs("SasisID") %>&db=SasisSKRB" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
+                              <a href="<%= getpathdoc & rs("SasisID") &"/"& rs("SasisSKRB") & ".pdf"%>" class="btn badge text-bg-light" target="_blank"><i class="bi bi-caret-right"></i></a>
                            <%else%>
-                              <a href="uploadDrawing.asp?id=<%= rs("SasisID") %>&t=pdf&db=SasisSKRB" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
+                              <a href="uploadDrawing.asp?id=<%= "S"&rs("SasisID") %>&pathidh=<%= rs("SasisID") %>&db=SasisSKRB" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
                            <%end if
                            set fs = Nothing
                            %>
