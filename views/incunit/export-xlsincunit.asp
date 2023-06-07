@@ -14,137 +14,109 @@
   data_cmd.commandTExt = "SELECT DLK_T_IncRepairD.*, DLK_M_Weblogin.username FROM DLK_T_IncRepairD LEFT OUTER JOIN DLK_M_Weblogin ON DLK_T_IncRepairD.IRD_Updateid = DLK_M_Weblogin.userid WHERE LEFT(IRD_IRHID,13) = '"& data("IRH_ID") &"' ORDER BY IRD_IRHID"
   set ddata = data_cmd.execute
 
-  Response.ContentType = "application/vnd.ms-excel"
-  Response.AddHeader "content-disposition", "filename=Material Receipt Produksi "& LEFT(data("IRH_ID"),4) &"-"& mid(data("IRH_ID"),5,3) &"/"& mid(data("IRH_ID"),8,4) &"/"& right(data("IRH_ID"),2)&" .xls"
-
+  call header("Media Print")
 %>
-<style>
-.td{
-  border:1px solid black;
-  border:collapse;
-}
-</style>
+<link href="../../public/css/incunit.css" rel="stylesheet" />
 
-<table width="100" style="font-size:16px;font-family:arial">
-  <tr>
-    <th colspan="5" style="text-align:center;font-size:18px" >
-      DETAIL INCOMMING UNIT INSPECTION
-    </th>
-  </tr>
-  <tr>
-    <th colspan="5" style="text-align:center;font-size:18px">
-      <%= LEFT(data("IRH_ID"),4) &"-"& mid(data("IRH_ID"),5,3) &"/"& mid(data("IRH_ID"),8,4) &"/"& right(data("IRH_ID"),2) %>
-    </th>
-  </tr>
-  <tr>
-    <td align="left" class="td">
-      Tanggal
-    </td>
-    <td align="left" class="td">
-      : <%= Cdate(data("IRH_Date")) %>
-    </td>
-    <td align="left" class="td">
-      Cabang
-    </td>
-    <td align="left" class="td" colspan="2">
-      : <%= data("agenname") %>
-    </td>
-  </tr>
-  <tr>
-    <td align="left" class="td">
+<body onload="window.print()"> 
+  <div class="rowIncrd gambar">
+    <div class="col ">
+      <img src="<%= url %>/public/img/delimalogo.png" alt="delimalogo">
+    </div>
+  </div>
+  <div class='labelHeaderIncr'>
+    <span><h3>INCOMMING UNIT INSPECTION</h3></span>
+    <span><h3><%= LEFT(data("IRH_ID"),4) &"-"& mid(data("IRH_ID"),5,3) &"/"& mid(data("IRH_ID"),8,4) &"/"& right(data("IRH_ID"),2) %></h3></span>
+  </div>
+  <div class='rowIncrd'>
+    <span>Tanggal</span>
+    <span>: <%= Cdate(data("IRH_Date")) %></span>
+    <span>Cabang</span>
+    <span>: <%= data("agenname") %></span>
+  </div>
+  <div class="rowIncrd">
+    <span>
       No.Penerimaan Unit
-    </td>
-    <td align="left" class="td">
+    </span>
+    <span>
       : <%= LEFT(data("IRH_TFKID"),11) &"/"& MID(data("IRH_TFKID"),12,4) &"/"& MID(data("IRH_TFKID"),16,2) &"/"& right(data("IRH_TFKID"),3) %>
-    </td>
-    <td align="left" class="td">
+    </span>
+    <span>
       Customer
-    </td>
-    <td align="left" class="td" colspan="2">
+    </span>
+    <span>
       : <%= data("custnama") %>
-    </td>
-  </tr>
-  <tr>
-    <td align="left" class="td">
-      Start Date
-    </td>
-    <td align="left" class="td">
-      : <%= Cdate(data("IRH_Startdate")) %>
-    </td>
-    <td align="left" class="td">
-      End Date
-    </td>
-    <td align="left" class="td" colspan="2">
-      : <%= Cdate(data("IRH_Enddate")) %>
-    </td>
-  </tr>
-  <tr>
-    <td align="left" class="td">
+    </span>
+  </div>
+  <div class="rowIncrd">
+    <span>
       Keterangan
-    </td>
-    <td align="left" class="td" colspan="4">
+    </span>
+    <span>
       : <%= data("IRH_Keterangan") %>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" colspan="5">
+    </span>
+  </div>
+  <div style="margin-top:10px">
+    <span>
       GENERAL PICTURE
-    </td>
-  </tr>
-  <tr rowspan="2" >
-    <td class="td">
-      <%if data("IRH_Img1") <> "" then%><img src="<%= url %>views/incunit/img/<%= data("IRH_IMG1") %>.jpg" class="rounded" alt="<%= data("IRH_Img1") %>" width="30" height="50"> <% end if%>
-    </td>
-    <td class="td">
-      <%if data("IRH_Img2") <> "" then%><img src="<%= url %>views/incunit/img/<%= data("IRH_IMG2") %>.jpg" class="rounded" alt="<%= data("IRH_Img2") %>" width="30" height="50"> <% end if%>
-    </td>
-    <td class="td">
-      <%if data("IRH_Img3") <> "" then%><img src="<%= url %>views/incunit/img/<%= data("IRH_IMG3") %>.jpg" class="rounded" alt="<%= data("IRH_Img3") %>" width="30" height="50"> <% end if%>
-    </td>
-    <td class="td">
-      <%if data("IRH_Img4") <> "" then%><img src="<%= url %>views/incunit/img/<%= data("IRH_IMG4") %>.jpg" class="rounded" alt="<%= data("IRH_Img4") %>" width="30" height="50"> <% end if%>
-    </td>
-    <td class="td">
-      <%if data("IRH_Img5") <> "" then%><img src="<%= url %>views/incunit/img/<%= data("IRH_IMG5") %>.jpg" class="rounded" alt="<%= data("IRH_Img5") %>" width="30" height="50"> <% end if%>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="5">&nbsp</td>
-  </tr>
-  <tr>
-    <th class="td">No</th>
-    <th class="td">Image</th>
-    <th class="td">Descripsi</th>
-    <th class="td">Remarks</th>
-    <th class="td">Update Name</th>
-  </tr>
-  <% 
-  no = 0
-  do while not ddata.eof 
-  no = no + 1
-  %>
+    </span>
+  </div>
+  <div class="imgwrapper" >
+    <div>
+      <%if data("IRH_Img1") <> "" then%><img src="<%= getpathdoc %>/<%= data("IRH_ID") %>/<%= data("IRH_IMG1") %>.jpg" class="rounded" alt="<%= data("IRH_Img1") %>" width="50" height="70"> <% end if%> Image 1
+    </div>
+    <div>
+      <%if data("IRH_Img2") <> "" then%><img src="<%= getpathdoc %>/<%= data("IRH_ID") %>/<%= data("IRH_IMG2") %>.jpg" class="rounded" alt="<%= data("IRH_Img2") %>" width="50" height="70"> <% end if%> Image 2
+    </div>
+    <div>
+      <%if data("IRH_Img3") <> "" then%><img src="<%= getpathdoc %>/<%= data("IRH_ID") %>/<%= data("IRH_IMG3") %>.jpg" class="rounded" alt="<%= data("IRH_Img3") %>" width="50" height="70"> <% end if%> Image 3
+    </div>
+    <div>
+      <%if data("IRH_Img4") <> "" then%><img src="<%= getpathdoc %>/<%= data("IRH_ID") %>/<%= data("IRH_IMG4") %>.jpg" class="rounded" alt="<%= data("IRH_Img4") %>" width="50" height="70"> <% end if%> Image 4
+    </div>
+    <div>
+      <%if data("IRH_Img5") <> "" then%><img src="<%= getpathdoc %>/<%= data("IRH_ID") %>/<%= data("IRH_IMG5") %>.jpg" class="rounded" alt="<%= data("IRH_Img5") %>" width="50" height="70"> <% end if%> Image 5
+    </div>
+  </div>
+
+
+  <table class="tableIncrd">
     <tr>
-      <td class="td">
-        <%= no  %>
-      </td>
-      <td class="td">
-        <% if ddata("IRD_Img") <> "" then %>
-          <img src="<%= url %>/views/incunit/img/<%= ddata("IRD_Img") %>.jpg" width="20" height="40">
-        <%end if%>
-      </td>
-      <td class="td">
-        <%= ddata("IRD_Description") %>
-      </td>
-      <td class="td">
-        <%= ddata("IRD_Remarks")%>
-      </td>
-      <td class="td">
-        <%= ddata("username")%>
-      </td>
+      <th>No</th>
+      <th>Image</th>
+      <th>Descripsi</th>
+      <th>Remarks</th>
+      <th>Update Name</th>
     </tr>
-  <% 
-  response.flush
-  ddata.movenext
-  loop
-  %>
-</table>
+    <% 
+    no = 0
+    do while not ddata.eof 
+    no = no + 1
+    %>
+      <tr>
+        <td>
+          <%= no  %>
+        </td>
+        <td>
+          <% if ddata("IRD_Img") <> "" then %>
+            <img src="<%= getpathdoc %>/<%= data("IRH_ID") %>/<%= ddata("IRD_Img") %>.jpg" width="40" style="padding:5px;">
+          <%end if%>
+        </td>
+        <td>
+          <%= ddata("IRD_Description") %>
+        </td>
+        <td>
+          <%= ddata("IRD_Remarks")%>
+        </td>
+        <td>
+          <%= ddata("username")%>
+        </td>
+      </tr>
+    <% 
+    response.flush
+    ddata.movenext
+    loop
+    %>
+  </table>
+</body>
+<% call footer()%>

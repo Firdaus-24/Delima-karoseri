@@ -63,21 +63,6 @@
         <input type="text" id="customer-incomingunit" name="customer" class="form-control" required readonly>
       </div>
     </div>
-    <div class="row align-items-center">
-      <div class="col-lg-2 mb-2">
-        <label for="startdate" class="col-form-label">Start Date</label>
-      </div>
-      <div class="col-lg-4 mb-2">
-        <input type="date" id="startdate" name="startdate" class="form-control" required>
-      </div>
-      <div class="col-lg-2 mb-2">
-        <label for="enddate" class="col-form-label">End Date</label>
-      </div>
-      <div class="col-lg-4 mb-2">
-        <input type="date" id="enddate" name="enddate" class="form-control" required>
-      </div>
-      
-    </div>
     <div class="row">
       <div class="col-lg-2 mb-2">
         <label for="keterangan" class="col-form-label">Keterangan</label>

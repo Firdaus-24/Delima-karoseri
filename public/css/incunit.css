@@ -1,0 +1,101 @@
+* {
+    font-size: 12px;
+}
+
+body {
+    margin: 10px;
+}
+
+.border {
+    border: 1px solid black;
+}
+
+.labelHeaderIncr {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 80px;
+    align-items: center;
+    line-height: 10px;
+    font-size: 12px;
+    margin-top: 30px;
+}
+
+.gambar {
+    width: 90px;
+    height: 80px;
+    position: absolute;
+    right: 70px;
+    line-height: 10px;
+}
+
+.gambar img {
+    position: absolute;
+    width: 90px;
+    height: 50px;
+}
+
+.rowIncrd {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 10px;
+    row-gap: 1em;
+}
+
+.imgwrapper {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-auto-rows: minmax(90px, auto);
+    align-items: center;
+    margin: auto;
+}
+
+.imgwrapper div {
+    border: 1px solid black;
+    padding: 10px;
+    align-items: center;
+}
+
+.tableIncrd {
+    font-size: 12px;
+    margin-top: 10px;
+    border-collapse: collapse;
+    text-align: center;
+    width: 100%;
+}
+
+.tableIncrd,
+td,
+th {
+    border: 1px solid black;
+}
+
+@page {
+    size: A4 portrait;
+    margin: 5mm;
+}
+
+@media print {
+
+    html,
+    body {
+        width: 210mm;
+        height: 297mm;
+    }
+
+    .imgwrapper {
+        grid-template-columns: repeat(5, 150px);
+    }
+
+    .tableIncrd {
+        width: 97%;
+        page-break-inside: auto;
+    }
+
+    .tableIncrd tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+
+    /* ... the rest of the rules ... */
+}

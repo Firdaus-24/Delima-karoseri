@@ -136,7 +136,7 @@
       <label for="tfkid" class="col-form-label">No.Penerimaan Unit</label>
     </div>
     <div class="col-lg-4 mb-2">
-      <input type="text" id="" name="tfkid" class="form-control" value="<%= LEFT(data("IRH_TFKID"),11) &"/"& MID(data("IRH_TFKID"),12,4) &"/"& MID(data("IRH_TFKID"),16,2) &"/"& right(data("IRH_TFKID"),3) %>" onclick="window.open('<%=url%>views/serteruni/detailD1.asp?id=<%= data("IRH_TFKID")%>&tfk_u')" style="cursor:pointer" readonly>
+      <input type="text" id="" name="tfkid" class="form-control" value="<%= LEFT(data("IRH_TFKID"),11) &"/"& MID(data("IRH_TFKID"),12,4) &"/"& MID(data("IRH_TFKID"),16,2) &"/"& right(data("IRH_TFKID"),3) %>" onclick="window.open('<%=url%>views/serteruni/detailD1.asp?id=<%= data("IRH_TFKID")%>&p=tfkd_u')" style="cursor:pointer" readonly>
     </div>
     <div class="col-lg-2 mb-2">
       <label for="customer" class="col-form-label">Customer</label>
@@ -145,21 +145,7 @@
       <input type="text" id="" name="customer" class="form-control" value="<%= data("custnama") %>" readonly>
     </div>
   </div>
-  <div class="row align-items-center">
-    <div class="col-lg-2 mb-2">
-      <label for="startdate" class="col-form-label">Start Date</label>
-    </div>
-    <div class="col-lg-4 mb-2">
-      <input type="text" id="startdate" name="startdate" class="form-control" value="<%= Cdate(data("IRH_Startdate")) %>" readonly>
-    </div>
-    <div class="col-lg-2 mb-2">
-      <label for="enddate" class="col-form-label">End Date</label>
-    </div>
-    <div class="col-lg-4 mb-2">
-      <input type="text" id="enddate" name="enddate" class="form-control" value="<%= Cdate(data("IRH_Enddate")) %>" readonly>
-    </div>
-    
-  </div>
+ 
   <div class="row">
     <div class="col-lg-2 mb-2">
       <label for="keterangan" class="col-form-label">Keterangan</label>

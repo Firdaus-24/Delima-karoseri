@@ -128,14 +128,14 @@
     <div class="col-lg-4 mb-3">
         <label>Customer</label>
         <select class="form-select" aria-label="Default select example" name="customer" id="customer">
-            <option value="">Pilih</option>
-            <% do while not custData.eof %>
-            <option value="<%= custData("custid") %>"><%= custData("custnama") %></option>
-            <% 
-            response.flush
-            custData.movenext
-            loop
-            %>
+          <option value="">Pilih</option>
+          <% do while not custData.eof %>
+          <option value="<%= custData("custid") %>"><%= custData("custnama") %></option>
+          <% 
+          response.flush
+          custData.movenext
+          loop
+          %>
         </select>
       </div>
     <div class="col-lg-4 mb-3">

@@ -3,8 +3,6 @@
     tgl = trim(Request.Form("tgl"))
     cabang = trim(Request.Form("cabang"))
     tfkid = trim(replace(Request.Form("tfkid"),"/",""))
-    startdate = trim(Request.Form("startdate"))
-    enddate = trim(Request.Form("enddate"))
     keterangan = trim(Request.Form("keterangan"))
 
     set data_cmd = Server.CreateObject ("ADODB.Command")
@@ -14,7 +12,7 @@
     set data = data_cmd.execute
 
     if data.eof then
-      data_cmd.commandText = "exec sp_AddDLK_T_IncRepairH '"& cabang &"', '"& tfkid &"', '"& tgl &"', '"& startdate &"', '"& enddate &"', '"& keterangan &"', '"& session("userid") &"' "
+      data_cmd.commandText = "exec sp_AddDLK_T_IncRepairH '"& cabang &"', '"& tfkid &"', '"& tgl &"', '"& keterangan &"', '"& session("userid") &"' "
       ' response.write data_cmd.commandText & "<br>"
       set p = data_cmd.execute
 

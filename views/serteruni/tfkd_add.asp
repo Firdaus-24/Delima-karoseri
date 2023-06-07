@@ -174,7 +174,7 @@
               <input type="text" id="type" class="form-control" name="type" maxlength="20" required>
             </td>
             <td>
-              <input type="text" id="polisi" class="form-control" name="polisi" maxlength="10" required>
+              <input type="text" id="polisi" class="form-control" name="polisi" maxlength="10">
             </td>
             <td>
               <input type="text" id="rangka" class="form-control" name="rangka" maxlength="20" required>

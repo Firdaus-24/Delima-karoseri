@@ -140,21 +140,6 @@
       <input type="text" id="" name="customer" class="form-control" value="<%= data("custnama") %>" readonly>
     </div>
   </div>
-  <div class="row align-items-center">
-    <div class="col-lg-2 mb-2">
-      <label for="startdate" class="col-form-label">Start Date</label>
-    </div>
-    <div class="col-lg-4 mb-2">
-      <input type="text" id="startdate" name="startdate" class="form-control" value="<%= Cdate(data("IRH_Startdate")) %>" readonly>
-    </div>
-    <div class="col-lg-2 mb-2">
-      <label for="enddate" class="col-form-label">End Date</label>
-    </div>
-    <div class="col-lg-4 mb-2">
-      <input type="text" id="enddate" name="enddate" class="form-control" value="<%= Cdate(data("IRH_Enddate")) %>" readonly>
-    </div>
-    
-  </div>
   <div class="row">
     <div class="col-lg-2 mb-2">
       <label for="keterangan" class="col-form-label">Keterangan</label>
@@ -172,35 +157,35 @@
     <div class="col-md mx-1 mb-3 position-relative generaPictured">
       <%if data("IRH_Img1") <> "" then%>
         <div class="position-absolute top-50 start-50 translate-middle">
-          <img src="<%= url %>views/incunit/img/<%= data("IRH_IMG1") %>.jpg" class="rounded" alt="<%= data("IRH_Img1") %>">
+          <img src="<%= getpathdoc %>/<%= data("IRH_ID") %>/<%= data("IRH_IMG1") %>.jpg" class="rounded" alt="<%= data("IRH_Img1") %>">
         </div>
       <%end if%>
     </div>
     <div class="col-md mx-1 mb-3 position-relative generaPictured">
       <%if data("IRH_Img2") <> "" then%>
         <div class="position-absolute top-50 start-50 translate-middle">
-          <img src="<%= url %>views/incunit/img/<%= data("IRH_IMG2") %>.jpg" class="rounded" alt="<%= data("IRH_Img1") %>">
+          <img src="<%= getpathdoc %>/<%= data("IRH_ID") %>/<%= data("IRH_IMG2") %>.jpg" class="rounded" alt="<%= data("IRH_Img1") %>">
         </div>
       <%end if%>
     </div>
     <div class="col-md mx-1 mb-3 position-relative generaPictured">
       <%if data("IRH_Img3") <> "" then%>
         <div class="position-absolute top-50 start-50 translate-middle">
-          <img src="<%= url %>views/incunit/img/<%= data("IRH_IMG3") %>.jpg" class="rounded" alt="<%= data("IRH_Img1") %>">
+          <img src="<%= getpathdoc %>/<%= data("IRH_ID") %>/<%= data("IRH_IMG3") %>.jpg" class="rounded" alt="<%= data("IRH_Img1") %>">
         </div>
       <%end if%>
     </div>
     <div class="col-md mx-1 mb-3 position-relative generaPictured">
       <%if data("IRH_Img4") <> "" then%>
         <div class="position-absolute top-50 start-50 translate-middle">
-          <img src="<%= url %>views/incunit/img/<%= data("IRH_IMG4") %>.jpg" class="rounded" alt="<%= data("IRH_Img1") %>">
+          <img src="<%= getpathdoc %>/<%= data("IRH_ID") %>/<%= data("IRH_IMG4") %>.jpg" class="rounded" alt="<%= data("IRH_Img1") %>">
         </div>
       <%end if%>
     </div>
     <div class="col-md mx-1 mb-3 position-relative generaPictured">
       <%if data("IRH_Img5") <> "" then%>
         <div class="position-absolute top-50 start-50 translate-middle">
-          <img src="<%= url %>views/incunit/img/<%= data("IRH_IMG5") %>.jpg" class="rounded" alt="<%= data("IRH_Img1") %>">
+          <img src="<%= getpathdoc %>/<%= data("IRH_ID") %>/<%= data("IRH_IMG5") %>.jpg" class="rounded" alt="<%= data("IRH_Img1") %>">
         </div>
       <%end if%>
     </div>
@@ -240,7 +225,7 @@
                 <div class="position-relative" style="heigth:5rem">
                   <% if ddata("IRD_Img") <> "" then %>
                     <div class="z-n1 position-absolute top-50 start-50 translate-middle">
-                      <img src="<%= url %>/views/incunit/img/<%= ddata("IRD_Img") %>.jpg" width="80" height="100">
+                      <img src="<%= getpathdoc %>/<%= data("IRH_ID") %>/<%= ddata("IRD_Img") %>.jpg" width="80" height="100">
                     </div>
                   <%end if%>
                 </div>
