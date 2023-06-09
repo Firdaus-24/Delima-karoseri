@@ -42,4 +42,5 @@
     <script src="../../public/js/invrepair.js"></script>
     <script src="../../public/js/serahterimaunit.js"></script>
     <script src="../../public/js/incunitrepair.js"></script>
+    <script src="../../public/js/prodrepair.js"></script>
 </html>

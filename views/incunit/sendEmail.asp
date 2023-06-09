@@ -28,7 +28,7 @@
     tabledata = ""
     do while not ddata.eof
     if ddata("IRD_Img") <> "" then
-      imgpath = "<img src="&url&"views/incunit/img/"&ddata("IRD_Img") &".jpg width='50' height='70'>"
+      imgpath = "<img src="&getpathdoc&"/"&data("IRH_ID") &"/"&ddata("IRD_Img")&".jpg width='50' height='70'>"
     else
       imgpath = "-"
     end if
@@ -77,14 +77,6 @@
             "<td width='10px'>:</td>"&_
             "<td align='left'>"&data("custnama")&"</td>"&_
         "</tr>"&_
-        "<tr>"&_
-            "<td width='6%'>Start date</td>"&_
-            "<td width='10px'>:</td>"&_
-            "<td align='left'>"&Cdate(data("IRH_Startdate"))&"</td>"&_
-            "<td width='6%'>End date</td>"&_
-            "<td width='10px'>:</td>"&_
-            "<td align='left'>"&Cdate(data("IRH_Enddate"))&"</td>"&_
-        "</tr>"&_ 
         "</tbody>"&_
     "</table>"&_ 
     "<table width='100%' style='font-size:12px;border-collapse: collapse;text-align: center;right:10px;'>"&_

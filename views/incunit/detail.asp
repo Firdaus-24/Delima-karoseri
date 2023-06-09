@@ -131,7 +131,7 @@
       <label for="tfkid" class="col-form-label">No.Penerimaan Unit</label>
     </div>
     <div class="col-lg-4 mb-2">
-      <input type="text" id="" name="tfkid" class="form-control" value="<%= LEFT(data("IRH_TFKID"),11) &"/"& MID(data("IRH_TFKID"),12,4) &"/"& MID(data("IRH_TFKID"),16,2) &"/"& right(data("IRH_TFKID"),3) %>" onclick="window.open('<%=url%>views/serteruni/detailD1.asp?id=<%= data("IRH_TFKID")%>&tfk_u')" style="cursor:pointer" readonly>
+      <input type="text" id="" name="tfkid" class="form-control" value="<%= LEFT(data("IRH_TFKID"),11) &"/"& MID(data("IRH_TFKID"),12,4) &"/"& MID(data("IRH_TFKID"),16,2) &"/"& right(data("IRH_TFKID"),3) %>" onclick="window.open('<%=url%>views/serteruni/detailD1.asp?id=<%= data("IRH_TFKID")%>&p=tfkd_u')" style="cursor:pointer" readonly>
     </div>
     <div class="col-lg-2 mb-2">
       <label for="customer" class="col-form-label">Customer</label>

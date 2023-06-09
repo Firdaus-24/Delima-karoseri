@@ -227,7 +227,7 @@
               </li>
               <% end if %>
             </ul>
-          <!-- ppic -->
+          <!-- ppic / produksi-->
           <li class="nav-text">
             <a href="#" onclick="toggle('sublist-ppic')"><i class="bi bi-layers"></i> PPIC/Prod Dev</a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
@@ -253,9 +253,16 @@
                 <a class="link-name" href="<%= url %>views/ReturnMaterial/">Return Material</a>
               </li>
               <% end if %>
+              <% if session("PP5") =  true then %>
+              <li>
+                <a class="link-name" href="<%= url %>views/prodrepair/">Produksi Repair</a>
+              </li>
+              <% end if %>
+              <% if session("PP6") =  true then %>
               <li>
                 <a class="link-name" href="<%= url %>views/finishgood/">Produksi Finish</a>
               </li>
+              <% end if%>
             </ul>
           <!-- purchase -->
           <li class="nav-text">
