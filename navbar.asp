@@ -191,6 +191,33 @@
                 <a class="link-name" href="<%= url %>views/produksi/">Produksi</a>
               </li>
               <% end if %>
+              <% if session("ENG6") = true then %>
+              <li>
+                <a class="link-name" href="<%= url %>views/produksi/report.asp">Report Proses Produksi</a>
+              </li>
+              <% end if %>
+              <% if session("ENG7") = true then %>
+              <li>
+                <a class="link-name" href="<%= url %>views/engineering/predBom.asp">Report Prediksi Harga</a>
+              </li>
+              <% end if %>
+              <% if session("ENG8") = true then %>
+              <li>
+                <a class="link-name" href="<%= url %>views/suratjalan/">Surat Jalan</a>
+              </li>
+              <% end if %>
+            </ul>
+          <!-- Model -->
+          <li class="nav-text">
+            <a href="#" onclick="toggle('sublist-model')"><i class="bi bi-easel2"></i> model</a>
+            <i class="bi bi-chevron-compact-down" id="iconDown"></i>
+          </li>
+            <ul class="sub-menu" id="sublist-model">
+              <% if session("MDL1") = true then%>
+              <li>
+                <a class="link-name" href="<%= url %>views/model/">Master Model</a>
+              </li>
+              <% end if%>
               <% if session("ENG2") = true then %>
               <li>
                 <a class="link-name" href="<%= url %>views/bom/">Master B.O.M</a>
@@ -209,21 +236,6 @@
               <% if session("ENG5") = true then %>
               <li>
                 <a class="link-name" href="<%= url %>views/sasis/">Standart Product</a>
-              </li>
-              <% end if %>
-              <% if session("ENG6") = true then %>
-              <li>
-                <a class="link-name" href="<%= url %>views/produksi/report.asp">Report Proses Produksi</a>
-              </li>
-              <% end if %>
-              <% if session("ENG7") = true then %>
-              <li>
-                <a class="link-name" href="<%= url %>views/engineering/predBom.asp">Report Prediksi Harga</a>
-              </li>
-              <% end if %>
-              <% if session("ENG8") = true then %>
-              <li>
-                <a class="link-name" href="<%= url %>views/suratjalan/">Surat Jalan</a>
               </li>
               <% end if %>
             </ul>

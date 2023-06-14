@@ -21,7 +21,7 @@
     set pJenis = data_cmd.execute
 
     ' type barang
-    data_cmd.commandText = "SELECT T_ID, T_Nama FROM DLK_M_TypeBarang WHERE T_AktifYN = 'Y' ORDER BY T_Nama ASC"
+    data_cmd.commandText = "SELECT T_ID, T_Nama FROM DLK_M_TypeBarang WHERE T_AktifYN = 'Y' AND T_ID <> 'T01' AND T_ID <> 'T02' AND T_ID <> 'T05' AND T_ID <> 'T06' ORDER BY T_Nama ASC"
 
     set typebarang = data_cmd.execute
     
@@ -134,7 +134,7 @@
         <div class="row">
             <div class="col-lg text-center">
                 <button type="submit" class="btn btn-primary btn-tambahBarang">Update</button>
-                <a href="index.asp"><button type="button" class="btn btn-danger">kembali</button></a>
+                <a href="./"><button type="button" class="btn btn-danger">kembali</button></a>
             </div>
         </div>
     </form>

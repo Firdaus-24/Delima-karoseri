@@ -11,7 +11,7 @@ sub tambahKategori()
     set data = data_cmd.execute
 
     if data.eof then
-        call query("exec sp_AddDLK_M_Kategori '"& nama &"','"& keterangan &"'")
+        call query("exec sp_AddDLK_M_Kategori '"& nama &"','"& keterangan &"','"& session("userid") &"'")
         value = 1 'case untuk insert data
     else
         value = 2 'case jika gagal insert 
@@ -31,7 +31,7 @@ sub updateKategori()
     set data = data_cmd.execute
 
     if not data.eof then
-        call query("UPDATE DLK_M_Kategori SET KategoriNama = '"& nama &"', KategoriKeterangan = '"& keterangan &"' WHERE KategoriID = '"& id &"'")
+        call query("UPDATE DLK_M_Kategori SET KategoriNama = '"& nama &"', KategoriKeterangan = '"& keterangan &"', kategoriUpdateID = '"& session("userid") &"' WHERE KategoriID = '"& id &"'")
         value = 1 'case untuk insert data
     else
         value = 2 'case jika gagal insert 

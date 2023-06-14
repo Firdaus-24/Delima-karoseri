@@ -11,7 +11,7 @@ sub tambahJenis()
     set data = data_cmd.execute
 
     if data.eof then
-        call query("exec sp_AddDLK_M_JenisBarang '"& nama &"','"& keterangan &"'")
+        call query("exec sp_AddDLK_M_JenisBarang '"& nama &"','"& keterangan &"', '"& session("userid") &"'")
         value = 1 'case untuk insert data
     else
         value = 2 'case jika gagal insert 
@@ -31,7 +31,7 @@ sub updateJenis()
     set data = data_cmd.execute
 
     if not data.eof then
-        call query("UPDATE DLK_M_JenisBarang SET JenisNama = '"& nama &"', JenisKeterangan = '"& keterangan &"' WHERE JenisID = '"& id &"'")
+        call query("UPDATE DLK_M_JenisBarang SET JenisNama = '"& nama &"', JenisKeterangan = '"& keterangan &"', jenisUpdateID = '"& session("userid") &"' WHERE JenisID = '"& id &"'")
         value = 1 'case untuk insert data
     else
         value = 2 'case jika gagal insert 

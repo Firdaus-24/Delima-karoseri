@@ -5,22 +5,22 @@ sub tambahBarang()
     kategori = trim(Request.Form("kategori"))
     jenis = trim(Request.Form("jenis"))
     tgl = trim(Request.Form("tgl"))
-    minstok = trim(Request.Form("minstok"))
-    jual = trim(Request.Form("jual"))
-    stok = trim(Request.Form("stok"))
+    minstok = 0
+    jual = "Y"
+    stok = "N"
     typebrg = trim(Request.Form("typebrg"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT * FROM DLK_M_Barang WHERE Brg_Nama = '"& nama &"' AND KategoriId = '"&  kategori &"' AND JenisID = '"& jenis &"' AND Brg_AktifYN = 'Y'"
+    data_cmd.commandText = "SELECT * FROM DLK_M_Barang WHERE UPPER(Brg_Nama) = '"& UCase(nama) &"' AND KategoriId = '"&  kategori &"' AND JenisID = '"& jenis &"' AND Brg_type = '"& typebrg &"' AND Brg_AktifYN = 'Y'"
     set data = data_cmd.execute
 
     if data.eof then
         call query("exec sp_AddDLK_M_Barang '"& agen &"','"& nama &"', '"& tgl &"', '"& jenis &"','"& kategori &"','"& stok &"','"& jual &"','', "& minstok &", '"& typebrg &"'")
-        value = 1 'case untuk insert data
+        call alert("MASTER MODEL", "berhasil di tambahkan", "success", "m_add.asp")
     else
-        value = 2 'case jika gagal insert 
+        call alert("MASTER MODEL", "sudah terdaftar", "error", "m_add.asp")
     end if
 end sub
 
@@ -29,10 +29,6 @@ sub updateBarang()
     nama = UCase(trim(Request.Form("nama")))
     kategori = trim(Request.Form("kategori"))
     jenis = trim(Request.Form("jenis"))
-    tgl = trim(Request.Form("tgl"))
-    minstok = trim(Request.Form("minstok"))
-    jual = trim(Request.Form("jual"))
-    stok = trim(Request.Form("stok"))
     typebrg = trim(Request.Form("typebrg"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
@@ -42,10 +38,10 @@ sub updateBarang()
     set data = data_cmd.execute
 
     if not data.eof then
-        call query("UPDATE DLK_M_Barang SET Brg_Nama = '"& nama &"', KategoriId = '"& kategori &"', JenisID = '"& jenis &"', Brg_tanggal = '"& tgl &"', Brg_StokYN = '"& stok &"', Brg_jualYN = '"& jual &"', Brg_minstok = "& minstok &", Brg_Type = '"& typebrg &"' WHERE Brg_ID = '"& id &"'")
-        value = 1 'case untuk insert data
+        call query("UPDATE DLK_M_Barang SET Brg_Nama = '"& nama &"', KategoriId = '"& kategori &"', JenisID = '"& jenis &"', Brg_Type = '"& typebrg &"' WHERE Brg_ID = '"& id &"'")
+        call alert("MASTER MODEL", "berhasil di update", "success", Request.ServerVariables("HTTP_REFERER"))
     else
-        value = 2 'case jika gagal insert 
+        call alert("MASTER MODEL", "data tidak terdaftar", "error", Request.ServerVariables("HTTP_REFERER"))
     end if
 end sub 
 %>
