@@ -272,9 +272,9 @@
               <% end if %>
               <% if session("PP6") =  true then %>
               <li>
-                <a class="link-name" href="<%= url %>views/finishgood/">Produksi Finish</a>
+                <a class="link-name" href="<%= url %>views/bomrepair/">B.O.M Repair</a>
               </li>
-              <% end if%>
+              <%end if%>
             </ul>
           <!-- purchase -->
           <li class="nav-text">
