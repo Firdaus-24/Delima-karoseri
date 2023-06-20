@@ -21,7 +21,7 @@
     data_cmd.commandText = "SELECT sat_Nama, sat_ID FROM DLK_M_satuanBarang WHERE sat_AktifYN = 'Y' ORDER BY sat_Nama ASC"
     set psatuan = data_cmd.execute    
     ' get all barang
-    data_cmd.commandText = "SELECT dbo.DLK_M_Barang.Brg_Id, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama FROM dbo.DLK_M_Barang LEFT OUTER JOIN dbo.DLK_T_VendorD ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_VendorD.Dven_BrgID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.JenisID WHERE (dbo.DLK_T_VendorD.Dven_BrgID <> '') AND (dbo.DLK_M_Barang.Brg_AktifYN = 'Y') AND (left(dbo.DLK_M_Barang.Brg_Id,3) = '"& dataH("memoAgenID") &"') GROUP BY dbo.DLK_M_Barang.Brg_Id, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama ORDER BY Brg_Nama ASC"
+    data_cmd.commandText = "SELECT dbo.DLK_M_Barang.Brg_Id, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama, DLK_M_TypeBarang.T_Nama FROM dbo.DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.JenisID LEFT OUTER JOIN DLK_M_TypeBarang ON DLK_M_Barang.BRg_Type = DLK_M_Typebarang.T_ID WHERE (dbo.DLK_M_Barang.Brg_AktifYN = 'Y') AND (left(dbo.DLK_M_Barang.Brg_Id,3) = '"& dataH("memoAgenID") &"') ORDER BY Brg_Nama ASC"
     set barang = data_cmd.execute
 %>
 <% call header("Detail Permintaan Anggaran") %>
@@ -164,12 +164,13 @@
         </div>
         <!-- table barang -->
         <div class="row">
-            <div class="col-sm mb-4 overflow-auto" style="height:15rem;">
+            <div class="col-sm mb-4 overflow-auto" style="height:15rem;font-size:12px;">
                 <table class="table">
                     <thead class="bg-secondary text-light" style="position: sticky;top: 0;">
                         <tr>
                             <th scope="col">Kode</th>
                             <th scope="col">Nama</th>
+                            <th scope="col">Type</th>
                             <th scope="col">Pilih</th>
                         </tr>
                     </thead>
@@ -178,6 +179,7 @@
                         <tr>
                             <th scope="row"><%= barang("kategoriNama")&"-"& barang("jenisNama") %></th>
                             <td><%= barang("brg_nama") %></td>
+                            <td><%= barang("T_Nama") %></td>
                             <td>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="brg" id="brg" value="<%= barang("Brg_ID") %>" required>

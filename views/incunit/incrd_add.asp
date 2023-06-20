@@ -432,7 +432,7 @@
               <label for="descripsi" class="form-label">Descripsi</label>
             </div>
             <div class="col-md mb-3">
-              <textarea class="form-control" id="descripsi" style="height: 50px" name="descripsi" required></textarea>
+              <textarea class="form-control" id="descripsi" style="height: 50px" name="descripsi" maxlength="50" required></textarea>
             </div>
           </div>
           <div class="row">
@@ -440,7 +440,7 @@
               <label for="remarks" class="form-label">Remarks</label>
             </div>
             <div class="col-md mb-3">
-              <textarea class="form-control" id="remarks" style="height: 50px" name="remarks"></textarea>
+              <textarea class="form-control" id="remarks" style="height: 50px" name="remarks" maxlength="30" ></textarea>
             </div>
           </div>
       </div>

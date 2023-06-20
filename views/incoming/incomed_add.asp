@@ -17,9 +17,6 @@
    data_cmd.commandTExt = "SELECT DLK_T_MaterialReceiptD1.*, DLK_M_WebLogin.username FROM DLK_T_MaterialReceiptD1 LEFT OUTER JOIN DLK_M_WebLogin ON DLK_T_MaterialReceiptD1.MR_Updateid = DLK_M_Weblogin.userid WHERE MR_ID = '"& id &"'"
    set data1 = data_cmd.execute
 
-
-   ' data_cmd.commandTExt = "SELECT IPH_ID FROM DLK_T_InvPemH WHERE IPH_AktifYN = 'Y' AND IPH_KID = 1 AND NOT EXISTS (SELECT MR_Transaksi FROM DLK_T_MaterialReceiptD1 WHERE MR_Transaksi = IPH_ID)"
-
    ' get data po
    data_cmd.commandTExt = "SELECT OPH_ID FROM DLK_T_OrPemH WHERE OPH_AktifYN = 'Y' AND OPH_KID = 1 AND NOT EXISTS (SELECT MR_Transaksi FROM DLK_T_MaterialReceiptD1 WHERE MR_Transaksi = OPH_ID) "
 
