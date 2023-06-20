@@ -55,7 +55,7 @@
         <div class="mb-3 row">
             <label for="nama" class="col-sm-2 col-form-label offset-sm-1">Nama</label>
             <div class="col-sm-8">
-                <input type="text" class="form-control" id="nama" name="nama" autocomplete="off" maxlength="30" required>
+                <input type="text" class="form-control" id="nama" name="nama" autocomplete="off" maxlength="50" required>
             </div>
         </div>
         <div class="mb-3 row">

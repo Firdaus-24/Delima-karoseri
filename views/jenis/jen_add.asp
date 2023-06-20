@@ -16,7 +16,7 @@ call header("Form Jenis") %>
         <div class="row d-flex justify-content-center">
             <div class="col-lg-5 mb-3 mt-3">
                 <label for="nama" class="form-label">Nama</label>
-                <input type="text" class="form-control" id="nama" name="nama" maxlength="30" autocomplete="off" required>
+                <input type="text" class="form-control" id="nama" name="nama" maxlength="50" autocomplete="off" required>
             </div>
         </div>
         <div class="row d-flex justify-content-center">

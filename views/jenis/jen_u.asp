@@ -32,8 +32,8 @@
         <div class="row d-flex justify-content-center">
             <div class="col-lg-5 mb-3">
                 <label for="nama" class="form-label">Nama</label>
-                <input type="hidden" class="form-control" id="oldnama" name="oldnama" value="<%= jenis("jenisNama") %>" maxlength="30" autocomplete="off" required>
-                <input type="text" class="form-control" id="nama" name="nama" value="<%= jenis("jenisNama") %>" maxlength="30" autocomplete="off" required>
+                <input type="hidden" class="form-control" id="oldnama" name="oldnama" value="<%= jenis("jenisNama") %>" maxlength="50" autocomplete="off" required>
+                <input type="text" class="form-control" id="nama" name="nama" value="<%= jenis("jenisNama") %>" maxlength="50" autocomplete="off" required>
             </div>
         </div>
         <div class="row d-flex justify-content-center">
