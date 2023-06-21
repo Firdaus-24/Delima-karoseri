@@ -440,7 +440,7 @@
               <label for="remarks" class="form-label">Remarks</label>
             </div>
             <div class="col-md mb-3">
-              <textarea class="form-control" id="remarks" style="height: 50px" name="remarks" maxlength="30" ></textarea>
+              <textarea class="form-control" id="remarks" style="height: 50px" name="remarks" maxlength="300" ></textarea>
             </div>
           </div>
       </div>

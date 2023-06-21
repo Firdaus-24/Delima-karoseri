@@ -5,33 +5,27 @@ sub tambahbomH()
    sasisid = trim(Request.Form("sasisid"))
    tgl = trim(Request.Form("tgl"))
    approve = trim(Request.Form("approve"))
+   mpbom = trim(Request.Form("mpbom"))
+   tsalary = replace(replace(replace(trim(Request.Form("tsalary")),".",""),",",""),"-","")
    keterangan = trim(Request.Form("keterangan"))
 
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
 
-   data_cmd.commandText = "SELECT * FROM DLK_M_bomH WHERE BMBrgID = '"& barang &"' AND BMAgenID = '"& cabang &"' AND BMSasisID = '"& sasisid &"'"
+   data_cmd.commandText = "SELECT * FROM DLK_M_bomH WHERE BMBrgID = '"& barang &"' AND BMAgenID = '"& cabang &"' AND BMSasisID = '"& sasisid &"' AND BMmanpower = "& mpbom &" AND BMtotalsalary = '"& tsalary &"' AND BMketerangan = '"& keterangan &"' "
    ' response.write data_cmd.commandText & "<br>"
    set data = data_cmd.execute
 
    if data.eof then
-      data_cmd.commandText = "exec SP_AddDLK_M_bomH '"& barang &"', '"& tgl &"', '"& cabang &"', '"& approve &"', '"& sasisid &"', '"& keterangan &"'"
+      data_cmd.commandText = "exec SP_AddDLK_M_bomH '"& barang &"', '"& tgl &"', '"& cabang &"', '"& approve &"', '"& sasisid &"', '"& keterangan &"', "& mpbom &", '"& tsalary &"'"
 
       set p = data_cmd.execute
 
       id = p("ID")
 
-      value = 1
-   else
-      value = 2
-   end if
-
-   if value = 1 then
       call alert("MATER B.O.M", "berhasil di tambahkan", "success","bomd_add.asp?id="&id) 
-   elseif value = 2 then
-      call alert("MATER B.O.M", "sudah terdaftar", "warning", "bom_add.asp")
    else
-      value = 0
+      call alert("MATER B.O.M", "sudah terdaftar", "warning", "bom_add.asp")
    end if
 end sub
 

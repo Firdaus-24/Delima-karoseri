@@ -13,7 +13,7 @@
     set st = data_cmd.execute
 
     if st.eof then
-      data_cmd.commandtext = "exec sp_addDLK_T_UnitCustomerH '"& salesorder &"', '"& custid &"','"& tgl &"','"& keterangan &"','"& penyerah &"', '"& penerima &"', '"& session("userid") &"', "& jenisUnit &""
+      data_cmd.commandtext = "exec sp_addDLK_T_UnitCustomerH '"& salesorder &"', '"& custid &"','"& tgl &"','"& keterangan &"','"& penerima &"','"& penyerah &"', '"& session("userid") &"', "& jenisUnit &""
       ' response.write data_cmd.commandText & "<br>"
       set p = data_cmd.execute
 

@@ -174,6 +174,8 @@
               <th>Cabang</th>
               <th>No.Produksi</th>
               <th>Man Power</th>
+              <th>Approve 1</th>
+              <th>Approve 2</th>
               <th class="text-center">Aksi</th>
           </thead>
           <tbody>
@@ -193,19 +195,45 @@
                 <td><%= rs("agenName") %></td>
                 <td><%=LEFT(rs("BMRPDRID"),3) &"-"& MID(rs("BMRPDRID"),4,2) &"/"& RIGHT(rs("BMRPDRID"),3) %></td>
                 <td><%=rs("BMRManpower")%></td>
+                <td>
+                  <% if session("PP6F") = true then %>
+                    <% if rs("bmrapprove1") = "N" then%>
+                      <button type="button" class="btn btn-outline-primary"style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#modalbomrepair" onclick="sendEmailbomrepair(1, '<%=rs("bmrid")%>')">
+                        ajukan
+                      </button>
+                    <% else %>
+                      <i class="bi bi-check2"></i>
+                    <% end if %>
+                  <% else %>
+                    -
+                  <% end if%>
+                </td>
+                <td>
+                  <% if session("PP6F") = true then %>
+                    <% if rs("bmrapprove2") = "N" then%>
+                      <button type="button" class="btn btn-outline-primary"style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#modalbomrepair"  onclick="sendEmailbomrepair(2, '<%=rs("bmrid")%>')">
+                        ajukan
+                      </button>
+                    <% else %>
+                      <i class="bi bi-check2"></i>
+                    <% end if %>
+                  <% else %>
+                    -
+                  <% end if%>
+                </td>
                 <td class="text-center">
-                      <div class="btn-group" role="group" aria-label="Basic example">
-                          <% if session("PP6B") = true then %>
-                            <a href="bmrd_add.asp?id=<%= rs("BMRID") %>" class="btn badge text-bg-primary" >Update</a>
-                          <% end if %>
-                          <% if not ddata.eof then %>
-                          <a href="detail.asp?id=<%= rs("BMRID") %>" class="btn badge text-light bg-warning">Detail</a>
-                          <% else %>
-                            <% if session("PP6C") = true then %>
-                                <a href="aktif.asp?id=<%= rs("BMRID") %>&p=N" class="btn badge text-bg-danger" onclick="deleteItem(event,'delete B.O.M Repair')">Delete</a>
-                            <%end if %>
-                          <% end if %>
-                      </div>
+                  <div class="btn-group" role="group" aria-label="Basic example">
+                      <% if session("PP6B") = true then %>
+                        <a href="bmrd_add.asp?id=<%= rs("BMRID") %>" class="btn badge text-bg-primary" >Update</a>
+                      <% end if %>
+                      <% if not ddata.eof then %>
+                      <a href="detail.asp?id=<%= rs("BMRID") %>" class="btn badge text-light bg-warning">Detail</a>
+                      <% else %>
+                        <% if session("PP6C") = true then %>
+                            <a href="aktif.asp?id=<%= rs("BMRID") %>&p=N" class="btn badge text-bg-danger" onclick="deleteItem(event,'delete B.O.M Repair')">Delete</a>
+                        <%end if %>
+                      <% end if %>
+                  </div>
                 </td>
               </tr>
               <% 
@@ -281,5 +309,46 @@
     </div>
   </div>
 </div>
-
+<!-- Modal -->
+<div class="modal fade" id="modalbomrepair" tabindex="-1" aria-labelledby="modalbomrepairLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modalbomrepairLabel">Send Email</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="sendemail.asp" method="post">
+          <input type="hidden" id="ajuanbomke" name="ajuanbomke" required>
+          <input type="hidden" id="idbomrepair" name="idbomrepair" required>
+          <div class="row">
+            <div class="col-md-3 mb-3">
+              <label for="email" class="col-form-label">Email Ke-</label>
+            </div>
+            <div class="col-md-9 mb-3">
+              <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3 mb-3">
+              <label for="subject" class="col-form-label">Subject</label>
+            </div>
+            <div class="col-md-9 mb-3">
+              <input type="text" id="subject" name="subject" class="form-control" required>
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
 <% call footer() %>
+<script>
+const sendEmailbomrepair = (e, id) => {
+  $("#ajuanbomke").val(e)
+  $("#idbomrepair").val(id)
+}
+</script>
