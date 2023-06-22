@@ -1,8 +1,7 @@
 <!--#include file="../../init.asp"-->
-<!--#include file="../../functions/func_permintaanb.asp"-->
 <% 
-    if session("INV1D") = false then
-        Response.Redirect("../index.asp")
+    if session("PP7D") = false then
+        Response.Redirect("anggaran.asp")
     end if
 
     id = trim(Request.QueryString("id"))
@@ -72,7 +71,7 @@
     <table width="100%" style="font-size:16px">
         <tbody>
         <tr>
-            <td align="center">DETAIL PERMINTAAN ANGGARAN PEMBELANJAAN</td>
+            <td align="center">DETAIL PERMINTAAN ANGGARAN INVENTORY</td>
         </tr> 
         <tr>
             <td>&nbsp</td>
@@ -165,15 +164,18 @@
                 <th>Quantity</th>
                 <th>Satuan</th>
                 <th>Keterangan</th>
+                <th>Harga</th>
             </tr>
             <% 
             data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY memoItem ASC"
             ' response.write data_cmd.commandText
             set dataD = data_cmd.execute
 
+            total = 0
             no = 0
             do while not dataD.eof
             no = no + 1
+            total = total + dataD("memoharga")
             %>
                 <tr>
                     <th><%= no %></th>
@@ -184,11 +186,22 @@
                     <td>
                         <%= dataD("memoKeterangan") %>
                     </td>
+                    <td>
+                        <%= replace(formatcurrency(dataD("memoharga")),"$","") %>
+                    </td>
                 </tr>
             <% 
             dataD.movenext
             loop
             %>
+            <tr>
+                <th colspan="6">
+                    Grand Total
+                </th>
+                <th>
+                    <%= replace(formatcurrency(total),"$","") %>
+                </th>
+            </tr>
         </tbody>
     </table>
     <div class="footer">

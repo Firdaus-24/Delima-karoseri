@@ -1,7 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
-    if session("INV1") = false then
-        Response.Redirect("index.asp")
+    if session("PP7") = false then
+        Response.Redirect("./")
     end if
 
     ' query cabang  
@@ -63,7 +63,7 @@
         filtertgl = ""
     end if
     ' query seach 
-    strquery = "SELECT DLK_T_Memo_H.*, GLB_M_Agen.AgenName, HRD_M_Divisi.DivNama, HRD_M_Departement.DepNama FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = LEFT(GLB_M_Agen.AgenID,3) LEFT OUTER JOIN HRD_M_Divisi ON DLK_T_Memo_H.memoDivid = HRD_M_Divisi.divID LEFT OUTER JOIN HRD_M_Departement ON DLK_T_Memo_H.MemoDepID = HRD_M_Departement.DepID WHERE MemoAktifYN = 'Y' AND memobmrid = '' AND memobmid = '' "& filterAgen &" "& filterKeb &" "& filtertgl &""
+    strquery = "SELECT DLK_T_Memo_H.*, GLB_M_Agen.AgenName, HRD_M_Divisi.DivNama, HRD_M_Departement.DepNama FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = LEFT(GLB_M_Agen.AgenID,3) LEFT OUTER JOIN HRD_M_Divisi ON DLK_T_Memo_H.memoDivid = HRD_M_Divisi.divID LEFT OUTER JOIN HRD_M_Departement ON DLK_T_Memo_H.MemoDepID = HRD_M_Departement.DepID WHERE MemoAktifYN = 'Y' AND memobmrid <> '' AND memobmid = '' "& filterAgen &" "& filterKeb &" "& filtertgl &""
 
     ' untuk data paggination
     page = Request.QueryString("page")
@@ -104,23 +104,16 @@
         end if	
     loop
 
-    call header("Permintaan Anggaran")
+    call header("Permintaan Anggaran B.O.M")
 %>    
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row mt-3 mb-3 text-center">
-        <div class="col-lg-12">
-            <h3>PERMINTAAN ANGGARAN PEMBELANJAAN</h3>
+        <div class="col-lg-12 mb-3 mt-3">
+            <h3>PERMINTAAN ANGGARAN PEMBELANJAAN B.O.M REPAIR</h3>
         </div>
     </div>
-    <% if session("INV1A") = true then %>
-    <div class="row">
-        <div class="col-lg-2 mb-3">
-            <a href="reqAnggaran_add.asp" class="btn btn-primary">Tambah</a>
-        </div>
-    </div>
-    <% end if %>
-    <form action="reqAnggaran.asp" method="post">
+    <form action="anggaran.asp" method="post">
         <div class="row">
             <div class="col-lg-3 mb-3">
                 <label for="Agen">Cabang</label>
@@ -135,22 +128,10 @@
                 </select>
             </div>
             <div class="col-lg-3 mb-3">
-                <label for="keb">Kebutuhan</label>
-                <select class="form-select" aria-label="Default select example" name="keb" id="keb">
-                    <option value="">Pilih</option>
-                    <% do while not DepData.eof %>
-                    <option value="<%= DepData("DepID") %>"><%= DepData("DepNama") %></option>
-                    <% 
-                    DepData.movenext
-                    loop
-                    %>
-                </select>
-            </div>
-            <div class="col-lg-2 mb-3">
                 <label for="tgl">Tanggal Pertama</label>
                 <input type="date" class="form-control" name="tgla" id="tgla" autocomplete="off" >
             </div>
-            <div class="col-lg-2 mb-3">
+            <div class="col-lg-3 mb-3">
                 <label for="tgl">Tanggal Kedua</label>
                 <input type="date" class="form-control" name="tgle" id="tgle" autocomplete="off" >
             </div>
@@ -165,11 +146,11 @@
                 <thead class="bg-secondary text-light">
                     <tr>
                     <th scope="col">No</th>
-                    <th scope="col">No Memo</th>
                     <th scope="col">Tanggal</th>
+                    <th scope="col">No Memo</th>
+                    <th scope="col">No.B.O.M</th>
                     <th scope="col">Cabang</th>
-                    <th scope="col">Divisi</th>
-                    <th scope="col">Departement</th>
+                    <th scope="col">Keterangan</th>
                     <th scope="col">Prosess</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
@@ -192,13 +173,13 @@
                     %>
                     <tr>
                         <th scope="row"><%= recordcounter %></th>
+                        <td><%= Cdate(rs("memotgl")) %></td>
                         <td>
                             <%= left(rs("memoID"),4) %>/<%=mid(rs("memoId"),5,3) %>-<% call getAgen(mid(rs("memoID"),8,3),"") %>/<%= mid(rs("memoID"),11,4) %>/<%= right(rs("memoID"),3) %>
                         </td>
-                        <td><%= Cdate(rs("memoTgl")) %></td>
+                        <td><%= left(rs("memoBMRID"),3)&"-"&MID(rs("memoBMRID"),4,3)&"/"&MID(rs("memoBMRID"),7,4)&"/"&right(rs("memoBMRID"),3) %></td>
                         <td><%= rs("AgenName") %></td>
-                        <td><%= rs("DivNama") %></td>
-                        <td><%= rs("DepNama")%></td>
+                        <td><%= rs("memoketerangan") %></td>
                         <td>
                             <%if not orderpo.eof then %>
                             <b class="text-success">
@@ -215,11 +196,11 @@
                                 <a href="detailAnggaran.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-warning">Detail</a>
                             <% if rs("memoApproveYN") = "N" then %>
                                 <% if session("INV1B") = true then %>
-                                    <a href="reqAnggaran_u.asp?id=<%= rs("memoID") %>" class="btn badge btn-primary btn-sm">Update</a>
+                                    <a href="anggaran_u.asp?id=<%= rs("memoID") %>" class="btn badge btn-primary btn-sm">Update</a>
                                 <% end if %>
                                 <% if ddetail.eof then%>
                                     <% if session("INV1C") = true then %>
-                                    <a href="reqAktifH.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'Header Permintaan Anggaran')">delete</a>
+                                    <a href="aktifanggaran.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'Header Permintaan Anggaran B.O.M')">delete</a>
                                     <% end if %>
                                 <% end if %>
                             <% end if %>
@@ -253,7 +234,7 @@
                         end if
                         if requestrecords <> 0 then 
                     %>
-                        <a class="page-link prev" href="reqAnggaran.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&agen=<%=agen%>&keb=<%=keb%>&tgla=<%=tgla%>&tgle=<%=tgle%>">&#x25C4; Prev </a>
+                        <a class="page-link prev" href="anggaran.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&agen=<%=agen%>&keb=<%=keb%>&tgla=<%=tgla%>&tgle=<%=tgle%>">&#x25C4; Prev </a>
                     <% else %>
                         <p class="page-link prev-p">&#x25C4; Prev </p>
                     <% end if %>
@@ -271,9 +252,9 @@
                         end if
                         if Cint(page) = pagelistcounter then
                         %>
-                            <a class="page-link hal bg-primary text-light" href="reqAnggaran.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&keb=<%=keb%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal bg-primary text-light" href="anggaran.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&keb=<%=keb%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
                         <%else%>
-                            <a class="page-link hal" href="reqAnggaran.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&keb=<%=keb%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal" href="anggaran.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&keb=<%=keb%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
                         <%
                         end if
                         pagelist = pagelist + recordsonpage
@@ -289,7 +270,7 @@
                         end if
                         %>
                         <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                            <a class="page-link next" href="reqAnggaran.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&agen=<%=agen%>&keb=<%=keb%>&tgla=<%=tgla%>&tgle=<%=tgle%>">Next &#x25BA;</a>
+                            <a class="page-link next" href="anggaran.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&agen=<%=agen%>&keb=<%=keb%>&tgla=<%=tgla%>&tgle=<%=tgle%>">Next &#x25BA;</a>
                         <% else %>
                             <p class="page-link next-p">Next &#x25BA;</p>
                         <% end if %>

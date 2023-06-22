@@ -28,6 +28,10 @@
     no = 0
     tabledata = ""
     do while not ddata.eof
+    ' get data harga purchase
+    data_cmd.commandTExt = "SELECT ISNULL(MAX(Dven_Harga),0) as harga FROM DLK_T_VendorD where Dven_BrgID = '"& ddata("BmrdBrgID") &"'"
+    set ckharga = data_cmd.execute
+
     no = no + 1
       tabledata = tabledata & "<tr style='border:1px solid black'>"&_
               "<th style='border:1px solid black'>"& no &"</th>"&_
@@ -35,6 +39,8 @@
               "<td style='border:1px solid black'>"& ddata("Brg_Nama")&"</td>"&_
               "<td style='border:1px solid black'>"& ddata("BmrdQtysatuan")&"</td>"&_
               "<td style='border:1px solid black'>"& ddata("Sat_nama")&"</td>"&_
+              "<td style='border:1px solid black'>"& replace(formatCurrency(ckharga("harga")),"$","")&"</td>"&_
+              "<td style='border:1px solid black'>"& ddata("BmrdKeterangan")&"</td>"&_
               "</tr>"
     response.flush
     ddata.movenext
@@ -48,10 +54,10 @@
     "<table width='100%' style='font-size:16px'>"&_
         "<tbody>"&_
         "<tr>"&_
-            "<td align='center'>DETAIL B.O.M.REPAIR</td>"&_
+            "<td align='center' colspan='7'>DETAIL B.O.M.REPAIR</td>"&_
         "</tr>"&_
         "<tr>"&_
-            "<td align='center'>"& left(data("BMRID"),3)&"-"&MID(data("BMRID"),4,3)&"/"&MID(data("BMRID"),7,4)&"/"&right(data("BMRID"),3) &"</td>"&_
+            "<td align='center' colspan='7'>"& left(data("BMRID"),3)&"-"&MID(data("BMRID"),4,3)&"/"&MID(data("BMRID"),7,4)&"/"&right(data("BMRID"),3) &"</td>"&_
         "</tr>"&_
         "</tbody>"&_
     "</table>"&_ 
@@ -107,6 +113,8 @@
                 "<th style='border:1px solid black'>Barang</th>"&_
                 "<th style='border:1px solid black'>Quantity</th>"&_
                 "<th style='border:1px solid black'>Satuan</th>"&_
+                "<th style='border:1px solid black'>Harga</th>"&_
+                "<th style='border:1px solid black'>Keterangan</th>"&_
             "</tr>"&_
                 tabledata &_
         "</tbody>"&_

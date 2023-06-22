@@ -275,6 +275,11 @@
                 <a class="link-name" href="<%= url %>views/bomrepair/">B.O.M Repair</a>
               </li>
               <%end if%>
+              <% if session("PP7") =  true then %>
+              <li>
+                <a class="link-name" href="<%= url %>views/bomrepair/anggaran.asp">Anggaran B.O.M Repair</a>
+              </li>
+              <%end if%>
             </ul>
           <!-- purchase -->
           <li class="nav-text">

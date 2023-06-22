@@ -16,7 +16,7 @@ sub tambahAnggaranH()
     set data = data_cmd.execute
 
     if data.eof then
-        data_cmd.commandText = "sp_addDLK_T_Memo_H '"& tgl &"','"& agen &"','"& departement &"', '"& divisi &"', '"& keterangan &"', '"& session("userid") &"', "& kebutuhan &" "
+        data_cmd.commandText = "sp_addDLK_T_Memo_H '"& tgl &"','"& agen &"','"& departement &"', '"& divisi &"', '"& keterangan &"', '"& session("userid") &"', "& kebutuhan &", '' ,'' ,1"
         set data = data_cmd.execute
 
         id = data("ID")
@@ -115,9 +115,9 @@ sub updateAnggaran()
     end if
 
     if value = 1 then
-        call alert("RINCIAN PERMINTAAN BARANG", "berhasil di tambahkan", "success","reqAnggaran_u.asp?id="&memoid) 
+        call alert("RINCIAN PERMINTAAN BARANG", "berhasil di tambahkan", "success",Request.ServerVariables("HTTP_REFERER")) 
     elseif value = 2 then
-        call alert("RINCIAN PERMINTAAN BARANG", "sudah terdaftar", "warning","reqAnggaran_u.asp?id="&memoid)
+        call alert("RINCIAN PERMINTAAN BARANG", "sudah terdaftar", "warning",Request.ServerVariables("HTTP_REFERER"))
     else
         value = 0
     end if

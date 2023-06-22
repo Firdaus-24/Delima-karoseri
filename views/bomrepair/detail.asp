@@ -138,6 +138,7 @@
             <th scope="col">Barang</th>
             <th scope="col">Quantity</th>
             <th scope="col">Satuan</th>
+            <th scope="col">Harga</th>
             <th scope="col">Keterangan</th>
           </tr>
         </thead>
@@ -146,6 +147,10 @@
           no = 0
           do while not ddata.eof 
           no = no + 1
+
+          ' get data harga purchase
+          data_cmd.commandTExt = "SELECT ISNULL(MAX(Dven_Harga),0) as harga FROM DLK_T_VendorD where Dven_BrgID = '"& ddata("BmrdBrgID") &"'"
+          set ckharga = data_cmd.execute
           %>
             <tr>
               <th>
@@ -162,6 +167,9 @@
               </td>
               <td>
                 <%= ddata("Sat_nama")%>
+              </td>
+              <td>
+                <%= replace(formatCurrency(ckharga("harga")),"$","")%>
               </td>
               <td>
                 <%= ddata("BmrdKeterangan")%>

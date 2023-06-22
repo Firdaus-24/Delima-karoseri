@@ -111,7 +111,7 @@
 <div class="container">
   <div class="row">
     <div class="col-lg-12 mb-3 mt-3 text-center">
-        <h3>MASTER B.O.M </h3>
+        <h3>B.O.M REPAIR</h3>
     </div>  
   </div>
   <% if session("PP6A") = true then %>
@@ -186,9 +186,14 @@
               do until showrecords = 0 OR  rs.EOF
               recordcounter = recordcounter + 1
 
+              ' cek data detail
               data_cmd.commandText = "SELECT BmrdID FROM DLK_T_BOMRepairD WHERE LEFT(BmrdID,13) = '"& rs("BMRID") &"'"
 
               set ddata = data_cmd.execute
+
+              ' cek data anggaran memo
+              data_cmd.commandText = "SELECT memobmrid FROM DLK_T_memo_h where memobmrid = '"& rs("bmrid") &"' AND memoaktifyn = 'Y'"
+              set ckmemo = data_cmd.execute
               %>
                 <tr><TH><%= recordcounter %></TH>
                 <td><%=left(rs("BMRID"),3)&"-"&MID(rs("BMRID"),4,3)&"/"&MID(rs("BMRID"),7,4)&"/"&right(rs("BMRID"),3)%></td>
@@ -223,6 +228,13 @@
                 </td>
                 <td class="text-center">
                   <div class="btn-group" role="group" aria-label="Basic example">
+                      <% if session("PP7A") = true then %>
+                        <% if rs("bmrapprove1") = "Y" AND rs("bmrapprove2") = "Y" then%>
+                          <% if ckmemo.eof then %>
+                            <a href="anggaran_add.asp?id=<%= rs("BMRID") %>" class="btn badge text-bg-light" >anggarkan</a>
+                          <% end if%>
+                        <%end if%>
+                      <%end if%>
                       <% if session("PP6B") = true then %>
                         <a href="bmrd_add.asp?id=<%= rs("BMRID") %>" class="btn badge text-bg-primary" >Update</a>
                       <% end if %>

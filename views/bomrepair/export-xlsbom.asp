@@ -33,10 +33,10 @@
 
 <table width="100%" style="font-size:16px;font-family:sans-serif">
   <tr>
-    <th colspan="6" align="center">DETAIL B.O.M REPAIR</th>
+    <th colspan="7" align="center">DETAIL B.O.M REPAIR</th>
   </tr>
   <tr>
-    <th colspan="6" align="center"><%=left(data("BMRID"),3)&"-"&MID(data("BMRID"),4,3)&"/"&MID(data("BMRID"),7,4)&"/"&right(data("BMRID"),3)%></th>
+    <th colspan="7" align="center"><%=left(data("BMRID"),3)&"-"&MID(data("BMRID"),4,3)&"/"&MID(data("BMRID"),7,4)&"/"&right(data("BMRID"),3)%></th>
   </tr>
   
   
@@ -50,7 +50,7 @@
     <td colspan="2">
       Cabang
     </td>
-    <td>
+    <td colspan="2">
       <%=data("AgenName") %>
     </td>
   </tr>
@@ -64,7 +64,7 @@
     <td colspan="2">
       No.Incomming Unit
     </td>
-    <td>
+    <td colspan="2">
       <%=LEFT(data("BmrIRHID"),4) &"-"& mid(data("BmrIRHID"),5,3) &"/"& mid(data("BmrIRHID"),8,4) &"/"& right(data("BmrIRHID"),2)%>
     </td>
   </tr>
@@ -78,7 +78,7 @@
     <td colspan="2">
       Brand
     </td>
-    <td>
+    <td colspan="2">
       <%=data("BrandName")%>
     </td>
   </tr>
@@ -92,7 +92,7 @@
     <td colspan="2">
       No.Polisi
     </td>
-    <td>
+    <td colspan="2">
       <%=data("TFK_Nopol")%>
     </td>
   </tr>
@@ -106,7 +106,7 @@
     <td colspan="2">
       Anggaran Manpower
     </td>
-    <td>
+    <td colspan="2">
       <%=Replace(formatCurrency(data("BmrTotalSalary")),"$","")%>
     </td>
   </tr>
@@ -114,7 +114,7 @@
     <td>
       Keterangan
     </td>
-    <td colspan="5">
+    <td colspan="6">
       <%=data("BmrKeterangan")%>
     </td>
   </tr>
@@ -125,12 +125,17 @@
     <th style="border-collapse: collapse;border:1px solid black;">Barang</th>
     <th style="border-collapse: collapse;border:1px solid black;">Quantity</th>
     <th style="border-collapse: collapse;border:1px solid black;">Satuan</th>
+    <th style="border-collapse: collapse;border:1px solid black;">Harga</th>
     <th style="border-collapse: collapse;border:1px solid black;">Keterangan</th>
   </tr>
   <% 
     no = 0
     do while not ddata.eof 
     no = no + 1
+
+    ' get data harga purchase
+    data_cmd.commandTExt = "SELECT ISNULL(MAX(Dven_Harga),0) as harga FROM DLK_T_VendorD where Dven_BrgID = '"& ddata("BmrdBrgID") &"'"
+    set ckharga = data_cmd.execute
     %>
     <tr>
       <th style="border-collapse: collapse;border:1px solid black;">
@@ -147,6 +152,9 @@
       </td>
       <td style="border-collapse: collapse;border:1px solid black;">
         <%= ddata("Sat_nama")%>
+      </td>
+      <td style="border-collapse: collapse;border:1px solid black;">
+        <%= replace(formatCurrency(ckharga("harga")),"$","")%>
       </td>
       <td style="border-collapse: collapse;border:1px solid black;">
         <%= ddata("BmrdKeterangan")%>

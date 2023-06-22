@@ -52,5 +52,23 @@ $(document).ready(function () {
       return
     })
   })
+  
+  // cari divisi anggaran bom repair
+  $("#bomrepairdivisi").change(function(){
+    let divisi = $("#bomrepairdivisi").val()
+    
+    if(!divisi){
+      $(".deplamarepair").show()
+    }else{
+      $(".deplamarepair").hide()
+      $.ajax({
+        method: "POST",
+        url: "getdep.asp",
+        data: { divisi }
+      }).done(function( msg ) {
+        $(".depbarurepair").html(msg)
+      });
+    }
+  })
 })
 

@@ -289,7 +289,7 @@
             </div>
             <div class="col-sm-9 mb-3">
               <div class="form-floating">
-          <textarea class="form-control" id="keterangan" name="keterangan" placeholder="Description" style="height: 100px" required></textarea>
+          <textarea class="form-control" id="keterangan" name="keterangan" placeholder="Description" style="height: 100px" maxlength="50"></textarea>
           <label for="keterangan">Description</label>
         </div>
             </div>

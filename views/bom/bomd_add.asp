@@ -96,6 +96,20 @@
    </div>
    <div class="row">
       <div class="col-sm-2">
+         <label class="col-form-label">Man power</label>
+      </div>
+      <div class="col-sm-4 mb-3">
+         <input type="text" class="form-control" autocomplete="off" value="<%= data("BMmanpower") %>" readonly>
+      </div>
+      <div class="col-sm-2">
+         <label class="col-form-label">Total Anggaran</label>
+      </div>
+      <div class="col-sm-4 mb-3">
+         <input type="text" class="form-control"  autocomplete="off" value="<%= data("BMtotalsalary") %>" readonly>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-2">
          <label for="sasisid" class="col-form-label">No. Drawing</label>
       </div>
       <div class="col-sm-4 mb-3">

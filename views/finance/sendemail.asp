@@ -11,20 +11,9 @@
     set data_cmd = Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT dbo.DLK_T_Memo_H.memoID, dbo.DLK_T_Memo_H.memoTgl, dbo.DLK_T_Memo_H.memoApproveYN, dbo.DLK_T_Memo_H.memoKeterangan, dbo.DLK_T_Memo_H.memoAktifYN, dbo.DLK_T_Memo_H.memoKebutuhan, dbo.DLK_T_Memo_D.memoID AS Expr1, dbo.DLK_T_Memo_D.memoSpect, dbo.DLK_T_Memo_D.memoQtty, dbo.DLK_T_Memo_D.memoKeterangan AS ket2,dbo.DLK_T_Memo_D.memoHarga, dbo.GLB_M_Agen.AgenName, dbo.HRD_M_Divisi.DivNama,dbo.HRD_M_Departement.DepNama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_Memo_H INNER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_Memo_D.memoItem = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_Memo_D.memoSatuan = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.HRD_M_Departement ON dbo.DLK_T_Memo_H.memoDepID = dbo.HRD_M_Departement.DepID LEFT OUTER JOIN dbo.HRD_M_Divisi ON dbo.DLK_T_Memo_H.memoDivID = dbo.HRD_M_Divisi.DivId LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_Memo_H.memoAgenID = dbo.GLB_M_Agen.AgenID WHERE (dbo.DLK_T_Memo_H.memoID = '"& id &"') AND (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') ORDER BY dbo.DLK_M_Barang.Brg_Nama"
+    data_cmd.commandText = "SELECT dbo.DLK_T_Memo_H.memoID, dbo.DLK_T_Memo_H.memoTgl, dbo.DLK_T_Memo_H.memoApproveYN, dbo.DLK_T_Memo_H.memoKeterangan, dbo.DLK_T_Memo_H.memoAktifYN, dbo.DLK_T_Memo_H.memoKebutuhan, dbo.DLK_T_Memo_D.memoID AS Expr1, dbo.DLK_T_Memo_D.memoSpect, dbo.DLK_T_Memo_D.memoQtty, dbo.DLK_T_Memo_D.memoKeterangan AS ket2,dbo.DLK_T_Memo_D.memoHarga, dbo.GLB_M_Agen.AgenName, dbo.HRD_M_Divisi.DivNama,dbo.HRD_M_Departement.DepNama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Barang.Brg_Nama, DLK_M_Kebutuhan.K_Name FROM dbo.DLK_T_Memo_H INNER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_Memo_D.memoItem = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_Memo_D.memoSatuan = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.HRD_M_Departement ON dbo.DLK_T_Memo_H.memoDepID = dbo.HRD_M_Departement.DepID LEFT OUTER JOIN dbo.HRD_M_Divisi ON dbo.DLK_T_Memo_H.memoDivID = dbo.HRD_M_Divisi.DivId LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_Memo_H.memoAgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Kebutuhan ON DLK_T_Memo_H.memoKebutuhan = DLK_M_Kebutuhan.K_ID WHERE (dbo.DLK_T_Memo_H.memoID = '"& id &"') AND (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') ORDER BY dbo.DLK_M_Barang.Brg_Nama"
     ' response.write data_cmd.commandText
     set data = data_cmd.execute
-
-    ' cek kebutuhan
-    if data("memoKebutuhan") = 0 then
-        kebutuhan = "Produksi"
-    elseif data("memoKebutuhan") = 1 then
-        kebutuhan = "Khusus"
-    elseif data("memoKebutuhan") = 2 then
-        kebutuhan = "Umum"
-    else
-        kebutuhan = "Sendiri"
-    end if
 
     if not data.eof then
     no = 0
@@ -76,7 +65,7 @@
             "<td align='left'>"& Cdate(data("memoTgl"))&"</td>"&_
             "<td width='6%'>Kebutuhan</td>"&_
             "<td width='10px'>:</td>"&_
-            "<td align='left'>"&kebutuhan&"</td>"&_
+            "<td align='left'>"&data("K_Name")&"</td>"&_
         "</tr>"&_
         "<tr>"&_
             "<td width='6%'>Divisi</td>"&_

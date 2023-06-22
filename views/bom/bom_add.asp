@@ -51,7 +51,7 @@
       </div>
       <div class="row">
          <div class="col-sm-2">
-            <label for="bombrg" class="col-form-label">Barang</label>
+            <label for="bombrg" class="col-form-label">Item</label>
          </div>
          <div class="col-sm-4 mb-3 bombrg">
             <select class="form-select" aria-label="Default select example" name="bombrg" id="bombrg" required> 
@@ -74,10 +74,24 @@
       </div>
       <div class="row">
          <div class="col-sm-2">
+            <label for="mpbom" class="col-form-label">Man power</label>
+         </div>
+         <div class="col-sm-4 mb-3">
+            <input class="form-control" type="number" name="mpbom" id="mpbom" required>
+         </div>
+         <div class="col-sm-2">
+            <label for="tsalary" class="col-form-label">Total salary</label>
+         </div>
+         <div class="col-sm-4 mb-3">
+            <input class="form-control" type="text" name="tsalary" id="tsalarybom" autocomplete="off" onchange="settingFormatRupiah(this.value, 'tsalarybom')" required>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-sm-2">
             <label for="sasisid" class="col-form-label">No. Drawing</label>
          </div>
          <div class="col-sm-4 mb-3">
-            <select class="form-select" aria-label="Default select example" id="sasisid" name="sasisid" required>
+            <select class="form-select" aria-label="Default select example" id="sasisid" name="sasisid">
                <option value="">Pilih</option>
                <% do while not getsasis.eof %>
                <option value="<%= getsasis("sasisID") %>"><%= getsasis("className") &" | "& getsasis("brandName") &" | "& getsasis("SasisType") %></option>
@@ -92,7 +106,7 @@
             <label for="keterangan" class="col-form-label">Keterangan</label>
          </div>
          <div class="col-sm-4 mb-3">
-            <input type="text" class="form-control" name="keterangan" id="keterangan" maxlength="50" autocomplete="off" required>
+            <input type="text" class="form-control" name="keterangan" id="keterangan" maxlength="50" autocomplete="off">
          </div>
       </div>
       <!-- end button -->
