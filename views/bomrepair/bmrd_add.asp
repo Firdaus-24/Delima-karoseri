@@ -27,18 +27,35 @@
   data_cmd.commandTExt = "SELECT Sat_Nama, Sat_ID FROM DLK_M_SatuanBarang WHERE Sat_AktifYN = 'Y' ORDER BY Sat_Nama ASC"
   set psatuan = data_cmd.execute
 
+  ' get copy rincian bom lain
+  data_cmd.commandTExt = "SELECT bmrid FROM DLK_T_BOMRepairH WHERE BmrAktifYN = 'Y' AND bmrid <> '"& data("BmrID") &"'"
+  set copybom = data_cmd.execute
+
   call header("From B.O.M Repair") 
 %>
 
 <!--#include file="../../navbar.asp"-->
 <style>
-.clearfixbom {
-  padding: 80px 0;
-  text-align: center;
-  display:none;
-  position:absolute;
-  width:inherit;
-  overflow:hidden;
+  .clearfixbom {
+    padding: 80px 0;
+    text-align: center;
+    display:none;
+    position:absolute;
+    width:inherit;
+    overflow:hidden;
+  }
+  .modal-loading-page {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(255, 255, 255, .8) url('<%=url%>public/img/loadermerah.gif') 50% 50% no-repeat;
+  }
+  .displayloading{
+    display: block;
 }
 </style>
 <div class="container">
@@ -108,34 +125,41 @@
       <input type="text" id="nopol-bomrepaird" class="form-control" name="nopol" value="<%=data("TFK_Nopol")%>" readonly>
     </div>
   </div>
+  <form action="updatebomheader.asp" method="post" id="formupdateheaderbomrepair" onsubmit="validasiForm(this,event, 'UPDATE HEADER B.O.M REPAIR', 'warning')">
   <div class="row">
+    <input type="hidden" name="idheaderbomrepair" id="idheaderbomrepair" value="<%=data("bmrid")%>">
     <div class="col-sm-2">
-      <label for="tmanpower" class="col-form-label">Total Man Power</label>
+      <label for="tmanpowerdbomrepair" class="col-form-label">Total Man Power</label>
     </div>
     <div class="col-sm-4 mb-3">
-      <input type="number" id="tmanpower" class="form-control" name="tmanpower" value="<%=data("BmrManPower")%>" readonly>
+      <input type="number" id="tmanpowerdbomrepair" class="form-control" name="tmanpowerdbomrepair" value="<%=data("BmrManPower")%>" required >
     </div>
     <div class="col-sm-2">
       <label for="salary" class="col-form-label">Anggaran Manpower</label>
     </div>
     <div class="col-sm-4 mb-3">
-      <input type="text" class="form-control" name="salary" id="salary-bomrepaird" value="<%=Replace(formatCurrency(data("BmrTotalSalary")),"$","")%>" autocomplete="off" readonly>
+      <input type="text" class="form-control" name="salarydbomrepair" id="salary-bomrepaird" value="<%=replace(Replace(formatCurrency(data("BmrTotalSalary")),"$",""),".00","")%>" onchange="settingFormatRupiah(this.value, 'salary-bomrepaird')" autocomplete="off" required >
     </div>
   </div>
   <div class='row'>
     <div class="col-sm-2">
-      <label for="keterangan" class="col-form-label">Keterangan</label>
+      <label for="ketbomrepairheader" class="col-form-label">Keterangan</label>
     </div>
     <div class="col-sm-10 mb-3">
-      <input type="text" class="form-control" name="keterangan" id="keterangan" maxlength="100" value="<%=data("BmrKeterangan")%>" autocomplete="off" readonly>
+      <input type="text" class="form-control" name="keterangan" id="ketbomrepairheader" maxlength="100" value="<%=data("BmrKeterangan")%>" autocomplete="off">
     </div>
   </div>
   <div class="row">
     <div class="col-lg-12 mb-3 d-flex justify-content-between ">
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalBmrdRepair">Tambah Rincian</button>
+      <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalBmrdRepair">Tambah Rincian</button>
+        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalcopybomrepair">Copy Rincian</button>
+        <button type="submit" class="btn btn-success">Update Header</button>
+      </div>
       <button type="button" onclick="window.location.href='./'" class="btn btn-danger">Kembali</button>
     </div>
   </div>
+  </form>
 
   <div class="row">
     <div class="col-lg-12 mb-3">
@@ -189,7 +213,7 @@
     </div>
   </div>  
 </div>
-<!-- Modal -->
+<!-- Modal 1-->
 <div class="modal fade" id="modalBmrdRepair" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalBmrdRepairLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -292,9 +316,103 @@
     </div>
   </div>
 </div>
+
+<!-- Modal 2-->
+<div class="modal fade" id="modalcopybomrepair" tabindex="-1" aria-labelledby="modalcopybomrepair" aria-hidden="true">
+  <div class="modal-dialog  modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modalcopybomrepair">Modal Copy Data</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="pbomcopy.asp" method="post" id="formCopyNoBom">
+      <input type="hidden" name="bmrdidrepair" id="bmrdidrepair" value="<%=data("bmrid")%>">
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-12 mb-4 overflow-auto" style="height:15rem;">
+            <table class="table" style="font-size:14px;">
+              <thead class="bg-secondary text-light" style="position: sticky;top: 0;">
+              <tr>
+                <th>No</th>
+                <th>No. B.O.M</th>
+                <th class="text-center">Pilih</th>
+              </tr>
+              </thead>
+              <tbody>
+              <%
+              np = 0
+              do while not copybom.eof
+              np = np + 1
+              %>
+              <tr>
+                <td><%=np%></td>
+                <td><%=left(copybom("BMRID"),3)&"-"&MID(copybom("BMRID"),4,3)&"/"&MID(copybom("BMRID"),7,4)&"/"&right(copybom("BMRID"),3)%></td>
+                <td class="text-center"><input class="form-check-input" type="radio" name="copyidrepair" id="copyidrepair" value="<%=copybom("BMRID")%>"></td>
+              </tr>
+              <%
+              response.flush
+              copybom.movenext
+              loop
+              %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Copy</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- spiner loading -->
+<div class="modal-loading-page">
+</div>
+
 <% 
   if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
     call tambahbomD()
   end if
   call footer() 
 %>
+
+<script>
+  $("#formCopyNoBom").submit(function(event) {
+
+    /* stop form from submitting normally */
+    event.preventDefault();
+
+    /* get some values from elements on the page: */
+    let form = $(this);
+    let id = $('input[name="bmrdidrepair"]').val();
+    let copyid = form.find($('input[name="copyidrepair"]:checked')).val();
+    let url = form.attr( "action" );
+
+      //before send
+      // hide modal
+      $('#modalcopybomrepair').modal('toggle')  
+      // // open loading page
+      $(".modal-loading-page").addClass("displayloading");
+
+      /* Send the data using post */
+      setTimeout(() => {
+        $.post(url,{id , copyid}).done(function( data ) {
+        $(".modal-loading-page").removeClass("displayloading");
+        // use data
+      if (data == "DONE"){
+        swal({title: `COPY DATA B.O.M REPAIR`,text: `berhasil di perbaharui`,icon: `success`,button: `OK`,}).then(function() {location.reload()})
+        }else{
+          swal({title: `COPY DATA B.O.M REPAIR`,text: `gagal di perbaharui`,icon: `error`,button: `OK`,}).then(function() {location.reload()})
+
+        }
+        
+      })
+      }, 3000);
+      
+
+  });
+</script>

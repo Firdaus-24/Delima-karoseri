@@ -132,6 +132,7 @@
             <th scope="col">Satuan</th>
             <th scope="col">Harga</th>
             <th scope="col">Rak</th>
+            <th scope="col">Total</th>
          </tr>
       </thead>
       <tbody>
@@ -139,19 +140,22 @@
          do while not data1.eof 
          %>
          <tr style="background-color: blue;color:#fff;">
-            <td colspan="2">Document :</td>
-            <td><%= LEFT(data1("MR_Transaksi"),2) &"-"& mid(data1("MR_Transaksi"),3,3) &"/"& mid(data1("MR_Transaksi"),6,4) &"/"& right(data1("MR_Transaksi"),4)%></td>
-            <td>User :</td>
-            <td colspan="4"><%= data1("username") %></td>
+            <td colspan="3">Document :</td>
+            <td colspan="6"><%= LEFT(data1("MR_Transaksi"),2) &"-"& mid(data1("MR_Transaksi"),3,3) &"/"& mid(data1("MR_Transaksi"),6,4) &"/"& right(data1("MR_Transaksi"),4)%></td>
          </tr>
          <% 
          ' detail2
          data_cmd.commandTExt = "SELECT dbo.DLK_T_MaterialReceiptD2.*, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id, DLK_M_Rak.Rak_Nama, DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama FROM dbo.DLK_T_MaterialReceiptD2 LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialReceiptD2.MR_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialReceiptD2.MR_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_Rak ON DLK_T_MaterialReceiptD2.MR_RakID = DLK_M_Rak.Rak_ID LEFT OUTER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId LEFT OUTER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID WHERE dbo.DLK_T_MaterialReceiptD2.MR_ID = '"& id &"' AND LEFT(MR_Transaksi,13) = '"& data1("MR_Transaksi") &"'"
          set data2 = data_cmd.execute
-
+         
+         gtotal = 0
+         total = 0
          no = 0
          do while not data2.eof 
          no = no + 1
+         total = (data2("MR_Harga") * data2("MR_Qtysatuan"))
+
+         gtotal = gtotal + total
          %>
          <tr>
             <td><%= no %></td>
@@ -162,6 +166,7 @@
             <td><%= data2("Sat_nama") %></td>
             <td><%= replace(formatCurrency(data2("MR_Harga")),"$","") %></td>
             <td><%= data2("Rak_nama") %></td>
+            <td><%= replace(formatCurrency(total),"$","") %></td>
          </tr>
          <% 
          response.flush
@@ -173,6 +178,14 @@
          data1.movenext
          loop
          %>
+         <tr>
+            <th colspan="8">
+               Grand Total
+            </th>
+            <th>
+               <%= replace(formatCurrency(gtotal),"$","") %>
+            </th>
+         </tr>
       </tbody>
    </table>
    <div class="footer">

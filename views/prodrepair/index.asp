@@ -212,7 +212,7 @@
                       <%=LEFT(rs("PDR_ID"),3) &"-"& MID(rs("PDR_ID"),4,2) &"/"& RIGHT(rs("PDR_ID"),3) %>
 										</th>
 										<td><%= Cdate(rs("PDR_Date")) %></td>
-										<td><%= LEFT(rs("PDR_IRHID"),4) &"-"& mid(rs("PDR_IRHID"),5,3) &"/"& mid(rs("PDR_IRHID"),8,4) &"/"& right(rs("PDR_IRHID"),2) %></td>
+										<td><a href="<%=url%>views/incunit/detail.asp?id=<%=rs("PDR_IRHID")%>" style="text-decoration:none;color:black;cursor:pointer;" target="_blank"><%= LEFT(rs("PDR_IRHID"),4) &"-"& mid(rs("PDR_IRHID"),5,3) &"/"& mid(rs("PDR_IRHID"),8,4) &"/"& right(rs("PDR_IRHID"),2) %></a></td>
 										<td><%= rs("AgenNAme")%></td>
 										<td class="text-center">
                       <div class="btn-group" role="group" aria-label="Basic example">
