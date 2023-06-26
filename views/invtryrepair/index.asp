@@ -1,21 +1,18 @@
 <!--#include file="../../init.asp"-->
 <% 
-    if session("PR3") = false then
-        Response.Redirect("index.asp")
+    if session("INV9") = false then
+        Response.Redirect("../")
     end if
-    set data_cmd =  Server.CreateObject ("ADODB.Command")
-    data_cmd.ActiveConnection = mm_delima_string
 
     ' query cabang  
     set agen_cmd =  Server.CreateObject ("ADODB.Command")
     agen_cmd.ActiveConnection = mm_delima_string
     ' filter agen
-    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID, GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'N' AND NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
     set agendata = agen_cmd.execute
-
-    ' filter departement
-    agen_cmd.commandText = "SELECT dbo.HRD_M_Departement.DepID, dbo.HRD_M_Departement.DepNama FROM dbo.DLK_T_Memo_H LEFT OUTER JOIN dbo.HRD_M_Departement ON dbo.DLK_T_Memo_H.memoDepID = dbo.HRD_M_Departement.DepID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'N' AND NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) GROUP BY dbo.HRD_M_Departement.DepID, dbo.HRD_M_Departement.DepNama"
-    set kebData = agen_cmd.execute
+    ' filter kebutuhan
+    agen_cmd.commandText = "SELECT dbo.HRD_M_Departement.DepID, dbo.HRD_M_Departement.DepNama FROM dbo.HRD_M_Departement INNER JOIN dbo.DLK_T_Memo_H ON dbo.HRD_M_Departement.DepID = dbo.DLK_T_Memo_H.memoDepID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y' AND memobmrid <> '' AND memobmid = ''  GROUP BY dbo.HRD_M_Departement.DepID, dbo.HRD_M_Departement.DepNama"
+    set DepData = agen_cmd.execute
 
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Delima_string
@@ -23,12 +20,12 @@
     dim recordsonpage, requestrecords, allrecords, hiddenrecords, showrecords, lastrecord, recordconter, pagelist, pagelistcounter, sqlawal
     dim angka
     dim code, nama, aktifId, UpdateId, uTIme, orderBy
-    
     ' untuk angka
     angka = request.QueryString("angka")
     if len(angka) = 0 then 
         angka = Request.form("urut") + 1
     end if
+    
     agen = request.QueryString("agen")
     if len(agen) = 0 then 
         agen = trim(Request.Form("agen"))
@@ -47,31 +44,31 @@
     end if
     
     if agen <> "" then
-        filterAgen = "AND DLK_T_Memo_H.memoAgenID = '"& agen &"'"
+        filterAgen = "AND memoAgenID = '"& agen &"'"
     else
         filterAgen = ""
     end if
 
     if keb <> "" then
-        filterKeb = "AND dbo.DLK_T_Memo_H.memoDepID = '"& keb &"'"
+        filterKeb = "AND memoDepID = '"& keb &"'"
     else
         filterKeb = ""
     end if
 
     if tgla <> "" AND tgle <> "" then
-        filtertgl = "AND dbo.DLK_T_Memo_H.memotgl BETWEEN '"& tgla &"' AND '"& tgle &"'"
+        filtertgl = "AND memotgl BETWEEN '"& tgla &"' AND '"& tgle &"'"
     elseIf tgla <> "" AND tgle = "" then
-        filtertgl = "AND dbo.DLK_T_Memo_H.memotgl = '"& tgla &"'"
+        filtertgl = "AND memotgl = '"& tgla &"'"
     else 
         filtertgl = ""
     end if
-
     ' query seach 
-    strquery = "SELECT DLK_T_Memo_H.*, HRD_M_Departement.DepNama, HRD_M_Divisi.DivNama, GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN HRD_M_departement ON DLK_T_Memo_H.MemoDepID = HRD_M_Departement.DepID LEFT OUTER JOIN HRD_M_Divisi ON DLK_T_Memo_H.memoDivID = HRD_M_Divisi.DivID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = LEFT(GLB_M_Agen.AgenID,3) WHERE NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) AND (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') "& filterAgen &" "& filterKeb &" "& filtertgl &""
+    strquery = "SELECT DLK_T_Memo_H.*, GLB_M_Agen.AgenName, HRD_M_Divisi.DivNama, HRD_M_Departement.DepNama FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = LEFT(GLB_M_Agen.AgenID,3) LEFT OUTER JOIN HRD_M_Divisi ON DLK_T_Memo_H.memoDivid = HRD_M_Divisi.divID LEFT OUTER JOIN HRD_M_Departement ON DLK_T_Memo_H.MemoDepID = HRD_M_Departement.DepID WHERE MemoAktifYN = 'Y' AND memobmrid <> '' AND memobmid = '' "& filterAgen &" "& filterKeb &" "& filtertgl &""
+
     ' untuk data paggination
     page = Request.QueryString("page")
 
-    orderBy = " order by dbo.DLK_T_Memo_H.MemoTgl DESC"
+    orderBy = " order by memoTgl DESC"
     set rs = Server.CreateObject("ADODB.Recordset")
     sqlawal = strquery
 
@@ -107,17 +104,16 @@
         end if	
     loop
 
-
-    call header("UPDATE MEMO ANGGARAN") 
-%>
+    call header("Revisi B.O.M Repair")
+%>    
 <!--#include file="../../navbar.asp"-->
 <div class="container">
-    <div class="row">
-        <div class="col-lg-12 mb-3 mt-3 text-center">
-            <h3>UPDATE HARGA MEMO ANGGARAN</h3> 
+    <div class="row mt-3 mb-3 text-center">
+        <div class="col-lg-12">
+            <h3>REVISI PERMINTAAN ANGGARAN PEMBELANJAAN B.O.M REPAIR</h3>
         </div>
     </div>
-    <form action="uprice.asp" method="post">
+    <form action="./" method="post">
         <div class="row">
             <div class="col-lg-3 mb-3">
                 <label for="Agen">Cabang</label>
@@ -132,23 +128,23 @@
                 </select>
             </div>
             <div class="col-lg-3 mb-3">
-                <label for="keb">Departement</label>
+                <label for="keb">Kebutuhan</label>
                 <select class="form-select" aria-label="Default select example" name="keb" id="keb">
                     <option value="">Pilih</option>
-                    <% do while not kebData.eof %>
-                    <option value="<%= kebData("DepID") %>"><%= kebData("DepNama") %></option>
+                    <% do while not DepData.eof %>
+                    <option value="<%= DepData("DepID") %>"><%= DepData("DepNama") %></option>
                     <% 
-                    kebData.movenext
+                    DepData.movenext
                     loop
                     %>
                 </select>
             </div>
             <div class="col-lg-2 mb-3">
-                <label for="tgla">Tanggal Pertama</label>
+                <label for="tgl">Tanggal Pertama</label>
                 <input type="date" class="form-control" name="tgla" id="tgla" autocomplete="off" >
             </div>
             <div class="col-lg-2 mb-3">
-                <label for="tgle">Tanggal Kedua</label>
+                <label for="tgl">Tanggal Kedua</label>
                 <input type="date" class="form-control" name="tgle" id="tgle" autocomplete="off" >
             </div>
             <div class="col-lg-2 mt-4 mb-3">
@@ -164,10 +160,9 @@
                     <th scope="col">No</th>
                     <th scope="col">Tanggal</th>
                     <th scope="col">No Memo</th>
+                    <th scope="col">No B.O.M</th>
                     <th scope="col">Cabang</th>
-                    <th scope="col">B.O.M Repair</th>
-                    <th scope="col">B.O.M Project</th>
-                    <th scope="col">Approve</th>
+                    <th scope="col">Prosess</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -180,8 +175,12 @@
                     recordcounter = recordcounter + 1
 
                     ' cek data detail
-                    agen_cmd.commandText = "SELECT MemoHarga FROM DLK_T_Memo_D WHERE Left(memoID,17) = '"& rs("memoID") &"' AND (MemoHarga = '0' OR MemoHarga = '')"
+                    agen_cmd.commandText = "SELECT memoID FROM DLK_T_Memo_D WHERE Left(memoID,17) = '"& rs("memoID") &"'"
                     set ddetail = agen_cmd.execute
+
+                    ' cek pembuatan po 
+                    agen_cmd.commandText = "SELECT OPH_MemoID FROM DLK_T_OrPemH WHERE OPH_memoID = '"& rs("memoID") &"'"
+                    set orderpo = agen_cmd.execute
                     %>
                     <tr>
                         <th scope="row"><%= recordcounter %></th>
@@ -189,38 +188,32 @@
                         <td>
                             <%= left(rs("memoID"),4) %>/<%=mid(rs("memoId"),5,3) %>-<% call getAgen(mid(rs("memoID"),8,3),"") %>/<%= mid(rs("memoID"),11,4) %>/<%= right(rs("memoID"),3) %>
                         </td>
-                        <td><%= rs("AgenName") %></td>
+                        <td><%=left(rs("memoBMRID"),3)&"-"&MID(rs("memoBMRID"),4,3)&"/"&MID(rs("memoBMRID"),7,4)&"/"&right(rs("memoBMRID"),3)%></td>
+                        <td><%= rs("agenname") %></td>
                         <td>
-                            <% if rs("memobmrid") <> "" then %>
-                                <%=left(rs("memoBMRID"),3)&"-"&MID(rs("memoBMRID"),4,3)&"/"&MID(rs("memoBMRID"),7,4)&"/"&right(rs("memoBMRID"),3)%>
-                            <%else%>
-                                -
-                            <% end if%>
-                        </td>
-                        <td>
-                            <% if rs("memobmid") <> "" then%>
-                                <%= left(rs("memobmid"),2) %>-<%=mid(rs("memobmid"),3,3) %>/<%= mid(rs("memobmid"),6,4) %>/<%= right(rs("memobmid"),3) %>
-                            <%else%>
-                                -
-                            <%end if%>
-                        </td>
-                        <td>
-                            <%if rs("memoApproveYN") = "Y" then %>
-                                <span class="text-success">Done</span>
+                            <%if not orderpo.eof then %>
+                            <b class="text-success">
+                                Done
+                            </b>
                             <% else %>
-                                <span class="text-dark">Waiting</span> 
+                            <b>
+                                Waiting
+                            </b>
                             <% end if %>
                         </td>
                         <td class="text-center">
-                            <% if not ddetail.eof then %>
-                                <% if session("PR3A") = true then %>
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <a href="uprice_add.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-primary">Update</a>
-                                </div>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                            <% if rs("memoApproveYN") = "N" then %>
+                                <% if ddetail.eof then%>
+                                  Call Engineering
+                                <% else %>
+                                  <%if session("INV9B") = true then%>
+                                    <a href="update.asp?id=<%= rs("memoID") %>" class="btn badge btn-primary btn-sm">Update</a>
+                                  <% end if%>
+                                  <a href="detail.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-warning">Detail</a>
                                 <% end if %>
-                            <% else %>
-                                -
                             <% end if %>
+                            </div>
                         </td>
                     </tr>
                     <% 
@@ -230,7 +223,6 @@
                     lastrecord = 1
                     end if
                     loop
-                    ' rs.movefirst
                     rs.close
                     %>
                 </tbody>
@@ -251,7 +243,7 @@
                         end if
                         if requestrecords <> 0 then 
                     %>
-                        <a class="page-link prev" href="uprice.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&agen=<%=agen%>&keb=<%=keb%>&tgla=<%=tgla%>&tgle=<%=tgle%>">&#x25C4; Prev </a>
+                        <a class="page-link prev" href="./?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&agen=<%=agen%>&keb=<%=keb%>&tgla=<%=tgla%>&tgle=<%=tgle%>">&#x25C4; Prev </a>
                     <% else %>
                         <p class="page-link prev-p">&#x25C4; Prev </p>
                     <% end if %>
@@ -269,9 +261,9 @@
                         end if
                         if Cint(page) = pagelistcounter then
                         %>
-                            <a class="page-link hal bg-primary text-light" href="uprice.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&keb=<%=keb%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal bg-primary text-light" href="./?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&keb=<%=keb%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
                         <%else%>
-                            <a class="page-link hal" href="uprice.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&keb=<%=keb%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal" href="./?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&keb=<%=keb%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
                         <%
                         end if
                         pagelist = pagelist + recordsonpage
@@ -287,7 +279,7 @@
                         end if
                         %>
                         <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                            <a class="page-link next" href="uprice.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&agen=<%=agen%>&keb=<%=keb%>&tgla=<%=tgla%>&tgle=<%=tgle%>">Next &#x25BA;</a>
+                            <a class="page-link next" href="./?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&agen=<%=agen%>&keb=<%=keb%>&tgla=<%=tgla%>&tgle=<%=tgle%>">Next &#x25BA;</a>
                         <% else %>
                             <p class="page-link next-p">Next &#x25BA;</p>
                         <% end if %>

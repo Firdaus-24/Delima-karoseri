@@ -205,7 +205,7 @@
                                 <% if session("M1B") = true then%>
                                     <a href="br_u.asp?id=<%= rs("brg_id") %>" class="btn badge text-bg-primary">update</a> 
                                 <% end if %>
-                                <% if session("M1B") = true then%>
+                                <% if session("M1C") = true then%>
                                     <a href="aktif.asp?id=<%= rs("brg_id") %>" class="btn badge text-bg-danger btn-aktifbrg">delete</a>
                                 <% end if %>
                             </div>

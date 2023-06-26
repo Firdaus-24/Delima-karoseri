@@ -56,6 +56,20 @@
     </div>
     <div class="row">
         <div class="col-sm-2">
+            <label for="No.B.O.M Repair" class="col-form-label">No.B.O.M Repair</label>
+        </div>
+        <div class="col-sm-4 mb-3">
+            <input type="text" id="No.B.O.M Repair" class="form-control" name="No.B.O.M Repair" <%if datah("memobmrid") <> "" then %> value="<%=left(dataH("memoBMRID"),3)&"-"&MID(dataH("memoBMRID"),4,3)&"/"&MID(dataH("memoBMRID"),7,4)&"/"&right(dataH("memoBMRID"),3)%>" <%end if%> readonly>
+        </div>
+        <div class="col-sm-2">
+            <label for="bomproject" class="col-form-label">No. B.O.M Project</label>
+        </div>
+        <div class="col-sm-4">
+            <input type="text" id="bomproject" class="form-control" name="bomproject" <%if datah("memobmid") <> "" then %>  value="<%= left(datah("memobmid"),2) %>-<%=mid(datah("memobmid"),3,3) %>/<%= mid(datah("memobmid"),6,4) %>/<%= right(datah("memobmid"),3) %>" <%end if%> readonly>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
             <label for="kebutuhan" class="col-form-label">Kebutuhan</label>
         </div>
         <div class="col-sm-4 mb-3">

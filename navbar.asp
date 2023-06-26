@@ -92,6 +92,11 @@
                 <a class="link-name" href="<%= url %>views/inventory/reqAnggaran.asp">Anggaran Permintaan</a>
               </li>
               <% end if %>
+              <% if session("INV9") = true then %>  
+              <li>
+                <a class="link-name" href="<%= url %>views/invtryrepair/">Anggaran B.O.M Repair</a>
+              </li>
+              <% end if %>
               <% if session("INV2") = true then %>
               <li>
                 <a class="link-name" href="<%= url %>views/incoming/index.asp">Incomming</a>
