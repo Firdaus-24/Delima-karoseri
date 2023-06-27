@@ -1,7 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
     if session("INV9D") = false then
-        Response.Redirect("../index.asp")
+        Response.Redirect("./")
     end if
 
     id = trim(Request.QueryString("id"))
@@ -57,9 +57,24 @@
     font-size:10px;
   }
   @page {
-    size: A4;
-    size: auto;   /* auto is the initial value */
-    margin: 0;  /* this affects the margin in the printer settings */
+    size: A4 portrait;
+    margin: 5mm;  /* this affects the margin in the printer settings */
+  }
+  @media print
+  {    
+    body {
+      width:   210mm;
+      height:  297mm;
+    }
+    table { 
+      page-break-inside:auto; 
+    }
+    tr    { 
+      page-break-inside:avoid; 
+      page-break-after:auto;
+    }
+    td    { page-break-inside:avoid; page-break-after:auto }
+    
   }
 </style>
 <body onload="window.print()">
@@ -187,23 +202,12 @@
           </td>
         </tr>
       <% 
+      Response.flush
       dataD.movenext
       loop
       %>
     </tbody>
   </table>
-  <div class="footer">
-    <img src="https://chart.googleapis.com/chart?cht=qr&chl=<%= id %>&chs=160x160&chld=L|0" width="60"/></br>
-      <article>
-        <p>
-          PT.Delima Karoseri Indonesia
-        </p>
-        <p>
-          Copyright © 2022, ALL Rights Reserved MuhamadFirdaus-IT Division</br>
-          V.1 Mobile Responsive 2022
-        </p>
-      </article>
-  </div>
 </body>
 <% 
     call footer()

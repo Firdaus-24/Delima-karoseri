@@ -2,7 +2,7 @@
 <!--#include file="../../functions/func_revisibomrepair.asp"-->
 <% 
   if session("INV9B") = false then
-    Response.Redirect("index.asp")
+    Response.Redirect("./")
   end if
     
   id = trim(Request.QueryString("id"))
