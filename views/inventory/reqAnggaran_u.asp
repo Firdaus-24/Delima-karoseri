@@ -119,7 +119,7 @@
                     no = no + 1
                     %>
                         <tr>
-                            <th scope="row"><%= dataD("memoID") %></th>
+                            <th scope="row"><%= no %></th>
                             <td>
                                 <%= dataD("KategoriNama") &"-"& dataD("jenisNama") %>
                             </td>

@@ -244,6 +244,19 @@
               </li>
               <% end if %>
             </ul>
+          <!-- djtf -->
+          <li class="nav-text">
+            <a href="#" onclick="toggle('sublist-djtf')"><i class="bi bi-tools"></i> DJTF</a>
+            <i class="bi bi-chevron-compact-down" id="iconDown"></i>
+          </li>
+            <ul class="sub-menu" id="sublist-djtf">
+              <% if session("DJTF1") = true then%>
+              <li>
+                <a class="link-name" href="<%= url %>views/alatfacility/">Master Alat & facility</a>
+              </li>
+              <% end if%>
+              
+            </ul>
           <!-- ppic / produksi-->
           <li class="nav-text">
             <a href="#" onclick="toggle('sublist-ppic')"><i class="bi bi-layers"></i> PPIC/Prod Dev</a>

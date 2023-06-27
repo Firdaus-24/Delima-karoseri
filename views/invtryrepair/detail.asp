@@ -79,7 +79,7 @@
     <div class="d-flex mb-3">
       <% if session("INV9D") = true then  %>
         <div class="me-auto p-2">
-          <button type="button" class="btn btn-secondary" onClick="window.open('export-XlsAnggaran.asp?id=<%=id%>')" class="btn btn-secondary">Export</button>
+          <button type="button" class="btn btn-secondary" onClick="window.open('export-Xlsanggaran.asp?id=<%=id%>')" class="btn btn-secondary">Export</button>
         </div>
       <% end if %>
       <div class="p-2">

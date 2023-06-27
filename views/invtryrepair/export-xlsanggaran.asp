@@ -13,6 +13,10 @@
     ' response.write data_cmd.commandText
     set dataH = data_cmd.execute
 
+    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama,  DLK_M_TypeBarang.T_Nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID LEFT OUTER JOIN DLK_M_TypeBarang ON DLK_M_Barang.BRg_Type = DLK_M_Typebarang.T_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY DLK_M_TypeBarang.T_Nama, DLK_M_Barang.Brg_Nama ASC"
+    ' response.write data_cmd.commandText
+    set dataD = data_cmd.execute
+
 %>
 <% call header("Detail Permintaan Anggaran") %>
 <style>
@@ -174,6 +178,7 @@
     <tbody>
       <tr>
         <th>No</th>
+        <th>Kode</th>
         <th>Item</th>
         <th>Spesification</th>
         <th>Quantity</th>
@@ -182,16 +187,15 @@
         <th>Keterangan</th>
       </tr>
       <% 
-      data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama,  DLK_M_TypeBarang.T_Nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID LEFT OUTER JOIN DLK_M_TypeBarang ON DLK_M_Barang.BRg_Type = DLK_M_Typebarang.T_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY DLK_M_TypeBarang.T_Nama, DLK_M_Barang.Brg_Nama ASC"
-      ' response.write data_cmd.commandText
-      set dataD = data_cmd.execute
-
       no = 0
       do while not dataD.eof
       no = no + 1
       %>
         <tr>
           <th><%= no %></th>
+          <td>
+            <%= dataD("KategoriNama") &"-"& dataD("jenisNama") %>
+          </td>
           <td><%= dataD("Brg_Nama") %></td>
           <td><%= dataD("memoSpect") %></td>
           <td><%= dataD("memoQtty") %></td>

@@ -12,7 +12,7 @@ sub tambahbomH()
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
 
-   data_cmd.commandText = "SELECT * FROM DLK_M_bomH WHERE BMBrgID = '"& barang &"' AND BMAgenID = '"& cabang &"' AND BMSasisID = '"& sasisid &"' AND BMmanpower = "& mpbom &" AND BMtotalsalary = '"& tsalary &"' AND BMketerangan = '"& keterangan &"' "
+   data_cmd.commandText = "SELECT * FROM DLK_M_bomH WHERE BMBrgID = '"& barang &"' AND BMAgenID = '"& cabang &"' AND BMSasisID = '"& sasisid &"' AND BMmanpower = "& mpbom &" AND BMtotalsalary = '"& tsalary &"' AND BMmanpower = '"& mpbom &"' "
    ' response.write data_cmd.commandText & "<br>"
    set data = data_cmd.execute
 
