@@ -12,7 +12,7 @@
    data.commandText = "SELECT AgenName, AgenID FROM GLB_M_Agen WHERE agenAktifYN = 'Y' ORDER BY AgenName ASC"
    set pcabang = data.execute    
 
-   ' get kode akun
+   ' get sasis
    data.commandText = "SELECT SasisID, SasisType, dbo.DLK_M_Brand.BrandName, dbo.DLK_M_Class.ClassName FROM dbo.DLK_M_Sasis LEFT OUTER JOIN dbo.DLK_M_Brand ON dbo.DLK_M_Sasis.SasisBrandID = dbo.DLK_M_Brand.BrandID LEFT OUTER JOIN dbo.DLK_M_Class ON dbo.DLK_M_Sasis.SasisClassID = dbo.DLK_M_Class.ClassID WHERE SasisAktifYN = 'Y' ORDER BY SasisID ASC"
    set getSasis = data.execute    
 
@@ -23,7 +23,7 @@
 <div class="container">
    <div class="row">
       <div class="col-lg-12 mb-3 mt-3 text-center">
-         <h3>FORM TAMBAH B.O.M</h3>
+         <h3>FORM TAMBAH MASTER B.O.M</h3>
       </div>
    </div>
    <form action="bom_add.asp" method="post" onsubmit="validasiForm(this,event,'Master B.O.M','warning')">
@@ -51,7 +51,7 @@
       </div>
       <div class="row">
          <div class="col-sm-2">
-            <label for="bombrg" class="col-form-label">Item</label>
+            <label for="bombrg" class="col-form-label">Model</label>
          </div>
          <div class="col-sm-4 mb-3 bombrg">
             <select class="form-select" aria-label="Default select example" name="bombrg" id="bombrg" required> 

@@ -22,7 +22,6 @@ sub tambahbomH()
       set p = data_cmd.execute
 
       id = p("ID")
-
       call alert("MATER B.O.M", "berhasil di tambahkan", "success","bomd_add.asp?id="&id) 
    else
       call alert("MATER B.O.M", "sudah terdaftar", "warning", "bom_add.asp")
@@ -63,6 +62,29 @@ sub tambahbomD()
    else
       value = 0
    end if
+end sub
+
+sub updatebomH()
+   bmid = trim(Request.Form("bmid"))
+   barang = trim(Request.Form("brgbomu"))
+   sasisid = trim(Request.Form("sasisidbomu"))
+   approve = trim(Request.Form("approve"))
+   mpbom = trim(Request.Form("mpbomu"))
+   tsalary = replace(replace(replace(trim(Request.Form("salarybomu")),".",""),",",""),"-","")
+   keterangan = trim(Request.Form("keterangan"))
+
+   data_cmd.commandText = "SELECT * FROM DLK_M_bomH WHERE BMid = '"& bmid &"'"
+   ' response.write data_cmd.commandText & "<br>"
+   set data = data_cmd.execute
+
+   if not data.eof then
+      call query("UPDATE DLK_M_BOMH SET BMBrgID = '"& barang &"', BMManpower = "& mpbom &", BMTotalsalary = '"& tsalary &"', BMSasisID = '"& sasisid &"', BMApproveYN = '"& approve &"', BMKeterangan = '"& keterangan &"' WHERE BMID = '"& bmid &"' ")
+      
+      call alert("HEADER MATER B.O.M", "berhasil di update", "success", Request.ServerVariables("HTTP_REFERER")) 
+   else
+      call alert("HEADER MATER B.O.M", "tidak terdaftar", "warning", "./")
+   end if
+
 end sub
 
 sub updatebomD()

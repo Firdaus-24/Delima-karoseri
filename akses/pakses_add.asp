@@ -3135,7 +3135,7 @@ call header("Hak Akses") %>
                 <input class="form-check-input" type="checkbox" name="ENG5B" id="ENG5B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','ENG5B');" >
                 <label for="ENG5B">Update</label>
                 </li>
-                <li>
+              <li>
                 <%
                 data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'ENG5C'"
 
@@ -3143,6 +3143,24 @@ call header("Hak Akses") %>
                 %>
                 <input class="form-check-input" type="checkbox" name="ENG5C" id="ENG5C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','ENG5C');" >
                 <label for="ENG5C">Delete</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'ENG5D'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="ENG5D" id="ENG5D" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','ENG5D');" >
+                <label for="ENG5D">Export</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'ENG5E'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="ENG5E" id="ENG5E" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','ENG5E');" >
+                <label for="ENG5E">Upload Drawing & SKRB</label>
               </li>
             </ul>
         </ul>

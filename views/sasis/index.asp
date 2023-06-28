@@ -1,7 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
    if session("ENG5") = false then 
-      Response.Redirect("../index.asp")
+      Response.Redirect("../")
    end if
 
    set data_cmd =  Server.CreateObject ("ADODB.Command")
@@ -195,19 +195,24 @@
                         <td><%= rs("SasisW") %></td>
                         <td><%= rs("SasisH") %></td>
                         <td>
+                           <% if session("ENG5E") = true then%>
                            <% 
-                           if rs("SasisDrawing") <> "" then
-                           %>
-                              <a href="uploadDrawing.asp?id=<%= "D"&rs("SasisID") %>&pathidh=<%= rs("SasisID") %>&db=SasisDrawing" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
-
-                              <a href="<%= getpathdoc & rs("SasisID") &"/"& rs("SasisDrawing") & ".pdf"%>" class="btn badge text-bg-light" target="_blank"><i class="bi bi-caret-right"></i></a>
+                              if rs("SasisDrawing") <> "" then
+                              %>
+                                    <a href="uploadDrawing.asp?id=<%= "D"&rs("SasisID") %>&pathidh=<%= rs("SasisID") %>&db=SasisDrawing" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
+                                 
+                                    <a href="<%= getpathdoc & rs("SasisID") &"/"& rs("SasisDrawing") & ".pdf"%>" class="btn badge text-bg-light" target="_blank"><i class="bi bi-caret-right"></i></a>
+                              <%else%>
+                                 <a href="uploadDrawing.asp?id=<%= "D"&rs("SasisID") %>&pathidh=<%= rs("SasisID") %>&db=SasisDrawing" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
+                              <%end if
+                              set fs = Nothing
+                              %>
                            <%else%>
-                              <a href="uploadDrawing.asp?id=<%= "D"&rs("SasisID") %>&pathidh=<%= rs("SasisID") %>&db=SasisDrawing" class="btn badge text-bg-light"><i class="bi bi-upload"></i></a>
-                           <%end if
-                           set fs = Nothing
-                           %>
+                              -
+                           <%end if%>
                         </td>
                         <td>
+                           <% if session("ENG5E") = true then%>
                            <% 
                            if rs("SasisSKRB") <> "" then
                            %>
@@ -218,6 +223,9 @@
                            <%end if
                            set fs = Nothing
                            %>
+                           <%else%>
+                              -
+                           <%end if%>
                         </td>
                         <td><%= rs("SasisKeterangan") %></td>
                         <td class="text-center">

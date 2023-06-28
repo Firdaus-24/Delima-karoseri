@@ -2,7 +2,7 @@
 <!--#include file="../../functions/func_bom.asp"--> 
 <% 
    if session("ENG2A") = false then
-      Response.Redirect("index.asp")
+      Response.Redirect("./")
    end if
 
    id = trim(Request.QueryString("id"))
@@ -11,7 +11,7 @@
    data_cmd.ActiveConnection = mm_delima_string
 
    ' get data header
-   data_cmd.commandText = "SELECT dbo.DLK_M_BOMH.*, dbo.DLK_M_Barang.Brg_Nama, GLB_M_Agen.AgenName FROM dbo.DLK_M_BOMH LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_BOMH.BMBrgid = dbo.DLK_M_Barang.brg_ID LEFT OUTER JOIN GLB_M_Agen ON DLK_M_BOMH.BMAgenID = GLB_M_Agen.AgenID WHERE dbo.DLK_M_BOMH.BMID = '"& id &"' AND dbo.DLK_M_BOMH.BMAktifYN = 'Y'"
+   data_cmd.commandText = "SELECT dbo.DLK_M_BOMH.*, dbo.DLK_M_Barang.Brg_Nama, DLK_M_kategori.kategoriNama, DLK_M_JenisBarang.jenisNama, GLB_M_Agen.AgenName FROM dbo.DLK_M_BOMH LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_BOMH.BMBrgid = dbo.DLK_M_Barang.brg_ID LEFT OUTER JOIN GLB_M_Agen ON DLK_M_BOMH.BMAgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.kategoriID = DLK_M_Kategori.kategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE dbo.DLK_M_BOMH.BMID = '"& id &"' AND dbo.DLK_M_BOMH.BMAktifYN = 'Y'"
 
    set data = data_cmd.execute
 
@@ -21,7 +21,7 @@
    set ddata = data_cmd.execute
 
    ' getbarang 
-   data_cmd.commandText = "SELECT DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_ID, DLK_M_kategori.kategoriNama, DLK_M_JenisBarang.jenisNama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.kategoriID = DLK_M_Kategori.kategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE Brg_AktifYN = 'Y' AND Brg_ID <> '"& data("BMBrgID") &"' AND LEFT(Brg_ID,3) = '"& data("BMAgenID") &"' ORDER BY Brg_Nama ASC"
+   data_cmd.commandText = "SELECT DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_ID, DLK_M_kategori.kategoriNama, DLK_M_JenisBarang.jenisNama, DLK_M_TypeBarang.T_Nama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.kategoriID = DLK_M_Kategori.kategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID LEFT OUTER JOIN DLK_M_TypeBarang ON DLK_M_Barang.Brg_type = DLK_M_TypeBarang.T_ID WHERE Brg_AktifYN = 'Y' AND Brg_ID <> '"& data("BMBrgID") &"' AND LEFT(Brg_ID,3) = '"& data("BMAgenID") &"' ORDER BY T_Nama, Brg_Nama ASC"
 
    set barang = data_cmd.execute
 
@@ -34,19 +34,19 @@
 %>
 <!--#include file="../../navbar.asp"-->
 <style>
-.clearfixbom {
-  padding: 80px 0;
-  text-align: center;
-  display:none;
-  position:absolute;
-  width:inherit;
-  overflow:hidden;
-}
+   .clearfixbom {
+   padding: 80px 0;
+   text-align: center;
+   display:none;
+   position:absolute;
+   width:inherit;
+   overflow:hidden;
+   }
 </style>
 <div class="container">
    <div class="row">
       <div class="col-lg-12  mt-3 text-center">
-         <h3>DETAIL BARANG B.O.M</h3>
+         <h3>DETAIL MASTER B.O.M</h3>
       </div>
    </div>
    <div class="row">
@@ -75,10 +75,38 @@
    </div>
    <div class="row">
       <div class="col-sm-2">
-         <label for="barang" class="col-form-label">Barang</label>
+         <label for="barang" class="col-form-label">Kode Model</label>
+      </div>
+      <div class="col-sm-4 mb-3">
+         <input type="text" id="barang" class="form-control" name="barang" value="<%= data("kategoriNama") &" - "& data("JenisNama") %>" readonly>
+      </div>
+      <div class="col-sm-2">
+         <label for="barang" class="col-form-label">Nama Model</label>
       </div>
       <div class="col-sm-4 mb-3">
          <input type="text" id="barang" class="form-control" name="barang" value="<%= data("Brg_Nama") %>" readonly>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-2">
+         <label class="col-form-label">Man power</label>
+      </div>
+      <div class="col-sm-4 mb-3">
+         <input type="text" class="form-control" autocomplete="off" value="<%= data("BMmanpower") %>" readonly>
+      </div>
+      <div class="col-sm-2">
+         <label class="col-form-label">Total Anggaran</label>
+      </div>
+      <div class="col-sm-4 mb-3">
+         <input type="text" class="form-control"  autocomplete="off" value="<%= replace(formatCurrency(data("BMtotalsalary")),"$","") %>" readonly>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-2">
+         <label for="sasisid" class="col-form-label">No. Drawing</label>
+      </div>
+      <div class="col-sm-4 mb-3">
+         <input type="text" class="form-control" name="sasisid" id="sasisid" maxlength="50" autocomplete="off" <%if data("BMSasisID") <> "" then%> value="<%= LEft(data("BMSasisID"),5) &"-"& mid(data("BMSasisID"),6,4) &"-"& right(data("BMSasisID"),3) %>" onclick="window.open('<%=getpathdoc & data("BMSasisID") &"/D"& data("BMSasisID") &".pdf" %>')" style="cursor:pointer;" <%end if%> readonly>
       </div>
       <div class="col-sm-2">
          <label for="approve" class="col-form-label">Approve Y/N</label>
@@ -94,31 +122,11 @@
          </div>
       </div>
    </div>
-   <div class="row">
-      <div class="col-sm-2">
-         <label class="col-form-label">Man power</label>
-      </div>
-      <div class="col-sm-4 mb-3">
-         <input type="text" class="form-control" autocomplete="off" value="<%= data("BMmanpower") %>" readonly>
-      </div>
-      <div class="col-sm-2">
-         <label class="col-form-label">Total Anggaran</label>
-      </div>
-      <div class="col-sm-4 mb-3">
-         <input type="text" class="form-control"  autocomplete="off" value="<%= data("BMtotalsalary") %>" readonly>
-      </div>
-   </div>
-   <div class="row">
-      <div class="col-sm-2">
-         <label for="sasisid" class="col-form-label">No. Drawing</label>
-      </div>
-      <div class="col-sm-4 mb-3">
-         <input type="text" class="form-control" name="sasisid" id="sasisid" maxlength="50" autocomplete="off" value="<%= LEft(data("BMSasisID"),5) &"-"& mid(data("BMSasisID"),6,4) &"-"& right(data("BMSasisID"),3) %>" onclick="window.open('<%=url%>views/sasis/openPdf.asp?id=CL0020001002&p=draw')" style="cursor:pointer;" readonly>
-      </div>
+   <div class='row'>
       <div class="col-sm-2">
          <label for="keterangan" class="col-form-label">Keterangan</label>
       </div>
-      <div class="col-sm-4 mb-3">
+      <div class="col-sm-10 mb-3">
          <input type="text" class="form-control" name="keterangan" id="keterangan" maxlength="50" autocomplete="off" value="<%= data("BMKeterangan") %>" readonly>
       </div>
    </div>
@@ -129,7 +137,7 @@
                <button type="button" class="btn btn-primary btn-modalbomd" data-bs-toggle="modal" data-bs-target="#modalbomd">Tambah Rincian</button>
             </div>
             <div class="p-2">
-               <a href="index.asp" class="btn btn-danger">Kembali</a>
+               <a href="./" class="btn btn-danger">Kembali</a>
             </div>
          </div>
       </div>
@@ -139,7 +147,7 @@
             <table class="table table-hover">
                 <thead class="bg-secondary text-light">
                     <tr>
-                        <th scope="col">ID</th>
+                        <th scope="col">No</th>
                         <th scope="col">Kode</th>
                         <th scope="col">Item</th>
                         <th scope="col">Quantity</th>
@@ -149,11 +157,13 @@
                 </thead>
                 <tbody>
                     <% 
+                    no = 0
                     do while not ddata.eof 
+                    no = no + 1
                     %>
                      <tr>
                         <th>
-                           <%= left(ddata("bmDbmID"),2) %>-<%=mid(ddata("bmDbmID"),3,3) %>/<%= mid(ddata("bmDbmID"),6,4) %>/<%= mid(ddata("BMDBMID"),10,3) %>/<%= right(ddata("BMDBMID"),3) %>
+                           <%= no %>
                         </th>
                         <td>
                            <%= ddata("kategoriNama") &"-"& ddata("JenisNama") %>
@@ -168,8 +178,11 @@
                            <%= ddata("sat_nama") %>
                         </td>
                         <td class="text-center">
-                           <div class="btn-group" role="group" aria-label="Basic example">
-                           <a href="aktifd.asp?id=<%= ddata("bmDbmID") %>&p=bomd_add" class="btn badge text-bg-danger" onclick="deleteItem(event,'delete detail bom')">Delete</a>
+                           <% if session("ENG2C") = true then %>
+                              <a href="aktifd.asp?id=<%= ddata("bmDbmID") %>&p=bomd_add" class="btn badge text-bg-danger" onclick="deleteItem(event,'delete detail bom')">Delete</a>
+                           <%else%>
+                              -
+                           <%end if%>
                         </td>
                      </tr>
                     <% 
@@ -203,9 +216,6 @@
                <input type="text" id="cdetailbom" class="form-control" name="cdetailbom" autocomplete="off"> 
                <!-- cabang -->
                <input type="hidden" id="bomdCabang" class="form-control" name="bomdCabang" value="<%= data("bmAgenID") %>" autocomplete="off"> 
-               <!-- id bom
-               <input type="hidden" id="productID" class="form-control" name="productID" value="<%'= data("bmBrgID") %>" autocomplete="off"> 
-                -->
             </div>
          </div>
          <div class="row">
@@ -215,6 +225,7 @@
                      <tr>
                         <th scope="col">Kode</th>
                         <th scope="col">Nama</th>
+                        <th scope="col">Type</th>
                         <th scope="col">Pilih</th>
                      </tr>
                   </thead>
@@ -227,6 +238,7 @@
                      <tr>
                         <th scope="row"><%= barang("kategoriNama")&"-"& barang("jenisNama") %></th>
                         <td><%= barang("brg_nama") %></td>
+                        <td><%= barang("T_nama") %></td>
                         <td>
                            <div class="form-check">
                                  <input class="form-check-input" type="radio" name="ckproduckd" id="ckproduckd" value="<%= barang("Brg_ID") %>" required>

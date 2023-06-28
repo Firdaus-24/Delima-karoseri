@@ -2,7 +2,7 @@
 <!--#include file="../../functions/func_bom.asp"--> 
 <% 
    if session("ENG2B") = false then
-      Response.Redirect("index.asp")
+      Response.Redirect("./")
    end if
 
    id = trim(Request.QueryString("id"))
@@ -11,17 +11,38 @@
    data_cmd.ActiveConnection = mm_delima_string
 
    ' get data header
-   data_cmd.commandText = "SELECT dbo.DLK_M_BOMH.*, dbo.DLK_M_Barang.Brg_Nama, GLB_M_Agen.AgenName FROM dbo.DLK_M_BOMH LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_BOMH.BMBrgid = dbo.DLK_M_Barang.brg_ID LEFT OUTER JOIN GLB_M_Agen ON DLK_M_BOMH.BMAgenID = GLB_M_Agen.AgenID WHERE dbo.DLK_M_BOMH.BMID = '"& id &"' AND dbo.DLK_M_BOMH.BMAktifYN = 'Y'"
-
+   data_cmd.commandText = "SELECT dbo.DLK_M_BOMH.*, dbo.DLK_M_Barang.Brg_Nama, DLK_M_kategori.kategoriNama, DLK_M_JenisBarang.jenisNama, GLB_M_Agen.AgenName FROM dbo.DLK_M_BOMH LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_BOMH.BMBrgid = dbo.DLK_M_Barang.brg_ID LEFT OUTER JOIN GLB_M_Agen ON DLK_M_BOMH.BMAgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.kategoriID = DLK_M_Kategori.kategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE dbo.DLK_M_BOMH.BMID = '"& id &"' AND dbo.DLK_M_BOMH.BMAktifYN = 'Y'"
+   ' Response.Write data_cmd.commandText 
    set data = data_cmd.execute
+
+   if data.eof then
+%>
+   <!--#include file="../../navbar.asp"-->
+<%
+   call header("error")
+      call alert("WARNING", "pastikan data aktif dan terdaftar", "error", "./") 
+   call footer()
+   Response.End
+%>
+<%
+   end if
 
    ' get data detail
    data_cmd.commandText = "SELECT dbo.DLK_M_BOMD.*, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama FROM dbo.DLK_M_SatuanBarang RIGHT OUTER JOIN dbo.DLK_M_BOMD ON dbo.DLK_M_SatuanBarang.Sat_ID = dbo.DLK_M_BOMD.BMDJenisSat LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_BOMD.BMDItem = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.kategoriID = DLK_M_Kategori.kategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.jenisID = DLK_M_JenisBarang.jenisID WHERE LEFT(dbo.DLK_M_BOMD.BMDBMID,12) = '"& data("BMID") &"' ORDER BY BMDBMID ASC"
 
    set ddata = data_cmd.execute
 
-   ' getbarang 
-   data_cmd.commandText = "SELECT DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_ID, DLK_M_kategori.kategoriNama, DLK_M_JenisBarang.jenisNama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.kategoriID = DLK_M_Kategori.kategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE Brg_AktifYN = 'Y' AND Brg_ID <> '"& data("BMBrgID") &"' AND LEFT(Brg_ID,3) = '"& data("BMAgenID") &"' ORDER BY Brg_Nama ASC"
+   ' get model
+   data_cmd.commandText = "SELECT DLK_M_Barang.*, dbo.DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama, DLK_M_TypeBarang.T_Nama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.JenisID LEFT OUTER JOIN DLK_M_TypeBarang ON DLK_M_Barang.BRg_Type = DLK_M_TypeBarang.T_ID WHERE Brg_AktifYN = 'Y' AND (T_Nama = 'PRODUKSI' OR T_Nama = 'SUB PART' ) ORDER BY Brg_Nama ASC"
+
+   set model = data_cmd.execute
+
+   ' get sasis / drawing
+   data_cmd.commandText = "SELECT SasisID, SasisType, dbo.DLK_M_Brand.BrandName, dbo.DLK_M_Class.ClassName FROM dbo.DLK_M_Sasis LEFT OUTER JOIN dbo.DLK_M_Brand ON dbo.DLK_M_Sasis.SasisBrandID = dbo.DLK_M_Brand.BrandID LEFT OUTER JOIN dbo.DLK_M_Class ON dbo.DLK_M_Sasis.SasisClassID = dbo.DLK_M_Class.ClassID WHERE SasisAktifYN = 'Y' ORDER BY SasisID ASC"
+   set getSasis = data_cmd.execute  
+
+   ' getbarang rincian
+   data_cmd.commandText = "SELECT DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_ID, DLK_M_kategori.kategoriNama, DLK_M_JenisBarang.jenisNama, DLK_M_TypeBarang.T_Nama FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.kategoriID = DLK_M_Kategori.kategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID LEFT OUTER JOIN DLK_M_TypeBarang ON DLK_M_Barang.Brg_type = DLK_M_TypeBarang.T_ID WHERE Brg_AktifYN = 'Y' AND Brg_ID <> '"& data("BMBrgID") &"' AND LEFT(Brg_ID,3) = '"& data("BMAgenID") &"' ORDER BY T_Nama, Brg_Nama ASC"
 
    set barang = data_cmd.execute
 
@@ -34,19 +55,19 @@
 %>
 <!--#include file="../../navbar.asp"-->
 <style>
-.clearfixbom {
-  padding: 80px 0;
-  text-align: center;
-  display:none;
-  position:absolute;
-  width:inherit;
-  overflow:hidden;
-}
+   .clearfixbom {
+   padding: 80px 0;
+   text-align: center;
+   display:none;
+   position:absolute;
+   width:inherit;
+   overflow:hidden;
+   }
 </style>
 <div class="container">
    <div class="row">
       <div class="col-lg-12  mt-3 text-center">
-         <h3>DETAIL BARANG B.O.M</h3>
+         <h3>DETAIL MASTER B.O.M</h3>
       </div>
    </div>
    <div class="row">
@@ -73,25 +94,43 @@
          <input type="text" id="cabang" class="form-control" name="cabang" value="<%= data("agenName") %>" readonly>
       </div>
    </div>
+   <form action="bom_u.asp?id=<%= id %>" method="post" onsubmit="validasiForm(this,event,'UPDATE MASTER B.O.M', 'warning')">
+   <input type="hidden" name="bmid" id="bmid" value="<%= id %>">
+   <input type="checkbox" name="dataheader" id="dataheader" style="opacity:0;display:none;"  checked>
    <div class="row">
       <div class="col-sm-2">
-         <label for="barang" class="col-form-label">Barang</label>
+         <label for="kode" class="col-form-label">Kode Model</label>
       </div>
       <div class="col-sm-4 mb-3">
-         <input type="text" id="barang" class="form-control" name="barang" value="<%= data("Brg_Nama") %>" readonly>
+         <input type="text" id="kode" class="form-control" name="kode" value="<%= data("kategoriNama") &" - "& data("JenisNama") %>" readonly>
       </div>
       <div class="col-sm-2">
-         <label for="approve" class="col-form-label">Approve Y/N</label>
+         <label for="brgbomu" class="col-form-label">Nama Model</label>
       </div>
       <div class="col-sm-4 mb-3">
-         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="approve" id="approveY" value="Y" <% if data("BMApproveYN") = "Y" then%>checked <% end if %>disabled>
-            <label class="form-check-label" for="approveY">Yes</label>
-         </div>
-         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="approve" id="approveN" value="N" <% if data("BMApproveYN") = "N" then%>checked <% end if %>disabled>
-            <label class="form-check-label" for="approveN" >No</label>
-         </div>
+         <select class="form-select" aria-label="Default select example" name="brgbomu" id="brgbomu" required> 
+         <option value="<%= data("bmbrgid") %>"><%= data("Brg_Nama") %></option>
+         <% do while not model.eof %>
+            <option value="<%=model("Brg_ID") %>"><%=  "<b>" & model("KategoriNama") &"-"& model("JenisNama") & "</b>" &" | "& model("Brg_Nama") %></option>
+         <% 
+         model.movenext
+         loop
+         %>
+    </select>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-2">
+         <label class="col-form-label">Man power</label>
+      </div>
+      <div class="col-sm-4 mb-3">
+         <input type="text" class="form-control" autocomplete="off" name="mpbomu" id="mpbomu" value="<%= data("BMmanpower") %>" required>
+      </div>
+      <div class="col-sm-2">
+         <label class="col-form-label">Total Anggaran</label>
+      </div>
+      <div class="col-sm-4 mb-3">
+         <input type="text" class="form-control" name="salarybomu" id="salarybomu"  autocomplete="off" value="<%= replace(replace(formatCurrency(data("BMtotalsalary")),"$",""),".00","") %>" onchange="settingFormatRupiah(this.value, 'salarybomu')" required>
       </div>
    </div>
    <div class="row">
@@ -99,73 +138,119 @@
          <label for="sasisid" class="col-form-label">No. Drawing</label>
       </div>
       <div class="col-sm-4 mb-3">
-         <input type="text" class="form-control" name="sasisid" id="sasisid" maxlength="50" autocomplete="off" value="<%= LEft(data("BMSasisID"),5) &"-"& mid(data("BMSasisID"),6,4) &"-"& right(data("BMSasisID"),3) %>" onclick="window.open('<%=url%>views/sasis/openPdf.asp?id=CL0020001002&p=draw')" style="cursor:pointer;"  readonly>
+         <div class="input-group mb-3">
+            <%if data("BMSasisID") <> "" then%>
+            <a href="<%=getpathdoc & data("BMSasisID") &"/D"& data("BMSasisID") &".pdf" %>" target="_blank">
+               <span class="input-group-text" id="basic-addon1"><i class="bi bi-eye"></i></span>
+            </a>
+            <%end if%>
+            <select class="form-select" aria-label="Default select example" id="sasisidbomu" name="sasisidbomu">
+               <%if data("BMSasisID") <> "" then%>
+                  <option value="<%=data("BMSasisID")%>">
+                     <%= LEft(data("BMSasisID"),5) &"-"& mid(data("BMSasisID"),6,4) &"-"& right(data("BMSasisID"),3) %>
+                  </option>
+               <%else%>
+                  <option value="">Pilih</option>
+               <%end if%>
+               <% do while not getsasis.eof %>
+               <option value="<%= getsasis("sasisID") %>"><%= getsasis("className") &" | "& getsasis("brandName") &" | "& getsasis("SasisType") %></option>
+               <% 
+               response.flush
+               getsasis.movenext
+               loop
+               %>
+            </select>
+         </div>
       </div>
+      <div class="col-sm-2">
+         <label for="approve" class="col-form-label">Approve Y/N</label>
+      </div>
+      <div class="col-sm-4 mb-3">
+         <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="approve" id="approveY" value="Y" <% if data("BMApproveYN") = "Y" then%>checked <% end if %>>
+            <label class="form-check-label" for="approveY">Yes</label>
+         </div>
+         <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="approve" id="approveN" value="N" <% if data("BMApproveYN") = "N" then%>checked <% end if %>>
+            <label class="form-check-label" for="approveN" >No</label>
+         </div>
+      </div>
+   </div>
+   <div class='row'>
       <div class="col-sm-2">
          <label for="keterangan" class="col-form-label">Keterangan</label>
       </div>
-      <div class="col-sm-4 mb-3">
-         <input type="text" class="form-control" name="keterangan" id="keterangan" maxlength="50" autocomplete="off" value="<%= data("BMKeterangan") %>" readonly>
+      <div class="col-sm-10 mb-3">
+         <input type="text" class="form-control" name="keterangan" id="keterangan" maxlength="50" autocomplete="off" value="<%= data("BMKeterangan") %>">
       </div>
    </div>
    <div class="row">
-   <div class="col-lg-12">
-      <div class="d-flex mb-3">
+      <div class="col-lg-12">
+         <div class="d-flex mb-3">
             <div class="me-auto p-2">
-               <button type="button" class="btn btn-primary btn-modalbomd" data-bs-toggle="modal" data-bs-target="#modalbomd">Tambah Rincian</button>
+               <div class="btn-group" role="group" aria-label="Basic example">
+                  <button type="button" class="btn btn-primary btn-modalbomd" data-bs-toggle="modal" data-bs-target="#modalbomd">Tambah Rincian</button>
+                  <button type="submit" class="btn btn-success">Update Header</button>
+               </div>
             </div>
+   </form>
             <div class="p-2">
-               <a href="index.asp" class="btn btn-danger">Kembali</a>
+               <a href="./" class="btn btn-danger">Kembali</a>
             </div>
          </div>
       </div>
    </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <table class="table table-hover">
-                <thead class="bg-secondary text-light">
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Kode</th>
-                        <th scope="col">Item</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Satuan</th>
-                        <th scope="col" class="text-center">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% 
-                    do while not ddata.eof 
-                    %>
-                        <tr>
-                           <th>
-                              <%= left(ddata("bmDbmID"),2) %>-<%=mid(ddata("bmDbmID"),3,3) %>/<%= mid(ddata("bmDbmID"),6,4) %>/<%= mid(ddata("BMDBMID"),10,3) %>/<%= right(ddata("BMDBMID"),3) %>
-                           </th>
-                           <td>
-                              <%= ddata("kategoriNama") &"-"& ddata("JenisNama") %>
-                           </td>
-                           <td>
-                              <%= ddata("Brg_Nama") %>
-                           </td>
-                           <td>
-                              <%= ddata("bmDQtty") %>
-                           </td>
-                           <td>
-                              <%= ddata("sat_nama") %>
-                           </td>
-                           <td class="text-center">
-                              <div class="btn-group" role="group" aria-label="Basic example">
+   <div class="row">
+      <div class="col-lg-12">
+         <table class="table table-hover">
+               <thead class="bg-secondary text-light">
+                  <tr>
+                     <th scope="col">No</th>
+                     <th scope="col">Kode</th>
+                     <th scope="col">Item</th>
+                     <th scope="col">Quantity</th>
+                     <th scope="col">Satuan</th>
+                     <th scope="col" class="text-center">Aksi</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <% 
+                  no = 0
+                  do while not ddata.eof 
+                  no = no + 1
+                  %>
+                     <tr>
+                        <th>
+                           <%= no %>
+                        </th>
+                        <td>
+                           <%= ddata("kategoriNama") &"-"& ddata("JenisNama") %>
+                        </td>
+                        <td>
+                           <%= ddata("Brg_Nama") %>
+                        </td>
+                        <td>
+                           <%= ddata("bmDQtty") %>
+                        </td>
+                        <td>
+                           <%= ddata("sat_nama") %>
+                        </td>
+                        <td class="text-center">
+                           <% if session("ENG2C") = true then %>
                               <a href="aktifd.asp?id=<%= ddata("bmDbmID") %>&p=bom_u" class="btn badge text-bg-danger" onclick="deleteItem(event,'delete detail bom')">Delete</a>
-                           </td>
-                        </tr>
-                    <% 
-                    ddata.movenext
-                    loop
-                    %>
-                </tbody>
-            </table>
-        </div>
-    </div>
+                           <%else%>
+                              -
+                           <%end if%>
+                        </td>
+                     </tr>
+                  <% 
+                  ddata.movenext
+                  loop
+                  %>
+               </tbody>
+         </table>
+      </div>
+   </div>
 </div>  
 <!-- Modal -->
 <div class="modal fade" id="modalbomd" tabindex="-1" aria-labelledby="modalbomdLabel" aria-hidden="true">
@@ -178,6 +263,7 @@
       <form action="bom_u.asp?id=<%= id %>" method="post" id="formbomd" onsubmit="validasiForm(this,event,'Detail Barang B.O.M','warning')">
       <input type="hidden" name="bmid" id="bmid" value="<%= id %>">
       <input type="hidden" name="notbrgid" id="notbrgid" value="<%= data("BMBrgID") %>">
+      <input type="checkbox" name="dataheader" id="dataheader" style="opacity:0;display:none;">
          <div class="modal-body">
          <!-- table barang -->
          <div class="row">
@@ -201,6 +287,7 @@
                      <tr>
                         <th scope="col">Kode</th>
                         <th scope="col">Nama</th>
+                        <th scope="col">Type</th>
                         <th scope="col">Pilih</th>
                      </tr>
                   </thead>
@@ -213,6 +300,7 @@
                      <tr>
                         <th scope="row"><%= barang("kategoriNama")&"-"& barang("jenisNama") %></th>
                         <td><%= barang("brg_nama") %></td>
+                        <td><%= barang("T_nama") %></td>
                         <td>
                            <div class="form-check">
                                  <input class="form-check-input" type="radio" name="ckproduckd" id="ckproduckd" value="<%= barang("Brg_ID") %>" required>
@@ -265,7 +353,11 @@
 
 <% 
    if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
-      call updatebomD()
+      if Request.Form("dataheader") <> "" then
+         call updatebomH()
+      else
+         call updatebomD()
+      end if
    end if
    call footer()
 %>

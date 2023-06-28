@@ -1,7 +1,7 @@
 <!--#include file="../../functions/func_uploadpdf.asp"-->
 <% 
-	if session("INV3F") = false then
-		Response.Redirect("index.asp")
+	if session("ENG5E") = false then
+		Response.Redirect("./")
 	end if
 
 	call header("UPLOAD DOCUMENT") 

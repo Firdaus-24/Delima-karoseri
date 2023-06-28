@@ -1,7 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
         if session("ENG2C") = false then
-                Response.Redirect("index.asp")
+                Response.Redirect("./")
         end if
         id = Request.QueryString("id")
         p = trim(Request.QueryString("p"))
@@ -18,6 +18,6 @@
 <!--#include file="../../navbar.asp"-->
 <%      
         call query("UPDATE DLK_M_BOMH SET BMAktifYN = '"& p &"' WHERE BMID = '"& id &"'")
-        call alert("MASTER B.O.M "&id&" ", str, "success","index.asp") 
+        call alert("MASTER B.O.M "&id&" ", str, "success","./") 
 call footer() 
 %>

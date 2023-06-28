@@ -1,19 +1,16 @@
 <!--#include file="../../init.asp"-->
 <% 
     if session("ENG2D") = false then
-        Response.Redirect("index.asp")
+        Response.Redirect("./")
     end if
 
     id = trim(Request.QueryString("id"))
-
-    ' Response.ContentType = "application/vnd.ms-excel"
-    ' Response.AddHeader "content-disposition", "filename=Detail Product "& Request.QueryString("id")&" .xls"
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
     ' get data header
-    data_cmd.commandText = "SELECT dbo.DLK_M_BOMH.*, dbo.DLK_M_Barang.Brg_Nama, GLB_M_Agen.AgenName FROM dbo.DLK_M_BOMH LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_BOMH.BMBrgid = dbo.DLK_M_Barang.brg_ID LEFT OUTER JOIN GLB_M_Agen ON DLK_M_BOMH.BMAgenID = GLB_M_Agen.AgenID WHERE dbo.DLK_M_BOMH.BMID = '"& id &"' AND dbo.DLK_M_BOMH.BMAktifYN = 'Y'"
+    data_cmd.commandText = "SELECT dbo.DLK_M_BOMH.*, dbo.DLK_M_Barang.Brg_Nama, DLK_M_kategori.kategoriNama, DLK_M_JenisBarang.jenisNama, GLB_M_Agen.AgenName FROM dbo.DLK_M_BOMH LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_BOMH.BMBrgid = dbo.DLK_M_Barang.brg_ID LEFT OUTER JOIN GLB_M_Agen ON DLK_M_BOMH.BMAgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.kategoriID = DLK_M_Kategori.kategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE dbo.DLK_M_BOMH.BMID = '"& id &"' AND dbo.DLK_M_BOMH.BMAktifYN = 'Y'"
 
     set data = data_cmd.execute
 
@@ -29,72 +26,59 @@
         padding:10px;
     }
     .gambar{
-        width:200px;
+        width:80px;
         height:80px;
-        /* right:70px; */
         position:absolute;
+        right:70px;
     }
     .gambar img{
         position:absolute;
-        width:120px;
+        width:100px;
         height:50px;
     }
     #cdetail > * > tr > *  {
         border: 1px solid black;
         padding:5px;
     }
-    .drawing{
-        margin-top:20px;
-        padding:5px;
-        width:100%;
-        height:10em;
-        display:flex;
-    }
-    .images{
-        width:12em;
-        margin:10px;
-        padding:0;
-        text-align: center;
-        vertical-align:center;
-        overflow:hidden;
-        border:1px solid black;
-    }
-    .images span{
-        display:block;
-        top:0;
-        padding:0;
-        font-family: Verdana, sans-serif;
-        font-weight:bold;
-        font-size:12px;
-        font-style: oblique;
-    }
-    .images img{
-        display:inline-block;
-        width:12rem;
-        height:110px;
-        padding:5px;
-    }
-    @page {
-        size: A4;
-        size: auto;   /* auto is the initial value */
-        margin: 0;  /* this affects the margin in the printer settings */
-    }
+
     #cdetail{
         width:100%;
         font-size:12px;
         border-collapse: collapse;
     }
+    .footer article{
+      font-size:10px;
+    }
+    @page {
+        size: A4 portrait;
+        margin: 5mm;  /* this affects the margin in the printer settings */
+    }
+    @media print
+    {    
+        body {
+            width:   210mm;
+            height:  297mm;
+        }
+        table { 
+            page-break-inside:auto; 
+        }
+        tr    { 
+        page-break-inside:avoid; 
+        page-break-after:auto;
+        }
+        td    { page-break-inside:avoid; page-break-after:auto }
+    }
 </style>
 <body onload="window.print()">
-    <table width="100%" style="font-size:16px">
-        <tr>
-        <div class="row gambar">
+    <div class="row gambar">
+         <div class="col ">
             <img src="<%= url %>/public/img/delimalogo.png" alt="delimalogo">
         </div>
-        </tr>
+    </div>
+    <table width="100%" style="font-size:16px">
         <tr>
             <td colspan="5" align="center">
-                DETAIL BARANG B.O.M
+                DETAIL MASTER B.O.M
             </td>
         </tr>
         <tr class="row">
@@ -125,10 +109,40 @@
         </tr>
         <tr>
             <td>
-                Barang
+                Kode Model
+            </td>
+            <td>
+                : <%= data("kategoriNama") &" - "& data("JenisNama") %>
+            </td>
+            <td>
+                Nama Model
             </td>
             <td>
                 : <%= data("Brg_Nama") %>
+            </td>
+            
+        </tr>
+        <tr>
+            <td>
+                Man Power
+            </td>
+            <td>
+                : <%= data("BMmanpower") %>
+            </td>
+            <td>
+                Anggaran Man Power
+            </td>
+            <td>
+                : <%= replace(formatCurrency(data("BMtotalsalary")),"$","Rp. ") %>
+            </td>
+            
+        </tr>
+        <tr>
+            <td>
+                No.Drawing
+            </td>
+            <td>
+                : <%= LEft(data("BMSasisID"),5) &"-"& mid(data("BMSasisID"),6,4) &"-"& right(data("BMSasisID"),3) %>
             </td>
             <td>
                 Approve
@@ -138,12 +152,6 @@
             </td>
         </tr>
         <tr>
-            <td>
-                No.Drawing
-            </td>
-            <td>
-                : <%= LEft(data("BMSasisID"),5) &"-"& mid(data("BMSasisID"),6,4) &"-"& right(data("BMSasisID"),3) %>
-            </td>
             <td>
                 Keterangan
             </td>
@@ -157,18 +165,20 @@
     </table>
     <table id="cdetail" style="font-size:12px">
         <tr>
-            <th scope="col">ID</th>
+            <th scope="col">No</th>
             <th scope="col">Kode</th>
             <th scope="col">Item</th>
             <th scope="col">Quantity</th>
             <th scope="col">Satuan</th>
         </tr>
         <% 
+        no = 0
         do while not ddata.eof 
+        no = no + 1
         %>
             <tr>
                 <th>
-                    <%= left(ddata("bmDbmID"),2) %>-<%=mid(ddata("bmDbmID"),3,3) %>/<%= mid(ddata("bmDbmID"),6,4) %>/<%= mid(ddata("BMDBMID"),10,3) %>/<%= right(ddata("BMDBMID"),3) %>
+                    <%= no %>
                 </th>
                 <td>
                     <%= ddata("kategoriNama") &"-"& ddata("JenisNama") %>
@@ -184,6 +194,7 @@
                 </td>
             </tr>
         <% 
+        response.flush
         ddata.movenext
         loop
         %>
