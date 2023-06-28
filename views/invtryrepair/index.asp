@@ -161,7 +161,7 @@
                     <th scope="col">Tanggal</th>
                     <th scope="col">No Memo</th>
                     <th scope="col">No B.O.M</th>
-                    <th scope="col">Cabang</th>
+                    <th scope="col">Keterangan</th>
                     <th scope="col">Prosess</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
@@ -189,7 +189,7 @@
                             <%= left(rs("memoID"),4) %>/<%=mid(rs("memoId"),5,3) %>-<% call getAgen(mid(rs("memoID"),8,3),"") %>/<%= mid(rs("memoID"),11,4) %>/<%= right(rs("memoID"),3) %>
                         </td>
                         <td><%=left(rs("memoBMRID"),3)&"-"&MID(rs("memoBMRID"),4,3)&"/"&MID(rs("memoBMRID"),7,4)&"/"&right(rs("memoBMRID"),3)%></td>
-                        <td><%= rs("agenname") %></td>
+                        <td><%= rs("memoketerangan") %></td>
                         <td>
                             <%if not orderpo.eof then %>
                             <b class="text-success">

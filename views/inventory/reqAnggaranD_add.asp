@@ -200,7 +200,7 @@
                 <label for="spect" class="col-form-label">Sepesification</label>
             </div>
             <div class="col-sm-9 mb-3">
-                <input type="text" id="spect" class="form-control" name="spect" autocomplete="off" maxlength="50" required>
+                <input type="text" id="spect" class="form-control" name="spect" autocomplete="off" maxlength="50">
             </div>
         </div>
         <div class="row">

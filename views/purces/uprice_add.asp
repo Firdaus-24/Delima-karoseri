@@ -12,7 +12,7 @@
     ' response.write data_cmd.commandText
     set dataH = data_cmd.execute
 
-    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_Id, DLK_M_kategori.kategoriNama, DLK_M_JenisBarang.jenisNama,DLK_M_TypeBarang.T_Nama  FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.kategoriID = DLK_M_Kategori.kategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID LEFT OUTER JOIN DLK_M_TypeBarang ON DLK_M_Barang.Brg_type = DLK_M_TypeBarang.T_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
+    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Barang.Brg_Id, DLK_M_kategori.kategoriNama, DLK_M_JenisBarang.jenisNama,DLK_M_TypeBarang.T_Nama, DLK_M_SatuanBarang.sat_nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.kategoriID = DLK_M_Kategori.kategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID LEFT OUTER JOIN DLK_M_TypeBarang ON DLK_M_Barang.Brg_type = DLK_M_TypeBarang.T_ID LEFT OUTER JOIN DLK_M_Satuanbarang ON DLK_T_Memo_D.memosatuan = DLK_M_Satuanbarang.sat_id WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
     ' response.write data_cmd.commandText
     set dataD = data_cmd.execute
 
@@ -127,13 +127,13 @@
                             <td><%= dataD("Brg_Nama") %></td>
                             <td><%= dataD("memoSpect") %></td>
                             <td><%= dataD("memoQtty") %></td>
-                            <td><% call getSatBerat(dataD("memoSatuan")) %></td>
-                            <td><%= replace(formatCurrency(dataD("memoHarga")),"$","") %></td>
+                            <td><%= dataD("sat_nama") %></td>
+                            <td><%= replace(replace(formatCurrency(dataD("memoHarga")),"$",""),".00","") %></td>
                             <td>
                                     <%= dataD("memoKeterangan") %>
                             </td>
                             <td class="text-center">
-                                <a href="#" class="btn badge text-bg-primary modalUpdateHarga" data-iddetail="<%= dataD("memoID") %>" data-bs-toggle="modal" data-bs-target="#modalUpdateHarga">Update</a>
+                                <a href="#" class="btn badge text-bg-primary" onclick="getUpricePurchase('<%= dataD("memoID") %>','<%= dataD("Brg_Nama") %>','<%= dataD("memoSpect") %>','<%= dataD("memoQtty") %>','<%= dataD("sat_nama") %>', '<%= dataD("memoKeterangan") %>', '<%= replace(replace(formatCurrency(dataD("memoHarga")),"$",""),".00","") %>')" data-bs-toggle="modal" data-bs-target="#modalUpdateHarga">Update</a>
                             </td>
                         </tr>
                     <% 
@@ -223,7 +223,6 @@
     if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
         memoiddetail = trim(Request.Form("memoiddetail"))
         hargaumemo = replace(replace(replace(trim(Request.Form("hargaumemo")),",",""),".",""),"-","")
-        memoid = left(memoiddetail,17)
 
         set data_cmd =  Server.CreateObject ("ADODB.Command")
         data_cmd.ActiveConnection = mm_delima_string
@@ -234,18 +233,11 @@
 
         if not data.eof then
             call query("UPDATE DLK_T_Memo_D SET memoHarga = '"& hargaumemo &"' WHERE memoID = '"& memoiddetail &"'")
-            value = 1
+            call alert("HARGA BARANG", "berhasil di Update", "success",Request.ServerVariables("HTTP_REFERER")) 
         else
-            value = 2
+            call alert("HARGA BARANG", "tidak terdaftar", "warning",Request.ServerVariables("HTTP_REFERER"))
         end if
 
-        if value = 1 then
-            call alert("HARGA BARANG", "berhasil di Update", "success","uprice_add.asp?id="&memoid) 
-        elseif value = 2 then
-            call alert("HARGA BARANG", "tidak terdaftar", "warning","uprice_add.asp?id="&memoid)
-        else
-            value = 0
-        end if
     end if
     call footer()
 %>

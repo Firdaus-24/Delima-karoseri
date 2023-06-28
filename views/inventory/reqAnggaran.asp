@@ -165,11 +165,11 @@
                 <thead class="bg-secondary text-light">
                     <tr>
                     <th scope="col">No</th>
-                    <th scope="col">No Memo</th>
                     <th scope="col">Tanggal</th>
-                    <th scope="col">Cabang</th>
+                    <th scope="col">No Memo</th>
                     <th scope="col">Divisi</th>
                     <th scope="col">Departement</th>
+                    <th scope="col">Keterangan</th>
                     <th scope="col">Prosess</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
@@ -192,13 +192,13 @@
                     %>
                     <tr>
                         <th scope="row"><%= recordcounter %></th>
+                        <td><%= Cdate(rs("memoTgl")) %></td>
                         <td>
                             <%= left(rs("memoID"),4) %>/<%=mid(rs("memoId"),5,3) %>-<% call getAgen(mid(rs("memoID"),8,3),"") %>/<%= mid(rs("memoID"),11,4) %>/<%= right(rs("memoID"),3) %>
                         </td>
-                        <td><%= Cdate(rs("memoTgl")) %></td>
-                        <td><%= rs("AgenName") %></td>
                         <td><%= rs("DivNama") %></td>
                         <td><%= rs("DepNama")%></td>
+                        <td><%= rs("memoKeterangan") %></td>
                         <td>
                             <%if not orderpo.eof then %>
                             <b class="text-success">
