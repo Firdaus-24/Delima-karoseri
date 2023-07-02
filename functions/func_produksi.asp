@@ -98,4 +98,72 @@ sub updateProduksiD()
         call alert("FORM DETAIL PRODUKSI", "berhasil didaftarkan", "success","prod_u.asp?id="&id)
     end if 
 end sub
+
+sub reqAnggaran()
+    pdhid = trim(Request.Form("pdhid"))
+    tgl = trim(Request.Form("tgl"))
+    agen = trim(Request.Form("agen"))
+    divisi = trim(Request.Form("divisi"))
+    departement = trim(Request.Form("departement"))
+    keterangan = trim(Request.Form("keterangan"))
+    kebutuhan = trim(Request.Form("kebutuhan"))
+
+    set data_cmd =  Server.CreateObject ("ADODB.Command")
+    data_cmd.ActiveConnection = mm_delima_string
+
+    ' cek data terserdia
+    data_cmd.commandText = "SELECT * FROM DLK_T_Memo_H WHERE MemoagenID = '"& agen &"' AND memopdhID = '"& pdhid &"' AND memoKebutuhan = "& kebutuhan &" AND memoApproveYN = 'N' AND memoAktifYN = 'Y'"
+    ' response.write data_cmd.commandText
+    set data = data_cmd.execute
+
+    if data.eof then
+        ' cek data bom di nomor produksi
+        data_cmd.commandTExt = "SELECT COUNT(PDD_BMID) AS jmlbom, PDD_BMID FROM   dbo.DLK_T_ProduksiD WHERE (LEFT(PDD_ID, 13) = '"& pdhid &"') GROUP BY PDD_BMID"
+        set ckpd = data_cmd.execute
+
+        capacity = 0
+        qtybaru = 0
+        do while not ckpd.EOF
+            capacity = Cint(ckpd("jmlbom"))
+            data_cmd.commandText = "sp_addDLK_T_Memo_H '"& tgl &"','"& agen &"','"& departement &"', '"& divisi &"', '"& keterangan &"', '"& session("userid") &"', "& kebutuhan &", '' ,'"& ckpd("PDD_BMID") &"','"& pdhid &"' ,"& capacity &" "
+            set data = data_cmd.execute
+
+            idheaderbaru = data("ID")
+
+            ' cek detail bom 
+            data_cmd.commandTExt = "SELECT * FROM DLK_M_BOMD WHERE LEFT(bmDbmID,12) = '"& ckpd("PDD_BMID") &"'"
+
+            set getbom = data_cmd.execute
+            
+            
+            if not getbom.eof then
+                do while not getbom.eof
+                    qtybaru =  getbom("BMDQtty") * capacity
+                    ' get id detail bom
+                    data_cmd.commandTExt = "SELECT ('"& idheaderbaru &"' + Right('000' + Convert(varchar,Convert(int,(Right(isnull(Max(memoID),'000'),3)))+1),3)) as newid FROM DLK_T_Memo_D WHERE LEFT(memoid,17) = '"& idheaderbaru &"'"
+
+                    set newid = data_cmd.execute
+
+                    ' get harga tertinggi di vendor
+                    data_cmd.commandTExt = "SELECT ISNULL(MAX(Dven_Harga),0) as harga FROM DLK_T_VendorD where Dven_BrgID = '"& getbom("BMDItem") &"'"
+
+                    set ckharga = data_cmd.execute
+
+
+                    call query("INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoKeterangan, memoHarga) VALUES ( '"& newid("newid") &"','"& getbom("BMDItem") &"', '', "& qtybaru &",'"& getbom("BMDJenisSat") &"','', '"& ckharga("harga") &"')")
+
+                response.flush
+                getbom.movenext
+                loop
+            end if
+
+
+        response.flush
+        ckpd.movenext
+        loop
+        call alert("PERMINTAAN ANGGARAN PRODUKSI", "berhasil di tambahkan", "success","./") 
+    else
+        call alert("PERMINTAAN ANGGARAN PRODUKSI", "sudah terdaftar", "warning","./")
+    end if
+end sub
 %>

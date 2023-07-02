@@ -5,19 +5,18 @@ sub tambahbomH()
    sasisid = trim(Request.Form("sasisid"))
    tgl = trim(Request.Form("tgl"))
    approve = trim(Request.Form("approve"))
-   mpbom = trim(Request.Form("mpbom"))
    tsalary = replace(replace(replace(trim(Request.Form("tsalary")),".",""),",",""),"-","")
    keterangan = trim(Request.Form("keterangan"))
 
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
 
-   data_cmd.commandText = "SELECT * FROM DLK_M_bomH WHERE BMBrgID = '"& barang &"' AND BMAgenID = '"& cabang &"' AND BMSasisID = '"& sasisid &"' AND BMmanpower = "& mpbom &" AND BMtotalsalary = '"& tsalary &"' AND BMmanpower = '"& mpbom &"' "
+   data_cmd.commandText = "SELECT * FROM DLK_M_bomH WHERE BMBrgID = '"& barang &"' AND BMAgenID = '"& cabang &"' AND BMSasisID = '"& sasisid &"' AND BMmanpower = "& mpbom &" AND BMtotalsalary = '"& tsalary &"' "
    ' response.write data_cmd.commandText & "<br>"
    set data = data_cmd.execute
 
    if data.eof then
-      data_cmd.commandText = "exec SP_AddDLK_M_bomH '"& barang &"', '"& tgl &"', '"& cabang &"', '"& approve &"', '"& sasisid &"', '"& keterangan &"', "& mpbom &", '"& tsalary &"'"
+      data_cmd.commandText = "exec SP_AddDLK_M_bomH '"& barang &"', '"& tgl &"', '"& cabang &"', '"& approve &"', '"& sasisid &"', '"& keterangan &"', '"& tsalary &"'"
 
       set p = data_cmd.execute
 
@@ -50,18 +49,11 @@ sub tambahbomD()
 
       call query("INSERT INTO DLK_M_BOMD (BMDBMID, BMDItem, BMDQtty, BMDjenissat) VALUES ( '"& iddetail &"','"& ckproduckd &"', "& qtty &",'"& satuan &"')")
 
-      value = 1
+      call alert("RINCIAN DETAIL B.O.M", "berhasil di tambahkan", "success","bomd_add.asp?id="&bmid) 
    else
-      value = 2
+      call alert("RINCIAN DETAIL B.O.M", "sudah terdaftar", "warning","bomd_add.asp?id="&bmid)
    end if
 
-   if value = 1 then
-      call alert("RINCIAN DETAIL B.O.M", "berhasil di tambahkan", "success","bomd_add.asp?id="&bmid) 
-   elseif value = 2 then
-      call alert("RINCIAN DETAIL B.O.M", "sudah terdaftar", "warning","bomd_add.asp?id="&bmid)
-   else
-      value = 0
-   end if
 end sub
 
 sub updatebomH()
@@ -69,7 +61,6 @@ sub updatebomH()
    barang = trim(Request.Form("brgbomu"))
    sasisid = trim(Request.Form("sasisidbomu"))
    approve = trim(Request.Form("approve"))
-   mpbom = trim(Request.Form("mpbomu"))
    tsalary = replace(replace(replace(trim(Request.Form("salarybomu")),".",""),",",""),"-","")
    keterangan = trim(Request.Form("keterangan"))
 
@@ -78,7 +69,7 @@ sub updatebomH()
    set data = data_cmd.execute
 
    if not data.eof then
-      call query("UPDATE DLK_M_BOMH SET BMBrgID = '"& barang &"', BMManpower = "& mpbom &", BMTotalsalary = '"& tsalary &"', BMSasisID = '"& sasisid &"', BMApproveYN = '"& approve &"', BMKeterangan = '"& keterangan &"' WHERE BMID = '"& bmid &"' ")
+      call query("UPDATE DLK_M_BOMH SET BMBrgID = '"& barang &"', BMTotalsalary = '"& tsalary &"', BMSasisID = '"& sasisid &"', BMApproveYN = '"& approve &"', BMKeterangan = '"& keterangan &"' WHERE BMID = '"& bmid &"' ")
       
       call alert("HEADER MATER B.O.M", "berhasil di update", "success", Request.ServerVariables("HTTP_REFERER")) 
    else
@@ -119,17 +110,9 @@ sub updatebomD()
 
          call query("INSERT INTO DLK_M_BOMD (bmDbmID, bmDItem, bmDQtty, bmDJenisSat) VALUES ('"& iddetail &"','"& ckproduckd &"', "& qtty &", '"& satuan &"') ")
       end if
-      value = 1
-   else
-      value = 2
-   end if
-
-   if value = 1 then
       call alert("DETAIL BARANG B.O.M", "berhasil ditambahkan", "success","bom_u.asp?id="&bmid) 
-   elseif value = 2 then
-      call alert("DETAIL BARANG B.O.M", "sudah terdaftar", "warning","bom_u.asp?id="&bmid)
    else
-      value = 0
+      call alert("DETAIL BARANG B.O.M", "sudah terdaftar", "warning","bom_u.asp?id="&bmid)
    end if
 end sub
 %>

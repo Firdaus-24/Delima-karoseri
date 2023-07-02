@@ -124,34 +124,26 @@
         </tr>
         <tr>
             <td>
-                Man Power
-            </td>
-            <td>
-                : <%= data("BMmanpower") %>
-            </td>
-            <td>
                 Anggaran Man Power
             </td>
             <td>
                 : <%= replace(formatCurrency(data("BMtotalsalary")),"$","Rp. ") %>
             </td>
+            <td>
+                No.Drawing
+            </td>
+            <td colspan="2">
+                : <%= LEft(data("BMSasisID"),5) &"-"& mid(data("BMSasisID"),6,4) &"-"& right(data("BMSasisID"),3) %>
+            </td>
             
         </tr>
         <tr>
             <td>
-                No.Drawing
-            </td>
-            <td>
-                : <%= LEft(data("BMSasisID"),5) &"-"& mid(data("BMSasisID"),6,4) &"-"& right(data("BMSasisID"),3) %>
-            </td>
-            <td>
                 Approve
             </td>
-            <td colspan="2">
+            <td>
                 : <%If data("BMApproveYN") = "Y" then %>Yes <% else %>No <% end if %>
             </td>
-        </tr>
-        <tr>
             <td>
                 Keterangan
             </td>

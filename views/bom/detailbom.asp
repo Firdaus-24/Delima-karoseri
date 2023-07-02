@@ -63,47 +63,39 @@
       </div>
    </div>
    <div class="row">
-      <div class="col-sm-2">
-         <label class="col-form-label">Man power</label>
-      </div>
-      <div class="col-sm-4 mb-3">
-         <input type="text" class="form-control" autocomplete="off" value="<%= data("BMmanpower") %>" readonly>
-      </div>
-      <div class="col-sm-2">
-         <label class="col-form-label">Total Anggaran</label>
-      </div>
-      <div class="col-sm-4 mb-3">
-         <input type="text" class="form-control"  autocomplete="off" value="<%= replace(formatCurrency(data("BMtotalsalary")),"$","") %>" readonly>
-      </div>
+        <div class="col-sm-2">
+            <label class="col-form-label">Total Anggaran</label>
+        </div>
+        <div class="col-sm-4 mb-3">
+            <input type="text" class="form-control"  autocomplete="off" value="<%= replace(formatCurrency(data("BMtotalsalary")),"$","") %>" readonly>
+        </div>
+        <div class="col-sm-2">
+            <label for="sasisid" class="col-form-label">No. Drawing</label>
+        </div>
+        <div class="col-sm-4 mb-3">
+            <input type="text" class="form-control" name="sasisid" id="sasisid" maxlength="50" autocomplete="off" <%if data("BMSasisID") <> "" then%> value="<%= LEft(data("BMSasisID"),5) &"-"& mid(data("BMSasisID"),6,4) &"-"& right(data("BMSasisID"),3) %>" onclick="window.open('<%=getpathdoc & data("BMSasisID") &"/D"& data("BMSasisID") &".pdf" %>')" style="cursor:pointer;" <%end if%> readonly>
+        </div>
    </div>
    <div class="row">
-      <div class="col-sm-2">
-         <label for="sasisid" class="col-form-label">No. Drawing</label>
-      </div>
-      <div class="col-sm-4 mb-3">
-         <input type="text" class="form-control" name="sasisid" id="sasisid" maxlength="50" autocomplete="off" <%if data("BMSasisID") <> "" then%> value="<%= LEft(data("BMSasisID"),5) &"-"& mid(data("BMSasisID"),6,4) &"-"& right(data("BMSasisID"),3) %>" onclick="window.open('<%=getpathdoc & data("BMSasisID") &"/D"& data("BMSasisID") &".pdf" %>')" style="cursor:pointer;" <%end if%> readonly>
-      </div>
-      <div class="col-sm-2">
-         <label for="approve" class="col-form-label">Approve Y/N</label>
-      </div>
-      <div class="col-sm-4 mb-3">
-         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="approve" id="approveY" value="Y" <% if data("BMApproveYN") = "Y" then%>checked <% end if %>disabled>
-            <label class="form-check-label" for="approveY">Yes</label>
-         </div>
-         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="approve" id="approveN" value="N" <% if data("BMApproveYN") = "N" then%>checked <% end if %>disabled>
-            <label class="form-check-label" for="approveN" >No</label>
-         </div>
-      </div>
-   </div>
-   <div class='row'>
-      <div class="col-sm-2">
-         <label for="keterangan" class="col-form-label">Keterangan</label>
-      </div>
-      <div class="col-sm-10 mb-3">
-         <input type="text" class="form-control" name="keterangan" id="keterangan" maxlength="50" autocomplete="off" value="<%= data("BMKeterangan") %>" readonly>
-      </div>
+        <div class="col-sm-2">
+            <label for="approve" class="col-form-label">Approve Y/N</label>
+        </div>
+        <div class="col-sm-4 mb-3">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="approve" id="approveY" value="Y" <% if data("BMApproveYN") = "Y" then%>checked <% end if %>disabled>
+                <label class="form-check-label" for="approveY">Yes</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="approve" id="approveN" value="N" <% if data("BMApproveYN") = "N" then%>checked <% end if %>disabled>
+                <label class="form-check-label" for="approveN" >No</label>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <label for="keterangan" class="col-form-label">Keterangan</label>
+        </div>
+        <div class="col-sm-4 mb-3">
+            <input type="text" class="form-control" name="keterangan" id="keterangan" maxlength="50" autocomplete="off" value="<%= data("BMKeterangan") %>" readonly>
+        </div>
    </div>
     <div class="row">
         <div class="col-lg-12">

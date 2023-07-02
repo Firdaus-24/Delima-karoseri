@@ -29,7 +29,7 @@
 
   end sub
 
-  sub tambahbomD()
+sub tambahbomD()
     bmrid = trim(Request.Form("bmrid"))
     ckbmrdbrg = trim(Request.Form("ckbmrdbrg"))
     qtty = trim(Request.Form("qtty"))
@@ -73,7 +73,7 @@ sub anggaran()
   set data = data_cmd.execute
 
   if data.eof then
-    data_cmd.commandText = "sp_addDLK_T_Memo_H '"& tgl &"','"& agen &"','"& departement &"', '"& divisi &"', '"& keterangan &"', '"& session("userid") &"', "& kebutuhan &", '"& bmrid &"' ,'' ,1"
+    data_cmd.commandText = "sp_addDLK_T_Memo_H '"& tgl &"','"& agen &"','"& departement &"', '"& divisi &"', '"& keterangan &"', '"& session("userid") &"', "& kebutuhan &", '"& bmrid &"' ,'','' ,1"
     set pdata = data_cmd.execute
 
     strid = pdata("ID")

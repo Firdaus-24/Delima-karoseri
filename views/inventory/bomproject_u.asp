@@ -1,40 +1,38 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_reqAnggaran.asp"-->
 <% 
-    if session("PP7B") = false then
-        Response.Redirect("./")
+    if session("INV10C") = false then
+        Response.Redirect("bomproject.asp")
     end if
     
     id = trim(Request.QueryString("id"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
-    ' header
+
+    ' data header
     data_cmd.commandText = "SELECT DLK_T_Memo_H.*, HRD_M_Departement.DepNama, GLB_M_Agen.AgenName, HRD_M_Divisi.DivNama, DLK_M_Kebutuhan.K_Name FROM DLK_T_Memo_H LEFT OUTER JOIN HRD_M_Departement ON DLK_T_Memo_H.memoDepID = HRD_M_Departement.DepID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN HRD_M_Divisi ON DLK_T_Memo_H.memoDivID = HRD_M_Divisi.divID LEFT OUTER JOIN DLK_M_Kebutuhan ON DLK_T_Memo_H.memoKebutuhan = DLK_M_Kebutuhan.K_ID WHERE memoID = '"& id &"' and memoAktifYN = 'Y'"
-    ' response.write data_cmd.commandText
+
     set dataH = data_cmd.execute
-    ' detail
-    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama, DLK_M_SatuanBarang.sat_nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID LEFT OUTER JOIN DLK_M_Satuanbarang ON DLK_T_Memo_D.memosatuan = DLK_M_Satuanbarang.sat_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY memoItem ASC"
+    ' data detail
+    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama, DLK_M_Satuanbarang.sat_nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID LEFT OUTER JOIN DLK_M_SatuanBarang ON DLK_T_Memo_D.memosatuan = DLK_M_SatuanBarang.sat_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY memoItem ASC"
+
     set dataD = data_cmd.execute
 
     ' get satuan
     data_cmd.commandText = "SELECT sat_Nama, sat_ID FROM DLK_M_satuanBarang WHERE sat_AktifYN = 'Y' ORDER BY sat_Nama ASC"
     set psatuan = data_cmd.execute    
+
     ' get all barang
     data_cmd.commandText = "SELECT dbo.DLK_M_Barang.Brg_Id, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama, DLK_M_TypeBarang.T_Nama FROM dbo.DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.JenisID LEFT OUTER JOIN DLK_M_TypeBarang ON DLK_M_Barang.BRg_Type = DLK_M_Typebarang.T_ID WHERE (dbo.DLK_M_Barang.Brg_AktifYN = 'Y') AND (left(dbo.DLK_M_Barang.Brg_Id,3) = '"& dataH("memoAgenID") &"') ORDER BY Brg_Nama ASC"
     set barang = data_cmd.execute
 
-     ' get divisi
-    data_cmd.commandText = "SELECT DivNama, DivID FROM HRD_M_Divisi WHERE DivAktifYN = 'Y' ORDER BY DivNama ASC"
-    set pdivisi = data_cmd.execute
-
-%>
-<% call header("Detail Permintaan Anggaran") %>
+     call header("Update Permintaan Anggaran") %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row">
         <div class="col-lg-12 mt-3 text-center">
-            <h3>UPDATE DETAIL PERMINTAAN ANGGARAN B.O.M REPAIR</h3>
+            <h3>UPDATE DETAIL PERMINTAAN ANGGARAN B.O.M PROJECT</h3>
         </div>  
     </div> 
     <div class="row">
@@ -58,35 +56,18 @@
             <input type="text" id="agen" class="form-control" name="agen" value="<%= dataH("agenNAme") %>" readonly>
         </div>
     </div>
-    <form action="anggaran_u.asp?id=<%=id%>" method="post" onsubmit="validasiForm(this,event,'UPDATE HEADER B.O.M REPAIR', 'warning')">
-    <input type="hidden" name="idmemoh" value="<%=dataH("memoID")%>">
     <div class="row">
         <div class="col-sm-2">
             <label for="divisi" class="col-form-label">Divisi</label>
         </div>
         <div class="col-sm-4 mb-3">
-            <select class="form-select" aria-label="Default select example" name="divisi" id="pbdivisi" required> 
-                <option value="<%=datah("memoDivID")%>"><%= dataH("divNama") %></option>
-                <% do while not pdivisi.eof %>
-                <option value="<%= pdivisi("divId") %>"><%= pdivisi("divNama") %></option>
-                <%  
-                pdivisi.movenext
-                loop
-                %>
-            </select>
+          <input type="text" id="agen" class="form-control" name="agen" value="<%= dataH("divNama") %>" readonly>
         </div>
         <div class="col-sm-2">
             <label for="departement" class="col-form-label">Departement</label>
         </div>
         <div class="col-sm-4">
-             <div class="deplama">
-                <select class="form-select" aria-label="Default select example" name="ldep" id="ldep" > 
-                    <option value="<%= dataH("memodepid") %>"><%= dataH("depnama") %></option>
-                </select>
-            </div>
-            <div class="depbaru">
-                <!-- kontent departement -->
-            </div>
+            <input type="text" id="agen" class="form-control" name="agen" value="<%= dataH("DepNama") %>" readonly>
         </div>
     </div>
     <div class="row">
@@ -94,13 +75,13 @@
             <label for="kebutuhan" class="col-form-label">Kebutuhan</label>
         </div>
         <div class="col-sm-4 mb-3">
-            <input type="text" id="kebutuhan" class="form-control" name="kebutuhan" value="<%= dataH("K_Name") %>">
+            <input type="text" id="kebutuhan" class="form-control" name="kebutuhan" value="<%= dataH("K_Name") %>" readonly>
         </div>
         <div class="col-sm-2">
             <label for="bmrid" class="col-form-label">No. B.O.M</label>
         </div>
         <div class="col-sm-4 mb-3">
-            <input type="text" class="form-control" autocomplete="off" value="<%= left(datah("memoBMRID"),3)&"-"&MID(datah("memoBMRID"),4,3)&"/"&MID(datah("memoBMRID"),7,4)&"/"&right(datah("memoBMRID"),3) %>">
+            <input type="text" class="form-control" autocomplete="off" value="<%= left(datah("memobmid"),2) %>-<%=mid(datah("memobmid"),3,3) %>/<%= mid(datah("memobmid"),6,4) %>/<%= right(datah("memobmid"),3) %>" readonly>
         </div>
     </div>
     <div class='row'>
@@ -108,39 +89,36 @@
             <label for="keterangan" class="col-form-label">Keterangan</label>
         </div>
         <div class="col-sm-10 mb-3">
-            <input type="text" id="keterangan" class="form-control" name="keterangan" maxlength="50" autocomplete="off" value="<%= dataH("memoKeterangan") %>">
+            <input type="text" id="keterangan" class="form-control" name="keterangan" maxlength="50" autocomplete="off" value="<%= dataH("memoKeterangan") %>" readonly>
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-12">
-            <div class="d-flex mb-3">
-                <div class="me-auto p-2">
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-primary btn-modalPb" data-bs-toggle="modal" data-bs-target="#modalpb">Tambah Rincian</button>
-                        <button type="submit" class="btn btn-success">Update Header</button>
-                    </div>
-                </div>
-    </form>
-    
-                <div class="p-2">
-                    <a href="anggaran.asp" class="btn btn-danger">Kembali</a>
-                </div>
-            </div>
+      <div class="col-lg-12">
+        <div class="d-flex mb-3">
+          <div class="me-auto p-2">   
+            <button type="button" class="btn btn-primary btn-modalPb" data-bs-toggle="modal" data-bs-target="#modalpb">Tambah Rincian</button>
+          </div>
+          <div class="p-2">
+              <a href="bomproject.asp" class="btn btn-danger">Kembali</a>
+          </div>
         </div>
+      </div>
     </div>
     <div class="row">
         <div class="col-lg-12 mb-3">
             <table class="table">
                 <thead class="bg-secondary text-light">
                     <tr>
+                        <th scope="col">No</th>
                         <th scope="col">Kode</th>
                         <th scope="col">Item</th>
                         <th scope="col">Spesification</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Satuan</th>
                         <th scope="col">Keterangan</th>
-                        <th scope="col">Harga</th>
+                        <% if session("INV10C") = true then%>
                         <th scope="col" class="text-center">Aksi</th>
+                        <%end if%>
                     </tr>
                 </thead>
                 <tbody>
@@ -150,9 +128,10 @@
                     no = no + 1
                     %>
                         <tr>
-                            <th>
+                            <th scope="row"><%= no %></th>
+                            <td>
                                 <%= dataD("KategoriNama") &"-"& dataD("jenisNama") %>
-                            </th>
+                            </td>
                             <td><%= dataD("Brg_Nama") %></td>
                             <td><%= dataD("memoSpect") %></td>
                             <td><%= dataD("memoQtty") %></td>
@@ -160,14 +139,14 @@
                             <td>
                                 <%= dataD("memoKeterangan") %>
                             </td>
-                            <td>
-                                <%= replace(formatcurrency(dataD("memoHarga")),"$","") %>
-                            </td>
-                            <td class="text-center">
-                                <a href="aktifanggarand.asp?id=<%= dataD("memoID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'Detail Anggaran Barang')">delete</a>
-                            </td>
+                            <% if session("INV10C") = true then%>
+                                <td class="text-center">
+                                    <a href="aktifdbomproject.asp?id=<%= dataD("memoID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'Detail Anggaran Barang')">delete</a>
+                                </td>
+                            <%end if%>
                         </tr>
                     <% 
+                    response.flush
                     dataD.movenext
                     loop
                     %>
@@ -185,8 +164,7 @@
         <h5 class="modal-title" id="modalpbLabel">Rincian Barang</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-    <form action="anggaran_u.asp?id=<%= id %>" method="post">
-        <input type="hidden" name="idmemoh">
+    <form action="bomproject_u.asp?id=<%= id %>" method="post">
         <input type="hidden" name="memoid" id="memoid" value="<%= id %>">
         <input type="hidden" name="pbcabang" id="pbcabang" value="<%= dataH("memoAgenID") %>">
       <div class="modal-body">
@@ -236,7 +214,7 @@
                 <label for="spect" class="col-form-label">Sepesification</label>
             </div>
             <div class="col-sm-9 mb-3">
-                <input type="text" id="spect" class="form-control" name="spect" autocomplete="off" maxlength="50" required>
+                <input type="text" id="spect" class="form-control" name="spect" autocomplete="off" maxlength="50">
             </div>
         </div>
         <div class="row">
@@ -287,31 +265,7 @@
 
 <% 
     if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
-        idmemoh = trim(Request.Form("idmemoh"))
-        if idmemoh <> "" then
-            divisi = trim(Request.Form("divisi"))
-            departement = trim(Request.Form("departement"))
-            ldep = trim(Request.Form("ldep"))
-            keterangan = trim(Request.Form("keterangan"))
-
-            if departement = "" then
-                departement = ldep
-            else
-                departement = departement
-            end if
-
-            data_cmd.commandText = "SELECT * FROM DLK_T_Memo_H WHERE memoid = '"& idmemoh &"' AND memoAktifYN = 'Y'"
-            set updateheader = data_cmd.execute
-
-            if not updateheader.eof then
-                call query("UPDATE DLK_T_MEMO_H SET memoDivid = '"& divisi &"', memodepid = '"& departement &"', memoketerangan = '"& keterangan &"' WHERE memoid = '"& idmemoh &"'")
-                call alert("HEADER PERMINTAAN B.O.M REPAIR", "berhasil di update", "success", request.ServerVariables("HTTP_REFERER"))
-            end if
-        elseif idmemoh = "" then
-            call updateAnggaran()
-        else
-            call alert("WARNING", "tidak ada aksi yang anda lakukan", "error",request.ServerVariables("HTTP_REFERER"))
-        end if
+        call updateAnggaran()      
     end if
     call footer()
 %>

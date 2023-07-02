@@ -16,22 +16,15 @@ sub tambahAnggaranH()
     set data = data_cmd.execute
 
     if data.eof then
-        data_cmd.commandText = "sp_addDLK_T_Memo_H '"& tgl &"','"& agen &"','"& departement &"', '"& divisi &"', '"& keterangan &"', '"& session("userid") &"', "& kebutuhan &", '' ,'' ,1"
+        data_cmd.commandText = "sp_addDLK_T_Memo_H '"& tgl &"','"& agen &"','"& departement &"', '"& divisi &"', '"& keterangan &"', '"& session("userid") &"', "& kebutuhan &", '' ,'','' ,1"
         set data = data_cmd.execute
 
         id = data("ID")
-        value = 1 'case untuk insert data
+        call alert("PERMINTAAN ANGGARAN INVENTORY", "berhasil di tambahkan", "success","reqAnggaranD_add.asp?id="&id) 
     else
-        value = 2 'case jika gagal insert 
+        call alert("PERMINTAAN ANGGARAN INVENTORY", "sudah terdaftar", "warning","./")
     end if
 
-    if value = 1 then
-        call alert("PERMINTAAN ANGGARAN INVENTORY", "berhasil di tambahkan", "success","reqAnggaranD_add.asp?id="&id) 
-    elseif value = 2 then
-        call alert("PERMINTAAN ANGGARAN INVENTORY", "sudah terdaftar", "warning","reqAnggaranD_add.asp?id="&id)
-    else
-        value = 0
-    end if
 end sub
 
 sub tambahAnggaranD()
@@ -60,17 +53,9 @@ sub tambahAnggaranD()
 
         call query("INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoKeterangan, memoHarga) VALUES ( '"& iddetail &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"', '"& ket &"', '0')")
 
-        value = 1
-    else
-        value = 2
-    end if
-
-    if value = 1 then
         call alert("RINCIAN PERMINTAAN BARANG", "berhasil di tambahkan", "success","reqAnggaranD_add.asp?id="&memoid) 
-    elseif value = 2 then
-        call alert("RINCIAN PERMINTAAN BARANG", "sudah terdaftar", "warning","reqAnggaranD_add.asp?id="&memoid)
     else
-        value = 0
+        call alert("RINCIAN PERMINTAAN BARANG", "sudah terdaftar", "warning","reqAnggaranD_add.asp?id="&memoid)
     end if
 
 end sub
@@ -109,17 +94,9 @@ sub updateAnggaran()
 
                 call query("INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoKeterangan, memoHarga) VALUES ( '"& iddetail &"','"& brg &"', '"& spect &"', "& qtty &",'"& satuan &"','"& ket &"', '0')")
             end if
-        value = 1
-    else
-        value = 2
-    end if
-
-    if value = 1 then
         call alert("RINCIAN PERMINTAAN BARANG", "berhasil di tambahkan", "success",Request.ServerVariables("HTTP_REFERER")) 
-    elseif value = 2 then
-        call alert("RINCIAN PERMINTAAN BARANG", "sudah terdaftar", "warning",Request.ServerVariables("HTTP_REFERER"))
     else
-        value = 0
+        call alert("RINCIAN PERMINTAAN BARANG", "sudah terdaftar", "warning",Request.ServerVariables("HTTP_REFERER"))
     end if
 
 end sub

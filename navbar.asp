@@ -97,6 +97,11 @@
                 <a class="link-name" href="<%= url %>views/invtryrepair/">Anggaran B.O.M Repair</a>
               </li>
               <% end if %>
+              <% if session("INV10") = true then %>  
+              <li>
+                <a class="link-name" href="<%= url %>views/inventory/bomproject.asp">Anggaran B.O.M Project</a>
+              </li>
+              <% end if %>
               <% if session("INV2") = true then %>
               <li>
                 <a class="link-name" href="<%= url %>views/incoming/index.asp">Incomming</a>
@@ -191,11 +196,6 @@
               <li>
                 <a class="link-name" href="<%= url %>views/engineering/">Engineering</a>
               </li>
-              <% if session("ENG1") = true then %>
-              <li>
-                <a class="link-name" href="<%= url %>views/produksi/">Produksi</a>
-              </li>
-              <% end if %>
               <% if session("ENG6") = true then %>
               <li>
                 <a class="link-name" href="<%= url %>views/produksi/report.asp">Report Proses Produksi</a>
@@ -263,6 +263,11 @@
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
             <ul class="sub-menu" id="sublist-ppic">
+              <% if session("ENG1") = true then %>
+              <li>
+                <a class="link-name" href="<%= url %>views/produksi/">Produksi</a>
+              </li>
+              <% end if %>
               <% if session("PP1") =  true then %>
               <li>
                 <a class="link-name" href="<%= url %>views/rc/">Produksi Received</a>
@@ -296,6 +301,11 @@
               <% if session("PP7") =  true then %>
               <li>
                 <a class="link-name" href="<%= url %>views/bomrepair/anggaran.asp">Anggaran B.O.M Repair</a>
+              </li>
+              <%end if%>
+              <% if session("PP8") =  true then %>
+              <li>
+                <a class="link-name" href="<%= url %>views/anggaranbomproject/">Anggaran B.O.M Project</a>
               </li>
               <%end if%>
             </ul>

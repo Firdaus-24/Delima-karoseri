@@ -151,9 +151,9 @@
                <th>No</th>
                <th>Produksi ID</th>
                <th>Cabang</th>
-               <th>Tanggal</th>
+               <th>Tgl Mulai</th>
+               <th>Tgl Selesai</th>
                <th>Approve1</th>
-               <th>Approve2</th>
                <th>Prototype</th>
                <th class="text-center">Aksi</th>
             </thead>
@@ -165,8 +165,15 @@
                do until showrecords = 0 OR  rs.EOF
                recordcounter = recordcounter + 1
 
+               ' cek data detail
                data_cmd.commandTExt = "SELECT PDD_ID FROM DLK_T_ProduksiD WHERE LEFT(PDD_ID,13) = '"& rs("PDH_ID") &"'"
                set p = data_cmd.execute
+
+
+               ' ceek exist anggaran
+               data_cmd.commandTExt = "SELECT memoid FROM DLK_T_Memo_H WHERE Memopdhid = '"& rs("PDH_ID") &"' AND memoaktifyn = 'Y'"
+
+               set ckanggran = data_cmd.execute
                %>
                   <tr><TH><%= recordcounter %></TH>
                   <td>
@@ -177,20 +184,12 @@
                      <% end if %>
                   </td>
                   <td><%= rs("AgenNAme")%></td>
-                  <td><%= Cdate(rs("PDH_Date")) %></td>
+                  <td><%= Cdate(rs("PDH_StartDate")) %></td>
+                  <td><%= Cdate(rs("PDH_EndDate")) %></td>
                   <td>
                      <% if session("ENG1E") = true then %>
                         <% if rs("PDH_Approve1") = "N" then %>
                            <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalAppProduksi" onclick="getIDProduksi('<%= rs("PDH_ID") %>', '1')">Ajukan</button>
-                        <% else %>
-                           Yes
-                        <% end if %>
-                     <% end if %>
-                  </td>
-                  <td>
-                     <% if session("ENG1E") = true then %>
-                        <% if rs("PDH_Approve2") = "N" then %>
-                           <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalAppProduksi" onclick="getIDProduksi('<%= rs("PDH_ID") %>', '2')">Ajukan</button>
                         <% else %>
                            Yes
                         <% end if %>
@@ -205,6 +204,12 @@
                   </td>
                   <td class="text-center">
                      <div class="btn-group" role="group" aria-label="Basic example">
+
+                        <% if session("PP8A") then%>
+                           <% if ckanggran.eof then%>
+                              <a href="anggaran_bom.asp?id=<%= rs("PDH_ID") %>" class="btn badge text-dark bg-light">Anggarkan</a>
+                           <%end if%>
+                        <%end if%>
                         <% if not p.eof then %>
                            <a href="detail.asp?id=<%= rs("PDH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
                         <% end if %>

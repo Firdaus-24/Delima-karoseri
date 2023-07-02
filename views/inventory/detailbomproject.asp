@@ -9,7 +9,8 @@
     ' response.write data_cmd.commandText
     set dataH = data_cmd.execute
 
-    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama, DLK_M_SatuanBarang.sat_nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID LEFT OUTER JOIN DLK_M_Satuanbarang ON DLK_T_Memo_D.memosatuan = DLK_M_Satuanbarang.sat_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY memoItem ASC"
+    ' detail
+    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama, DLK_M_SatuanBarang.Sat_nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID LEFT OUTER JOIN DLK_M_satuanbarang ON DLK_T_Memo_D.memosatuan = dlk_M_Satuanbarang.sat_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY memoItem ASC"
 
     set dataD = data_cmd.execute
 
@@ -19,7 +20,7 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-12 mt-3 text-center">
-            <h3>DETAIL PERMINTAAN ANGGARAN</h3>
+            <h3>DETAIL PERMINTAAN ANGGARAN PROJECT</h3>
         </div>  
     </div> 
     <div class="row">
@@ -68,7 +69,7 @@
             <label for="bmrid" class="col-form-label">No. B.O.M</label>
         </div>
         <div class="col-sm-4 mb-3">
-            <input type="text" class="form-control" autocomplete="off" value="<%= left(datah("memoBMRID"),3)&"-"&MID(datah("memoBMRID"),4,3)&"/"&MID(datah("memoBMRID"),7,4)&"/"&right(datah("memoBMRID"),3) %>" readonly>
+            <input type="text" class="form-control" autocomplete="off" value="<%= left(datah("memobmid"),2) %>-<%=mid(datah("memobmid"),3,3) %>/<%= mid(datah("memobmid"),6,4) %>/<%= right(datah("memobmid"),3) %>" readonly>
         </div>
     </div>
     <div class='row'>
@@ -81,13 +82,13 @@
     </div>
     <div class="row">
         <div class="d-flex mb-3">
-            <% if session("PP7D") = true then  %>
+            <% if session("INV10D") = true then  %>
             <div class="me-auto p-2">
-                <button type="button" class="btn btn-secondary" onClick="window.open('export-XlsAnggaranrepair.asp?id=<%=id%>')" class="btn btn-secondary">Export</button>
+                <button type="button" class="btn btn-secondary" onClick="window.open('export-bomproject.asp?id=<%=id%>')" class="btn btn-secondary">Export</button>
             </div>
             <% end if %>
             <div class="p-2">
-                <a href="anggaran.asp" class="btn btn-danger">Kembali</a>
+                <a href="bomproject.asp" class="btn btn-danger">Kembali</a>
             </div>
         </div>
     </div>
@@ -103,20 +104,16 @@
                         <th scope="col">Quantity</th>
                         <th scope="col">Satuan</th>
                         <th scope="col">Keterangan</th>
-                        <th scope="col">Harga</th>
-                        <th scope="col">Total</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% 
-                    gtotal = 0
                     total = 0
                     no = 0
                     do while not dataD.eof
                     no = no + 1
 
-                    total = dataD("memoHarga") * dataD("memoQtty")
-                    gtotal = gtotal + total
+                    total = total + dataD("memoHarga")
                     %>
                         <tr>
                             <th scope="row"><%= no %></th>
@@ -130,21 +127,12 @@
                             <td>
                                 <%= dataD("memoKeterangan") %>
                             </td>
-                            <td><%= replace(formatcurrency(dataD("memoHarga")),"$","") %></td>
-                            <td><%= replace(formatcurrency(total),"$","") %></td>
                         </tr>
                     <% 
+                    response.flush
                     dataD.movenext
                     loop
                     %>
-                    <tr>
-                      <th colspan="8">
-                        Grand Total
-                      </th>
-                      <th>
-                        <%= replace(formatcurrency(gtotal),"$","") %>
-                      </th>
-                    </tr>
                 </tbody>
             </table>
         </div>

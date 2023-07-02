@@ -95,8 +95,8 @@
       </div>
    </div>
    <form action="bom_u.asp?id=<%= id %>" method="post" onsubmit="validasiForm(this,event,'UPDATE MASTER B.O.M', 'warning')">
-   <input type="hidden" name="bmid" id="bmid" value="<%= id %>">
-   <input type="checkbox" name="dataheader" id="dataheader" style="opacity:0;display:none;"  checked>
+      <input type="hidden" name="bmid" id="bmid" value="<%= id %>">
+      <input type="checkbox" name="dataheader" id="dataheader" style="opacity:0;display:none;"  checked>
    <div class="row">
       <div class="col-sm-2">
          <label for="kode" class="col-form-label">Kode Model</label>
@@ -121,19 +121,11 @@
    </div>
    <div class="row">
       <div class="col-sm-2">
-         <label class="col-form-label">Man power</label>
-      </div>
-      <div class="col-sm-4 mb-3">
-         <input type="text" class="form-control" autocomplete="off" name="mpbomu" id="mpbomu" value="<%= data("BMmanpower") %>" required>
-      </div>
-      <div class="col-sm-2">
          <label class="col-form-label">Total Anggaran</label>
       </div>
       <div class="col-sm-4 mb-3">
          <input type="text" class="form-control" name="salarybomu" id="salarybomu"  autocomplete="off" value="<%= replace(replace(formatCurrency(data("BMtotalsalary")),"$",""),".00","") %>" onchange="settingFormatRupiah(this.value, 'salarybomu')" required>
       </div>
-   </div>
-   <div class="row">
       <div class="col-sm-2">
          <label for="sasisid" class="col-form-label">No. Drawing</label>
       </div>
@@ -162,6 +154,8 @@
             </select>
          </div>
       </div>
+   </div>
+   <div class="row">
       <div class="col-sm-2">
          <label for="approve" class="col-form-label">Approve Y/N</label>
       </div>
@@ -175,12 +169,10 @@
             <label class="form-check-label" for="approveN" >No</label>
          </div>
       </div>
-   </div>
-   <div class='row'>
       <div class="col-sm-2">
          <label for="keterangan" class="col-form-label">Keterangan</label>
       </div>
-      <div class="col-sm-10 mb-3">
+      <div class="col-sm-4 mb-3">
          <input type="text" class="form-control" name="keterangan" id="keterangan" maxlength="50" autocomplete="off" value="<%= data("BMKeterangan") %>">
       </div>
    </div>
