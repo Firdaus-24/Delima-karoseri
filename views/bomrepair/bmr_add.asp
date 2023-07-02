@@ -92,23 +92,15 @@
       </div>
       <div class="row">
          <div class="col-sm-2">
-            <label for="tmanpower" class="col-form-label">Total Man Power</label>
-         </div>
-         <div class="col-sm-4 mb-3">
-            <input type="number" id="tmanpower" class="form-control" name="tmanpower" required>
-         </div>
-         <div class="col-sm-2">
             <label for="salary" class="col-form-label">Anggaran Manpower</label>
          </div>
          <div class="col-sm-4 mb-3">
             <input type="text" class="form-control" name="salary" id="salary-bomrepair" onchange="settingFormatRupiah(this.value, 'salary-bomrepair')" autocomplete="off" required>
          </div>
-      </div>
-      <div class='row'>
          <div class="col-sm-2">
             <label for="keterangan" class="col-form-label">Keterangan</label>
          </div>
-         <div class="col-sm-10 mb-3">
+         <div class="col-sm-4 mb-3">
             <input type="text" class="form-control" name="keterangan" id="keterangan" maxlength="100" autocomplete="off">
          </div>
       </div>

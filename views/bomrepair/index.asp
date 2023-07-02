@@ -173,7 +173,6 @@
               <th>No.BOM</th>
               <th>Cabang</th>
               <th>No.Produksi</th>
-              <th>Man Power</th>
               <th>Approve 1</th>
               <th>Approve 2</th>
               <th class="text-center">Aksi</th>
@@ -199,7 +198,6 @@
                 <td><%=left(rs("BMRID"),3)&"-"&MID(rs("BMRID"),4,3)&"/"&MID(rs("BMRID"),7,4)&"/"&right(rs("BMRID"),3)%></td>
                 <td><%= rs("agenName") %></td>
                 <td><%=LEFT(rs("BMRPDRID"),3) &"-"& MID(rs("BMRPDRID"),4,2) &"/"& RIGHT(rs("BMRPDRID"),3) %></td>
-                <td><%=rs("BMRManpower")%></td>
                 <td>
                   <% if session("PP6F") = true then %>
                     <% if rs("bmrapprove1") = "N" then%>

@@ -99,23 +99,15 @@
   </div>
   <div class="row">
     <div class="col-sm-2">
-      <label for="tmanpower" class="col-form-label">Total Man Power</label>
-    </div>
-    <div class="col-sm-4 mb-3">
-      <input type="number" id="tmanpower" class="form-control" name="tmanpower" value="<%=data("BmrManPower")%>" readonly>
-    </div>
-    <div class="col-sm-2">
       <label for="salary" class="col-form-label">Anggaran Manpower</label>
     </div>
     <div class="col-sm-4 mb-3">
       <input type="text" class="form-control" name="salary" id="salary-bomrepaird" value="<%=Replace(formatCurrency(data("BmrTotalSalary")),"$","")%>" autocomplete="off" readonly>
     </div>
-  </div>
-  <div class='row'>
     <div class="col-sm-2">
       <label for="keterangan" class="col-form-label">Keterangan</label>
     </div>
-    <div class="col-sm-10 mb-3">
+    <div class="col-sm-4 mb-3">
       <input type="text" class="form-control" name="keterangan" id="keterangan" maxlength="100" value="<%=data("BmrKeterangan")%>" autocomplete="off" readonly>
     </div>
   </div>
@@ -140,10 +132,13 @@
             <th scope="col">Satuan</th>
             <th scope="col">Harga</th>
             <th scope="col">Keterangan</th>
+            <th scope="col">Total</th>
           </tr>
         </thead>
         <tbody>
           <% 
+          gettotal = 0
+          total = 0
           no = 0
           do while not ddata.eof 
           no = no + 1
@@ -151,6 +146,9 @@
           ' get data harga purchase
           data_cmd.commandTExt = "SELECT ISNULL(MAX(Dven_Harga),0) as harga FROM DLK_T_VendorD where Dven_BrgID = '"& ddata("BmrdBrgID") &"'"
           set ckharga = data_cmd.execute
+
+          total = ckharga("harga") * ddata("BmrdQtysatuan")
+          gtotal = gtotal + total
           %>
             <tr>
               <th>
@@ -168,17 +166,28 @@
               <td>
                 <%= ddata("Sat_nama")%>
               </td>
-              <td>
+              <td align="right">
                 <%= replace(formatCurrency(ckharga("harga")),"$","")%>
               </td>
               <td>
                 <%= ddata("BmrdKeterangan")%>
+              </td>
+              <td align="right">
+                <%= replace(formatCurrency(total),"$","")%>
               </td>
             </tr>
           <% 
           ddata.movenext
           loop
           %>
+          <tr>
+            <th colspan="7" align="left">
+              GRAND TOTAL
+            </th>
+            <th class="text-end">
+              <%= replace(formatCurrency(gtotal),"$","")%>
+            </th>
+          </tr>
         </tbody>
       </table>
     </div>

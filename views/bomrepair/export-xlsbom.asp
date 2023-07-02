@@ -98,23 +98,15 @@
   </tr>
   <tr>
     <td colspan="2">
-      Total Man Power
-    </td>
-    <td>
-      <%=data("BmrManPower")%>
-    </td>
-    <td colspan="2">
       Anggaran Manpower
     </td>
-    <td colspan="2">
+    <td>
       <%=Replace(formatCurrency(data("BmrTotalSalary")),"$","")%>
     </td>
-  </tr>
-  <tr>
-    <td>
+    <td colspan="2">
       Keterangan
     </td>
-    <td colspan="6">
+    <td colspan="2">
       <%=data("BmrKeterangan")%>
     </td>
   </tr>
@@ -127,8 +119,11 @@
     <th style="border-collapse: collapse;border:1px solid black;">Satuan</th>
     <th style="border-collapse: collapse;border:1px solid black;">Harga</th>
     <th style="border-collapse: collapse;border:1px solid black;">Keterangan</th>
+    <th style="border-collapse: collapse;border:1px solid black;">Total</th>
   </tr>
   <% 
+    gtotal = 0
+    total = 0
     no = 0
     do while not ddata.eof 
     no = no + 1
@@ -136,6 +131,8 @@
     ' get data harga purchase
     data_cmd.commandTExt = "SELECT ISNULL(MAX(Dven_Harga),0) as harga FROM DLK_T_VendorD where Dven_BrgID = '"& ddata("BmrdBrgID") &"'"
     set ckharga = data_cmd.execute
+    total = ckharga("harga") * ddata("BmrdQtysatuan")
+    gtotal = gtotal + total
     %>
     <tr>
       <th style="border-collapse: collapse;border:1px solid black;">
@@ -159,10 +156,21 @@
       <td style="border-collapse: collapse;border:1px solid black;">
         <%= ddata("BmrdKeterangan")%>
       </td>
+      <td align="right" style="border-collapse: collapse;border:1px solid black;">
+        <%= replace(formatCurrency(total),"$","")%>
+      </td>
     </tr>
   <% 
   ddata.movenext
   loop
   %>
+    <tr>
+      <th colspan="7" align="left" style="border-collapse: collapse;border:1px solid black;">
+        GRAND TOTAL
+      </th>
+      <th align="right" style="border-collapse: collapse;border:1px solid black;">
+        <%= replace(formatCurrency(gtotal),"$","")%>
+      </th>
+    </tr>
 
 </table>

@@ -129,23 +129,15 @@
   <div class="row">
     <input type="hidden" name="idheaderbomrepair" id="idheaderbomrepair" value="<%=data("bmrid")%>">
     <div class="col-sm-2">
-      <label for="tmanpowerdbomrepair" class="col-form-label">Total Man Power</label>
-    </div>
-    <div class="col-sm-4 mb-3">
-      <input type="number" id="tmanpowerdbomrepair" class="form-control" name="tmanpowerdbomrepair" value="<%=data("BmrManPower")%>" required >
-    </div>
-    <div class="col-sm-2">
       <label for="salary" class="col-form-label">Anggaran Manpower</label>
     </div>
     <div class="col-sm-4 mb-3">
       <input type="text" class="form-control" name="salarydbomrepair" id="salary-bomrepaird" value="<%=replace(Replace(formatCurrency(data("BmrTotalSalary")),"$",""),".00","")%>" onchange="settingFormatRupiah(this.value, 'salary-bomrepaird')" autocomplete="off" required >
     </div>
-  </div>
-  <div class='row'>
     <div class="col-sm-2">
       <label for="ketbomrepairheader" class="col-form-label">Keterangan</label>
     </div>
-    <div class="col-sm-10 mb-3">
+    <div class="col-sm-4 mb-3">
       <input type="text" class="form-control" name="keterangan" id="ketbomrepairheader" maxlength="100" value="<%=data("BmrKeterangan")%>" autocomplete="off">
     </div>
   </div>

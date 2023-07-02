@@ -4,7 +4,6 @@
     tgl = trim(Request.Form("tgl"))
     pdrid = trim(Request.Form("pdrid"))
     irhid = trim(Request.Form("irhid"))
-    tmanpower = trim(Request.Form("tmanpower"))
     salary = replace(replace(replace(trim(Request.Form("salary")),".",""),",",""),"-","")
     keterangan = trim(Request.Form("keterangan"))
 
@@ -17,7 +16,7 @@
     set data = data_cmd.execute
 
     if data.eof then
-      data_cmd.commandTExt = "exec sp_AddDLK_T_BOMRepairH '"& pdrid &"', '"& irhid &"', '"& cabang &"', '"& tgl &"',  '"& session("userid") &"', '"& keterangan &"', "& tmanpower &", '"& salary &"'"
+      data_cmd.commandTExt = "exec sp_AddDLK_T_BOMRepairH '"& pdrid &"', '"& irhid &"', '"& cabang &"', '"& tgl &"',  '"& session("userid") &"', '"& keterangan &"', '"& salary &"'"
 
       set p = data_cmd.execute
 
