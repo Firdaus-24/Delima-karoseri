@@ -1,5 +1,9 @@
 <!--#include file="../../init.asp"-->
 <% 
+    if session("FN1D") =  false then
+      Response.Redirect("appmemo.asp")
+    end if
+
     id = trim(Request.QueryString("id"))
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
@@ -9,15 +13,16 @@
     ' response.write data_cmd.commandText
     set dataH = data_cmd.execute
 
-    ' nomor id
-    ' left(dataH("memoID"),4)/ mid(dataH("memoId"),5,3)- getAgen(mid(dataH("memoID"),8,3),"")/ mid(dataH("memoID"),11,4)/ right(dataH("memoID"),3)
+    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY memoItem ASC"
+    ' response.write data_cmd.commandText
+    set dataD = data_cmd.execute
 %>
 <% call header("Detail Permintaan Anggaran") %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row">
         <div class="col-lg-12 mt-3 text-center">
-            <h3>DETAIL PERMINTAAN ANGGARAN</h3>
+            <h3>DETAIL PERMINTAAN ANGGARAN PT.DELIMA KAROSERI</h3>
         </div>  
     </div> 
     <div class="row">
@@ -76,7 +81,12 @@
         </div>
     </div>
     <div class="row">
-        <div class="d-flex mb-3">
+        <div class="d-flex justify-content-between mb-3">
+            <div class="p-2">
+                <% if session("FN1D") = true then %>
+                    <a href="export-anggaran.asp?id=<%=dataH("memoID")%>" target="_blank" class="btn btn-secondary">Print</a>
+                <%end if%>
+            </div>
             <div class="p-2">
                 <a href="appmemo.asp" class="btn btn-danger">Kembali</a>
             </div>
@@ -100,10 +110,6 @@
                 </thead>
                 <tbody>
                     <% 
-                    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY memoItem ASC"
-                    ' response.write data_cmd.commandText
-                    set dataD = data_cmd.execute
-
                     no = 0
                     total = 0
                     do while not dataD.eof
@@ -129,6 +135,7 @@
                             </td>
                         </tr>
                     <% 
+                    response.flush
                     dataD.movenext
                     loop
                     %>

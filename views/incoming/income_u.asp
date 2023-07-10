@@ -1,8 +1,8 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_incomming.asp"-->   
 <% 
-   if session("INV2B") = false then
-      Response.Redirect("index.asp")
+   if session("INV2A") = false then
+      Response.Redirect("./")
    end if
 
    id = trim(Request.QueryString("id"))
@@ -17,17 +17,22 @@
    data_cmd.commandTExt = "SELECT DLK_T_MaterialReceiptD1.*, DLK_M_WebLogin.username FROM DLK_T_MaterialReceiptD1 LEFT OUTER JOIN DLK_M_WebLogin ON DLK_T_MaterialReceiptD1.MR_Updateid = DLK_M_Weblogin.userid WHERE MR_ID = '"& id &"'"
    set data1 = data_cmd.execute
 
-   ' get nomor menerimaan barang
-   data_cmd.commandTExt = "SELECT OPH_ID FROM DLK_T_OrPemH WHERE OPH_AktifYN = 'Y' AND OPH_KID = 1 AND NOT EXISTS (SELECT MR_Transaksi FROM DLK_T_MaterialReceiptD1 WHERE MR_Transaksi = OPH_ID)"
+   ' get data po
+   data_cmd.commandTExt = "SELECT dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_M_Vendor.Ven_Nama, SUM(ISNULL(dbo.DLK_T_OrPemD.OPD_QtySatuan, 0)) AS qtypo FROM dbo.DLK_M_Vendor RIGHT OUTER JOIN dbo.DLK_T_OrPemH ON dbo.DLK_M_Vendor.Ven_ID = dbo.DLK_T_OrPemH.OPH_venID RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID, 13) WHERE (dbo.DLK_T_OrPemH.OPH_AktifYN = 'Y') AND (dbo.DLK_T_OrPemH.OPH_KID = 1) GROUP BY dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_M_Vendor.Ven_Nama HAVING SUM(ISNULL(dbo.DLK_T_OrPemD.OPD_QtySatuan, 0)) - ISNULL((SELECT SUM(ISNULL(dbo.DLK_T_MaterialReceiptD2.MR_Qtysatuan, 0)) AS qtymr FROM dbo.DLK_T_MaterialReceiptD1 RIGHT OUTER JOIN dbo.DLK_T_MaterialReceiptD2 ON dbo.DLK_T_MaterialReceiptD1.MR_Transaksi = LEFT(dbo.DLK_T_MaterialReceiptD2.MR_Transaksi, 13) WHERE (dbo.DLK_T_MaterialReceiptD1.MR_Transaksi = dbo.DLK_T_OrPemH.OPH_ID) GROUP BY dbo.DLK_T_MaterialReceiptD1.MR_Transaksi),0) > 0 AND SUM(ISNULL(dbo.DLK_T_OrPemD.OPD_QtySatuan, 0)) - ISNULL((SELECT SUM(ISNULL(dbo.DLK_T_MaterialReceiptD2.MR_Qtysatuan, 0)) AS qtymr FROM dbo.DLK_T_MaterialReceiptD1 RIGHT OUTER JOIN dbo.DLK_T_MaterialReceiptD2 ON dbo.DLK_T_MaterialReceiptD1.MR_Transaksi = LEFT(dbo.DLK_T_MaterialReceiptD2.MR_Transaksi, 13) WHERE (dbo.DLK_T_MaterialReceiptD1.MR_Transaksi = dbo.DLK_T_OrPemH.OPH_ID) GROUP BY dbo.DLK_T_MaterialReceiptD1.MR_Transaksi ),0) <> 0 ORDER BY dbo.DLK_T_OrPemH.OPH_ID"
 
-   set fakturterhutang = data_cmd.execute
+   set datafp = data_cmd.execute
 
    ' set rak 
    data_cmd.commandText = "SELECT Rak_ID, Rak_Nama FROM DLK_M_Rak WHERE Rak_aktifYN = 'Y' AND LEFT(Rak_ID,3) = '"& data("AgenID") &"' ORDER BY Rak_nama"
 
    set drak = data_cmd.execute
 
-   call header("Update Incomming")
+   ' set satuan 
+   data_cmd.commandText = "SELECT sat_ID, sat_Nama FROM DLK_M_satuanbarang WHERE sat_aktifYN = 'Y' ORDER BY sat_nama"
+
+   set dsatuan = data_cmd.execute
+
+   call header("Proses Incomming")
 %>
 <!--#include file="../../navbar.asp"--> 
 <!--auto relog page 
@@ -36,7 +41,7 @@
 <div class="container">
    <div class="row">
       <div class="col-lg-12 mt-3 text-center">
-         <h3>FORM UPDATE PROSES INCOMMING DETAIL</h3>
+         <h3>FORM PROSES INCOMMING DETAIL</h3>
       </div>
    </div>
    <div class="row">
@@ -87,12 +92,9 @@
    </div>
    <div class="row">
       <div class="col-lg-12">
-         <div class="d-flex mb-3">
-            <div class="me-auto p-2">
-               <button type="button" class="btn btn-primary btn-modalIncomed" data-bs-toggle="modal" data-bs-target="#modalIncomed">Tambah Doc</button>
-            </div>
-            <div class="p-2">
-               <a href="index.asp" class="btn btn-danger">Kembali</a>
+         <div class="d-flex justify-content-spacebetween mb-3">
+            <div>
+               <a href="./" class="btn btn-danger">Kembali</a>
             </div>
          </div>
       </div>
@@ -125,7 +127,7 @@
                %>
                <tr>
                   <td colspan="2">Document :</td>
-                  <td ><%= LEFT(data1("MR_Transaksi"),2) &"-"& mid(data1("MR_Transaksi"),3,3) &"/"& mid(data1("MR_Transaksi"),6,4) &"/"& right(data1("MR_Transaksi"),4)%></td>
+                  <td><%= LEFT(data1("MR_Transaksi"),2) &"-"& mid(data1("MR_Transaksi"),3,3) &"/"& mid(data1("MR_Transaksi"),6,4) &"/"& right(data1("MR_Transaksi"),4)%></td>
                   <td>User :</td>
                   <td colspan="5"><%= data1("username") %></td>
                </tr>
@@ -134,6 +136,7 @@
                rakID = ""
                data_cmd.commandTExt = "SELECT dbo.DLK_T_MaterialReceiptD2.*, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id, DLK_M_Rak.Rak_Nama, DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama FROM dbo.DLK_T_MaterialReceiptD2 LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialReceiptD2.MR_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialReceiptD2.MR_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_Rak ON DLK_T_MaterialReceiptD2.MR_RakID = DLK_M_Rak.Rak_ID LEFT OUTER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId LEFT OUTER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID WHERE dbo.DLK_T_MaterialReceiptD2.MR_ID = '"& id &"' AND LEFT(MR_Transaksi,13) = '"& data1("MR_Transaksi") &"'"
                set data2 = data_cmd.execute
+
                do while not data2.eof 
                no1 = no1 + 1
 
@@ -147,12 +150,12 @@
                   <td><%= data2("kategoriNama") &"-"& data2("jenisNama") %></td>
                   <td><%= data2("Brg_Nama") %></td>
                   <td>
-                     <input type="number" name="qty" id="qty<%= data2("MR_Transaksi") %>" value="<%= data2("MR_Qtysatuan") %>" class="form-control" style="width:5rem;padding:3px;border:none;background:none;">
+                     <input type="number" name="qty" id="qty<%= no1 & data2("MR_Transaksi") %>" value="<%= data2("MR_Qtysatuan") %>" class="form-control" style="width:5rem;padding:3px;border:none;background:none;">
                   </td>
                   <td><%= data2("Sat_nama") %></td>
                   <td><%= replace(formatCurrency(data2("MR_Harga")),"$","") %></td>
                   <td>
-                     <select class="form-select" aria-label="Default select example" name="rakIncome" id="rakIncome<%= data2("MR_Transaksi") %>" style="border:none;background:none;margin:inherit;padding:6px;">
+                     <select class="form-select" aria-label="Default select example" name="rakIncome" id="rakIncome<%= no1 & data2("MR_Transaksi") %>" style="border:none;background:none;margin:inherit;padding:6px;">
                         <option value="<%= rakID %>">
                            <% if data2("MR_RakID") = "" then%>
                               Pilih
@@ -165,12 +168,12 @@
                         <% 
                         drak.movenext
                         loop
-                        drak.movefirst 
+                        drak.movefirst
                         %>
                      </select>
                   </td>
                   <td>
-                     <button type="button" class="btn badge text-bg-warning"  onclick="updateData('<%= data2("MR_ID") %>', '<%= data2("MR_transaksi") %>')">Update</button>
+                     <button type="button" class="btn badge text-bg-warning"  onclick="updateData('<%= data2("MR_ID") %>', '<%= data2("MR_transaksi") %>', '<%= data2("MR_Qtysatuan") %>', '<%=no1%>', '<%=data2("MR_Acpdate")%>')">Update</button>
                   </td>
                </tr>
                <% 
@@ -189,51 +192,15 @@
    </div>
    <% end if %>
 </div>  
-<!-- Modal -->
-<div class="modal fade" id="modalIncomed" tabindex="-1" aria-labelledby="modalIncomedLabel" aria-hidden="true">
-   <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h1 class="modal-title fs-5" id="modalIncomedLabel">Tambah Dokumen Penerimaan Barang</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-         </div>
-         <form action="income_u.asp?id=<%= id %>" method="post">
-            <input type="hidden" name="id" value="<%= id %>">
-            <div class="modal-body">
-               <div class="row">
-                  <div class="col-sm-2">
-                     <label for="faktur">Nomor</label>
-                  </div>
-                  <div class="col-sm">
-                     <select class="form-select" aria-label="Default select example" name="fakturH" id="fakturH" required>
-                        <option value="">Pilih</option>
-                        <% do while not fakturterhutang.eof %>
-                        <option value="<%= fakturterhutang("OPH_ID") %>"><%= left(fakturterhutang("OPH_ID"),2) %>-<% call getAgen(mid(fakturterhutang("OPH_ID"),3,3),"") %>/<%= mid(fakturterhutang("OPH_ID"),6,4) %>/<%= right(fakturterhutang("OPH_ID"),4) %></option>
-                        <% 
-                        fakturterhutang.movenext
-                        loop
-                        %>
-                     </select>
-                  </div>
-               </div>
-            </div>
-            <div class="modal-footer">
-               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-               <button type="submit" class="btn btn-primary">Save</button>
-            </div>
-         </form>
-      </div>
-   </div>
-</div>
-
 <script>
-const updateData = (id,trans) => {
-   let qty = $(`#qty${trans}`).val()
-   let rak = $(`#rakIncome${trans}`).val()
+const updateData = (id,trans, qtylama, urutan, acpdate) => {
    
-   $.post( "updateMRD2.asp", { id, trans, rak, qty }).done(function( data ) {
+   let qty = $(`#qty${urutan}${trans}`).val()
+   let rak = $(`#rakIncome${urutan}${trans}`).val()
+   
+   $.post( "updateMRD2.asp", { id, trans, rak, qtylama, qty, acpdate }).done(function( data ) {
       if(data != "DONE"){
-         swal(`PERHATIAN ${data}`)
+         swal(`PERHATIAN !!! ${data}`)
          return false
       }else{
          swal({title: 'Data Berhasil Diubah',text: 'Update Rak & Quantity',icon: 'success',button: 'OK',}).then(function() {window.location = 'income_u.asp?id='+ id})
@@ -242,8 +209,5 @@ const updateData = (id,trans) => {
 }
 </script>
 <% 
-   if Request.ServerVariables("REQUEST_METHOD") = "POST" then
-      call updateincomepo()
-   end if
    call footer()
 %>

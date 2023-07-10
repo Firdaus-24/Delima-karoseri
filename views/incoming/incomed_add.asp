@@ -2,7 +2,7 @@
 <!--#include file="../../functions/func_incomming.asp"-->   
 <% 
    if session("INV2A") = false then
-      Response.Redirect("index.asp")
+      Response.Redirect("./")
    end if
 
    id = trim(Request.QueryString("id"))
@@ -18,7 +18,7 @@
    set data1 = data_cmd.execute
 
    ' get data po
-   data_cmd.commandTExt = "SELECT OPH_ID FROM DLK_T_OrPemH WHERE OPH_AktifYN = 'Y' AND OPH_KID = 1 AND NOT EXISTS (SELECT MR_Transaksi FROM DLK_T_MaterialReceiptD1 WHERE MR_Transaksi = OPH_ID) "
+   data_cmd.commandTExt = "SELECT dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_M_Vendor.Ven_Nama, SUM(ISNULL(dbo.DLK_T_OrPemD.OPD_QtySatuan, 0)) AS qtypo FROM dbo.DLK_M_Vendor RIGHT OUTER JOIN dbo.DLK_T_OrPemH ON dbo.DLK_M_Vendor.Ven_ID = dbo.DLK_T_OrPemH.OPH_venID RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID, 13) WHERE (dbo.DLK_T_OrPemH.OPH_AktifYN = 'Y') AND (dbo.DLK_T_OrPemH.OPH_KID = 1) GROUP BY dbo.DLK_T_OrPemH.OPH_ID, dbo.DLK_M_Vendor.Ven_Nama HAVING SUM(ISNULL(dbo.DLK_T_OrPemD.OPD_QtySatuan, 0)) - ISNULL((SELECT SUM(ISNULL(dbo.DLK_T_MaterialReceiptD2.MR_Qtysatuan, 0)) AS qtymr FROM dbo.DLK_T_MaterialReceiptD1 RIGHT OUTER JOIN dbo.DLK_T_MaterialReceiptD2 ON dbo.DLK_T_MaterialReceiptD1.MR_Transaksi = LEFT(dbo.DLK_T_MaterialReceiptD2.MR_Transaksi, 13) WHERE (dbo.DLK_T_MaterialReceiptD1.MR_Transaksi = dbo.DLK_T_OrPemH.OPH_ID) GROUP BY dbo.DLK_T_MaterialReceiptD1.MR_Transaksi),0) > 0 AND SUM(ISNULL(dbo.DLK_T_OrPemD.OPD_QtySatuan, 0)) - ISNULL((SELECT SUM(ISNULL(dbo.DLK_T_MaterialReceiptD2.MR_Qtysatuan, 0)) AS qtymr FROM dbo.DLK_T_MaterialReceiptD1 RIGHT OUTER JOIN dbo.DLK_T_MaterialReceiptD2 ON dbo.DLK_T_MaterialReceiptD1.MR_Transaksi = LEFT(dbo.DLK_T_MaterialReceiptD2.MR_Transaksi, 13) WHERE (dbo.DLK_T_MaterialReceiptD1.MR_Transaksi = dbo.DLK_T_OrPemH.OPH_ID) GROUP BY dbo.DLK_T_MaterialReceiptD1.MR_Transaksi ),0) <> 0 ORDER BY dbo.DLK_T_OrPemH.OPH_ID"
 
    set datafp = data_cmd.execute
 
@@ -26,6 +26,11 @@
    data_cmd.commandText = "SELECT Rak_ID, Rak_Nama FROM DLK_M_Rak WHERE Rak_aktifYN = 'Y' AND LEFT(Rak_ID,3) = '"& data("AgenID") &"' ORDER BY Rak_nama"
 
    set drak = data_cmd.execute
+
+   ' set satuan 
+   data_cmd.commandText = "SELECT sat_ID, sat_Nama FROM DLK_M_satuanbarang WHERE sat_aktifYN = 'Y' ORDER BY sat_nama"
+
+   set dsatuan = data_cmd.execute
 
    call header("Proses Incomming")
 %>
@@ -87,12 +92,14 @@
    </div>
    <div class="row">
       <div class="col-lg-12">
-         <div class="d-flex mb-3">
-            <div class="me-auto p-2">
-               <button type="button" class="btn btn-primary btn-modalIncomed" data-bs-toggle="modal" data-bs-target="#modalIncomed">Tambah Doc</button>
+         <div class="d-flex justify-content-spacebetween mb-3">
+            <div class="me-auto">
+               <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalIncomedadd">
+                  Tambah Rincian
+               </button>
             </div>
-            <div class="p-2">
-               <a href="index.asp" class="btn btn-danger">Kembali</a>
+            <div>
+               <a href="./" class="btn btn-danger">Kembali</a>
             </div>
          </div>
       </div>
@@ -148,12 +155,12 @@
                   <td><%= data2("kategoriNama") &"-"& data2("jenisNama") %></td>
                   <td><%= data2("Brg_Nama") %></td>
                   <td>
-                     <input type="number" name="qty" id="qty<%= data2("MR_Transaksi") %>" value="<%= data2("MR_Qtysatuan") %>" class="form-control" style="width:5rem;padding:3px;border:none;background:none;">
+                     <input type="number" name="qty" id="qty<%= no1 & data2("MR_Transaksi") %>" value="<%= data2("MR_Qtysatuan") %>" class="form-control" style="width:5rem;padding:3px;border:none;background:none;">
                   </td>
                   <td><%= data2("Sat_nama") %></td>
                   <td><%= replace(formatCurrency(data2("MR_Harga")),"$","") %></td>
                   <td>
-                     <select class="form-select" aria-label="Default select example" name="rakIncome" id="rakIncome<%= data2("MR_Transaksi") %>" style="border:none;background:none;margin:inherit;padding:6px;">
+                     <select class="form-select" aria-label="Default select example" name="rakIncome" id="rakIncome<%= no1 & data2("MR_Transaksi") %>" style="border:none;background:none;margin:inherit;padding:6px;">
                         <option value="<%= rakID %>">
                            <% if data2("MR_RakID") = "" then%>
                               Pilih
@@ -171,7 +178,7 @@
                      </select>
                   </td>
                   <td>
-                     <button type="button" class="btn badge text-bg-warning"  onclick="updateData('<%= data2("MR_ID") %>', '<%= data2("MR_transaksi") %>')">Update</button>
+                     <button type="button" class="btn badge text-bg-warning"  onclick="updateData('<%= data2("MR_ID") %>', '<%= data2("MR_transaksi") %>', '<%= data2("MR_Qtysatuan") %>', '<%=no1%>', '<%=data2("MR_Acpdate")%>')">Update</button>
                   </td>
                </tr>
                <% 
@@ -190,61 +197,201 @@
    </div>
    <% end if %>
 </div>  
+
+
 <!-- Modal -->
-<div class="modal fade" id="modalIncomed" tabindex="-1" aria-labelledby="modalIncomedLabel" aria-hidden="true">
-   <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h1 class="modal-title fs-5" id="modalIncomedLabel">Tambah Dokumen Penerimaan Barang</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-         </div>
-         <form action="incomed_add.asp?id=<%= id %>" method="post">
-            <input type="hidden" name="id" value="<%= id %>">
-            <div class="modal-body">
-               <div class="row">
-                  <div class="col-sm-2">
-                     <label for="faktur">Nomor</label>
-                  </div>
-                  <div class="col-sm">
-                     <select class="form-select" aria-label="Default select example" name="fakturH" id="fakturH" required>
-                        <option value="">Pilih</option>
-                        <% do while not datafp.eof %>
-                        <option value="<%= datafp("OPH_ID") %>"><%= left(datafp("OPH_ID"),2) %>-<% call getAgen(mid(datafp("OPH_ID"),3,3),"") %>/<%= mid(datafp("OPH_ID"),6,4) %>/<%= right(datafp("OPH_ID"),4) %></option>
+<div class="modal fade" id="modalIncomedadd" tabindex="-1" aria-labelledby="modalIncomedaddLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modalIncomedaddLabel">Tambah Rincian Barang</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+         <form action="incomed_add.asp?id=<%=id%>" method="post" onsubmit="validasiIncomming(this,event)">
+            <input type="hidden" value="<%=data("MR_ID")%>" name="mrid">
+            <div class='row mb-3'>
+               <div class="col-md-12 mb-3 overflow-auto tblincomed" style="height:20rem;font-size:12px">
+                  <table class="table table-hover">
+                     <thead class="bg-secondary text-light" style="position: sticky;top: 0;">
+                        <tr>
+                           <th scope="col">No</th>
+                           <th scope="col">Kode</th>
+                           <th scope="col">Barang</th>
+                           <th scope="col">Qty PO</th>
+                           <th scope="col">Qty MR</th>
+                           <th scope="col">Satuan</th>
+                           <th scope="col">Type</th>
+                           <th scope="col">Pilih</th>
+                        </tr>
+                     </thead>
+                     <tbody>
                         <% 
-                        datafp.movenext
+                        a = 0
+                        Do While not datafp.eof 
+                        ' cek data po 
+                        data_cmd.commandTExt = "SELECT dbo.DLK_T_OrPemD.OPD_OPHID, dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_OrPemD.OPD_QtySatuan, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_TypeBarang.T_Nama FROM dbo.DLK_M_TypeBarang INNER JOIN dbo.DLK_M_Kategori INNER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_Kategori.KategoriId = dbo.DLK_M_Barang.KategoriID INNER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID ON dbo.DLK_M_TypeBarang.T_ID = dbo.DLK_M_Barang.Brg_Type RIGHT OUTER JOIN dbo.DLK_M_SatuanBarang RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_M_SatuanBarang.Sat_ID = dbo.DLK_T_OrPemD.OPD_JenisSat ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_OrPemD.OPD_Item WHERE LEFT(OPD_OPHID,13) = '"& datafp("OPH_ID") &"' ORDER BY dbo.DLK_M_TypeBarang.T_Nama, dbo.DLK_M_Barang.Brg_Nama ASC"
+                        set ckpo = data_cmd.execute
+
+                        ' cek data hitungan
+                        qtysisa = 0
+                        if ckpo.eof then
+                           response.flush
+                           datafp.movenext
+                        else
+
+                        a = a + 1
+                        %>
+                           <tr style="background-color:rgba(0,0,255,0.5);">
+                              <td><%=a%></td>
+                              <td>No. Purchase</td>
+                              <td>
+                                 : <%= left(datafp("OPH_ID"),2) %>-<% call getAgen(mid(datafp("OPH_ID"),3,3),"") %>/<%= mid(datafp("OPH_ID"),6,4) %>/<%= right(datafp("OPH_ID"),4) %>
+                              </td>
+                              <td>Vendor</td>
+                              <td colspan="5">: <%=datafp("Ven_nama")%></td>
+                           </tr>
+
+                           <% do while not ckpo.eof  
+                              ' cek data MR
+                              data_cmd.commandTExt = "SELECT ISNULL(SUM(MR_Qtysatuan),0) AS qtymr FROM DLK_T_MaterialReceiptD2 WHERE MR_Item = '"& ckpo("OPD_Item") &"' AND MR_Transaksi = '"& ckpo("OPD_OPHID") &"' GROUP BY MR_Item"
+                              ' Response.Write data_cmd.commandTExt & "<br>"
+                              set ckdatamr = data_cmd.execute
+
+                              if not ckdatamr.eof then
+                                 qtymr = ckdatamr("qtymr")
+                              else
+                                 qtymr = 0
+                              end if
+
+                              qtysisa = ckpo("OPD_Qtysatuan") - qtymr
+                              if qtysisa < 0 or qtysisa = 0 then
+                                 response.flush
+                                 ckpo.movenext
+                              else
+                           %>
+                              <tr>
+                                 <td></td>
+                                 <td><%=ckpo("KategoriNama") &" - "& ckpo("jenisnama") %></td>
+                                 <td><%=ckpo("Brg_nama")%></td>
+                                 <td><%=ckpo("OPD_Qtysatuan")%></td>
+                                 <td><%=qtymr%></td>
+                                 <td><%=ckpo("sat_nama")%></td>
+                                 <td><%=ckpo("T_nama")%></td>
+                                 <td class="text-center">
+                                    <div class="form-check">
+                                       <input class="form-check-input" type="radio" name="opdophid" id="opdophid1" onclick="getsisaqtymrpo('<%=qtysisa%>')" value="<%=ckpo("OPD_OPHID")&","&ckpo("OPD_Item")%>" required>
+                                    </div>
+                                 </td>
+                              </tr>
+                              
+                        <%
+                              response.flush
+                              ckpo.movenext
+                              end if
+                              loop
+                           response.flush
+                           datafp.movenext
+                        end if
                         loop
                         %>
-                     </select>
-                  </div>
+                     </tbody>
+                  </table>
                </div>
             </div>
-            <div class="modal-footer">
-               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-               <button type="submit" class="btn btn-primary">Save</button>
+            <div class='row'>
+               <div class='col-sm-3 mb-3 '>
+                  <label for="acpdate" class="form-label">Tanggal diterima</label>
+                  <input type="date" id="acpdate" class="form-control" name="acpdate" required>
+               </div>
+               <div class='col-sm-3 mb-3 '>
+                  <label for="qtyincomed" class="form-label">Quantity</label>
+                  <input type="hidden" id="sisaqtymrpo" class="form-control" required>
+                  <input type="number" id="qtyincomed" class="form-control" name="qtyincomed" required>
+               </div>
+               <div class='col-sm-3 mb-3 '>
+                  <label for="satuan" class="form-label">Satuan</label>
+                  <select class="form-select" name="satuan" required>
+                     <option value="">Pilih</option>
+                     <%do while not dsatuan.eof%>
+                        <option value="<%=dsatuan("sat_ID")%>"><%=dsatuan("sat_Nama")%></option>
+                     <%
+                     response.flush
+                     dsatuan.movenext
+                     loop
+                     %>
+                  </select>
+               </div>
+               <div class='col-sm-3 mb-3 '>
+                  <label for="rak" class="form-label">Rak</label>
+                  <select class="form-select" name="rak" required>
+                     <option value="">Pilih</option>
+                     <%do while not drak.eof%>
+                        <option value="<%=drak("Rak_ID")%>"><%=drak("Rak_Nama")%></option>
+                     <%
+                     response.flush
+                     drak.movenext
+                     loop
+                     %>
+                  </select>
+               </div>
             </div>
-         </form>
       </div>
-   </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
-
 <script>
-const updateData = (id,trans) => {
-   let qty = $(`#qty${trans}`).val()
-   let rak = $(`#rakIncome${trans}`).val()
+const updateData = (id,trans, qtylama, urutan, acpdate) => {
    
-   $.post( "updateMRD2.asp", { id, trans, rak, qty }).done(function( data ) {
+   let qty = $(`#qty${urutan}${trans}`).val()
+   let rak = $(`#rakIncome${urutan}${trans}`).val()
+   
+   $.post( "updateMRD2.asp", { id, trans, rak, qtylama, qty, acpdate }).done(function( data ) {
       if(data != "DONE"){
-         swal(`PERHATIAN ${data}`)
+         swal(`PERHATIAN !!! ${data}`)
          return false
       }else{
          swal({title: 'Data Berhasil Diubah',text: 'Update Rak & Quantity',icon: 'success',button: 'OK',}).then(function() {window.location = 'incomed_add.asp?id='+ id})
       }
    });
 }
+const getsisaqtymrpo = (e) => {
+   $("#sisaqtymrpo").val(e);
+}
+const validasiIncomming = (val,e) => {
+   let form = val;
+   e.preventDefault(); // <--- prevent form from submitting
+   if(Number($("#qtyincomed").val()) > Number($("#sisaqtymrpo").val())){
+      swal("Quantity Melebihi batas!!");
+      return false;
+   }else{
+      swal({
+      title: "APAKAH ANDA SUDAH YAKIN??",
+      text: 'TRANSAKSI INCOMMING',
+      icon: 'warning',
+      buttons: [
+         'No',
+         'Yes'
+      ],
+      dangerMode: true,
+      }).then(function (isConfirm) {
+         if (isConfirm) {
+            form.submit(); // <--- submit form programmatically
+         } else {
+            swal("Form gagal di kirim");
+         }
+      })
+   }
+   
+}
 </script>
 <% 
    if Request.ServerVariables("REQUEST_METHOD") = "POST" then
-      ' call tambahIncome()
       call incomePo()
    end if
    call footer()

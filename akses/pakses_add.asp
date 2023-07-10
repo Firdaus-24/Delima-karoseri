@@ -1749,7 +1749,16 @@ call header("Hak Akses") %>
                 set app = data_cmd.execute
                 %>
                 <input class="form-check-input" type="checkbox" name="FN1E" id="FN1E" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','FN1E');" >
-                <label for="FN1E">Send Email</label>
+                <label for="FN1E">Approve memo</label>
+              </li>
+              <li>
+                <%
+                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'FN1F'"
+
+                set app = data_cmd.execute
+                %>
+                <input class="form-check-input" type="checkbox" name="FN1F" id="FN1F" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','FN1F');" >
+                <label for="FN1F">Send Email</label>
               </li>
             </ul>
           <!-- Master Bank -->

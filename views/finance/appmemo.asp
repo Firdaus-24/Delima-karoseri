@@ -1,7 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
     if session("FN1") = false then
-        Response.Redirect("../index.asp")
+        Response.Redirect("../")
     end if
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
@@ -161,11 +161,11 @@
                 <thead class="bg-secondary text-light">
                     <tr>
                     <th scope="col">No</th>
-                    <th scope="col">No Memo</th>
                     <th scope="col">Tanggal</th>
-                    <th scope="col">Cabang</th>
+                    <th scope="col">No Memo</th>
                     <th scope="col">Divisi</th>
                     <th scope="col">Departement</th>
+                    <th scope="col">Keterangan</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -184,33 +184,39 @@
                     %>
                     <tr>
                         <th scope="row"><%= recordcounter %></th>
+                        <td><%= Cdate(rs("memoTgl")) %></td>
                         <td>
                             <a href="DetailMemo.asp?id=<%= rs("memoID") %>" class="btn btn-outline-primary p-1">
                             <%= left(rs("memoID"),4) %>/<%=mid(rs("memoId"),5,3) %>-<% call getAgen(mid(rs("memoID"),8,3),"") %>/<%= mid(rs("memoID"),11,4) %>/<%= right(rs("memoID"),3) %>
                             </a>
                         </td>
-                        <td><%= Cdate(rs("memoTgl")) %></td>
-                        <td><%= rs("AgenName") %></td>
                         <td><%= rs("DivNama") %></td>
                         <td><%= rs("DepNama")%></td>
+                        <td><%= rs("memoketerangan") %></td>
                         <td class="text-center">
-                        <%  if session("FN1E") = true then %>
                             <% if not ddetail.eof then %>
                                 Call Purchase
                             <% else %>  
                                 <% if rs("memoApproveYN") = "Y" then %>
-                                    -
+                                    <i class="bi bi-check2"></i>
                                 <% else %>
-                                    <div class="btn-group" role="group" aria-label="Basic example">
-                                        <a href="#" class="btn badge text-bg-primary modalSendEmailMemo" data-id="<%= rs("memoID") %>" data-bs-toggle="modal" data-bs-target="#modalSendEmail">Email</a>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <%  if session("FN1E") = true then %>
                                         <a href="appPmemo.asp?id=<%= rs("memoID") %>" onclick="return ApproveYN(event, 'YAKIN UNTUK DI PROSES', 'Proses ini hanya bisa di lakukan satu kali !!', 'warning')" class="btn badge text-bg-danger">Approve</a>
-                                    </div>
-                                <% end if %>    
+                                    <% end if %>    
+                                    <%  if session("FN1F") = true then %>
+                                        <a href="#" class="btn badge text-bg-primary modalSendEmailMemo" data-id="<%= rs("memoID") %>" data-bs-toggle="modal" data-bs-target="#modalSendEmail">Email</a>
+                                    <% end if %>    
+                                    <%  if session("FN1E") = false and session("FN1F") = false then %>
+                                        <i class="bi bi-x-lg"></i>
+                                    <% end if%>
+                                </div>
                             <% end if %>
                         <% end if %>
                         </td>
                     </tr>
                     <% 
+                    response.flush
                     showrecords = showrecords - 1
                     rs.movenext
                     if rs.EOF then

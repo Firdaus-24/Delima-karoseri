@@ -135,10 +135,12 @@
                 </thead>
                 <tbody>
                     <%  
+                    no = 0
                     do while not ddata.eof 
+                    no = no + 1
                     %>
                     <tr>
-                        <th scope="row"><%= ddata("Dven_Venid") %></th>
+                        <th scope="row"><%= no %></th>
                         <td>
                             <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
                         </td>

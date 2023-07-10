@@ -2,7 +2,7 @@
 <!--#include file="../../functions/func_vendor.asp"-->
 <% 
     if session("M8B") = false then  
-        Response.Redirect("index.asp")
+        Response.Redirect("./")
     end if
 
     id = trim(Request.querystring("id"))
@@ -142,10 +142,12 @@
                 </thead>
                 <tbody>
                     <%  
+                    n = 0
                     do while not ddata.eof 
+                    n = n + 1
                     %>
                     <tr>
-                        <th scope="row"><%= ddata("Dven_Venid") %></th>
+                        <th scope="row"><%= n %></th>
                         <td>
                             <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
                         </td>

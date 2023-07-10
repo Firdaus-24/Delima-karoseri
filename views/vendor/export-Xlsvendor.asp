@@ -1,7 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
     if session("M8D") = false then
-        Response.Redirect("index.asp")
+        Response.Redirect("./")
     end if
 
     Response.ContentType = "application/vnd.ms-excel"
