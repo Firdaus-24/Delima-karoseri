@@ -3,7 +3,7 @@
     if session("FN1F") = false then
         Response.Redirect("appmemo.asp")
     end if
-
+    
     id = Request.Form("idappmemo")
     custEmail = Request.Form("custEmail")
     subject = Request.Form("subject")
@@ -56,9 +56,11 @@
     loop
     data.movefirst
 
-    dataBody = "<div class='row gambar' style='width:80px;height:80px;position:absolute;right:70px;'>"&_
+    onclickBtn = "<a href='"& url &"views/finance/verifikasi.asp?d="& id &"' style=text-decoration:none;color:white;padding:10px;background-color:#0dcaf0; > VERIFIKASI </a>"
+
+    dataBody =  "<div class='row gambar' style='width:80px;height:80px;position:absolute;right:70px;'>"&_
         "<div class='col'>"&_
-            "<img src='http://103.111.190.162:8008/public/img/delimalogo.png' alt='delimalogo' style='position:absolute;width:100px;height:50px;'>"&_
+            "<img src='"& url &"/public/img/delimalogo.png' alt='delimalogo' style='position:absolute;width:100px;height:50px;'>"&_
         "</div>"&_
     "</div>"&_
     "<table width='100%' style='font-size:16px'>"&_
@@ -133,9 +135,8 @@
     "<table border=0 width=640 style=margin:auto;border-collapse:collapse;font-size:12px;font-family:Arial,Helvetica,sans-serif;>"&_
         "<tr>"&_
             "<td  colspan=2 align=center >"&_
-                
                 "<h2>"&_
-                    "<a href=http://103.111.190.162:8008/views/finance/verifikasi.asp?d="& id &" style=text-decoration:none;color:white;padding:10px;background-color:#0dcaf0;> VERIFIKASI SEKARANG </a>"&_
+                    onclickBtn&_
                 "</h2>"&_
             "</td>"&_
         "</tr>"&_
@@ -145,6 +146,7 @@
             "</td>"&_
         "</tr>"&_
     "</table>"
+   
 
     Set Mail = CreateObject("CDO.Message")
 
