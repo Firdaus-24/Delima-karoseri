@@ -194,13 +194,12 @@
 </div>  
 <script>
 const updateData = (id,trans, qtylama, urutan, acpdate) => {
-   
    let qty = $(`#qty${urutan}${trans}`).val()
    let rak = $(`#rakIncome${urutan}${trans}`).val()
-   
+
    $.post( "updateMRD2.asp", { id, trans, rak, qtylama, qty, acpdate }).done(function( data ) {
       if(data != "DONE"){
-         swal(`PERHATIAN !!! ${data}`)
+         swal({title: `PERHATIAN !!! `,text: `${data}`,icon: 'success',button: 'OK',}).then(function() {window.location = 'income_u.asp?id='+ id})
          return false
       }else{
          swal({title: 'Data Berhasil Diubah',text: 'Update Rak & Quantity',icon: 'success',button: 'OK',}).then(function() {window.location = 'income_u.asp?id='+ id})

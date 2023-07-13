@@ -8,14 +8,16 @@
    trans = trim(Request.form("trans"))
    rak = trim(Request.form("rak"))
    acpdate = trim(Request.form("acpdate"))
-   qtylama = trim(Request.Form("qtylama"))
+   qtylama = trim(Request.form("qtylama"))
    qty = trim(Request.form("qty"))
-
+ 
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
 
    data_cmd.commandText = "SELECT * FROM DLK_T_MaterialReceiptD2 WHERE MR_ID = '"& id &"' AND MR_Transaksi = '"& trans &"' AND MR_Qtysatuan = "& qtylama &" AND MR_Acpdate = '"& acpdate &"'"
+   ' Response.Write data_cmd.commandTExt
    set data = data_cmd.execute
+   ' Response.end 
 
    if not data.eof then
       
@@ -54,8 +56,11 @@
 
             thargamr = ckhargastok - hargapengurang 
             stokbaru = stokMaster("stok") - pengurang 
-            realharga = Round(thargamr / stokbaru)
-            
+            if stokbaru <> 0 then
+               realharga = Round(thargamr / stokbaru)
+            else
+               realharga = 0
+            end if
             call query("UPDATE DLK_T_MaterialReceiptD2 SET MR_Harga = '" & realharga &"' WHERE MR_Item = '"& data("MR_Item") &"'")
             call query("UPDATE DLK_T_MaterialReceiptD2 SET MR_Qtysatuan = "& qty &", MR_RakID = '"& rak &"' WHERE MR_ID = '"& id &"' AND MR_Transaksi = '"& trans &"' AND MR_Qtysatuan = '"& qtylama &"' AND MR_acpdate = '"& acpdate &"' ")
 
