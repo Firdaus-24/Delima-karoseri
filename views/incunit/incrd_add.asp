@@ -388,10 +388,10 @@
                 </div>
                 </form>
               </td>
-              <td>
+              <td style="white-space: normal !important;padding-left:30px; ">
                 <%= ddata("IRD_Description") %>
               </td>
-              <td>
+              <td  style="white-space: normal !important; ">
                 <%= ddata("IRD_Remarks")%>
               </td>
               <td>

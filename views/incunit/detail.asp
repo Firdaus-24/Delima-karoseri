@@ -218,7 +218,7 @@
           no = no + 1
           %>
             <tr>
-              <td class="p-0 m-0 text-center">
+              <td class="p-2 mr-2 text-center">
                 <%= no  %>
               </td>
               <td>
@@ -230,10 +230,10 @@
                   <%end if%>
                 </div>
               </td>
-              <td>
+              <td style="white-space: normal !important;padding-left:30px; ">
                 <%= ddata("IRD_Description") %>
               </td>
-              <td>
+              <td style="white-space: normal !important; ">
                 <%= ddata("IRD_Remarks")%>
               </td>
               <td>
