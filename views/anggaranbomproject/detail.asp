@@ -81,13 +81,11 @@
     </div>
     <div class="row">
         <div class="d-flex mb-3">
-            <% 'if session("PP7D") = true then  %>
-            <!-- 
+            <% if session("PP8D") = true then  %>
             <div class="me-auto p-2">
-                <button type="button" class="btn btn-secondary" onClick="window.open('export-XlsAnggaranrepair.asp?id=<%=id%>')" class="btn btn-secondary">Export</button>
+                <button type="button" class="btn btn-secondary" onClick="window.open('export-anggaranbomproject.asp?id=<%=id%>')" class="btn btn-secondary">Export</button>
             </div>
-            -->
-            <% 'end if %>
+            <% end if %>
             <div class="p-2">
                 <a href="./" class="btn btn-danger">Kembali</a>
             </div>

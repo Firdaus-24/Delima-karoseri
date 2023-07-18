@@ -1,7 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
     if session("PP8") = false then
-        Response.Redirect("index.asp")
+        Response.Redirect("./")
     end if
 
     ' query cabang  
