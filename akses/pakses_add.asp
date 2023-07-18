@@ -2555,33 +2555,42 @@ call header("Hak Akses") %>
             <label for="PP8">Anggaran B.O.M project</label>
           </li>
             <ul>
-              <li>
-                <%
-                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'PP8A'"
+            <li>
+              <%
+              data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'PP8A'"
 
-                set app = data_cmd.execute
-                %>
-                <input class="form-check-input" type="checkbox" name="PP8A" id="PP8A" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','PP8A');" >
-                <label for="PP8A">Tambah</label>
-              </li>
-              <li>
-                <%
-                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'PP8B'"
+              set app = data_cmd.execute
+              %>
+              <input class="form-check-input" type="checkbox" name="PP8A" id="PP8A" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','PP8A');" >
+              <label for="PP8A">Tambah</label>
+            </li>
+            <li>
+              <%
+              data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'PP8B'"
 
-                set app = data_cmd.execute
-                %>
-                <input class="form-check-input" type="checkbox" name="PP8B" id="PP8B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','PP8B');" >
-                <label for="PP8B">Update</label>
-              </li>
-              <li>
-                <%
-                data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'PP8C'"
+              set app = data_cmd.execute
+              %>
+              <input class="form-check-input" type="checkbox" name="PP8B" id="PP8B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','PP8B');" >
+              <label for="PP8B">Update</label>
+            </li>
+            <li>
+              <%
+              data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'PP8C'"
 
-                set app = data_cmd.execute
-                %>
-                <input class="form-check-input" type="checkbox" name="PP8C" id="PP8C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','PP8C');" >
-                <label for="PP8C">Delete</label>
-              </li>
+              set app = data_cmd.execute
+              %>
+              <input class="form-check-input" type="checkbox" name="PP8C" id="PP8C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','PP8C');" >
+              <label for="PP8C">Delete</label>
+            </li>
+            <li>
+              <%
+              data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'PP8D'"
+
+              set app = data_cmd.execute
+              %>
+              <input class="form-check-input" type="checkbox" name="PP8D" id="PP8D" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','PP8D');" >
+              <label for="PP8D">Export</label>
+            </li>
         </ul>
       </div>
     </div>
