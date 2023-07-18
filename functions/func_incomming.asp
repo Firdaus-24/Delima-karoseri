@@ -186,7 +186,7 @@
                call alert("DATA TRANSAKSI SUDAH TERDAFTAR", "Erorr", "error","income_u.asp?id="&id) 
             end if
          else
-            call alert("DATA HEADER TIDAK TERDAFTAR", "Erorr", "error","index.asp") 
+            call alert("DATA HEADER TIDAK TERDAFTAR", "Erorr", "error","./") 
          end if
       else
          call alert("DATA TRANSAKSI TIDAK TERDAFTAR", "Erorr", "error","income_u.asp?id="&id) 

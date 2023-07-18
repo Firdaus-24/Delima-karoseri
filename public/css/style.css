@@ -184,8 +184,9 @@ hr {
    
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: rgb(96, 88, 88); 
-    border-radius: 10px;
+    background-color: red;
+    border-right: none;
+    border-left: none;
   }
   
   /* Handle on hover */

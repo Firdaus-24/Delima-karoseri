@@ -1,0 +1,119 @@
+* {
+  font-size: 12px;
+}
+
+body {
+  margin: 10px;
+}
+
+.border {
+  border: 1px solid black;
+}
+.gambar {
+  width: 90px;
+  height: 80px;
+  position: absolute;
+  right: 70px;
+  line-height: 10px;
+}
+
+.labelHeaderPdirepair{
+  display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 80px;
+    align-items: center;
+    line-height: 10px;
+    font-size: 12px;
+    margin-top: 30px;
+}
+.gambar img {
+  position: absolute;
+  width: 90px;
+  height: 50px;
+}
+
+.tablepdirepair {
+  font-size: 12px;
+  margin-top: 10px;
+  border-collapse: collapse;
+  text-align: center;
+  width: 100%;
+}
+
+.tablepdirepair, td,
+th {
+  border: 1px solid black;
+}
+.pdirIrdIrhid {
+  display: none;
+}
+.rowpdirepair {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 10px;
+  row-gap: 1em;
+}
+.labelpdirepair {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 80px;
+  align-items: center;
+  line-height: 10px;
+  font-size: 12px;
+  margin-top: 30px;
+}
+.getImgIrdIrhid {
+  height: 8rem;
+  margin-botton: 10px;
+  overflow: hidden;
+}
+
+.getImgIrdIrhid .imgpdir {
+  height: 8rem;
+  width: 80px;
+  padding: 2px;
+  border: 1px solid black;
+}
+
+.skeleton {
+  opacity: .7;
+  animation: skeleton-loading 1s linear infinite alternate;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: hsl(200, 20%, 70%)
+  }
+
+  100% {
+    background-color: hsl(200, 20%, 95%)
+  }
+  }
+
+@page {
+  size: A4 portrait;
+  margin: 5mm;
+}
+
+@media print {
+
+  html,
+  body {
+    width: 210mm;
+    height: 297mm;
+  }
+
+  .tablepdirepair {
+    width: 97%;
+    page-break-inside: auto;
+  }
+
+  .tablepdirepair tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  /* ... the rest of the rules ... */
+}

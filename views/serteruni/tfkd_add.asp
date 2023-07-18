@@ -105,7 +105,7 @@
       <table class="table ">
         <thead class="table-primary">
           <tr>
-            <th scope="col">Tanggal Kedangan</th>
+            <th scope="col">Tanggal Kedatangan</th>
             <th scope="col">Merk</th>
             <th scope="col">Type</th>
             <th scope="col">No.Polisi</th>

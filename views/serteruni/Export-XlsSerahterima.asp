@@ -90,7 +90,7 @@
     </td>
   </tr>
   <tr>
-    <th style="background-color: #0000ff;color:#fff;">Tanggal Kedangan</th>
+    <th style="background-color: #0000ff;color:#fff;">Tanggal Kedatangan</th>
     <th style="background-color: #0000ff;color:#fff;">Merk</th>
     <th style="background-color: #0000ff;color:#fff;">Type</th>
     <th style="background-color: #0000ff;color:#fff;">No.Polisi</th>

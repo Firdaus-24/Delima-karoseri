@@ -181,6 +181,11 @@
                 <a class="link-name" href="<%= url %>views/pdi/">PDI Project</a>
               </li>
               <% end if %>
+              <% if session("MQ5") = true then %>
+              <li>
+                <a class="link-name" href="<%= url %>views/pdirepair/">PDI Repair</a>
+              </li>
+              <% end if %>
               <% if session("MQ4") = true then %>
               <li>
                 <a class="link-name" href="<%= url %>views/incunit/">Incomming Unit</a>
