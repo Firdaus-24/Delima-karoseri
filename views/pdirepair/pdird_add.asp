@@ -317,7 +317,7 @@
         <div class="mb-3 row">
           <label for="remaks" class="col-sm-3 col-form-label">Remaks</label>
           <div class="col-sm-9 ">
-            <textarea class="form-control" placeholder="Leave a comment here" id="pdiRepairremaks" name="remaks" maxlength="100" style="height: 80px"></textarea>
+            <textarea class="form-control" placeholder="Leave a comment here" id="pdiRepairremaks" name="remaks" maxlength="255" style="height: 80px"></textarea>
           </div>
         </div>
         <div class="mb-3 row">

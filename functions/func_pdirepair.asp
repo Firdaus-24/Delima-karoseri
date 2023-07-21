@@ -40,10 +40,15 @@ sub detail()
   remaks = trim(Request.Form("remaks"))
   condition = trim(Request.Form("conditionPdiRepair"))
 
-  data_cmd.commandTExt = "SELECT * FROM DLK_T_PDIRepairD WHERE LEFT(PDIR_ID,14) = '"& id &"' AND PDIR_IRDIRHID = '"& irdirhid &"'"
+  if irdirhid <> "" then  
+    filterirdirhid = "AND PDIR_IRDIRHID = '"& irdirhid &"'"
+  else
+    filterirdirhid = "AND UPPER(PDIR_Description) = '"& UCase(desc) &"'"
+  end if
 
+  data_cmd.commandTExt = "SELECT * FROM DLK_T_PDIRepairD WHERE LEFT(PDIR_ID,14) = '"& id &"' "& filterirdirhid &"  "
+  ' Response.Write data_cmd.commandTExt & "<br>"
   set data = data_cmd.execute
-
 
   if data.eof then  
     data_cmd.commandTExt = "SELECT ( '"& id &"' + Right('00' + Convert(varchar,Convert(int,(Right(isnull(Max(PDIR_ID),'00'),2)))+1),2)) as newid FROM DLK_T_PDIrepairD WHERE LEFT(PDIR_ID,14) = '"& id &"'"
@@ -73,9 +78,9 @@ sub updatedetail()
 
 
   if not data.eof then  
-      call query("UPDATE DLK_T_PDIRepairD SET PDIR_IRDIRHID = '"& irdirhid &"', PDIR_Description = '"& desc &"', PDIR_Remaks = '"& remaks &"', PDIR_condition = '"& condition &"',PDIR_UpdateID = '"& session("userid") &"' WHERE PDIR_ID = '"& idd &"'")
+    call query("UPDATE DLK_T_PDIRepairD SET PDIR_IRDIRHID = '"& irdirhid &"', PDIR_Description = '"& desc &"', PDIR_Remaks = '"& remaks &"', PDIR_condition = '"& condition &"',PDIR_UpdateID = '"& session("userid") &"' WHERE PDIR_ID = '"& idd &"'")
 
-      call alert("DETAIL PRE DELIVERY INSPECTIONS REPAIR", "berhasil di update", "success", Request.ServerVariables("HTTP_REFERER"))
+    call alert("DETAIL PRE DELIVERY INSPECTIONS REPAIR", "berhasil di update", "success", Request.ServerVariables("HTTP_REFERER"))
   else
     call alert("DETAIL PRE DELIVERY INSPECTIONS REPAIR", "tidak terdaftar", "error", Request.ServerVariables("HTTP_REFERER"))
   end if
