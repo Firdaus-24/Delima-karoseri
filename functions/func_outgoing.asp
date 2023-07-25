@@ -3,17 +3,18 @@
       pddid = trim(Request.Form("pddid"))
       agen = trim(Request.Form("agen"))
       tgl = trim(Request.Form("tgl"))
+      typeRadioPdr = trim(Request.Form("typeRadioPdr"))
       keterangan = trim(Request.Form("keterangan"))
 
       set data_cmd =  Server.CreateObject ("ADODB.Command")
       data_cmd.ActiveConnection = mm_delima_string
 
-      data_cmd.commandText = "SELECT * FROM DLK_T_MaterialOutH WHERE MO_pddID = '"& pddid &"' AND MO_AgenID = '"& agen &"' AND MO_Date = '"& tgl &"' AND MO_AktifYN = 'Y'"
+      data_cmd.commandText = "SELECT * FROM DLK_T_MaterialOutH WHERE MO_PDDPDRID = '"& pddid &"' AND MO_AgenID = '"& agen &"' AND MO_AktifYN = 'Y'"
       ' response.write data_cmd.commandText & "<br>"
       set data = data_cmd.execute
 
       if data.eof then
-         data_cmd.commandText = "exec sp_AddDLK_T_materialOutH '"& pddid &"','"& agen &"', '"& tgl &"', '"& keterangan &"', '', '"& session("userid") &"', '"& now &"'"
+         data_cmd.commandText = "exec sp_AddDLK_T_materialOutH '"& pddid &"','"& agen &"', '"& tgl &"', '"& keterangan &"', '"& session("userid") &"', '"& typeRadioPdr &"'"
          ' response.write data_cmd.commandText & "<br>"
          set p = data_cmd.execute
 
@@ -25,9 +26,9 @@
       end if
 
       if value = 1 then
-         call alert("PROSES OUTGOIN", "berhasil ditambahkan", "success","outd_add.asp?id="&id) 
+         call alert("PROSES OUTGOING", "berhasil ditambahkan", "success","outd_add.asp?id="&id) 
       elseif value = 2 then
-         call alert("PROSES OUTGOIN", "sudah terdaftar", "warning","outd_add.asp?id="&id)
+         call alert("PROSES OUTGOING", "sudah terdaftar", "warning","outd_add.asp?id="&id)
       else
          value = 0
       end if
@@ -50,7 +51,7 @@
       set detaildata = data_cmd.execute
 
       if detaildata.eof then
-         call query("INSERT INTO DLK_T_MAterialOutD (MO_ID,MO_Date,MO_Item,MO_Qtysatuan,MO_Harga,MO_JenisSat,MO_RakID) VALUES ('"& id &"', '"& tgl &"', '"& ckbrgid &"', "& qty &", '"& harga &"', '"& dsatuan &"', '"& rak &"')")
+         call query("INSERT INTO DLK_T_MAterialOutD (MO_ID,MO_Date,MO_Item,MO_Qtysatuan,MO_Harga,MO_JenisSat,MO_RakID, MO_Updateid) VALUES ('"& id &"', '"& tgl &"', '"& ckbrgid &"', "& qty &", '"& harga &"', '"& dsatuan &"', '"& rak &"', '"& session("userid") &"')")
 
          call alert("DETAIL BARANG OUTGOIN", "berhasil ditambahkan", "success","outd_add.asp?id="&id) 
       else 

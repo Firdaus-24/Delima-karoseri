@@ -1,32 +1,41 @@
 $(document).ready(function () {
-   // get nomor bom
-   $("#agenOutgoing").change(function () {
-      let cabang = $("#agenOutgoing").val()
+  $("#cOutItem").keyup(function () {
+    let nama = $("#cOutItem").val();
+    let cabang = $("#cOutcabang").val();
 
-      if (!cabang) {
-         $(".lbomlama").show()
-      } else {
-         $(".lbomlama").hide()
-         $.ajax({
-            method: "POST",
-            url: "../../ajax/getNomorBomByCabang.asp",
-            data: { cabang }
-         }).done(function (msg) {
-            $(".lbombaru").html(msg)
-         });
-      }
-   })
-   $("#cOutItem").keyup(function () {
-      let nama = $("#cOutItem").val()
-      let cabang = $("#cOutcabang").val()
+    $.ajax({
+      method: "POST",
+      url: "../../ajax/getStokOutgoing.asp",
+      data: { nama, cabang },
+    }).done(function (msg) {
+      $(".contentItemsOutgoing").html(msg);
+    });
+  });
+});
+const getCabangOutgoing = () => {
+  return $("#agenOutgoing").val();
+};
 
-      $.ajax({
-         method: "POST",
-         url: "../../ajax/getStokOutgoing.asp",
-         data: { nama, cabang }
-      }).done(function (msg) {
-         $(".contentItemsOutgoing").html(msg)
-      });
-   })
-
-})
+const getPdrOutgoing = (e) => {
+  let cabang = getCabangOutgoing();
+  let typeRadioPdr = e;
+  if (!cabang) {
+    $(".loutgoinglama")
+      .html(`<select class="form-select" aria-label="Default select example" name="lbom" id="lbom" > 
+                    <option value="" readonly disabled>Pilih Cabang dahulu</option>
+                </select>`);
+  } else if (!typeRadioPdr) {
+    $(".loutgoinglama")
+      .html(`<select class="form-select" aria-label="Default select example" name="lbom" id="lbom" > 
+                    <option value="" readonly disabled>Pilih Cabang dahulu</option>
+                </select>`);
+  } else {
+    $.ajax({
+      method: "POST",
+      url: "../../ajax/getpddpdrbycabang.asp",
+      data: { cabang, typeRadioPdr },
+    }).done(function (msg) {
+      $(".loutgoinglama").html(msg);
+    });
+  }
+};

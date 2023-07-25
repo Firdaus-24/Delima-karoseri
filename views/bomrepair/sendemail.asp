@@ -45,7 +45,6 @@
     response.flush
     ddata.movenext
     loop
-  
     dataBody = "<div class='row gambar' style='width:80px;height:80px;position:absolute;right:70px;'>"&_
         "<div class='col'>"&_
             "<img src='"& url &"public/img/delimalogo.png' alt='delimalogo' style='position:absolute;width:100px;height:50px;'>"&_
@@ -96,9 +95,6 @@
             "<td align='left'>"&data("TFK_Nopol")&"</td>"&_
         "</tr>"&_
         "<tr>"&_
-            "<td width='6%'>Total Man Power </td>"&_
-            "<td width='10px'>:</td>"&_
-            "<td align='left'>"& data("BmrManPower") &"</td>"&_
             "<td width='6%'>Anggaran Manpower</td>"&_
             "<td width='10px'>:</td>"&_
             "<td align='left'>"&Replace(formatCurrency(data("BmrTotalSalary")),"$","")&"</td>"&_
@@ -142,7 +138,8 @@
             "</td>"&_
         "</tr>"&_
     "</table>"
-
+    
+    
     Set Mail = CreateObject("CDO.Message")
 
     Mail.Configuration.Fields.Item ("http://schemas.microsoft.com/cdo/configuration/sendusing") = 2
@@ -159,12 +156,9 @@
 
     Mail.Configuration.Fields.Update
 
-    ' custEmail = "larasdelimakaroseri27@gmail.com"
     Mail.Subject= subject
     Mail.From="delimakaroseri8008@gmail.com"
     Mail.To = email
-    'Mail.Bcc="emailyangdiCCkan@gmail.com" 'Carbon Copy
-    ' Response.Write dataBody
     Mail.HTMLBody=dataBody
 
     Mail.Send

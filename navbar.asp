@@ -104,17 +104,17 @@
               <% end if %>
               <% if session("INV2") = true then %>
               <li>
-                <a class="link-name" href="<%= url %>views/incoming/index.asp">Incomming</a>
+                <a class="link-name" href="<%= url %>views/incoming/">Incomming</a>
               </li>
               <% end if %>
               <% if session("INV3") = true then %>
               <li>
-                <a class="link-name" href="<%= url %>views/klaim/index.asp">Klaim Barang</a>
+                <a class="link-name" href="<%= url %>views/klaim/">Klaim Barang</a>
               </li>
               <% end if %>
               <% if session("INV4") = true then %>
               <li>
-                <a class="link-name" href="<%= url %>views/outgoing/index.asp">Outgoing</a>
+                <a class="link-name" href="<%= url %>views/outgoing/">Outgoing</a>
               </li>
               <% end if %>
               <% if session("INV6") = true then %>
@@ -385,7 +385,7 @@
           </li>
             <ul class="sub-menu" id="sublist-finance">
               <li>
-                <a class="link-name" href="<%= url %>views/finance/index.asp">Finance</a>
+                <a class="link-name" href="<%= url %>views/finance/">Finance</a>
               </li>
               <% if session("FN1") =  true then %>
               <li>

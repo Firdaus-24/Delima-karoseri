@@ -1,7 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
     if session("INV4") = false then
-        Response.Redirect("../index.asp")
+        Response.Redirect("../")
     end if
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
@@ -13,7 +13,7 @@
     set agendata = data_cmd.execute
 
     ' filter produksi
-    data_cmd.commandText = "SELECT dbo.DLK_T_ProduksiD.PDD_ID FROM dbo.DLK_T_MaterialOutH LEFT OUTER JOIN dbo.DLK_T_ProduksiD ON dbo.DLK_T_MaterialOutH.MO_PDDID = dbo.DLK_T_ProduksiD.PDD_ID WHERE (dbo.DLK_T_MaterialOutH.MO_AktifYN = 'Y') GROUP BY dbo.DLK_T_MaterialOutH.MO_AktifYN, dbo.DLK_T_ProduksiD.PDD_ID ORDER BY PDD_ID ASC"
+    data_cmd.commandText = "SELECT dbo.DLK_T_MaterialOutH.MO_PDDPDRID, dbo.DLK_T_MaterialOutH.MO_Type FROM dbo.DLK_T_MaterialOutH WHERE (dbo.DLK_T_MaterialOutH.MO_AktifYN = 'Y') GROUP BY dbo.DLK_T_MaterialOutH.MO_PDDPDRID, dbo.DLK_T_MaterialOutH.MO_Type ORDER BY MO_PDDPDRID ASC"
     ' response.write data_cmd.commandText & "<br>"
     set custdata = data_cmd.execute
 
@@ -37,6 +37,10 @@
     if len(bom) = 0 then 
         bom = trim(Request.Form("bom"))
     end if
+    typeMo = request.QueryString("typeMo")
+    if len(typeMo) = 0 then 
+        typeMo = trim(Request.Form("typeMo"))
+    end if
     tgla = request.QueryString("tgla")
     if len(tgla) = 0 then 
         tgla = trim(Request.Form("tgla"))
@@ -53,9 +57,14 @@
     end if
 
     if bom <> "" then
-        filterbom = "AND dbo.DLK_T_MaterialOutH.MO_PDDID = '"& bom &"'"
+        filterbom = "AND dbo.DLK_T_MaterialOutH.MO_PDDPDRID = '"& bom &"'"
     else
         filterbom = ""
+    end if
+    if typeMo <> "" then
+        filtertypeMo = "AND dbo.DLK_T_MaterialOutH.MO_Type = '"& typeMo &"'"
+    else
+        filtertypeMo = ""
     end if
 
     if tgla <> "" AND tgle <> "" then
@@ -67,8 +76,8 @@
     end if
 
     ' query seach 
-    strquery = "SELECT dbo.DLK_T_MaterialOutH.MO_ID, dbo.DLK_T_MaterialOutH.MO_PDDID, dbo.DLK_T_MaterialOutH.MO_Date, dbo.DLK_T_MaterialOutH.MO_Keterangan, dbo.DLK_T_MaterialOutH.MO_UpdateID, dbo.DLK_T_MaterialOutH.MO_UpdateTime, dbo.DLK_T_MaterialOutH.MO_AktifYN, dbo.GLB_M_Agen.AgenName, DLK_M_WebLogin.username FROM dbo.DLK_T_MaterialOutH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialOutH.MO_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_WebLogin ON DLK_T_MaterialOutH.MO_UpdateID = DLK_M_WebLogin.userID WHERE MO_AktifYN = 'Y' "& filterAgen &"  "& filterbom &" "& filtertgl &""
-    ' untuk data paggination
+    strquery = "SELECT dbo.DLK_T_MaterialOutH.MO_ID, dbo.DLK_T_MaterialOutH.MO_PDDPDRID, dbo.DLK_T_MaterialOutH.MO_Date, dbo.DLK_T_MaterialOutH.MO_Keterangan, dbo.DLK_T_MaterialOutH.MO_UpdateID, dbo.DLK_T_MaterialOutH.MO_Type, dbo.DLK_T_MaterialOutH.MO_AktifYN, dbo.GLB_M_Agen.AgenName, DLK_M_WebLogin.username FROM dbo.DLK_T_MaterialOutH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialOutH.MO_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_WebLogin ON DLK_T_MaterialOutH.MO_UpdateID = DLK_M_WebLogin.userID WHERE MO_AktifYN = 'Y' "& filterAgen &"  "& filterbom &" "& filtertgl &""& filtertypeMo &""
+    ' untuk data paggination 
     page = Request.QueryString("page")
 
     orderBy = " ORDER BY MO_Date DESC"
@@ -123,7 +132,7 @@
         </div>
     </div>
     <% end if %>
-    <form action="index.asp" method="post">
+    <form action="./" method="post">
         <div class="row">
             <div class="col-lg-4 mb-3">
                 <label for="Agen">Cabang</label>
@@ -138,15 +147,30 @@
                 </select>
             </div>
             <div class="col-lg-4 mb-3">
-                <label for="bom">No Produksi</label>
+                <label >No Produksi</label>
                 <select class="form-select" aria-label="Default select example" name="bom" id="bom">
                     <option value="">Pilih</option>
                     <% do while not custdata.eof %>
-                    <option value="<%= custdata("PDD_ID") %>"><%= left(custdata("PDD_ID"),2) %>-<%= mid(custdata("PDD_ID"),3,3) %>/<%= mid(custdata("PDD_ID"),6,4) %>/<%= mid(custdata("PDD_ID"),10,4) %>/<%= right(custdata("PDD_ID"),3) %></option>
+                    <option value="<%= custdata("MO_PDDPDRID") %>">
+                        <%if custdata("MO_type") = "R" then%> 
+                            <%=LEFT(custdata("MO_PDDPDRID"),3) &"-"& MID(custdata("MO_PDDPDRID"),4,2) &"/"& RIGHT(custdata("MO_PDDPDRID"),3) %>
+                        <%else%> 
+                            <%= left(custdata("MO_PDDPDRID"),2) %>-<%= mid(custdata("MO_PDDPDRID"),3,3) %>/<%= mid(custdata("MO_PDDPDRID"),6,4) %>/<%= mid(custdata("MO_PDDPDRID"),10,4) %>/<%= right(custdata("MO_PDDPDRID"),3) %>
+                        <%end if%>
+                    </option>
                     <% 
+                    Response.flush
                     custdata.movenext
                     loop
                     %>
+                </select>
+            </div>
+            <div class='col-lg-4 mb-3'>
+                <label for="bom">Jenis</label>
+                <select class="form-select" aria-label="Default select example" name="typeMo" id="typeMo">
+                    <option value="">Pilih</option>
+                    <option value="R">Repair</option>
+                    <option value="P">Project / Produksi</option>
                 </select>
             </div>
         </div>
@@ -166,15 +190,15 @@
     </form>
     <div class="row">
         <div class="col-lg-12">
-            <table class="table table-hover">
+            <table class="table table-hover table-bordered">
                 <thead class="bg-secondary text-light">
                     <th>No</th>
-                    <th>ID</th>
+                    <th>Tanggal</th>
+                    <th>No</th>
                     <th>No.Produksi</th>
                     <th>Cabang</th>
-                    <th>Tanggal</th>
+                    <th>Type</th>
                     <th>Update ID</th>
-                    <th>Update Time</th>
                     <th class="text-center">Aksi</th>
                 </thead>
                 <tbody>
@@ -189,16 +213,26 @@
                     set p = data_cmd.execute
                     %>
                         <tr><TH><%= recordcounter %></TH>
-                        <th>
-                            <%= left(rs("MO_ID"),2) %>-<%= mid(rs("MO_ID"),3,3) %>/<%= mid(rs("MO_ID"),6,4) %>/<%= right(rs("MO_ID"),4) %>
-                        </th>
+                        <td><%= Cdate(rs("MO_Date")) %></td>
                         <td>
-                            <%= left(rs("MO_PDDID"),2) %>-<%= mid(rs("MO_PDDID"),3,3) %>/<%= mid(rs("MO_PDDID"),6,4) %>/<%= mid(rs("MO_PDDID"),10,4) %>/<%= right(rs("MO_PDDID"),3) %>
+                            <%= left(rs("MO_ID"),2) %>-<%= mid(rs("MO_ID"),3,3) %>/<%= mid(rs("MO_ID"),6,4) %>/<%= right(rs("MO_ID"),4) %>
+                        </td>
+                        <td>
+                            <%if rs("MO_Type") = "P" then%>
+                                <%= left(rs("MO_PDDPDRID"),2) %>-<%= mid(rs("MO_PDDPDRID"),3,3) %>/<%= mid(rs("MO_PDDPDRID"),6,4) %>/<%= mid(rs("MO_PDDPDRID"),10,4) %>/<%= right(rs("MO_PDDPDRID"),3) %>
+                            <%else%>
+                                <%=LEFT(rs("MO_PDDPDRID"),3) &"-"& MID(rs("MO_PDDPDRID"),4,2) &"/"& RIGHT(rs("MO_PDDPDRID"),3) %>
+                            <%end if%>
                         </td>
                         <td><%= rs("agenName") %></td>
-                        <td><%= Cdate(rs("MO_Date")) %></td>
+                        <td>
+                            <%if rs("MO_Type") = "P" then%>
+                                Project
+                            <%else%>
+                                Repair
+                            <%end if%>
+                        </td>
                         <td><%= rs("username") %></td>
-                        <td><%= rs("MO_updatetime") %></td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <% if not p.eof then %>
@@ -217,6 +251,7 @@
                         </td>
                     </tr>
                     <% 
+                    response.flush
                     showrecords = showrecords - 1
                     rs.movenext
                     if rs.EOF then
@@ -244,7 +279,7 @@
                         end if
                         if requestrecords <> 0 then 
                     %>
-                        <a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&agen=<%=agen%>&bom=<%=bom%>&tgla=<%=tgla%>&tgle=<%=tgle%>">&#x25C4; Prev </a>
+                        <a class="page-link prev" href="./?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&agen=<%=agen%>&bom=<%=bom%>&tgla=<%=tgla%>&tgle=<%=tgle%>&typeMo=<%=typeMo%>">&#x25C4; Prev </a>
                     <% else %>
                         <p class="page-link prev-p">&#x25C4; Prev </p>
                     <% end if %>
@@ -262,9 +297,9 @@
                         end if
                         if Cint(page) = pagelistcounter then
                         %>
-                            <a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&bom=<%=bom%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal bg-primary text-light" href="./?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&bom=<%=bom%>&tgla=<%=tgla%>&tgle=<%=tgle%>&typeMo=<%=typeMo%>"><%= pagelistcounter %></a> 
                         <%else%>
-                            <a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&bom=<%=bom%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
+                            <a class="page-link hal" href="./?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&bom=<%=bom%>&tgla=<%=tgla%>&tgle=<%=tgle%>&typeMo=<%=typeMo%>"><%= pagelistcounter %></a> 
                         <%
                         end if
                         pagelist = pagelist + recordsonpage
@@ -280,7 +315,7 @@
                         end if
                         %>
                         <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                            <a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&agen=<%=agen%>&bom=<%=bom%>&tgla=<%=tgla%>&tgle=<%=tgle%>">Next &#x25BA;</a>
+                            <a class="page-link next" href="./?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&agen=<%=agen%>&bom=<%=bom%>&tgla=<%=tgla%>&tgle=<%=tgle%>&typeMo=<%=typeMo%>">Next &#x25BA;</a>
                         <% else %>
                             <p class="page-link next-p">Next &#x25BA;</p>
                         <% end if %>

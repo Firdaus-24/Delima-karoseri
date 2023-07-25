@@ -2,7 +2,7 @@
 <!--#include file="../../functions/func_outgoing.asp"-->
 <% 
     if session("INV4A") = false then
-        Response.Redirect("index.asp")
+        Response.Redirect("./")
     end if
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
@@ -36,35 +36,47 @@
                     %>
                 </select>
             </div>
-            <div class="col-lg-2 mb-3">
-                <label for="bmhid" class="col-form-label">No Produksi</label>
-            </div>
-            <div class="col-lg-4 mb-3 lbomlama">
-                <select class="form-select" aria-label="Default select example" name="lbom" id="lbom" > 
-                    <option value="" readonly disabled>Pilih Cabang dahulu</option>
-                </select>
-            </div>
-            <div class="col-lg-4 lbombaru">
-                <!-- kontent po -->
-            </div>
-        </div>
-        <div class="row align-items-center">
-            <div class="col-lg-2 mb-3">
+             <div class="col-lg-2 mb-3">
                 <label for="tgl" class="col-form-label">Tanggal</label>
             </div>
             <div class="col-lg-4 mb-3">
                 <input type="text" id="tgl" name="tgl" class="form-control" value="<%= date() %>" onfocus="(this.type='date')" required>
             </div>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-lg-2 mb-3">
+                <label for="Jenis" class="col-form-label">Jenis Produksi</label>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="typeRadioPdr" id="repair" value="R" onchange="getPdrOutgoing(this.value)" required>
+                    <label class="form-check-label" for="repair">Repair</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="typeRadioPdr" id="project" value="P" onchange="getPdrOutgoing(this.value)">
+                    <label class="form-check-label" for="project">Project</label>
+                </div>
+            </div>
+            <div class="col-lg-2 mb-3">
+                <label for="bmhid" class="col-form-label">No Produksi</label>
+            </div>
+            <div class="col-lg-4 mb-3 loutgoinglama">
+                <select class="form-select" aria-label="Default select example" name="lbom" id="lbom" > 
+                    <option value="" readonly disabled>Pilih Cabang dahulu</option>
+                </select>
+            </div>
+        </div>
+        <div class='row'>
             <div class="col-lg-2 mb-3">
                 <label for="keterangan" class="col-form-label">Keterangan</label>
             </div>
-            <div class="col-lg-4 mb-3">
+            <div class="col-lg-10 mb-3">
                 <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" autocomplete="off" required>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-12 text-center">
-                <a href="index.asp" type="button" class="btn btn-danger">Kembali</a>
+                <a href="./" type="button" class="btn btn-danger">Kembali</a>
                 <button type="submit" class="btn btn-primary">Save</button>
             </div>
         </div>
