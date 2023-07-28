@@ -159,7 +159,8 @@
         <thead class="bg-secondary text-light">
           <tr>
             <th scope="col">No</th>
-            <th scope="col">Kode</th>
+            <th scope="col">Kategori</th>
+            <th scope="col">Jenis</th>
             <th scope="col">Barang</th>
             <th scope="col">Quantity</th>
             <th scope="col">Satuan</th>
@@ -177,9 +178,12 @@
               <th>
                 <%= no %>
               </th>
-              <th>
-                <%= ddata("KategoriNama") &" - "& ddata("jenisNama") %>
-              </th>
+              <td>
+                <%=ddata("KategoriNama") %>
+              </td>
+              <td>
+                <%= ddata("jenisNama") %>
+              </td>
               <td>
                 <%=ddata("Brg_Nama")%>
               </td>

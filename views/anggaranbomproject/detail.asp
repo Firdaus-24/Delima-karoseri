@@ -93,41 +93,47 @@
     </div>
     <div class="row">
         <div class="col-lg-12 mb-3">
-            <table class="table">
+            <table class="table table-hover">
                 <thead class="bg-secondary text-light">
                     <tr>
                         <th scope="col">No</th>
-                        <th scope="col">Kode</th>
+                        <th scope="col">Kategori</th>
+                        <th scope="col">Jenis</th>
                         <th scope="col">Item</th>
-                        <th scope="col">Spesification</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Satuan</th>
                         <th scope="col">Keterangan</th>
                         <th scope="col">Harga</th>
+                        <th scope="col">Total</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% 
-                    total = 0
                     no = 0
+                    gtotal = 0
                     do while not dataD.eof
                     no = no + 1
+                    total = 0
 
-                    total = total + dataD("memoHarga")
+                    total = dataD("memoHarga") * dataD("memoQtty")
+                    gtotal = gtotal + total
                     %>
                         <tr>
                             <th scope="row"><%= no %></th>
                             <td>
-                                <%= dataD("KategoriNama") &"-"& dataD("jenisNama") %>
+                                <%=dataD("KategoriNama") %>
+                            </td>
+                            <td>
+                                <%= dataD("jenisNama") %>
                             </td>
                             <td><%= dataD("Brg_Nama") %></td>
-                            <td><%= dataD("memoSpect") %></td>
                             <td><%= dataD("memoQtty") %></td>
                             <td><%= dataD("Sat_nama") %></td>
                             <td>
                                 <%= dataD("memoKeterangan") %>
                             </td>
-                            <td><%= replace(formatcurrency(dataD("memoHarga")),"$","") %></td>
+                            <td class="text-end"><%= replace(formatcurrency(dataD("memoHarga")),"$","") %></td>
+                            <td class="text-end"><%= replace(formatcurrency(total),"$","") %></td>
                         </tr>
                     <% 
                     response.flush
@@ -135,11 +141,11 @@
                     loop
                     %>
                     <tr>
-                      <th colspan="7">
+                      <th colspan="8">
                         Grand Total
                       </th>
-                      <th>
-                        <%= replace(formatcurrency(total),"$","") %>
+                      <th class="text-end">
+                        <%= replace(formatcurrency(gtotal),"$","") %>
                       </th>
                     </tr>
                 </tbody>

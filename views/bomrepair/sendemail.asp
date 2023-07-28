@@ -35,7 +35,8 @@
     no = no + 1
       tabledata = tabledata & "<tr style='border:1px solid black'>"&_
               "<th style='border:1px solid black'>"& no &"</th>"&_
-              "<td style='border:1px solid black'>"& ddata("KategoriNama") &" - "& ddata("jenisNama") &"</td>"&_
+              "<td style='border:1px solid black'>"& ddata("KategoriNama") &"</td>"&_
+              "<td style='border:1px solid black'>"& ddata("jenisNama") &"</td>"&_
               "<td style='border:1px solid black'>"& ddata("Brg_Nama")&"</td>"&_
               "<td style='border:1px solid black'>"& ddata("BmrdQtysatuan")&"</td>"&_
               "<td style='border:1px solid black'>"& ddata("Sat_nama")&"</td>"&_
@@ -105,7 +106,8 @@
         "<tbody>"&_
             "<tr style='border:1px solid black'>"&_
                 "<th style='border:1px solid black'>No</th>"&_
-                "<th style='border:1px solid black'>Kode</th>"&_
+                "<th style='border:1px solid black'>Kategori</th>"&_
+                "<th style='border:1px solid black'>Jenis</th>"&_
                 "<th style='border:1px solid black'>Barang</th>"&_
                 "<th style='border:1px solid black'>Quantity</th>"&_
                 "<th style='border:1px solid black'>Satuan</th>"&_

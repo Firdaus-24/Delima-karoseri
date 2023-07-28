@@ -9,6 +9,9 @@
     ' response.write data_cmd.commandText
     set dataH = data_cmd.execute
 
+    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama, DLK_M_Satuanbarang.sat_nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID LEFT OUTER JOIN DLK_M_Satuanbarang ON DLK_T_Memo_D.memosatuan =  DLK_M_Satuanbarang.sat_id WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY brg_nama ASC"
+    ' response.write data_cmd.commandText
+    set dataD = data_cmd.execute
 %>
 <% call header("Detail Permintaan Anggaran") %>
 <!--#include file="../../navbar.asp"-->
@@ -85,9 +88,9 @@
                 <thead class="bg-secondary text-light">
                     <tr>
                         <th scope="col">No</th>
-                        <th scope="col">Kode</th>
+                        <th scope="col">Kategori</th>
+                        <th scope="col">Jenis</th>
                         <th scope="col">Item</th>
-                        <th scope="col">Spesification</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Satuan</th>
                         <th scope="col">Keterangan</th>
@@ -95,10 +98,6 @@
                 </thead>
                 <tbody>
                     <% 
-                    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY memoItem ASC"
-                    ' response.write data_cmd.commandText
-                    set dataD = data_cmd.execute
-
                     no = 0
                     do while not dataD.eof
                     no = no + 1
@@ -106,12 +105,14 @@
                         <tr>
                             <th scope="row"><%= no %></th>
                             <td>
-                                <%= dataD("KategoriNama") &"-"& dataD("jenisNama") %>
+                                <%=dataD("KategoriNama") %>
+                            </td>
+                            <td>
+                                <%= dataD("jenisNama") %>
                             </td>
                             <td><%= dataD("Brg_Nama") %></td>
-                            <td><%= dataD("memoSpect") %></td>
                             <td><%= dataD("memoQtty") %></td>
-                            <td><% call getSatBerat(dataD("memoSatuan")) %></td>
+                            <td><%= dataD("sat_nama") %></td>
                             <td>
                                 <%= dataD("memoKeterangan") %>
                             </td>

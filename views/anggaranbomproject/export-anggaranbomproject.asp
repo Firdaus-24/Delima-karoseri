@@ -73,35 +73,41 @@
   <table class="tblReqBomProject">
     <tr style="text-align:center">
       <th>No</th>
-      <th>Kode</th>
+      <th>Kategori</th>
+      <th>Jenis</th>
       <th>Item</th>
-      <th>Spesification</th>
       <th>Quantity</th>
       <th>Satuan</th>
       <th>Keterangan</th>
       <th>Harga</th>
+      <th>Total</th>
     </tr>
     <% 
-    total = 0
     no = 0
+    gtotal = 0
     do while not dataD.eof
     no = no + 1
+    total = 0
 
-    total = total + dataD("memoHarga")
+    total = dataD("memoHarga") * dataD("memoQtty")
+    gtotal = gtotal + total
     %>
       <tr>
         <td><%= no %></td>
         <td>
-          <%= dataD("KategoriNama") &"-"& dataD("jenisNama") %>
+          <%=dataD("KategoriNama") %>
+        </td>
+        <td>
+          <%= dataD("jenisNama") %>
         </td>
         <td><%= dataD("Brg_Nama") %></td>
-        <td><%= dataD("memoSpect") %></td>
         <td><%= dataD("memoQtty") %></td>
         <td><%= dataD("Sat_nama") %></td>
         <td>
           <%= dataD("memoKeterangan") %>
         </td>
         <td style="text-align:right"><%= replace(formatcurrency(dataD("memoHarga")),"$","") %></td>
+        <td style="text-align:right"><%= replace(formatcurrency(total),"$","") %></td>
       </tr>
     <% 
     response.flush
@@ -109,11 +115,11 @@
     loop
     %>
     <tr>
-      <td colspan="7">
+      <td colspan="8">
         Grand Total
       </td>
       <td style="text-align:right">
-        <%= replace(formatcurrency(total),"$","") %>
+        <%= replace(formatcurrency(gtotal),"$","") %>
       </td>
     </tr>
   </table>

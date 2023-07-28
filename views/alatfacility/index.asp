@@ -170,13 +170,13 @@
   </form>
   <div class="row">
     <div class="col-lg-12">
-      <table class="table">
+      <table class="table table-hover">
         <thead class="bg-secondary text-light">
           <tr>
             <th scope="col">No</th>
-            <th scope="col">Nama</th>
             <th scope="col">Kategori</th>
             <th scope="col">Jenis</th>
+            <th scope="col">Nama</th>
             <th scope="col" >Type</th>
             <th scope="col" >Aktif</th>
             <th scope="col" class="text-center">Aksi</th>
@@ -191,10 +191,10 @@
             recordcounter = recordcounter + 1
             %>
             <tr>
-              <td><%= recordcounter %></td>
-              <td><%= rs("Brg_Nama") %></td>
+              <th><%= recordcounter %></th>
               <td><%= rs("kategoriNama") %></td>
               <td><%= rs("JenisNama") %></td>
+              <td><%= rs("Brg_Nama") %></td>
               <td><%= rs("T_Nama")%></td>
               <td><%if rs("Brg_AktifYN") = "Y" then%>Aktif <% end if %></td>
               <td class="text-center">

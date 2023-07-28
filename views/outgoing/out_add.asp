@@ -71,7 +71,7 @@
                 <label for="keterangan" class="col-form-label">Keterangan</label>
             </div>
             <div class="col-lg-10 mb-3">
-                <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" autocomplete="off" required>
+                <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" autocomplete="off">
             </div>
         </div>
         <div class="row">

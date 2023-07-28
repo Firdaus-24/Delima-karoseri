@@ -2,7 +2,7 @@
 <!--#include file="../../functions/func_permintaanb.asp"-->
 <% 
     if session("INV1D") = false then
-        Response.Redirect("../index.asp")
+        Response.Redirect("../")
     end if
 
     id = trim(Request.QueryString("id"))
@@ -14,8 +14,7 @@
     ' response.write data_cmd.commandText
     set dataH = data_cmd.execute
 
-    ' detail
-    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY memoItem ASC"
+    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama, DLK_M_Satuanbarang.sat_nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID LEFT OUTER JOIN DLK_M_Satuanbarang ON DLK_T_Memo_D.memosatuan =  DLK_M_Satuanbarang.sat_id WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY brg_nama ASC"
     ' response.write data_cmd.commandText
     set dataD = data_cmd.execute
 
@@ -167,9 +166,9 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Kode</th>
+                <th>Kategori</th>
+                <th>Jenis</th>
                 <th>Item</th>
-                <th>Spesification</th>
                 <th>Quantity</th>
                 <th>Satuan</th>
                 <th>Keterangan</th>
@@ -184,12 +183,14 @@
                 <tr>
                     <th><%= no %></th>
                     <td>
-                        <%= dataD("KategoriNama") &"-"& dataD("jenisNama") %>
+                        <%=dataD("KategoriNama") %>
+                    </td>
+                    <td>
+                        <%= dataD("jenisNama") %>
                     </td>
                     <td><%= dataD("Brg_Nama") %></td>
-                    <td><%= dataD("memoSpect") %></td>
                     <td><%= dataD("memoQtty") %></td>
-                    <td><% call getSatBerat(dataD("memoSatuan")) %></td>
+                    <td><%= dataD("sat_nama") %></td>
                     <td>
                         <%= dataD("memoKeterangan") %>
                     </td>

@@ -44,27 +44,30 @@
         font-size:12px;
         border-collapse: collapse;
     }
-    #cdetail2 > * > tr > *  {
-        border: 1px solid black;
-        padding:5px;
+    @page {
+        size: A4 portrait;
+        margin: 5mm;
+    }
+    @media print {
+
+    html,
+    body {
+        width: 210mm;
+        height: 297mm;
     }
 
-    #cdetail2{
-        width:30%;
-        font-size:12px;
-        border-collapse: collapse;
-        text-align: center;
-        right:10px;
-        position:absolute;
+    .cdetail {
+        width: 97%;
+        page-break-inside: auto;
     }
-    .footer article{
-      font-size:10px;
+
+    .cdetail tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
     }
-    @page {
-        size: A4;
-        size: auto;   /* auto is the initial value */
-        margin: 0;  /* this affects the margin in the printer settings */
-    }
+
+    /* ... the rest of the rules ... */
+}
 </style>
 <body onload="window.print()">
     <div class="row gambar">
@@ -163,8 +166,9 @@
         <tbody>
             <tr>
                 <th>No</th>
+                <th>Kategori</th>
+                <th>Jenis</th>
                 <th>Item</th>
-                <th>Spesification</th>
                 <th>Quantity</th>
                 <th>Satuan</th>
                 <th>Keterangan</th>
@@ -182,17 +186,22 @@
             %>
                 <tr>
                     <th><%= no %></th>
+                    <td>
+                        <%=dataD("KategoriNama") %>
+                    </td>
+                    <td>
+                        <%= dataD("jenisNama") %>
+                    </td>
                     <td><%= dataD("Brg_Nama") %></td>
-                    <td><%= dataD("memoSpect") %></td>
                     <td><%= dataD("memoQtty") %></td>
                     <td><%= dataD("sat_nama") %></td>
                     <td>
                         <%= dataD("memoKeterangan") %>
                     </td>
-                    <td>
+                    <td align="right">
                         <%= replace(formatcurrency(dataD("memoharga")),"$","") %>
                     </td>
-                    <td>
+                    <td align="right">
                         <%= replace(formatcurrency(total),"$","") %>
                     </td>
                 </tr>
@@ -201,10 +210,10 @@
             loop
             %>
             <tr>
-                <th colspan="7">
+                <th colspan="8">
                     Grand Total
                 </th>
-                <th>
+                <th style="text-align:right;">
                     <%= replace(formatcurrency(gtotal),"$","") %>
                 </th>
             </tr>

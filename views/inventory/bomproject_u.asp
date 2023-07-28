@@ -110,9 +110,9 @@
                 <thead class="bg-secondary text-light">
                     <tr>
                         <th scope="col">No</th>
-                        <th scope="col">Kode</th>
+                        <th scope="col">Kategori</th>
+                        <th scope="col">Jenis</th>
                         <th scope="col">Item</th>
-                        <th scope="col">Spesification</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Satuan</th>
                         <th scope="col">Type</th>
@@ -130,11 +130,11 @@
                     %>
                         <tr>
                             <th scope="row"><%= no %></th>
+                            <td><%= dataD("KategoriNama") %></td>
                             <td>
-                                <%= dataD("KategoriNama") &"-"& dataD("jenisNama") %>
+                                <%= dataD("jenisNama") %>
                             </td>
                             <td><%= dataD("Brg_Nama") %></td>
-                            <td><%= dataD("memoSpect") %></td>
                             <td><%= dataD("memoQtty") %></td>
                             <td><%= dataD("sat_nama") %></td>
                             <td><%= dataD("T_nama") %></td>

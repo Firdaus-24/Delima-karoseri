@@ -2,7 +2,7 @@
 <!--#include file="../../functions/func_reqAnggaran.asp"-->
 <% 
     if session("INV1B") = false then
-        Response.Redirect("index.asp")
+        Response.Redirect("./")
     end if
     
     id = trim(Request.QueryString("id"))
@@ -13,6 +13,11 @@
     data_cmd.commandText = "SELECT DLK_T_Memo_H.*, HRD_M_Departement.DepNama, GLB_M_Agen.AgenName, HRD_M_Divisi.DivNama, DLK_M_Kebutuhan.K_Name FROM DLK_T_Memo_H LEFT OUTER JOIN HRD_M_Departement ON DLK_T_Memo_H.memoDepID = HRD_M_Departement.DepID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN HRD_M_Divisi ON DLK_T_Memo_H.memoDivID = HRD_M_Divisi.divID LEFT OUTER JOIN DLK_M_Kebutuhan ON DLK_T_Memo_H.memoKebutuhan = DLK_M_Kebutuhan.K_ID WHERE memoID = '"& id &"' and memoAktifYN = 'Y'"
     ' response.write data_cmd.commandText
     set dataH = data_cmd.execute
+
+    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama, DLK_M_Satuanbarang.sat_nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID LEFT OUTER JOIN DLK_M_Satuanbarang ON DLK_T_Memo_D.memosatuan =  DLK_M_Satuanbarang.sat_id WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY brg_nama ASC"
+    ' response.write data_cmd.commandText
+    set dataD = data_cmd.execute
+
 
     ' get satuan
     data_cmd.commandText = "SELECT sat_Nama, sat_ID FROM DLK_M_satuanBarang WHERE sat_AktifYN = 'Y' ORDER BY sat_Nama ASC"
@@ -99,9 +104,9 @@
                 <thead class="bg-secondary text-light">
                     <tr>
                         <th scope="col">No</th>
-                        <th scope="col">Kode</th>
+                        <th scope="col">Kategori</th>
+                        <th scope="col">Jenis</th>
                         <th scope="col">Item</th>
-                        <th scope="col">Spesification</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Satuan</th>
                         <th scope="col">Keterangan</th>
@@ -110,10 +115,6 @@
                 </thead>
                 <tbody>
                     <% 
-                    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY memoItem ASC"
-                    ' response.write data_cmd.commandText
-                    set dataD = data_cmd.execute
-
                     no = 0
                     do while not dataD.eof
                     no = no + 1
@@ -121,12 +122,14 @@
                         <tr>
                             <th scope="row"><%= no %></th>
                             <td>
-                                <%= dataD("KategoriNama") &"-"& dataD("jenisNama") %>
+                                <%=dataD("KategoriNama")%>
+                            </td>
+                            <td>
+                                <%= dataD("jenisNama") %>
                             </td>
                             <td><%= dataD("Brg_Nama") %></td>
-                            <td><%= dataD("memoSpect") %></td>
                             <td><%= dataD("memoQtty") %></td>
-                            <td><% call getSatBerat(dataD("memoSatuan")) %></td>
+                            <td><%= dataD("sat_nama")%></td>
                             <td>
                                 <%= dataD("memoKeterangan") %>
                             </td>
@@ -179,7 +182,7 @@
                     <tbody  class="contentdetailpbrg">
                         <% do while not barang.eof %>
                         <tr>
-                            <th scope="row"><%= barang("kategoriNama")&"-"& barang("jenisNama") %></th>
+                            <th scope="row"><%= barang("kategoriNama")&" - "& barang("jenisNama") %></th>
                             <td><%= barang("brg_nama") %></td>
                             <td><%= barang("T_Nama") %></td>
                             <td>
@@ -197,14 +200,6 @@
             </div>
         </div>
         <!-- end table -->
-         <div class="row">
-            <div class="col-sm-3">
-                <label for="spect" class="col-form-label">Sepesification</label>
-            </div>
-            <div class="col-sm-9 mb-3">
-                <input type="text" id="spect" class="form-control" name="spect" autocomplete="off" maxlength="50">
-            </div>
-        </div>
         <div class="row">
             <div class="col-sm-3">
                 <label for="qtty" class="col-form-label">Quantity</label>

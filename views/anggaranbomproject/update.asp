@@ -137,9 +137,9 @@
                 <thead class="bg-secondary text-light">
                     <tr>
                         <th scope="col">No</th>
-                        <th scope="col">Kode</th>
+                        <th scope="col">Kategori</th>
+                        <th scope="col">Jenis</th>
                         <th scope="col">Item</th>
-                        <th scope="col">Spesification</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Satuan</th>
                         <th scope="col">Harga</th>
@@ -158,13 +158,15 @@
                         <tr>
                             <th scope="row"><%= no %></th>
                             <td>
-                                <%= dataD("KategoriNama") &"-"& dataD("jenisNama") %>
+                                <%=dataD("KategoriNama") %>
+                            </td>
+                            <td>
+                                <%= dataD("jenisNama") %>
                             </td>
                             <td><%= dataD("Brg_Nama") %></td>
-                            <td><%= dataD("memoSpect") %></td>
                             <td><%= dataD("memoQtty") %></td>
                             <td><%= dataD("sat_nama") %></td>
-                            <td><%= replace(formatcurrency(dataD("memoharga")),"$","") %></td>
+                            <td class="text-end"><%= replace(formatcurrency(dataD("memoharga")),"$","") %></td>
                             <td>
                                 <%= dataD("memoKeterangan") %>
                             </td>
@@ -239,14 +241,6 @@
             </div>
         </div>
         <!-- end table -->
-         <div class="row">
-            <div class="col-sm-3">
-                <label for="spect" class="col-form-label">Sepesification</label>
-            </div>
-            <div class="col-sm-9 mb-3">
-                <input type="text" id="spect" class="form-control" name="spect" autocomplete="off" maxlength="50">
-            </div>
-        </div>
         <div class="row">
             <div class="col-sm-3">
                 <label for="qtty" class="col-form-label">Quantity</label>

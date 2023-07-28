@@ -1,7 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
     if session("MDL1") = false then
-        Response.Redirect("../index.asp")
+        Response.Redirect("../")
     end if
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
@@ -180,10 +180,12 @@
     </div>
     <div class="row">
         <div class="col-lg-12">
-            <table class="table">
+            <table class="table table-hover">
                 <thead class="bg-secondary text-light">
                     <tr>
-                    <th scope="col">Kode</th>
+                    <th scope="col">No</th>
+                    <th scope="col">Kategori</th>
+                    <th scope="col">Jenis</th>
                     <th scope="col">Nama</th>
                     <th scope="col" >Type</th>
                     <th scope="col" >Aktif</th>
@@ -199,7 +201,9 @@
                     recordcounter = recordcounter + 1
                     %>
                     <tr>
-                        <td><%= rs("kategoriNama") %> - <%= rs("JenisNama") %></td>
+                        <th><%= recordcounter %></th>
+                        <td><%= rs("kategoriNama") %> </td>
+                        <td><%= rs("JenisNama") %></td>
                         <td><%= rs("Brg_Nama") %></td>
                         <td><%= rs("T_Nama")%></td>
                         <td><%if rs("Brg_AktifYN") = "Y" then%>Aktif <% end if %></td>

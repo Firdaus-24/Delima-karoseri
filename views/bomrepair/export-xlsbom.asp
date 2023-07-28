@@ -27,93 +27,92 @@
   set psatuan = data_cmd.execute
 
   Response.ContentType = "application/vnd.ms-excel"
-  Response.AddHeader "content-disposition", "filename=B.O.M Repair "& left(data("BMRID"),3)&"-"&MID(data("BMRID"),4,3)&"/"&MID(data("BMRID"),7,4)&"/"&right(data("BMRID"),3)&" .xls"
+  Response.AddHeader "content-disposition", "filename=B.O.M Repair "& left(data("BMRID"),3)&"-"&MID(data("BMRID"),4,3)&"/"&MID(data("BMRID"),8,4)&"/"&right(data("BMRID"),3)&" .xls"
 
 %>
 
 <table width="100%" style="font-size:16px;font-family:sans-serif">
   <tr>
-    <th colspan="7" align="center">DETAIL B.O.M REPAIR</th>
+    <th colspan="9" align="center">DETAIL B.O.M REPAIR</th>
   </tr>
   <tr>
-    <th colspan="7" align="center"><%=left(data("BMRID"),3)&"-"&MID(data("BMRID"),4,3)&"/"&MID(data("BMRID"),7,4)&"/"&right(data("BMRID"),3)%></th>
+    <th colspan="9" align="center"><%=left(data("BMRID"),3)&"-"&MID(data("BMRID"),4,3)&"/"&MID(data("BMRID"),8,4)&"/"&right(data("BMRID"),3)%></th>
   </tr>
-  
-  
   <tr>
     <td colspan="2">
       Tanggal
     </td>
-    <td>
-      <%= Cdate(data("BmrDate")) %>
+    <td colspan="2">
+      : <%= Cdate(data("BmrDate")) %>
     </td>
     <td colspan="2">
       Cabang
     </td>
-    <td colspan="2">
-      <%=data("AgenName") %>
+    <td colspan="3">
+      : <%=data("AgenName") %>
     </td>
   </tr>
   <tr>
     <td colspan="2">
       No. Produksi
     </td>
-    <td>
-      <%=LEFT(data("BMRPDRID"),3) &"-"& MID(data("BMRPDRID"),4,2) &"/"& RIGHT(data("BMRPDRID"),3) %>
+    <td colspan="2">
+      : <%=LEFT(data("BMRPDRID"),3) &"-"& MID(data("BMRPDRID"),4,2) &"/"& RIGHT(data("BMRPDRID"),3) %>
     </td>
     <td colspan="2">
       No.Incomming Unit
     </td>
-    <td colspan="2">
-      <%=LEFT(data("BmrIRHID"),4) &"-"& mid(data("BmrIRHID"),5,3) &"/"& mid(data("BmrIRHID"),8,4) &"/"& right(data("BmrIRHID"),2)%>
+    <td colspan="3">
+      : <%=LEFT(data("BmrIRHID"),4) &"-"& mid(data("BmrIRHID"),5,3) &"/"& mid(data("BmrIRHID"),8,4) &"/"& right(data("BmrIRHID"),2)%>
     </td>
   </tr>
   <tr>
     <td colspan="2">
       Customer
     </td>
-    <td>
-      <%=data("custnama")%>
+    <td colspan="2">
+      : <%=data("custnama")%>
     </td>
     <td colspan="2">
       Brand
     </td>
-    <td colspan="2">
-      <%=data("BrandName")%>
+    <td colspan="3">
+      : <%=data("BrandName")%>
     </td>
   </tr>
   <tr>
     <td colspan="2">
       Type
     </td>
-    <td>
-      <%=data("TFK_Type")%>
+    <td colspan="2">
+      : <%=data("TFK_Type")%>
     </td>
     <td colspan="2">
       No.Polisi
     </td>
-    <td colspan="2">
-      <%=data("TFK_Nopol")%>
+    <td colspan="3">
+      : <%=data("TFK_Nopol")%>
     </td>
   </tr>
   <tr>
     <td colspan="2">
       Anggaran Manpower
     </td>
-    <td>
-      <%=Replace(formatCurrency(data("BmrTotalSalary")),"$","")%>
+    <td colspan="2">
+      : <%=Replace(formatCurrency(data("BmrTotalSalary")),"$","")%>
     </td>
     <td colspan="2">
       Keterangan
     </td>
-    <td colspan="2">
-      <%=data("BmrKeterangan")%>
+    <td colspan="3">
+      : <%=data("BmrKeterangan")%>
     </td>
   </tr>
 
   <tr>
     <th style="border-collapse: collapse;border:1px solid black;">No</th>
-    <th style="border-collapse: collapse;border:1px solid black;">Kode</th>
+    <th style="border-collapse: collapse;border:1px solid black;">Kategori</th>
+    <th style="border-collapse: collapse;border:1px solid black;">Jenis</th>
     <th style="border-collapse: collapse;border:1px solid black;">Barang</th>
     <th style="border-collapse: collapse;border:1px solid black;">Quantity</th>
     <th style="border-collapse: collapse;border:1px solid black;">Satuan</th>
@@ -138,9 +137,12 @@
       <th style="border-collapse: collapse;border:1px solid black;">
         <%= no %>
       </th>
-      <th style="border-collapse: collapse;border:1px solid black;">
-        <%= ddata("KategoriNama") &" - "& ddata("jenisNama") %>
-      </th>
+      <td style="border-collapse: collapse;border:1px solid black;">
+        <%=ddata("KategoriNama") %>
+      </td>
+      <td style="border-collapse: collapse;border:1px solid black;">
+        <%= ddata("jenisNama") %>
+      </td>
       <td style="border-collapse: collapse;border:1px solid black;">
         <%=ddata("Brg_Nama")%>
       </td>
@@ -165,7 +167,7 @@
   loop
   %>
     <tr>
-      <th colspan="7" align="left" style="border-collapse: collapse;border:1px solid black;">
+      <th colspan="8" align="left" style="border-collapse: collapse;border:1px solid black;">
         GRAND TOTAL
       </th>
       <th align="right" style="border-collapse: collapse;border:1px solid black;">

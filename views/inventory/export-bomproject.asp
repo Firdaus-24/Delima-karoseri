@@ -166,9 +166,9 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Kode</th>
+                <th>Kategori</th>
+                <th>Jenis</th>
                 <th>Item</th>
-                <th>Spesification</th>
                 <th>Quantity</th>
                 <th>Satuan</th>
                 <th>Type</th>
@@ -183,11 +183,11 @@
             %>
                 <tr>
                     <th><%= no %></th>
+                    <td><%= dataD("KategoriNama") %></td>
                     <td>
-                        <%= dataD("KategoriNama") &"-"& dataD("jenisNama") %>
+                        <%= dataD("jenisNama") %>
                     </td>
                     <td><%= dataD("Brg_Nama") %></td>
-                    <td><%= dataD("memoSpect") %></td>
                     <td><%= dataD("memoQtty") %></td>
                     <td><%= dataD("sat_nama") %></td>
                     <td><%= dataD("T_nama") %></td>
