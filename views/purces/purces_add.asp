@@ -1,7 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
     if session("PR2A") = false then
-        Response.Redirect("index.asp")
+        Response.Redirect("./")
     end if
 
 
@@ -11,7 +11,7 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT dbo.DLK_T_Memo_H.MemoID, dbo.DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, GLB_M_agen.AgenID, GLB_M_Agen.AgenName, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama, DLK_M_Kebutuhan.K_Name, DLK_M_Kebutuhan.K_ID FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.Memoitem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_T_Memo_H ON LEFT(DLK_T_Memo_D.memoID,17) = DLK_T_Memo_H.memoID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID LEFT OUTER JOIN DLK_M_Kebutuhan ON DLK_T_Memo_H.memoKebutuhan = DLK_M_kebutuhan.K_ID WHERE LEFT(dbo.DLK_T_Memo_D.memoID,17) = '"& id &"' AND dbo.DLK_T_Memo_H.MemoID = '"& id &"' AND DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'Y'"
+    data_cmd.commandText = "SELECT dbo.DLK_T_Memo_H.MemoID, dbo.DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, GLB_M_agen.AgenID, GLB_M_Agen.AgenName, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama, DLK_M_Kebutuhan.K_Name, DLK_M_Kebutuhan.K_ID, DLK_M_satuanbarang.sat_nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.Memoitem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_T_Memo_H ON LEFT(DLK_T_Memo_D.memoID,17) = DLK_T_Memo_H.memoID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID LEFT OUTER JOIN DLK_M_Kebutuhan ON DLK_T_Memo_H.memoKebutuhan = DLK_M_kebutuhan.K_ID LEFT OUTER JOIN DLK_M_satuanbarang ON DLK_T_MEMO_D.memosatuan = DLK_M_satuanbarang.sat_Id WHERE LEFT(dbo.DLK_T_Memo_D.memoID,17) = '"& id &"' AND dbo.DLK_T_Memo_H.MemoID = '"& id &"' AND DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'Y'"
     ' response.write data_cmd.commandText & "<br>"
     set data = data_cmd.execute
 
@@ -136,111 +136,142 @@
             </div>
         </div>
     </form>
-    <div class="row">
-        <div class="col-lg-12">
-            <h5>DAFTAR BARANG YANG DI AJUKAN</h5>
+    <div class='row'>
+        <div class='col-lg-6 mb-3'>
+            <div class='row'>
+                <div class='col-lg-12 mb-3'>
+                    <h5>DAFTAR BARANG YANG DI AJUKAN</h5>
+                </div>  
+            </div>
+            <div class="row">
+                <div class="col-lg-12 mb-3">
+                    <table class="table table-hover" style="font-size:12px;">
+                        <thead class="bg-secondary text-light" style="white-space: nowrap;">
+                            <tr>
+                                <th>Kategori</th>
+                                <th>Jenis</th>
+                                <th>Item</th>
+                                <th>Harga</th>
+                                <th>Qty</th>
+                                <th>Qty PO</th>
+                                <th>Satuan</th>
+                                <th>Sisa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% do while not data.eof 
+                            ' cek data yang sudah di beli
+                            data_cmd.commandText = "SELECT ISNULL(SUM(dbo.DLK_T_OrPemD.OPD_QtySatuan), 0) AS qtypo FROM dbo.DLK_T_OrPemH RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID,13) GROUP BY dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemH.OPH_AktifYN, dbo.DLK_T_OrPemH.OPH_MemoID HAVING (dbo.DLK_T_OrPemH.OPH_AktifYN = 'Y') AND (dbo.DLK_T_OrPemH.OPH_MemoID = '"& id &"') AND OPD_Item = '"& data("memoItem") &"'"
+                            ' Response.Write data_cmd.commandText & "<br>"
+                            set ckqtypo = data_cmd.execute
+                            
+                            if ckqtypo.eof then
+                                qtypo = 0
+                                bg = ""
+                            else
+                                qtypo = ckqtypo("qtypo")
+                                bg = "bg-info"
+                            end if
+                            ' cek sisa
+                            sisa  = data("memoQtty") - qtypo
+
+                            if sisa = 0 then   
+                                bg="bg-success text-light"
+                            elseIf sisa < 0 then
+                                bg="bg-danger text-light"
+                            end if
+                            %>
+                            <tr class="<%=bg%>">
+                                <th>
+                                    <%= data("KategoriNama") %>
+                                </th>
+                                <th>
+                                    <%= data("jenisNama") %>
+                                </th>
+                                <td>
+                                    <%= data("Brg_Nama")%>
+                                </td>
+                                <td class="text-end">
+                                    <%= replace(formatCurrency(data("memoHarga")),"$","") %>
+                                </td>
+                                <td>
+                                    <%= data("memoQtty") %>
+                                </td>
+                                <td>
+                                    <%= qtypo%>
+                                </td>
+                                <td>
+                                    <%= data("sat_nama") %>
+                                </td>
+                                <td>
+                                    <%= sisa%>
+                                </td>
+                            </tr>
+                            <% 
+                            Response.flush
+                            data.movenext
+                            loop
+                            data.movefirst
+                            %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class='col-lg-6 mb-3'>
+            <div class="row">
+                <div class="col-lg-12 mb-3 text-end">
+                    <h5>DAFTAR VENDOR PENYEDIA</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <table class="table table-hover" style="font-size:12px;">
+                        <thead class="bg-secondary text-light" style="white-space: nowrap;">
+                            <tr>
+                                <th>Nama</th>
+                                <th>Specification</th>
+                                <th>Harga</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% do while not data.eof 
+                                data_cmd.commandText = "SELECT dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_T_VendorD.Dven_Venid, dbo.DLK_T_VendorD.Dven_Spesification, dbo.DLK_T_VendorD.Dven_Harga, dbo.DLK_T_VendorD.Dven_BrgID, dbo.DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_VendorD LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_VendorD.Dven_BrgID = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_Vendor ON LEFT(dbo.DLK_T_VendorD.Dven_Venid, 9) = dbo.DLK_M_Vendor.Ven_ID WHERE dbo.DLK_T_VendorD.Dven_BrgID = '"& data("memoitem") &"' AND DLK_M_Vendor.Ven_AktifYN = 'Y' GROUP BY dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_T_VendorD.Dven_Venid, dbo.DLK_T_VendorD.Dven_Spesification, dbo.DLK_T_VendorD.Dven_Harga, dbo.DLK_T_VendorD.Dven_BrgID, dbo.DLK_M_Barang.Brg_Nama ORDER BY dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_VendorD.Dven_Harga ASC"
+                                set datavendor = data_cmd.execute
+                            %>
+                            <tr class="bg-success p-2 text-dark bg-opacity-25">
+                                <td colspan="3">
+                                    <%= "<b>"&data("KategoriNama") &"-"& data("jenisNama") &"</b> | "& data("Brg_Nama") %>
+                                </td>
+                            </tr>
+                            <% do while not datavendor.eof %>
+                            <tr>
+                                <td>
+                                    <%= datavendor("Ven_Nama")%>
+                                </td>
+                                <td>
+                                    <%= datavendor("Dven_Spesification")%>
+                                </td>
+                                <td>
+                                    <%= replace(formatCurrency(datavendor("Dven_Harga")),"$","") %>
+                                </td>
+                            </tr>
+                            
+                            <% 
+                                response.flush  
+                                datavendor.movenext
+                                loop
+                            Response.flush
+                            data.movenext
+                            loop
+                            %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-12 mb-3">
-            <table class="table table-hover">
-                <thead class="bg-secondary text-light" style="white-space: nowrap;">
-                    <tr>
-                        <th>Kode</th>
-                        <th>Item</th>
-                        <th>Specification</th>
-                        <th>Quantty</th>
-                        <th>Harga</th>
-                        <th>Satuan Barang</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% do while not data.eof %>
-                    <tr>
-                        <th>
-                            <%= data("KategoriNama") &"-"& data("jenisNama") %>
-                        </th>
-                        <td>
-                            <%= data("Brg_Nama")%>
-                        </td>
-                        <td>
-                            <%= data("memospect")%>
-                        </td>
-                        <td>
-                            <%= data("memoQtty") %>
-                        </td>
-                        <td>
-                            <%= replace(formatCurrency(data("memoHarga")),"$","") %>
-                        </td>
-                        <td>
-                            <% call getSatBerat(data("memosatuan")) %>
-                        </td>
-                        <!-- 
-                        <td>
-                            <input type="number" id="disc1" name="disc1" class="form-control " required>
-                        </td>
-                        <td>
-                            <input type="number" id="disc2" name="disc2" class="form-control" required>
-                        </td>
-                            -->
-                    </tr>
-                    <% 
-                    data.movenext
-                    loop
-                    data.movefirst
-                    %>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <h5>DAFTAR VENDOR PENYEDIA</h3>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <table class="table table-hover">
-                <thead class="bg-secondary text-light" style="white-space: nowrap;">
-                    <tr>
-                        <th>Nama</th>
-                        <th>Specification</th>
-                        <th>Harga</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% do while not data.eof 
-                        data_cmd.commandText = "SELECT dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_T_VendorD.Dven_Venid, dbo.DLK_T_VendorD.Dven_Spesification, dbo.DLK_T_VendorD.Dven_Harga, dbo.DLK_T_VendorD.Dven_BrgID, dbo.DLK_M_Barang.Brg_Nama FROM dbo.DLK_T_VendorD LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_VendorD.Dven_BrgID = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_Vendor ON LEFT(dbo.DLK_T_VendorD.Dven_Venid, 9) = dbo.DLK_M_Vendor.Ven_ID WHERE dbo.DLK_T_VendorD.Dven_BrgID = '"& data("memoitem") &"' AND DLK_M_Vendor.Ven_AktifYN = 'Y' GROUP BY dbo.DLK_M_Vendor.Ven_Nama, dbo.DLK_T_VendorD.Dven_Venid, dbo.DLK_T_VendorD.Dven_Spesification, dbo.DLK_T_VendorD.Dven_Harga, dbo.DLK_T_VendorD.Dven_BrgID, dbo.DLK_M_Barang.Brg_Nama ORDER BY dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_VendorD.Dven_Harga ASC"
-                        set datavendor = data_cmd.execute
-                    %>
-                    <tr class="bg-success p-2 text-dark bg-opacity-25">
-                        <td colspan="3">
-                            <%= "<b>"&data("KategoriNama") &"-"& data("jenisNama") &"</b> | "& data("Brg_Nama") %>
-                        </td>
-                    </tr>
-                    <% do while not datavendor.eof %>
-                    <tr>
-                        <td>
-                            <%= datavendor("Ven_Nama")%>
-                        </td>
-                        <td>
-                            <%= datavendor("Dven_Spesification")%>
-                        </td>
-                        <td>
-                            <%= replace(formatCurrency(datavendor("Dven_Harga")),"$","") %>
-                        </td>
-                    </tr>
-                    
-                    <% 
-                        datavendor.movenext
-                        loop
-                    data.movenext
-                    loop
-                    %>
-                </tbody>
-            </table>
-        </div>
-    </div>
+   
 </div>  
 <% 
    call footer()

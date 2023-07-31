@@ -2,7 +2,7 @@
 <!--#include file="../../functions/func_purce.asp"-->
 <% 
     if session("PR2B") = false then
-        Response.Redirect("index.asp")
+        Response.Redirect("./")
     end if
     id = trim(Request.QueryString("id"))
 
@@ -140,8 +140,9 @@
             <table class="table tableupurchase">
                 <thead class="bg-secondary text-light" style="white-space: nowrap;">
                     <tr>
-                        <th>ID</th>
-                        <th>Kode</th>
+                        <th>No</th>
+                        <th>Kategori</th>
+                        <th>Jenis</th>
                         <th>Item</th>
                         <th>Quantty</th>
                         <th>Satuan</th>
@@ -156,16 +157,21 @@
                     data_cmd.commandText = "SELECT dbo.DLK_T_OrPemD.*, dbo.DLK_M_Barang.Brg_Nama,dbo.DLK_M_SatuanBarang.Sat_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama FROM dbo.DLK_T_OrPemD LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_OrPemD.OPD_Item = dbo.DLK_M_Barang.Brg_ID LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_OrPemD.OPD_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID WHERE LEFT(DLK_T_OrPemD.OPD_OPHID,13) = '"& data("OPH_ID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
 
                     set ddata = data_cmd.execute
+                    no = 0
                     do while not ddata.eof 
+                    no = no + 1
                     
                     %>
                     <tr>
                         <th>
-                            <%= LEFT(ddata("OPD_OPHID"),2) &"-"& mid(ddata("OPD_OPHID"),3,3) &"/"& mid(ddata("OPD_OPHID"),6,4) &"/"& mid(ddata("OPD_OPHID"),10,4) &"/"& right(ddata("OPD_OPHID"),3) %>
+                            <%= no %>
                         </th>
-                        <th>
-                            <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
-                        </th>
+                        <td>
+                            <%=ddata("KategoriNama") %>
+                        </td>
+                        <td>
+                            <%= ddata("jenisNama") %>
+                        </td>
                         <td>
                             <%= ddata("Brg_Nama")%>
                         </td>
@@ -217,20 +223,44 @@
                 <table class="table" style="font-size:12px;">
                     <thead class="bg-secondary text-light" style="position: sticky;top: 0;">
                         <tr>
-                            <th scope="col">Kode</th>
+                            <th scope="col">Kategori</th>
+                            <th scope="col">Jenis</th>
                             <th scope="col">Nama</th>
-                            <th scope="col">Sepesification</th>
                             <th scope="col">Harga</th>
+                            <th scope="col">Sisa</th>
                             <th scope="col">Pilih</th>
                         </tr>
                     </thead>
                     <tbody  class="contentdpo">
-                        <% do while not barang.eof %>
+                        <% do while not barang.eof 
+
+                        data_cmd.commandText = "SELECT Brg_Id,  Brg_Nama, (SELECT SUM(ISNULL(dbo.DLK_T_OrPemD.OPD_QtySatuan,0)) AS qtypo FROM   dbo.DLK_T_OrPemH RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID, 13)GROUP BY dbo.DLK_T_OrPemD.OPD_Item, dbo.DLK_T_OrPemH.OPH_AktifYN, dbo.DLK_T_OrPemH.OPH_MemoID HAVING (dbo.DLK_T_OrPemD.OPD_Item = '"& barang("Dven_BrgID") &"') AND (dbo.DLK_T_OrPemH.OPH_AktifYN = 'Y') AND (dbo.DLK_T_OrPemH.OPH_MemoID = '"& data("OPH_memoID") &"')) as qtypo, (SELECT SUM(ISNULL(dbo.DLK_T_Memo_D.memoQtty, 0)) AS qtymemo FROM dbo.DLK_T_Memo_H RIGHT OUTER JOIN dbo.DLK_T_Memo_D ON dbo.DLK_T_Memo_H.memoID = LEFT(dbo.DLK_T_Memo_D.memoID, 17) GROUP BY dbo.DLK_T_Memo_D.memoItem, dbo.DLK_T_Memo_H.memoID, dbo.DLK_T_Memo_H.memoAktifYN HAVING (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_Memo_H.memoID = '"& data("OPH_memoID") &"') AND (dbo.DLK_T_Memo_D.memoItem = '"& barang("Dven_BrgID") &"')) as qtymemo FROM DLK_M_Barang where Brg_AktifYN = 'Y' AND Brg_Id = '"& barang("Dven_BrgID") &"'"
+                        ' Response.Write data_cmd.commandText & "<br>"
+                        set ckqtypo = data_cmd.execute
+
+                        if ckqtypo.eof then
+                            sisa = 0
+                        else
+                            if IsNull(ckqtypo("qtypo")) then
+                                qtypo = 0
+                            else
+                                qtypo = ckqtypo("qtypo")
+                            end if
+                            if IsNull(ckqtypo("qtymemo")) then
+                                qtymemo = 0
+                            else
+                                qtymemo = ckqtypo("qtymemo")
+                            end if
+                            sisa = qtymemo - qtypo
+                            
+                        end if
+                        %>
                         <tr>
-                            <th scope="row"><%= barang("kategoriNama")&"-"& barang("jenisNama") %></th>
+                            <td><%= barang("kategoriNama") %></td>
+                            <td><%= barang("jenisNama") %></td>
                             <td><%= barang("brg_nama") %></td>
-                            <td><%= barang("Dven_Spesification") %></td>
                             <td><%= replace(formatCurrency(barang("Dven_Harga")),"$","Rp.") %></td>
+                            <td><%=sisa %></td>
                             <td>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="ckbrgpo" id="ckbrgpo" value="<%= barang("Dven_BrgID") &","& barang("Dven_Harga") %>" required>

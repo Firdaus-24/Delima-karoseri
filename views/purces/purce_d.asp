@@ -131,7 +131,9 @@
             <table class="table table-hover">
                 <thead class="bg-secondary text-light">
                     <tr>
-                        <th scope="col">Kode</th>
+                        <th scope="col">No</th>
+                        <th scope="col">Kategori</th>
+                        <th scope="col">Jenis</th>
                         <th scope="col">Item</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Satuan</th>
@@ -143,8 +145,10 @@
                 </thead>
                 <tbody>
                     <% 
+                    no = 0
                     grantotal = 0
                     do while not ddata.eof 
+                    no = no + 1
                     ' cek total harga 
                     jml = ddata("OPD_QtySatuan") * ddata("OPD_Harga")
                     ' cek diskon peritem
@@ -168,8 +172,14 @@
                     %>
                         <tr>
                             <th>
-                                <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
+                                <%=no%>
                             </th>
+                            <td>
+                                <%=ddata("KategoriNama") %>
+                            </td>
+                            <td>
+                                <%=  ddata("jenisNama") %>
+                            </td>
                             <td>
                                 <%= ddata("Brg_Nama") %>
                             </td>
@@ -188,7 +198,7 @@
                             <td>
                                 <%= ddata("OPD_disc2") %>%
                             </td>
-                            <td>
+                            <td class="text-end">
                                 <%= replace(formatCurrency(realharga),"$","") %>
                             </td>
                         </tr>
@@ -211,16 +221,24 @@
                     realgrantotal = (grantotal - diskonall) + ppn + data("OPH_Asuransi") + data("OPH_Lain")
                     %>
                     <tr>
-                        <th colspan="7">Asuransi</th>
-                        <th><%= replace(formatCurrency(data("OPH_Asuransi")),"$","") %></th>
+                        <th colspan="9">+ PPN</th>
+                        <th class="text-end"><%= replace(formatCurrency(ppn),"$","") %></th>
                     </tr>
                     <tr>
-                        <th colspan="7">Lain - Lain</th>
-                        <th><%= replace(formatCurrency(data("OPH_Lain")),"$","") %></th>
+                        <th colspan="9">+ Asuransi</th>
+                        <th class="text-end"><%= replace(formatCurrency(data("OPH_Asuransi")),"$","") %></th>
                     </tr>
                     <tr>
-                        <th colspan="7">Total Pembayaran</th>
-                        <th><%= replace(formatCurrency(realgrantotal),"$","") %></th>
+                        <th colspan="9">+ Lain - Lain</th>
+                        <th class="text-end"><%= replace(formatCurrency(data("OPH_Lain")),"$","") %></th>
+                    </tr>
+                    <tr>
+                        <th colspan="9">- Diskon all Items</th>
+                        <th class="text-end"><%= replace(formatCurrency(diskonall),"$","") %></th>
+                    </tr>
+                    <tr>
+                        <th colspan="9">Total Pembayaran</th>
+                        <th class="text-end"><%= replace(formatCurrency(realgrantotal),"$","") %></th>
                     </tr>
                 </tbody>
             </table>
