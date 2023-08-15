@@ -167,34 +167,43 @@
         </div>
         <div class="row">
             <div class="col-sm-3">
-                <label for="spectUMemo" class="col-form-label">Sepesification</label>
-            </div>
-            <div class="col-sm-9 mb-3">
-                <input type="text" id="spectUMemo" class="form-control" name="spectUMemo" autocomplete="off" maxlength="50" readonly required>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-3">
                 <label for="qttyUMemo" class="col-form-label">Quantity</label>
             </div>
             <div class="col-sm-3 mb-3">
                 <input type="number" id="qttyUMemo" class="form-control" name="qttyUMemo" autocomplete="off" readonly required>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-3">
-                <label for="satuanUMemo" class="col-form-label">Satuan Barang</label>
-            </div>
-            <div class="col-sm-4 mb-3">
-                <input type="text" id="satuanUMemo" class="form-control" name="satuanUMemo" autocomplete="off" readonly required>
+            <div class="col-sm-6 mb-3">
+                 <input type="text" id="satuanUMemo" class="form-control" name="satuanUMemo" autocomplete="off" readonly required>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-3">
-                <label for="hargaumemo" class="col-form-label">Harga</label>
+                <label for="realHargaUprice" class="col-form-label">Harga real</label>
             </div>
-            <div class="col-sm-4 mb-3">
-                <input type="text" id="hargaumemo" class="form-control" name="hargaumemo" autocomplete="off" onchange="settingFormatRupiah(this.value, 'hargaumemo')" inputmode="Numeric" required>
+            <div class="col-sm-9 mb-3">
+                <input type="text" id="realHargaUprice" class="form-control" name="realHargaUprice" autocomplete="off" onchange="settingFormatRupiah(this.value, 'realHargaUprice')" inputmode="Numeric" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <label for="ppnUpdateHargaPuchase" class="col-form-label">PPN</label>
+            </div>
+            <div class="col-sm-2 mb-3">
+                <input type="number" id="ppnUpdateHargaPuchase" class="form-control" name="ppnUpdateHargaPuchase" autocomplete="off" required>
+            </div>
+            <div class="col-sm-1 m-0 p-0 mb-3">
+                <label>%</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <label for="hargaUpricePruchase" class="col-form-label">Harga</label>
+            </div>
+            <div class="col-sm-9 mb-3">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control"id="hargaUpricePruchase" name="hargaUpricePruchase" autocomplete="off" required>
+                    <span class="input-group-text"><button type="button" style="border:none;background-color:transparent;" onclick="hitungUpricePurchase()">Cek harga</button></span>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -218,11 +227,10 @@
     </div>
   </div>
 </div>
-
 <% 
     if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
         memoiddetail = trim(Request.Form("memoiddetail"))
-        hargaumemo = replace(replace(replace(trim(Request.Form("hargaumemo")),",",""),".",""),"-","")
+        hargaumemo = replace(replace(replace(trim(Request.Form("hargaUpricePruchase")),",",""),".",""),"-","")
 
         set data_cmd =  Server.CreateObject ("ADODB.Command")
         data_cmd.ActiveConnection = mm_delima_string

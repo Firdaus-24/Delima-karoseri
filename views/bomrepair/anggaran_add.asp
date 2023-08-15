@@ -10,7 +10,7 @@
   set data_cmd =  Server.CreateObject ("ADODB.Command")
   data_cmd.ActiveConnection = mm_delima_string
 
-  data_cmd.commandText = "SELECT dbo.GLB_M_Agen.AgenName, dbo.GLB_M_Agen.Agenid, dbo.DLK_T_BOMRepairH.bmrid FROM  dbo.DLK_T_BOMRepairH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_BOMRepairH.BmrAgenId = dbo.GLB_M_Agen.AgenID WHERE (dbo.DLK_T_BOMRepairH.BmrID = '"& id &"') AND (dbo.DLK_T_BOMRepairH.BmrAktifYN = 'Y')"
+  data_cmd.commandText = "SELECT dbo.GLB_M_Agen.AgenName, dbo.GLB_M_Agen.Agenid, dbo.DLK_T_BOMRepairH.bmrid, dbo.DLK_T_BOMRepairH.bmrpdrid FROM  dbo.DLK_T_BOMRepairH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_BOMRepairH.BmrAgenId = dbo.GLB_M_Agen.AgenID WHERE (dbo.DLK_T_BOMRepairH.BmrID = '"& id &"') AND (dbo.DLK_T_BOMRepairH.BmrAktifYN = 'Y')"
   set data = data_cmd.execute
 
   if data.eof then
@@ -43,6 +43,7 @@
   </div>
   <form action="anggaran_add.asp?id=<%= data("bmrid") %>" method="post" id="formAnggaranH" onsubmit="validasiForm(this,event,'Permintaan Anggaran','warning')">
     <input type="hidden" id="bmrid" class="form-control" name="bmrid" value="<%= data("bmrid") %>" required>
+    <input type="hidden" id="bmrpdrid" class="form-control" name="bmrpdrid" value="<%= data("bmrpdrid") %>" required>
     <div class="row">
       <div class="col-sm-2">
         <label for="tgl" class="col-form-label">Tanggal</label>

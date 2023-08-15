@@ -22,6 +22,7 @@
         </td>
     </tr>
     <% 
+    Response.flush
     barang.movenext
     loop
     %>

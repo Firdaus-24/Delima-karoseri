@@ -96,7 +96,7 @@
       <div class="col-lg-12">
         <div class="d-flex mb-3">
           <div class="me-auto p-2">   
-            <button type="button" class="btn btn-primary btn-modalPb" data-bs-toggle="modal" data-bs-target="#modalpb">Tambah Rincian</button>
+            <button type="button" class="btn btn-primary btn-modalAnggaranProject" data-bs-toggle="modal" data-bs-target="#modalAnggaranProject">Tambah Rincian</button>
           </div>
           <div class="p-2">
               <a href="bomproject.asp" class="btn btn-danger">Kembali</a>
@@ -113,12 +113,13 @@
                         <th scope="col">Kategori</th>
                         <th scope="col">Jenis</th>
                         <th scope="col">Item</th>
-                        <th scope="col">Quantity</th>
+                        <th scope="col">Qty</th>
+                        <th scope="col">Stok</th>
                         <th scope="col">Satuan</th>
                         <th scope="col">Type</th>
                         <th scope="col">Keterangan</th>
                         <% if session("INV10C") = true then%>
-                        <th scope="col" class="text-center">Aksi</th>
+                            <th scope="col" class="text-center">Aksi</th>
                         <%end if%>
                     </tr>
                 </thead>
@@ -127,8 +128,43 @@
                     no = 0
                     do while not dataD.eof
                     no = no + 1
+
+                    ' incoming outgoing
+                    data_cmd.commandText = "select Brg_Nama, Brg_MinStok, ISNULL((SELECT SUM(dbo.DLK_T_MaterialReceiptD2.MR_Qtysatuan) AS qtymr FROM dbo.DLK_M_Barang RIGHT OUTER JOIN dbo.DLK_T_MaterialReceiptD2 ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_MaterialReceiptD2.MR_Item GROUP BY dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_MaterialReceiptD2.MR_Item HAVING (dbo.DLK_T_MaterialReceiptD2.MR_Item = '"& dataD("MemoItem") &"')) - ((SELECT SUM(dbo.DLK_T_MaterialOutD.MO_Qtysatuan) AS qty FROM dbo.DLK_M_Barang RIGHT OUTER JOIN dbo.DLK_T_MaterialOutD ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_MaterialOutD.MO_Item GROUP BY dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_MaterialOutD.MO_Item HAVING (dbo.DLK_T_MaterialOutD.MO_Item = '"& dataD("MemoItem") &"')) ),0) as stok FROM DLK_M_Barang WHERE Brg_ID = '"& dataD("MemoItem") &"' GROUP BY Brg_Nama, Brg_MinStok"
+                    ' Response.Write data_cmd.commandText & "<br>"
+                    set ckstok = data_cmd.execute
+
+                    ' delete barang
+                    data_cmd.commandText = "SELECT ISNULL(SUM(dbo.DLK_T_DelBarang.DB_QtySatuan),0) AS qtydel FROM dbo.DLK_M_Barang LEFT OUTER JOIN dbo.DLK_T_DelBarang ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_DelBarang.DB_Item GROUP BY dbo.DLK_T_DelBarang.DB_Item, dbo.DLK_T_DelBarang.DB_AktifYN HAVING (dbo.DLK_T_DelBarang.DB_AktifYN = 'Y') AND (dbo.DLK_T_DelBarang.DB_Item = '"& dataD("MemoItem") &"')"
+
+                    set ckdelbarang = data_cmd.execute
+
+                    if not ckstok.eof then
+                        stok = ckstok("stok")
+                    else
+                        stok = 0
+                    end if
+
+                    if not ckdelbarang.eof then
+                        delbrg = ckdelbarang("qtydel")
+                    else
+                        delbrg = 0
+                    end if
+
+                    realstok = Cint(stok) - Cint(delbrg)
+
+                    If realstok = 0 then
+                        bgrow = "bg-danger"
+                        ckstyle = "style='--bs-bg-opacity: .5;'"
+                    elseif Cint(ckstok("Brg_minstok")) >= realstok then
+                        bgrow = "bg-warning"
+                        ckstyle = "style='--bs-bg-opacity: .5;'"
+                    elseif Cint(ckstok("Brg_minstok")) <= realstok then
+                        ckstyle = ""
+                        bgrow = ""
+                    end if
                     %>
-                        <tr>
+                        <tr class="<%=bgrow%>" <%=ckstyle%>>
                             <th scope="row"><%= no %></th>
                             <td><%= dataD("KategoriNama") %></td>
                             <td>
@@ -136,16 +172,20 @@
                             </td>
                             <td><%= dataD("Brg_Nama") %></td>
                             <td><%= dataD("memoQtty") %></td>
+                            <td><%= realstok %></td>
                             <td><%= dataD("sat_nama") %></td>
                             <td><%= dataD("T_nama") %></td>
                             <td>
                                 <%= dataD("memoKeterangan") %>
                             </td>
-                            <% if session("INV10C") = true then%>
-                                <td class="text-center">
-                                    <a href="aktifdbomproject.asp?id=<%= dataD("memoID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'Detail Anggaran Barang')">delete</a>
-                                </td>
-                            <%end if%>
+                            <td class="text-center">
+                                <% if session("INV1B") = true then %>
+                                    <button class="btn badge text-bg-primary" data-bs-toggle="modal" data-bs-target="#modalAnggaranProject" onclick="updateForm('<%=dataD("memoid")%>','<%=dataD("MemoItem")%>','<%= dataD("memoQtty") %>','<%= dataD("memoSatuan")%>','<%= dataD("memoketerangan")%>')"  style='--bs-bg-opacity: 1;'>Update</button>
+                                <%end if%>
+                                <% if session("INV10C") = true then%>
+                                    <a href="aktifdbomproject.asp?id=<%= dataD("memoID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'Detail Anggaran Barang')" style='--bs-bg-opacity: 1;'>delete</a>
+                                <%end if%>
+                            </td>
                         </tr>
                     <% 
                     response.flush
@@ -159,15 +199,16 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="modalpb" tabindex="-1" aria-labelledby="modalpbLabel" aria-hidden="true">
+<div class="modal fade" id="modalAnggaranProject" tabindex="-1" aria-labelledby="modalAnggaranProjectLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalpbLabel">Rincian Barang</h5>
+        <h5 class="modal-title" id="modalAnggaranProjectLabel">Rincian Barang</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
     <form action="bomproject_u.asp?id=<%= id %>" method="post">
         <input type="hidden" name="memoid" id="memoid" value="<%= id %>">
+        <input type="hidden" name="iddreqanggaran" id="iddreqanggaran" >
         <input type="hidden" name="pbcabang" id="pbcabang" value="<%= dataH("memoAgenID") %>">
       <div class="modal-body">
         <div class="row">
@@ -175,7 +216,7 @@
                 <label for="cpbarang" class="col-form-label">Cari Barang</label>
             </div>
             <div class="col-sm-9 mb-3">
-                <input type="text" id="cpbarang" class="form-control" name="cpbarang">
+                <input type="text" id="cpbarang" class="form-control" name="cpbarang" autocomplete="off" onkeyup="GetNamabgrAnggaran(this.value)">
             </div>
         </div>
         <!-- table barang -->
@@ -211,14 +252,6 @@
             </div>
         </div>
         <!-- end table -->
-         <div class="row">
-            <div class="col-sm-3">
-                <label for="spect" class="col-form-label">Sepesification</label>
-            </div>
-            <div class="col-sm-9 mb-3">
-                <input type="text" id="spect" class="form-control" name="spect" autocomplete="off" maxlength="50">
-            </div>
-        </div>
         <div class="row">
             <div class="col-sm-3">
                 <label for="qtty" class="col-form-label">Quantity</label>
@@ -264,10 +297,46 @@
     </div>
   </div>
 </div>
-
+<script>
+    let ainun = null
+    const updateForm = (id,brgid, qty, satuan, keterangan) => {
+        let varbrg = null
+        $("#iddreqanggaran").val(id)
+        $('input:radio[name=brg]').filter(`[value=${brgid}]`).prop('checked', true);
+        $("#qtty").val(qty)
+        $("#satuan").val(satuan)
+        $("#ket").val(keterangan)
+        ainun = brgid
+    }
+    const tambahForm = () => {
+        $("#iddreqanggaran").val("")
+        $('input:radio[name=brg]').prop('checked', false);
+        $("#qtty").val(0)
+        $("#satuan").val("")
+        $("#ket").val("")
+        ainun = null
+    }
+    // get nama barang by vendor
+    const GetNamabgrAnggaran = (e) => {
+        let nama = e;
+        let cabang = $("#pbcabang").val();
+        $.ajax({
+            method: "POST",
+            url: "../../ajax/getbrgvendor.asp",
+            data: { nama, cabang },
+        }).done(function (msg) {
+            $(".contentdetailpbrg").html(msg);
+            $("input:radio[name=brg]").filter(`[value=${ainun}]`).prop("checked", true);
+        });
+    };
+</script>
 <% 
     if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
-        call updateAnggaran()      
+        if Request.Form("iddreqanggaran") = ""  then
+            call updateAnggaran()      
+        elseif Request.Form("iddreqanggaran") <> "" then
+            call updateDetail()
+        end if
     end if
     call footer()
 %>

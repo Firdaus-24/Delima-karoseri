@@ -73,25 +73,6 @@ $(function () {
     });
   });
 
-  // update harga memo
-  // $(".modalUpdateHarga").click(function(){
-  //     let dataID = $(this).attr("data-iddetail")
-  //     $.ajax({
-  //         method: "POST",
-  //         url: "../../ajax/getDetailPermintaan.asp",
-  //         data: { id:dataID }
-  //     }).done(function( msg ) {
-  //         $("#memoiddetail").val(msg[0].MEMOID.toString())
-  //         $("#brgUMemo").val(msg[0].BARANGNAMA.toString())
-  //         $("#spectUMemo").val(msg[0].SPECT.toString())
-  //         $("#qttyUMemo").val(msg[0].QTTY.toString())
-  //         $("#satuanUMemo").val(msg[0].SATUANNAMA.toString())
-  //         $("#ketUMemo").val(msg[0].KETERANGAN.toString())
-  //         $("#hargaumemo").val(msg[0].HARGA.toString())
-  //     });
-
-  // })
-
   // getdata id memo
   $("#agenPotoMemo").change(function () {
     let cabang = $("#agenPotoMemo").val();
@@ -119,5 +100,23 @@ const getUpricePurchase = (id, brgnama, spec, qty, satuan, ket, price) => {
   $("#qttyUMemo").val(qty);
   $("#satuanUMemo").val(satuan);
   $("#ketUMemo").val(ket);
-  $("#hargaumemo").val(price);
+  $("#realHargaUprice").val(price);
+  $("#ppnUpdateHargaPuchase").val(0);
+  $("#hargaUpricePruchase").val("");
+};
+
+// hitung update harga purchase
+const hitungUpricePurchase = () => {
+  let realharga = $("#realHargaUprice").val();
+  let ppn = $("#ppnUpdateHargaPuchase").val();
+  let total;
+
+  realharga = !realharga ? 0 : realharga.replace(/[.,-]/g, "");
+  ppn = !ppn ? 0 : ppn;
+
+  total =
+    parseInt(realharga) +
+    Math.round((parseInt(ppn) / 100) * parseInt(realharga));
+
+  $("#hargaUpricePruchase").val(format(total));
 };

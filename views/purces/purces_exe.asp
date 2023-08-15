@@ -1,7 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
     if session("PR2A") = false then
-        Response.Redirect("index.asp")
+        Response.Redirect("./")
     end if
     call header("Purcase Order Proses")
 

@@ -1,7 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
     if session("INV1") = false then
-        Response.Redirect("index.asp")
+        Response.Redirect("./")
     end if
 
     ' query cabang  
@@ -212,21 +212,27 @@
                         </td>
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="detailAnggaran.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-warning">Detail</a>
                             <% if rs("memoApproveYN") = "N" then %>
-                                <% if session("INV1B") = true then %>
-                                    <a href="reqAnggaran_u.asp?id=<%= rs("memoID") %>" class="btn badge btn-primary btn-sm">Update</a>
-                                <% end if %>
+                                <%if rs("memoinventoryYN") = "N" then %>
+                                    <%if session("INV1G") = true then%>
+                                        <a href="appanggaraninv.asp?id=<%= rs("memoID") %>" class="btn badge bg-secondary" onclick="ApproveYN(event,'PASTIKAN SEMUA DATA BENAR!!', 'approve memo inventory', 'info')">Ajukan</a>
+                                    <%end if%>
+                                    <% if session("INV1B") = true then %>
+                                        <a href="reqAnggaran_u.asp?id=<%= rs("memoID") %>" class="btn badge btn-primary btn-sm">Update</a>
+                                    <% end if %>
+                                <%end if%>
                                 <% if ddetail.eof then%>
                                     <% if session("INV1C") = true then %>
                                     <a href="reqAktifH.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'Header Permintaan Anggaran')">delete</a>
                                     <% end if %>
                                 <% end if %>
                             <% end if %>
+                            <a href="detailAnggaran.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-warning">Detail</a>
                             </div>
                         </td>
                     </tr>
                     <% 
+                    Response.flush
                     showrecords = showrecords - 1
                     rs.movenext
                     if rs.EOF then

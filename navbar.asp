@@ -83,23 +83,23 @@
             </ul>
           <!-- inventory -->
           <li class="nav-text">
-            <a href="#" onclick="toggle('sublist-inventory')"><i class="bi bi-box-seam"></i> Inventory</a>
+            <a href="#" onclick="toggle('sublist-inventory')"><i class="bi bi-box-seam"></i> Inventory <span class="badge text-end bg-danger end-0 rounded-circle notifInventoryNavbar" style="width: 20px;font-size:12px"></span></a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
             <ul class="sub-menu" id="sublist-inventory">
               <% if session("INV1") = true then %>  
               <li>
-                <a class="link-name" href="<%= url %>views/inventory/reqAnggaran.asp">Anggaran Permintaan</a>
+                <a class="link-name" href="<%= url %>views/inventory/reqAnggaran.asp">Anggaran Permintaan  <span class="badge text-end text-bg-danger rounded-circle notifReqAnggaranNavbar" ></span></a>
               </li>
               <% end if %>
               <% if session("INV9") = true then %>  
               <li>
-                <a class="link-name" href="<%= url %>views/invtryrepair/">Anggaran B.O.M Repair</a>
+                <a class="link-name" href="<%= url %>views/invtryrepair/">Anggaran B.O.M Repair <span class="badge text-bg-danger rounded-circle notifBomrepairNavbar"></span></a>
               </li>
               <% end if %>
               <% if session("INV10") = true then %>  
               <li>
-                <a class="link-name" href="<%= url %>views/inventory/bomproject.asp">Anggaran B.O.M Project</a>
+                <a class="link-name" href="<%= url %>views/inventory/bomproject.asp">Anggaran B.O.M Project  <span class="badge text-bg-danger rounded-circle notifBomProjectNavbar"></span></a>
               </li>
               <% end if %>
               <% if session("INV2") = true then %>
@@ -316,7 +316,7 @@
             </ul>
           <!-- purchase -->
           <li class="nav-text">
-            <a href="#" onclick="toggle('sublist-purces')"><i class="bi bi-cash-stack"></i> Purchase</a>
+            <a href="#" onclick="toggle('sublist-purces')"><i class="bi bi-cash-stack"></i> Purchase  <span class="badge text-end bg-danger end-0 rounded-circle notifPurchaseNavbar" style="width: 20px;font-size:12px"></span></a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
             <ul class="sub-menu" id="sublist-purces">
@@ -332,7 +332,7 @@
               <% end if %>
               <% if session("PR3") =  true then %>
               <li>
-                <a class="link-name" href="<%= url %>views/purces/uprice.asp">Update Harga Memo</a>
+                <a class="link-name" href="<%= url %>views/purces/uprice.asp">Update Harga Memo <span class="badge text-bg-danger rounded-circle notifUpdateHargaPurchaseNavbar"></span></a>
               </li>
               <% end if %>
               <% if session("PR4") =  true then %>
@@ -380,7 +380,7 @@
             </ul>
           <!-- finance -->
           <li class="nav-text">
-            <a href="#" onclick="toggle('sublist-finance')"><i class="bi bi-bag-plus-fill"></i> Finc/Accounting</a>
+            <a href="#" onclick="toggle('sublist-finance')"><i class="bi bi-bag-plus-fill"></i> Finc/Accounting <span class="badge text-end bg-danger end-0 rounded-circle notifFinanceNavbar" style="width: 20px;font-size:12px"></span></a>
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
             <ul class="sub-menu" id="sublist-finance">
@@ -389,7 +389,7 @@
               </li>
               <% if session("FN1") =  true then %>
               <li>
-                <a class="link-name" href="<%= url %>views/finance/appmemo.asp">Approve Memo</a>
+                <a class="link-name" href="<%= url %>views/finance/appmemo.asp">Approve Memo <span class="badge text-bg-danger rounded-circle notifFinanceAnggaranNavbar"></span></a>
               </li>
               <% end if %>
               <% if session("FN2") =  true then %>

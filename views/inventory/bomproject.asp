@@ -204,17 +204,27 @@
                           <% end if %>
                       </td>
                       <td class="text-center">
-                          <div class="btn-group" role="group" aria-label="Basic example">
-                            <a href="detailbomproject.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-warning">Detail</a>
-                          <% if rs("memoApproveYN") = "N" then %>
-                              <% if session("INV10B") = true then %>
-                                  <a href="bomproject_u.asp?id=<%= rs("memoID") %>" class="btn badge btn-primary btn-sm">Update</a>
-                              <% end if %>
-                          <% end if %>
-                          </div>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <% if rs("memoApproveYN") = "N" then %>
+                                <% if rs("memoInventoryYN") = "N" then%>
+                                    <%if session("INV10G") = true then%>
+                                        <a href="appanggaraninv.asp?id=<%= rs("memoID") %>" class="btn badge bg-secondary" onclick="ApproveYN(event,'PASTIKAN SEMUA DATA BENAR!!', 'approve memo project', 'info')">Ajukan</a>
+                                    <%end if%>
+                                    <% if session("INV10B") = true then %>
+                                        <a href="bomproject_u.asp?id=<%= rs("memoID") %>" class="btn badge btn-primary btn-sm">Update</a>
+                                    <% end if %>
+                                    <a href="detailbomproject.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-warning">Detail</a>
+                                <%else%>
+                                    <div class="loaderSpiner"></div>
+                                <%end if%>
+                            <%else%>
+                                <a href="detailbomproject.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-warning">Detail</a>
+                            <% end if %>
+                        </div>
                       </td>
                   </tr>
                   <% 
+                  Response.flush
                   showrecords = showrecords - 1
                   rs.movenext
                   if rs.EOF then

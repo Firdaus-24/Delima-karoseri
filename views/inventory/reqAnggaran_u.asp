@@ -26,8 +26,11 @@
     data_cmd.commandText = "SELECT dbo.DLK_M_Barang.Brg_Id, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama, DLK_M_TypeBarang.T_Nama FROM dbo.DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KategoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.JenisID LEFT OUTER JOIN DLK_M_TypeBarang ON DLK_M_Barang.BRg_Type = DLK_M_Typebarang.T_ID WHERE (dbo.DLK_M_Barang.Brg_AktifYN = 'Y') AND (left(dbo.DLK_M_Barang.Brg_Id,3) = '"& dataH("memoAgenID") &"') ORDER BY Brg_Nama ASC"
     set barang = data_cmd.execute
 
-    ' kode aja
-    '  left(dataH("memoID"),4) / mid(dataH("memoId"),5,3) - getAgen(mid(dataH("memoID"),8,3),"") / mid(dataH("memoID"),11,4) / right(dataH("memoID"),3) 
+    ' ' cek kebutuhan
+    ' data_cmd.commandText = "SELECT K_ID,K_Name FROM DLK_M_Kebutuhan WHERE K_AktifYN = 'Y' and k_id = 1 ORDER BY K_ID ASC"
+
+    ' set ckkebutuhan = data_cmd.execute
+
 %>
 <% call header("Detail Permintaan Anggaran") %>
 <!--#include file="../../navbar.asp"-->
@@ -80,17 +83,20 @@
             <input type="text" id="kebutuhan" class="form-control" name="kebutuhan" value="<%= dataH("K_Name") %>" readonly>
         </div>
         <div class="col-sm-2">
-            <label for="keterangan" class="col-form-label">Keterangan</label>
+            <label for="ketreqanggaranu" class="col-form-label">Keterangan</label>
         </div>
-        <div class="col-sm-4 mb-3">
-            <input type="text" id="keterangan" class="form-control" name="keterangan" maxlength="50" autocomplete="off" value="<%= dataH("memoKeterangan") %>" readonly>
+        <div class="col-sm-3 mb-3">
+            <input type="text" id="ketreqanggaranu" class="form-control" name="keterangan" maxlength="50" autocomplete="off" value="<%= dataH("memoKeterangan") %>">
+        </div>
+        <div class='col-sm-1'>
+            <button type="button" class="btn btn-outline-primary" onclick="ketupdate('<%= id %>')">Update</button>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-12">
             <div class="d-flex mb-3">
                 <div class="me-auto p-2">
-                    <button type="button" class="btn btn-primary btn-modalPb" data-bs-toggle="modal" data-bs-target="#modalpb">Tambah Rincian</button>
+                    <button type="button" class="btn btn-primary btn-modalPb" data-bs-toggle="modal" data-bs-target="#modalpb" onclick="tambahForm()">Tambah Rincian</button>
                 </div>
                 <div class="p-2">
                     <a href="reqAnggaran.asp" class="btn btn-danger">Kembali</a>
@@ -134,7 +140,14 @@
                                 <%= dataD("memoKeterangan") %>
                             </td>
                             <td class="text-center">
-                                <a href="reqaktifD.asp?id=<%= dataD("memoID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'Detail Anggaran Barang')">delete</a>
+                                <% if session("INV1B") = true then %>
+                                    <button class="btn badge text-bg-primary" data-bs-toggle="modal" data-bs-target="#modalpb" onclick="updateForm('<%=dataD("memoid")%>','<%=dataD("MemoItem")%>','<%= dataD("memoQtty") %>','<%= dataD("memoSatuan")%>','<%= dataD("memoketerangan")%>')" >Update</button>
+                                <%end if%>
+                                <%if session("INV1C") = true then%>
+                                    <a href="reqaktifD.asp?id=<%= dataD("memoID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'Detail Anggaran Barang')">delete</a>
+                                <%else%>
+                                    -
+                                <%end if%>
                             </td>
                         </tr>
                     <% 
@@ -157,14 +170,15 @@
       </div>
     <form action="reqAnggaran_u.asp?id=<%= id %>" method="post">
         <input type="hidden" name="memoid" id="memoid" value="<%= id %>">
+        <input type="hidden" name="iddreqanggaran" id="iddreqanggaran" >
         <input type="hidden" name="pbcabang" id="pbcabang" value="<%= dataH("memoAgenID") %>">
       <div class="modal-body">
-        <div class="row">
+        <div class="row rowCpBarang">
             <div class="col-sm-3">
                 <label for="cpbarang" class="col-form-label">Cari Barang</label>
             </div>
             <div class="col-sm-9 mb-3">
-                <input type="text" id="cpbarang" class="form-control" name="cpbarang">
+                <input type="text" id="cpbarang" class="form-control" name="cpbarang" autocomplete="off" onkeyup="GetNamabgrAnggaran(this.value)">
             </div>
         </div>
         <!-- table barang -->
@@ -187,11 +201,12 @@
                             <td><%= barang("T_Nama") %></td>
                             <td>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="brg" id="brg" value="<%= barang("Brg_ID") %>" required>
+                                    <input class="form-check-input" type="radio" name="brg" id="brganggaranupdate" value="<%= barang("Brg_ID") %>" required>
                                 </div>
                             </td>
                         </tr>
                         <% 
+                        Response.flush
                         barang.movenext
                         loop
                         %>
@@ -245,10 +260,71 @@
     </div>
   </div>
 </div>
-
+<script>
+    let ainun = null;
+    const updateForm = (id,brgid, qty, satuan, keterangan) => {
+        let varbrg = null
+        $("#iddreqanggaran").val(id)
+        $(".rowCpBarang").show()
+        $('input:radio[name=brg]').filter(`[value=${brgid}]`).prop('checked', true);
+        $("#qtty").val(qty)
+        $("#satuan").val(satuan)
+        $("#keterangan").val(keterangan)
+        ainun = brgid
+    }
+    const tambahForm = () => {
+        $("#iddreqanggaran").val("")
+        $(".rowCpBarang").show()
+        $('input:radio[name=brg]').prop('checked', false);
+        $("#qtty").val(0)
+        $("#satuan").val("")
+        $("#keterangan").val("keterangan")
+        ainun = null
+    }
+    const ketupdate = (id) => {
+        let keterangan = $("#ketreqanggaranu").val()
+        $.ajax({
+        method: "POST",
+        url: "keterangananggaran_u.asp",
+        data: { id, keterangan },
+        }).done(function (msg) {
+            swal({
+                title: "YAKIN UNTUK DI UPDATE?",
+                text: "",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                })
+                .then((willDelete) => {
+                if (willDelete) {
+                   location.reload();
+                } else {
+                    swal("gagal diupdate");
+                }
+            });
+        });
+    }
+    // get nama barang by vendor
+    const GetNamabgrAnggaran = (e) => {
+        let nama = e;
+        let cabang = $("#pbcabang").val();
+        $.ajax({
+            method: "POST",
+            url: "../../ajax/getbrgvendor.asp",
+            data: { nama, cabang },
+        }).done(function (msg) {
+            $(".contentdetailpbrg").html(msg);
+            $("input:radio[name=brg]").filter(`[value=${ainun}]`).prop("checked", true);
+        });
+    };
+</script>
 <% 
-    if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
-        call updateAnggaran()
+    if Request.ServerVariables("REQUEST_METHOD") = "POST" then
+        if Request.Form("iddreqanggaran") = "" then 
+            call updateAnggaran()
+        else
+            call updateDetail()
+        end if
     end if
     call footer()
 %>

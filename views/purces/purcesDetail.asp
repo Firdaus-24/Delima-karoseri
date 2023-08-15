@@ -1,7 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
     if session("PR2") = false then
-        Response.Redirect("index.asp")
+        Response.Redirect("./")
     end if
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")

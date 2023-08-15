@@ -2,7 +2,7 @@
 <!--#include file="../../functions/func_Faktur.asp"-->
 <% 
     if session("PR4A") = false then
-        Response.Redirect("index.asp")
+        Response.Redirect("./")
     end if
 
     id = trim(Request.QueryString("id"))

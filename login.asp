@@ -191,20 +191,19 @@
    }
    .input-icon {
    position: absolute;
-   top: 0;
+   top: 10px;
    left: 18px;
    height: 48px;
    font-size: 24px;
-   line-height: 48px;
    text-align: left;
    color: #ffeba7;
-   -webkit-transition: all 200ms linear;
+   /* -webkit-transition: all 200ms linear; */
       transition: all 200ms linear;
    }
 
    .form-group input:-ms-input-placeholder  {
    color: #c4c3ca;
-   opacity: 0.7;
+   /* opacity: 0.7; */
    -webkit-transition: all 200ms linear;
       transition: all 200ms linear;
    }
@@ -243,7 +242,7 @@
    }
    .form-group input:focus::-webkit-input-placeholder  {
    opacity: 0;
-   -webkit-transition: all 200ms linear;
+   /* -webkit-transition: all 200ms linear; */
       transition: all 200ms linear;
    }
 
@@ -321,7 +320,9 @@
                                  <input type="text" name="username" class="form-style" placeholder="Username" id="username" autocomplete="off" required>
                                  <i class="input-icon bi bi-person"></i>
                               </div>	
+                              <div class="form-group">
                               <input type="hidden" name="agen" class="form-style" placeholder="agen" id="agen" autocomplete="off" value="001" required>
+                              </div>	
                               <!-- 
                               <div class="form-group mt-2">
                                  <select class="form-select form-style" name="agen" id="agen" required>

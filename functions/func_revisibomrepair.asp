@@ -36,4 +36,28 @@ sub updateAnggaran()
   end if
 
 end sub
+
+sub updateDetail ()
+  id = trim(Request.Form("memoidrepair"))
+  brg = trim(Request.Form("brg"))
+  spect = trim(Request.Form("spect"))
+  qtty = trim(Request.Form("qtty"))
+  harga = trim(Request.Form("harga"))
+  satuan = trim(Request.Form("satuan"))
+  ket = trim(Request.Form("ket"))
+
+  set data_cmd =  Server.CreateObject ("ADODB.Command")
+  data_cmd.ActiveConnection = mm_delima_string
+
+  data_cmd.commandTExt = "SELECT * FROM DLK_T_Memo_D WHERE memoID = '"& id &"' "
+  ' response.write data_cmd.commandText & "<br>"
+  set data = data_cmd.execute
+
+  if not data.eof then
+      call query("UPDATE DLK_T_Memo_D set memoItem = '"& brg &"', memoQtty = '"& qtty &"', memoSatuan = '"& satuan &"', memoKeterangan = '"& ket &"'  WHERE memoid = '"& id &"' ")
+      call alert("RINCIAN PERMINTAAN BARANG", "berhasil di update", "success",Request.ServerVariables("HTTP_REFERER")) 
+  else    
+      call alert("RINCIAN PERMINTAAN BARANG", "tidak terdaftar", "success",Request.ServerVariables("HTTP_REFERER")) 
+  end if
+end sub
 %>

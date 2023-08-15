@@ -1,7 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
     if session("PR3") = false then
-        Response.Redirect("index.asp")
+        Response.Redirect("./")
     end if
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
@@ -10,11 +10,11 @@
     set agen_cmd =  Server.CreateObject ("ADODB.Command")
     agen_cmd.ActiveConnection = mm_delima_string
     ' filter agen
-    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID, GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'N' AND NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID, GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE  (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN = 'N') AND (dbo.DLK_T_Memo_H.memopurchaseYN = 'N') AND (dbo.DLK_T_Memo_H.memoinventoryYN = 'Y') GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
     set agendata = agen_cmd.execute
 
     ' filter departement
-    agen_cmd.commandText = "SELECT dbo.HRD_M_Departement.DepID, dbo.HRD_M_Departement.DepNama FROM dbo.DLK_T_Memo_H LEFT OUTER JOIN dbo.HRD_M_Departement ON dbo.DLK_T_Memo_H.memoDepID = dbo.HRD_M_Departement.DepID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y' AND DLK_T_Memo_H.memoApproveYN = 'N' AND NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) GROUP BY dbo.HRD_M_Departement.DepID, dbo.HRD_M_Departement.DepNama"
+    agen_cmd.commandText = "SELECT dbo.HRD_M_Departement.DepID, dbo.HRD_M_Departement.DepNama FROM dbo.DLK_T_Memo_H LEFT OUTER JOIN dbo.HRD_M_Departement ON dbo.DLK_T_Memo_H.memoDepID = dbo.HRD_M_Departement.DepID WHERE (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN = 'N') AND (dbo.DLK_T_Memo_H.memopurchaseYN = 'N') AND (dbo.DLK_T_Memo_H.memoinventoryYN = 'Y') GROUP BY dbo.HRD_M_Departement.DepID, dbo.HRD_M_Departement.DepNama"
     set kebData = agen_cmd.execute
 
     set conn = Server.CreateObject("ADODB.Connection")
@@ -67,7 +67,7 @@
     end if
 
     ' query seach 
-    strquery = "SELECT DLK_T_Memo_H.*, HRD_M_Departement.DepNama, HRD_M_Divisi.DivNama, GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN HRD_M_departement ON DLK_T_Memo_H.MemoDepID = HRD_M_Departement.DepID LEFT OUTER JOIN HRD_M_Divisi ON DLK_T_Memo_H.memoDivID = HRD_M_Divisi.DivID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = LEFT(GLB_M_Agen.AgenID,3) WHERE NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) AND (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') "& filterAgen &" "& filterKeb &" "& filtertgl &""
+    strquery = "SELECT DLK_T_Memo_H.*, HRD_M_Departement.DepNama, HRD_M_Divisi.DivNama, GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN HRD_M_departement ON DLK_T_Memo_H.MemoDepID = HRD_M_Departement.DepID LEFT OUTER JOIN HRD_M_Divisi ON DLK_T_Memo_H.memoDivID = HRD_M_Divisi.DivID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = LEFT(GLB_M_Agen.AgenID,3) WHERE (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN = 'N') AND (dbo.DLK_T_Memo_H.memopurchaseYN = 'N') AND (dbo.DLK_T_Memo_H.memoinventoryYN = 'Y') "& filterAgen &" "& filterKeb &" "& filtertgl &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
@@ -180,7 +180,7 @@
                     recordcounter = recordcounter + 1
 
                     ' cek data detail
-                    agen_cmd.commandText = "SELECT MemoHarga FROM DLK_T_Memo_D WHERE Left(memoID,17) = '"& rs("memoID") &"' AND (MemoHarga = '0' OR MemoHarga = '')"
+                    agen_cmd.commandText = "SELECT MemoHarga FROM DLK_T_Memo_D WHERE Left(memoID,17) = '"& rs("memoID") &"'"
                     set ddetail = agen_cmd.execute
                     %>
                     <tr>
@@ -212,18 +212,26 @@
                             <% end if %>
                         </td>
                         <td class="text-center">
+                            <div class="btn-group" role="group" aria-label="Basic example">
                             <% if not ddetail.eof then %>
-                                <% if session("PR3A") = true then %>
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <a href="uprice_add.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-primary">Update</a>
-                                </div>
-                                <% end if %>
+                                <%if rs("memopurchaseYN") = "N" then %>
+                                    <% if session("PR3A") = true then %>
+                                        <a href="uprice_add.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-primary">Update</a>
+                                    <% end if %>
+                                    <% if session("PR3F") = true then %>
+                                        <a href="approvememo.asp?id=<%= rs("memoID") %>" class="btn badge bg-secondary" onclick="ApproveYN(event,'PASTIKAN SEMUA DATA BENAR!!', 'approve memo', 'info')">Ajukan</a>
+                                    <%end if%>
+                                <%else%>
+                                    <div class="loaderSpiner"></div>
+                                <%end if%>
                             <% else %>
                                 -
                             <% end if %>
+                            </div>
                         </td>
                     </tr>
                     <% 
+                    Response.flush
                     showrecords = showrecords - 1
                     rs.movenext
                     if rs.EOF then

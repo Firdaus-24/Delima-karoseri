@@ -10,11 +10,11 @@
     set agen_cmd =  Server.CreateObject ("ADODB.Command")
     agen_cmd.ActiveConnection = mm_delima_string
     ' filter agen
-    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE GLB_M_Agen.AgenAktifYN = 'Y' and DLK_T_Memo_H.memoAktifYN = 'Y' AND NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+    agen_cmd.commandText = "SELECT GLB_M_Agen.AgenID , GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID WHERE (dbo.DLK_T_Memo_H.memoAktifYN = 'Y')  AND (dbo.DLK_T_Memo_H.memoinventoryYN = 'Y')  AND (dbo.DLK_T_Memo_H.memopurchaseYN = 'Y') GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
     set agendata = agen_cmd.execute
 
     ' filter departement
-    agen_cmd.commandText = "SELECT dbo.HRD_M_Departement.DepID, dbo.HRD_M_Departement.DepNama FROM dbo.DLK_T_Memo_H LEFT OUTER JOIN dbo.HRD_M_Departement ON dbo.DLK_T_Memo_H.memoDepID = dbo.HRD_M_Departement.DepID WHERE dbo.DLK_T_Memo_H.memoAktifYN = 'Y' AND NOT EXISTS(select OPH_MemoID FROM dbo.DLK_T_OrPemH where OPH_AktifYN = 'Y' and OPH_memoID = dbo.DLK_T_Memo_H.memoID ) GROUP BY dbo.HRD_M_Departement.DepID, dbo.HRD_M_Departement.DepNama"
+    agen_cmd.commandText = "SELECT dbo.HRD_M_Departement.DepID, dbo.HRD_M_Departement.DepNama FROM dbo.DLK_T_Memo_H LEFT OUTER JOIN dbo.HRD_M_Departement ON dbo.DLK_T_Memo_H.memoDepID = dbo.HRD_M_Departement.DepID WHERE (dbo.DLK_T_Memo_H.memoAktifYN = 'Y')  AND (dbo.DLK_T_Memo_H.memoinventoryYN = 'Y')  AND (dbo.DLK_T_Memo_H.memopurchaseYN = 'Y') GROUP BY dbo.HRD_M_Departement.DepID, dbo.HRD_M_Departement.DepNama"
     set kebData = agen_cmd.execute
 
     set conn = Server.CreateObject("ADODB.Connection")
@@ -66,7 +66,7 @@
     end if
 
     ' query seach 
-    strquery = "SELECT DLK_T_Memo_H.*, HRD_M_Departement.DepNama, HRD_M_Divisi.DivNama, GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN HRD_M_departement ON DLK_T_Memo_H.MemoDepID = HRD_M_Departement.DepID LEFT OUTER JOIN HRD_M_Divisi ON DLK_T_Memo_H.memoDivID = HRD_M_Divisi.DivID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = LEFT(GLB_M_Agen.AgenID,3) WHERE (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') "& filterAgen &" "& filterKeb &" "& filtertgl &""
+    strquery = "SELECT DLK_T_Memo_H.*, HRD_M_Departement.DepNama, HRD_M_Divisi.DivNama, GLB_M_Agen.AgenName FROM DLK_T_Memo_H LEFT OUTER JOIN HRD_M_departement ON DLK_T_Memo_H.MemoDepID = HRD_M_Departement.DepID LEFT OUTER JOIN HRD_M_Divisi ON DLK_T_Memo_H.memoDivID = HRD_M_Divisi.DivID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = LEFT(GLB_M_Agen.AgenID,3) WHERE (dbo.DLK_T_Memo_H.memoAktifYN = 'Y')  AND (dbo.DLK_T_Memo_H.memoinventoryYN = 'Y')  AND (dbo.DLK_T_Memo_H.memopurchaseYN = 'Y') "& filterAgen &" "& filterKeb &" "& filtertgl &""
     ' untuk data paggination
     page = Request.QueryString("page")
 
@@ -181,6 +181,10 @@
                     agen_cmd.commandText = "SELECT memoID, memoHarga FROM DLK_T_Memo_D WHERE Left(memoID,17) = '"& rs("memoID") &"' AND memoHarga = 0 "
                     ' response.write agen_cmd.commandTExt & "<br>"
                     set ddetail = agen_cmd.execute
+
+                    ' cek time kirim email
+                    data_cmd.commandTExt = "SELECT * FROM DLK_T_Email WHERE emailDocument = '"& rs("memoid") &"'"
+                    set ckemail = data_cmd.execute
                     %>
                     <tr>
                         <th scope="row"><%= recordcounter %></th>
@@ -197,20 +201,23 @@
                             <% if not ddetail.eof then %>
                                 Call Purchase
                             <% else %>  
-                                <% if rs("memoApproveYN") = "Y" then %>
-                                    <i class="bi bi-check2"></i>
-                                <% else %>
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <%  if session("FN1E") = true then %>
-                                        <a href="appPmemo.asp?id=<%= rs("memoID") %>" onclick="return ApproveYN(event, 'YAKIN UNTUK DI PROSES', 'Proses ini hanya bisa di lakukan satu kali !!', 'warning')" class="btn badge text-bg-danger">Approve</a>
-                                    <% end if %>    
-                                    <%  if session("FN1F") = true then %>
-                                        <a href="#" class="btn badge text-bg-primary modalSendEmailMemo" data-id="<%= rs("memoID") %>" data-bs-toggle="modal" data-bs-target="#modalSendEmail">Email</a>
-                                    <% end if %>    
-                                    <%  if session("FN1E") = false and session("FN1F") = false then %>
-                                        <i class="bi bi-x-lg"></i>
-                                    <% end if%>
-                                </div>
+                            <% if rs("memoApproveYN") = "Y" then %>
+                                <i class="bi bi-check2"></i>
+                            <% else %>
+                                <%if not ckemail.eof then%>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <div class="loaderSpiner"></div>
+                                    </div>
+                                <%else%>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <%  if session("FN1F") = true then %>
+                                            <a href="#" class="btn badge text-bg-primary modalSendEmailMemo" data-id="<%= rs("memoID") %>" data-bs-toggle="modal" data-bs-target="#modalSendEmail">Email</a>
+                                        <% end if %>    
+                                        <%  if session("FN1E") = false and session("FN1F") = false then %>
+                                            <i class="bi bi-x-lg"></i>
+                                        <% end if%>
+                                    </div>
+                                <%end if%>
                             <% end if %>
                         <% end if %>
                         </td>

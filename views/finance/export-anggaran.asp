@@ -105,7 +105,9 @@
          <td width="6%">No. B.O.M </td>
          <td width="10px">:</td>
          <td align="left"> 
+            <% if datah("memoBMRID") <> "" then %>
                <%= left(datah("memoBMRID"),3)&"-"&MID(datah("memoBMRID"),4,3)&"/"&MID(datah("memoBMRID"),7,4)&"/"&right(datah("memoBMRID"),3)%>
+            <%end if%>
          </td>
          <td width="6%">
                Departement 

@@ -1,7 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
         if session("INV1C") = false then 
-                Response.Redirect("index.asp")
+                Response.Redirect("./")
         end if
 
         id = trim(Request.QueryString("id"))

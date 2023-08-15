@@ -101,7 +101,8 @@
                         <th scope="col">Kategori</th>
                         <th scope="col">Jenis</th>
                         <th scope="col">Item</th>
-                        <th scope="col">Quantity</th>
+                        <th scope="col">Qty</th>
+                        <th scope="col">Stok</th>
                         <th scope="col">Satuan</th>
                         <th scope="col">Type</th>
                         <th scope="col">Keterangan</th>
@@ -109,14 +110,47 @@
                 </thead>
                 <tbody>
                     <% 
-                    total = 0
                     no = 0
                     do while not dataD.eof
                     no = no + 1
 
-                    total = total + dataD("memoHarga")
+                    ' incoming outgoing
+                    data_cmd.commandText = "select Brg_Nama, Brg_MinStok, ISNULL((SELECT SUM(dbo.DLK_T_MaterialReceiptD2.MR_Qtysatuan) AS qtymr FROM dbo.DLK_M_Barang RIGHT OUTER JOIN dbo.DLK_T_MaterialReceiptD2 ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_MaterialReceiptD2.MR_Item GROUP BY dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_MaterialReceiptD2.MR_Item HAVING (dbo.DLK_T_MaterialReceiptD2.MR_Item = '"& dataD("MemoItem") &"')) - ((SELECT SUM(dbo.DLK_T_MaterialOutD.MO_Qtysatuan) AS qty FROM dbo.DLK_M_Barang RIGHT OUTER JOIN dbo.DLK_T_MaterialOutD ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_MaterialOutD.MO_Item GROUP BY dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_MaterialOutD.MO_Item HAVING (dbo.DLK_T_MaterialOutD.MO_Item = '"& dataD("MemoItem") &"')) ),0) as stok FROM DLK_M_Barang WHERE Brg_ID = '"& dataD("MemoItem") &"' GROUP BY Brg_Nama, Brg_MinStok"
+                    ' Response.Write data_cmd.commandText & "<br>"
+                    set ckstok = data_cmd.execute
+
+                    ' delete barang
+                    data_cmd.commandText = "SELECT ISNULL(SUM(dbo.DLK_T_DelBarang.DB_QtySatuan),0) AS qtydel FROM dbo.DLK_M_Barang LEFT OUTER JOIN dbo.DLK_T_DelBarang ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_DelBarang.DB_Item GROUP BY dbo.DLK_T_DelBarang.DB_Item, dbo.DLK_T_DelBarang.DB_AktifYN HAVING (dbo.DLK_T_DelBarang.DB_AktifYN = 'Y') AND (dbo.DLK_T_DelBarang.DB_Item = '"& dataD("MemoItem") &"')"
+
+                    set ckdelbarang = data_cmd.execute
+
+                    if not ckstok.eof then
+                        stok = ckstok("stok")
+                    else
+                        stok = 0
+                    end if
+
+                    if not ckdelbarang.eof then
+                        delbrg = ckdelbarang("qtydel")
+                    else
+                        delbrg = 0
+                    end if
+
+                    realstok = Cint(stok) - Cint(delbrg)
+
+                    If realstok = 0 then
+                        bgrow = "bg-danger"
+                        ckstyle = "style='--bs-bg-opacity: .5;'"
+                    elseif Cint(ckstok("Brg_minstok")) >= realstok then
+                        bgrow = "bg-warning"
+                        ckstyle = "style='--bs-bg-opacity: .5;'"
+                    elseif Cint(ckstok("Brg_minstok")) <= realstok then
+                        ckstyle = ""
+                        bgrow = ""
+                    end if
+
                     %>
-                        <tr>
+                        <tr class="<%=bgrow%>" <%=ckstyle%>>
                             <th scope="row"><%= no %></th>
                             <td>
                                 <%=dataD("KategoriNama") %>
@@ -126,6 +160,7 @@
                             </td>
                             <td><%= dataD("Brg_Nama") %></td>
                             <td><%= dataD("memoQtty") %></td>
+                            <td><%= realstok %></td>
                             <td><%= dataD("sat_nama") %></td>
                             <td><%= dataD("T_nama") %></td>
                             <td>

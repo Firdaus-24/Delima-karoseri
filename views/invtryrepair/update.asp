@@ -85,17 +85,17 @@
   </div>
   <div class='row'>
     <div class="col-sm-2">
-      <label for="keterangan" class="col-form-label">Keterangan</label>
+      <label for="ketheader" class="col-form-label">Keterangan</label>
     </div>
     <div class="col-sm-10 mb-3">
-      <input type="text" id="keterangan" class="form-control" name="keterangan" maxlength="50" autocomplete="off" value="<%= dataH("memoKeterangan") %>" readonly>
+      <input type="text" id="ketheader" class="form-control" name="keterangan" maxlength="50" autocomplete="off" value="<%= dataH("memoKeterangan") %>" readonly>
     </div>
   </div>
   <div class="row">
     <div class="col-lg-12">
       <div class="d-flex mb-3">
         <div class="me-auto p-2">
-          <button type="button" class="btn btn-primary btn-modalPb" data-bs-toggle="modal" data-bs-target="#modalpb">Tambah Rincian</button>
+          <button type="button" class="btn btn-primary btn-modalPbrepair" data-bs-toggle="modal" data-bs-target="#modalpbrepair" onclick="tambahForm()">Tambah Rincian</button>
         </div>
         <div class="p-2">
           <a href="./" class="btn btn-danger">Kembali</a>
@@ -112,7 +112,8 @@
             <th scope="col">Kategori</th>
             <th scope="col">Jenis</th>
             <th scope="col">Item</th>
-            <th scope="col">Quantity</th>
+            <th scope="col">Qty</th>
+            <th scope="col">Stok</th>
             <th scope="col">Satuan</th>
             <th scope="col">Type</th>
             <th scope="col">Keterangan</th>
@@ -124,8 +125,43 @@
           no = 0
           do while not dataD.eof
           no = no + 1
+          
+          ' incoming outgoing
+          data_cmd.commandText = "select Brg_Nama, Brg_MinStok, ISNULL((SELECT SUM(dbo.DLK_T_MaterialReceiptD2.MR_Qtysatuan) AS qtymr FROM dbo.DLK_M_Barang RIGHT OUTER JOIN dbo.DLK_T_MaterialReceiptD2 ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_MaterialReceiptD2.MR_Item GROUP BY dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_MaterialReceiptD2.MR_Item HAVING (dbo.DLK_T_MaterialReceiptD2.MR_Item = '"& dataD("MemoItem") &"')) - ((SELECT SUM(dbo.DLK_T_MaterialOutD.MO_Qtysatuan) AS qty FROM dbo.DLK_M_Barang RIGHT OUTER JOIN dbo.DLK_T_MaterialOutD ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_MaterialOutD.MO_Item GROUP BY dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_T_MaterialOutD.MO_Item HAVING (dbo.DLK_T_MaterialOutD.MO_Item = '"& dataD("MemoItem") &"')) ),0) as stok FROM DLK_M_Barang WHERE Brg_ID = '"& dataD("MemoItem") &"' GROUP BY Brg_Nama, Brg_MinStok"
+          ' Response.Write data_cmd.commandText & "<br>"
+          set ckstok = data_cmd.execute
+
+          ' delete barang
+          data_cmd.commandText = "SELECT ISNULL(SUM(dbo.DLK_T_DelBarang.DB_QtySatuan),0) AS qtydel FROM dbo.DLK_M_Barang LEFT OUTER JOIN dbo.DLK_T_DelBarang ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_DelBarang.DB_Item GROUP BY dbo.DLK_T_DelBarang.DB_Item, dbo.DLK_T_DelBarang.DB_AktifYN HAVING (dbo.DLK_T_DelBarang.DB_AktifYN = 'Y') AND (dbo.DLK_T_DelBarang.DB_Item = '"& dataD("MemoItem") &"')"
+
+          set ckdelbarang = data_cmd.execute
+
+          if not ckstok.eof then
+            stok = ckstok("stok")
+          else
+            stok = 0
+          end if
+
+          if not ckdelbarang.eof then
+            delbrg = ckdelbarang("qtydel")
+          else
+            delbrg = 0
+          end if
+
+          realstok = Cint(stok) - Cint(delbrg)
+
+          If realstok = 0 then
+            bgrow = "bg-danger"
+            ckstyle = "style='--bs-bg-opacity: .5;'"
+          elseif Cint(ckstok("Brg_minstok")) >= realstok then
+            bgrow = "bg-warning"
+            ckstyle = "style='--bs-bg-opacity: .5;'"
+          elseif Cint(ckstok("Brg_minstok")) <= realstok then
+            ckstyle = ""
+            bgrow = ""
+          end if
           %>
-            <tr>
+            <tr class="<%=bgrow%>" <%=ckstyle%>>
               <th scope="row"><%= no %></th>
               <td>
                 <%= dataD("KategoriNama") %>
@@ -135,20 +171,23 @@
               </td>
               <td><%= dataD("Brg_Nama") %></td>
               <td><%= dataD("memoQtty") %></td>
+              <td><%= realstok %></td>
               <td><%= dataD("Sat_Nama") %></td>
               <td><%= dataD("T_nama") %></td>
               <td>
                   <%= dataD("memoKeterangan") %>
               </td>
               <td class="text-center">
+                <% if session("INV1B") = true then %>
+                  <button class="btn badge text-bg-primary" data-bs-toggle="modal" data-bs-target="#modalpbrepair" onclick="updateForm('<%=dataD("memoid")%>','<%=dataD("MemoItem")%>','<%= dataD("memoQtty") %>','<%= dataD("memoSatuan")%>','<%= dataD("memoketerangan")%>')" style='--bs-bg-opacity: 1;' >Update</button>
+                <%end if%>
                 <% if session("INV9C") = true then%>
-                  <a href="aktifd.asp?id=<%= dataD("memoID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'Detail Anggaran Barang')">delete</a>
-                <%else%>
-                  -
+                  <a href="aktifd.asp?id=<%= dataD("memoID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'Detail Anggaran Barang')" style='--bs-bg-opacity: 1;'>delete</a>
                 <% end if %>
               </td>
             </tr>
           <% 
+          Response.flush
           dataD.movenext
           loop
           %>
@@ -159,56 +198,57 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="modalpb" tabindex="-1" aria-labelledby="modalpbLabel" aria-hidden="true">
+<div class="modal fade" id="modalpbrepair" tabindex="-1" aria-labelledby="modalpbrepairLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalpbLabel">Rincian Barang</h5>
+        <h5 class="modal-title" id="modalpbrepairLabel">Rincian Barang</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
     <form action="update.asp?id=<%= id %>" method="post" onsubmit="validasiForm(this, event, 'Detail permintaan B.O.M repair','warning')">
         <input type="hidden" name="memoid" id="memoid" value="<%= id %>">
+        <input type="hidden" name="memoidrepair" id="memoidrepair">
         <input type="hidden" name="pbcabang" id="pbcabang" value="<%= dataH("memoAgenID") %>">
       <div class="modal-body">
-        <div class="row">
+        <div class="row rowCpBarangrepair">
             <div class="col-sm-3">
                 <label for="cpbarang" class="col-form-label">Cari Barang</label>
             </div>
             <div class="col-sm-9 mb-3">
-                <input type="text" id="cpbarang" class="form-control" name="cpbarang">
+                <input type="text" id="cpbarang" class="form-control" name="cpbarang" autocomplete="off" onkeyup="GetNamabgrAnggaran(this.value)">
             </div>
         </div>
         <!-- table barang -->
         <div class="row">
-            <div class="col-sm mb-4 overflow-auto" style="height:15rem; font-size:12px;">
-                <table class="table">
-                    <thead class="bg-secondary text-light" style="position: sticky;top: 0;">
-                        <tr>
-                            <th scope="col">Kode</th>
-                            <th scope="col">Nama</th>
-                            <th scope="col">Type</th>
-                            <th scope="col">Pilih</th>
-                        </tr>
-                    </thead>
-                    <tbody  class="contentdetailpbrg">
-                        <% do while not barang.eof %>
-                        <tr>
-                            <th scope="row"><%= barang("kategoriNama")&"-"& barang("jenisNama") %></th>
-                            <td><%= barang("brg_nama") %></td>
-                            <td><%= barang("T_Nama") %></td>
-                            <td>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="brg" id="brg" value="<%= barang("Brg_ID") %>" required>
-                                </div>
-                            </td>
-                        </tr>
-                        <% 
-                        barang.movenext
-                        loop
-                        %>
-                    </tbody>
-                </table>
-            </div>
+          <div class="col-sm mb-4 overflow-auto" style="height:15rem; font-size:12px;">
+            <table class="table">
+              <thead class="bg-secondary text-light" style="position: sticky;top: 0;">
+                <tr>
+                  <th scope="col">Kode</th>
+                  <th scope="col">Nama</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Pilih</th>
+                </tr>
+              </thead>
+              <tbody  class="contentdetailpbrg">
+                <% do while not barang.eof %>
+                <tr>
+                  <th scope="row"><%= barang("kategoriNama")&"-"& barang("jenisNama") %></th>
+                  <td><%= barang("brg_nama") %></td>
+                  <td><%= barang("T_Nama") %></td>
+                  <td>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="brg" id="brg" value="<%= barang("Brg_ID") %>" required>
+                    </div>
+                  </td>
+                </tr>
+                <% 
+                barang.movenext
+                loop
+                %>
+              </tbody>
+            </table>
+          </div>
         </div>
         <!-- end table -->
         <div class="row">
@@ -237,11 +277,11 @@
         </div>
         <div class="row">
             <div class="col-sm-3">
-                <label for="ket" class="col-form-label">Keterangan</label>
+                <label for="ketdetailreqrepair" class="col-form-label">Keterangan</label>
             </div>
             <div class="col-sm-9 mb-3">
                 <div class="form-floating">
-                    <textarea class="form-control" placeholder="detail" id="ket" name="ket" autocomplete="off" maxlength="50"></textarea>
+                    <textarea class="form-control" placeholder="detail" id="ketdetailreqrepair" name="ket" autocomplete="off" maxlength="50"></textarea>
                     <label for="ket">Detail</label>
                 </div>
             </div>
@@ -256,10 +296,45 @@
     </div>
   </div>
 </div>
-
+<script>
+  let brgAnggranrepair = null;
+  const updateForm = (id,brgid, qty, satuan, keterangan) => {
+    $("#memoidrepair").val(id)
+    $('input:radio[name=brg]').filter(`[value=${brgid}]`).prop('checked', true);
+    $("#qtty").val(qty)
+    $("#satuan").val(satuan)
+    $("#ketdetailreqrepair").val(keterangan)
+    brgAnggranrepair = brgid
+  }
+  const tambahForm = () => {
+    $("#memoidrepair").val("")
+    $('input:radio[name=brg]').prop('checked', false);
+    $("#qtty").val(0)
+    $("#satuan").val("")
+    $("#ketdetailreqrepair").val("")
+    brgAnggranrepair = null
+  }
+  // get nama barang by vendor
+  const GetNamabgrAnggaran = (e) => {
+    let nama = e
+    let cabang = $("#pbcabang").val();
+    $.ajax({
+    method: "POST",
+    url: "../../ajax/getbrgvendor.asp",
+    data: { nama, cabang },
+    }).done(function (msg) {
+      $(".contentdetailpbrg").html(msg);
+      $('input:radio[name=brg]').filter(`[value=${brgAnggranrepair}]`).prop('checked', true);
+    });
+  }
+</script>
 <% 
   if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
-    call updateAnggaran()
+    if Request.Form("memoidrepair") = "" then
+      call updateAnggaran()
+    elseif Request.Form("memoidrepair") <> "" then
+      call updateDetail()
+    end if
   end if
   call footer()
 %>

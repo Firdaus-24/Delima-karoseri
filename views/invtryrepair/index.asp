@@ -63,7 +63,7 @@
         filtertgl = ""
     end if
     ' query seach 
-    strquery = "SELECT DLK_T_Memo_H.*, GLB_M_Agen.AgenName, HRD_M_Divisi.DivNama, HRD_M_Departement.DepNama FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = LEFT(GLB_M_Agen.AgenID,3) LEFT OUTER JOIN HRD_M_Divisi ON DLK_T_Memo_H.memoDivid = HRD_M_Divisi.divID LEFT OUTER JOIN HRD_M_Departement ON DLK_T_Memo_H.MemoDepID = HRD_M_Departement.DepID WHERE MemoAktifYN = 'Y' AND memobmrid <> '' AND memobmid = '' "& filterAgen &" "& filterKeb &" "& filtertgl &""
+    strquery = "SELECT DLK_T_Memo_H.*, GLB_M_Agen.AgenName, HRD_M_Divisi.DivNama, HRD_M_Departement.DepNama FROM DLK_T_Memo_H LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = LEFT(GLB_M_Agen.AgenID,3) LEFT OUTER JOIN HRD_M_Divisi ON DLK_T_Memo_H.memoDivid = HRD_M_Divisi.divID LEFT OUTER JOIN HRD_M_Departement ON DLK_T_Memo_H.MemoDepID = HRD_M_Departement.DepID WHERE MemoAktifYN = 'Y' AND memobmrid <> '' "& filterAgen &" "& filterKeb &" "& filtertgl &""
 
     ' untuk data paggination
     page = Request.QueryString("page")
@@ -204,14 +204,23 @@
                         <td class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
                             <% if rs("memoApproveYN") = "N" then %>
-                                <% if ddetail.eof then%>
-                                  Call Engineering
-                                <% else %>
-                                  <%if session("INV9B") = true then%>
-                                    <a href="update.asp?id=<%= rs("memoID") %>" class="btn badge btn-primary btn-sm">Update</a>
-                                  <% end if%>
-                                  <a href="detail.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-warning">Detail</a>
-                                <% end if %>
+                                <% if rs("memoInventoryYN") = "N" then%>
+                                    <%if session("INV9G") = true then%>
+                                        <a href="apprepairanggaran.asp?id=<%= rs("memoID") %>" class="btn badge bg-secondary" onclick="ApproveYN(event,'PASTIKAN SEMUA DATA BENAR!!', 'approve memo repair', 'info')">Ajukan</a>
+                                    <%end if%>
+                                    <% if ddetail.eof then%>
+                                        Call Engineering
+                                    <% else %>
+                                        <%if session("INV9B") = true then%>
+                                            <a href="update.asp?id=<%= rs("memoID") %>" class="btn badge btn-primary btn-sm">Update</a>
+                                        <% end if%>
+                                    <% end if %>
+                                    <a href="detail.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-warning">Detail</a>
+                                <%else%>
+                                    <div class="loaderSpiner"></div>
+                                <%end if%>
+                            <%else%>
+                                <a href="detail.asp?id=<%= rs("memoID") %>" class="btn badge text-bg-warning">Detail</a>
                             <% end if %>
                             </div>
                         </td>

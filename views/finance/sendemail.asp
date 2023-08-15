@@ -15,6 +15,14 @@
     ' response.write data_cmd.commandText
     set data = data_cmd.execute
 
+    ' cek data email
+    data_cmd.commandText = "SELECT * FROM DLK_T_Email WHERE emaildocument = '"& id &"'"
+    set ckemail = data_cmd.execute
+
+    if ckemail.eof then
+        call query("INSERT INTO DLK_T_Email (emailDocument,emailTo,emailSubject,emailUpdateTime,emailUpdateId, emailExpired) VALUES  ('"& id &"', '"& custEmail &"', '"& subject &"', '"& now &"', '"& session("userid") &"', 'N') ")
+    end if
+
     if data("memobmid") <> "" then
         document = "<tr>"&_
                         "<td width='6%'>No. Produksi</td>"&_

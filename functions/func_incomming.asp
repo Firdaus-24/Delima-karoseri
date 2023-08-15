@@ -42,7 +42,7 @@
             set document = data_cmd.execute
 
             ' cek stok barang
-            data_cmd.commandText = "SELECT Brg_Nama, ISNULL((SELECT MR_Harga as harga FROM DLK_T_MaterialReceiptD2 WHERE MR_Item = DLK_M_Barang.Brg_ID GROUP BY MR_Harga),0) as harga,ISNULL((SELECT SUM(MR_Qtysatuan) as pembelian FROM DLK_T_MaterialReceiptD2 WHERE MR_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT SUM(MO_Qtysatuan) FROM DLK_T_MaterialOutD WHERE MO_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT SUM(DB_QtySatuan) FROM dbo.DLK_T_DelBarang WHERE DB_Item = DLK_M_Barang.Brg_ID AND DB_AktifYN = 'Y'),0) as stok FROM DLK_M_Barang WHERE Brg_ID =  '"& brgid &"'"
+            data_cmd.commandText = "SELECT Brg_Nama, ISNULL((SELECT TOP 1 MR_Harga as harga FROM DLK_T_MaterialReceiptD2 WHERE MR_Item = DLK_M_Barang.Brg_ID GROUP BY MR_Harga order by MR_Harga DESC),0) as harga,ISNULL((SELECT SUM(MR_Qtysatuan) as pembelian FROM DLK_T_MaterialReceiptD2 WHERE MR_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT SUM(MO_Qtysatuan) FROM DLK_T_MaterialOutD WHERE MO_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT SUM(DB_QtySatuan) FROM dbo.DLK_T_DelBarang WHERE DB_Item = DLK_M_Barang.Brg_ID AND DB_AktifYN = 'Y'),0) as stok FROM DLK_M_Barang WHERE Brg_ID =  '"& brgid &"'"
             ' response.write data_cmd.commandText
             set stokMaster = data_cmd.execute
 
@@ -186,7 +186,7 @@
                call alert("DATA TRANSAKSI SUDAH TERDAFTAR", "Erorr", "error","income_u.asp?id="&id) 
             end if
          else
-            call alert("DATA HEADER TIDAK TERDAFTAR", "Erorr", "error","./") 
+            call alert("DATA HEADER TIDAK TERDAFTAR", "Erorr", "error","index.asp") 
          end if
       else
          call alert("DATA TRANSAKSI TIDAK TERDAFTAR", "Erorr", "error","income_u.asp?id="&id) 

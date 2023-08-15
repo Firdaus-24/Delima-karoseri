@@ -159,7 +159,7 @@
                 <label for="cpbarang" class="col-form-label">Cari Barang</label>
             </div>
             <div class="col-sm-9 mb-3">
-                <input type="text" id="cpbarang" class="form-control" name="cpbarang" autocomplete="off">
+                <input type="text" id="cpbarang" class="form-control" name="cpbarang" autocomplete="off" onkeyup="GetNamabgrAnggaran(this.value)">
             </div>
         </div>
         <!-- table barang -->
