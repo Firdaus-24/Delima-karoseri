@@ -1,7 +1,9 @@
+<!--#include file="func_ceil.asp"-->
 <% 
 Sub tambahProduksiH()
     agen = trim(Request.Form("agen"))
     tgl = trim(Request.Form("tgl"))
+    salesOrderProduksi = trim(Request.Form("salesOrderProduksi"))
     tgla = trim(Request.Form("tgla"))
     tgle = trim(Request.Form("tgle"))
     keterangan = trim(Request.Form("keterangan"))
@@ -16,8 +18,7 @@ Sub tambahProduksiH()
     set data = data_cmd.execute
 
     if data.eof then
-        data_cmd.commandText = "exec sp_AddDLK_T_ProduksiH '"& agen &"', '"& tgl &"', '"& tgla &"', '"& tgle &"', '"& keterangan &"', '"& prototype &"', '"& model &"'"
-        ' response.write data_cmd.commandText & "<br>"
+        data_cmd.commandText = "exec sp_AddDLK_T_ProduksiH '"& agen &"', '"& tgl &"', '"& salesOrderProduksi &"', '"& tgla &"', '"& tgle &"', '"& keterangan &"', '"& prototype &"', '"& model &"'"
         set p = data_cmd.execute
 
         id = p("ID")
@@ -66,6 +67,28 @@ sub tambahProduksiD()
         call alert("FORM DETAIL PRODUKSI", "berhasil didaftarkan", "success","prodd_add.asp?id="&id)
     end if 
 end sub
+
+sub updateHeaderProduksi()
+    id = trim(Request.Form("idHeaderProduksi"))
+    salesOrderProduksi = trim(Request.Form("salesOrderProduksi"))
+    tgla = trim(Request.Form("tgla"))
+    tgle = trim(Request.Form("tgle"))
+    keterangan = trim(Request.Form("keterangan"))
+    prototype = trim(Request.Form("prototype"))
+    model = trim(Request.Form("model")) 
+
+    data_cmd.commandTExt = "SELECT * FROM DLK_T_ProduksiH WHERE PDH_ID = '"& id &"'"
+    set ckdataheader = data_cmd.execute
+
+    if not ckdataheader.eof then
+        call query ("UPDATE DLK_T_ProduksiH SET PDH_OJHID = '"& salesOrderProduksi &"', PDH_StartDate = '"& tgla &"', PDH_EndDate = '"& tgle &"',  PDH_Keterangan = '"& keterangan &"', PDH_PrototypeYN = '"& prototype &"', PDH_Model = '"& model &"'  WHERE PDH_ID = '"& id &"'")
+
+        call alert("UPDATE HEADER PRODUKSI", "berhasil diupdate", "success",Request.ServerVariables ("HTTP_REFERER"))
+    else
+        call alert("UPDATE HEADER PRODUKSI", "Tidak Terdaftar", "error",Request.ServerVariables ("HTTP_REFERER"))
+    end if
+end sub
+
 sub updateProduksiD()
     id = trim(Request.Form("id"))
     bomid = trim(Request.Form("bomid"))
@@ -118,7 +141,7 @@ sub reqAnggaran()
 
     if data.eof then
         ' cek data bom di nomor produksi
-        data_cmd.commandTExt = "SELECT COUNT(PDD_BMID) AS jmlbom, PDD_BMID FROM   dbo.DLK_T_ProduksiD WHERE (LEFT(PDD_ID, 13) = '"& pdhid &"') GROUP BY PDD_BMID"
+        data_cmd.commandTExt = "SELECT COUNT(PDD_BMID) AS jmlbom, PDD_BMID FROM  dbo.DLK_T_ProduksiD WHERE (LEFT(PDD_ID, 13) = '"& pdhid &"') GROUP BY PDD_BMID"
         set ckpd = data_cmd.execute
 
         capacity = 0
@@ -138,7 +161,7 @@ sub reqAnggaran()
             
             if not getbom.eof then
                 do while not getbom.eof
-                    qtybaru =  getbom("BMDQtty") * capacity
+                    qtybaru =  Ceil(getbom("BMDQtty")) * capacity
                     ' get id detail bom
                     data_cmd.commandTExt = "SELECT ('"& idheaderbaru &"' + Right('000' + Convert(varchar,Convert(int,(Right(isnull(Max(memoID),'000'),3)))+1),3)) as newid FROM DLK_T_Memo_D WHERE LEFT(memoid,17) = '"& idheaderbaru &"'"
 

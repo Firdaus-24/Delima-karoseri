@@ -275,7 +275,7 @@
               <label for="qtty" class="col-form-label">Quantity</label>
             </div>
             <div class="col-sm-4 mb-3">
-              <input type="number" id="qtty" class="form-control" name="qtty" autocomplete="off" required>
+              <input type="number" id="qtty" class="form-control" name="qtty" autocomplete="off" autocomplete="off" step="any" required>
             </div>
           </div>
           <div class="row">

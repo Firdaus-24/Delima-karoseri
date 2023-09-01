@@ -6,21 +6,21 @@
   en = trim(Request.QueryString("en"))
 
   if en <> "" then
-    filterAgen = "AND DLK_T_OrJulH.OJH_AgenID = '"& en &"'"
+    filterAgen = "AND MKT_T_OrJulH.OJH_AgenID = '"& en &"'"
   else
     filterAgen = ""
   end if
   if st <> "" then
-    filtercust = "AND DLK_T_OrJulH.OJH_custID = '"& st &"'"
+    filtercust = "AND MKT_T_OrJulH.OJH_custID = '"& st &"'"
   else
     filtercust = ""
   end if
 
 
   if la <> "" AND le <> "" then
-    filtertgl = "AND dbo.DLK_T_OrJulH.OJH_Date BETWEEN '"& la &"' AND '"& le &"'"
+    filtertgl = "AND dbo.MKT_T_OrJulH.OJH_Date BETWEEN '"& la &"' AND '"& le &"'"
   elseIf la <> "" AND le = "" then
-    filtertgl = "AND dbo.DLK_T_OrJulH.OJH_Date = '"& la &"'"
+    filtertgl = "AND dbo.MKT_T_OrJulH.OJH_Date = '"& la &"'"
   else 
     filtertgl = ""
   end if
@@ -28,7 +28,7 @@
   set data_cmd =  Server.CreateObject ("ADODB.Command")
   data_cmd.ActiveConnection = mm_delima_string
 
-  data_cmd.commandTExt = "SELECT dbo.DLK_T_OrJulH.*, dbo.DLK_M_Customer.custNama,  dbo.GLB_M_Agen.AgenName FROM dbo.DLK_T_OrJulH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_OrJulH.OJH_AgenID = dbo.GLB_M_Agen.AgenID  LEFT OUTER JOIN dbo.DLK_M_Customer ON dbo.DLK_T_OrJulH.OJH_CustID = dbo.DLK_M_Customer.custId WHERE (DLK_T_OrJulH.OJH_AktifYN = 'Y') "& filterAgen &""& filtercust &""& filtertgl &"  ORDER BY OJH_Date DESC"
+  data_cmd.commandTExt = "SELECT dbo.MKT_T_OrJulH.*, dbo.DLK_M_Customer.custNama,  dbo.GLB_M_Agen.AgenName FROM dbo.MKT_T_OrJulH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.MKT_T_OrJulH.OJH_AgenID = dbo.GLB_M_Agen.AgenID  LEFT OUTER JOIN dbo.DLK_M_Customer ON dbo.MKT_T_OrJulH.OJH_CustID = dbo.DLK_M_Customer.custId WHERE (MKT_T_OrJulH.OJH_AktifYN = 'Y') "& filterAgen &""& filtercust &""& filtertgl &"  ORDER BY OJH_Date DESC"
 
   set data = data_cmd.execute
 
@@ -75,7 +75,7 @@
     <td colspan="2"><%= data("OJH_TimeWork")%></td>
   </tr>
   <% 
-    data_cmd.commandText = "SELECT dbo.DLK_T_OrJulD.OJD_OJHID, dbo.DLK_T_OrJulD.OJD_Item, dbo.DLK_T_OrJulD.OJD_Qtysatuan, dbo.DLK_T_OrJulD.OJD_JenisSat, dbo.DLK_T_OrJulD.OJD_Harga, dbo.DLK_T_OrJulD.OJD_Diskon, dbo.DLK_T_OrJulD.OJD_Keterangan, dbo.DLK_T_OrJulD.OJD_Updatetime, dbo.DLK_T_OrJulD.OJD_UpdateID, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama, DLK_M_WebLogin.username FROM dbo.DLK_M_JenisBarang INNER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_JenisBarang.JenisID = dbo.DLK_M_Barang.JenisID INNER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId RIGHT OUTER JOIN dbo.DLK_T_OrJulD ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_OrJulD.OJD_Item LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_OrJulD.OJD_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_WebLogin ON DLK_T_OrjulD.OJD_Updateid = DLK_M_webLogin.userid WHERE LEFT(dbo.DLK_T_OrJulD.OJD_OJHID,13) = '"& data("OJH_ID") &"' ORDER BY dbo.DLK_T_OrjulD.OJD_OJHID" ' response.write data_cmd.commandText & "<br>"
+    data_cmd.commandText = "SELECT dbo.MKT_T_OrJulD.OJD_OJHID, dbo.MKT_T_OrJulD.OJD_Item, dbo.MKT_T_OrJulD.OJD_Qtysatuan, dbo.MKT_T_OrJulD.OJD_JenisSat, dbo.MKT_T_OrJulD.OJD_Harga, dbo.MKT_T_OrJulD.OJD_Diskon, dbo.MKT_T_OrJulD.OJD_Keterangan, dbo.MKT_T_OrJulD.OJD_Updatetime, dbo.MKT_T_OrJulD.OJD_UpdateID, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama, DLK_M_WebLogin.username FROM dbo.DLK_M_JenisBarang INNER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_JenisBarang.JenisID = dbo.DLK_M_Barang.JenisID INNER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId RIGHT OUTER JOIN dbo.MKT_T_OrJulD ON dbo.DLK_M_Barang.Brg_Id = dbo.MKT_T_OrJulD.OJD_Item LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.MKT_T_OrJulD.OJD_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_WebLogin ON MKT_T_OrjulD.OJD_Updateid = DLK_M_webLogin.userid WHERE LEFT(dbo.MKT_T_OrJulD.OJD_OJHID,13) = '"& data("OJH_ID") &"' ORDER BY dbo.MKT_T_OrjulD.OJD_OJHID" ' response.write data_cmd.commandText & "<br>"
     set ddata = data_cmd.execute
   %>
     <% 

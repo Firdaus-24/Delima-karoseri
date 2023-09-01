@@ -5,7 +5,7 @@
   set data_cmd =  Server.CreateObject ("ADODB.Command")
   data_cmd.ActiveConnection = mm_delima_string
 
-  data_cmd.commandText = "SELECT dbo.DLK_T_OrJulH.*, DLK_M_Customer.custid, DLK_M_Customer.custnama FROM dbo.DLK_T_OrJulH LEFT OUTER JOIN DLK_M_Customer ON DLK_T_OrJulH.OJH_custid = DLK_M_Customer.custID WHERE OJH_AktifYN = 'Y' AND OJH_ID = '"& id &"'"
+  data_cmd.commandText = "SELECT dbo.MKT_T_OrJulH.*, DLK_M_Customer.custid, DLK_M_Customer.custnama FROM dbo.MKT_T_OrJulH LEFT OUTER JOIN DLK_M_Customer ON MKT_T_OrJulH.OJH_custid = DLK_M_Customer.custID WHERE OJH_AktifYN = 'Y' AND OJH_ID = '"& id &"'"
   ' response.write data_cmd.commandText & "<br>"
   set data = data_cmd.execute
 

@@ -1,6 +1,7 @@
 <!--#include file="../../init.asp"-->
 <!--#include file="../../functions/func_bom.asp"--> 
 <% 
+
    if session("ENG2B") = false then
       Response.Redirect("./")
    end if
@@ -183,6 +184,7 @@
                <div class="btn-group" role="group" aria-label="Basic example">
                   <button type="button" class="btn btn-primary btn-modalbomd" data-bs-toggle="modal" data-bs-target="#modalbomd">Tambah Rincian</button>
                   <button type="submit" class="btn btn-success">Update Header</button>
+                  <a href='uploadcsv.asp?id=<%=id%>' class="btn btn-warning">Upload CSV</a>
                </div>
             </div>
    </form>
@@ -271,9 +273,6 @@
                <input type="text" id="cdetailbom" class="form-control" name="cdetailbom" autocomplete="off"> 
                <!-- cabang -->
                <input type="hidden" id="bomdCabang" class="form-control" name="bomdCabang" value="<%= data("bmAgenID") %>" autocomplete="off"> 
-               <!-- id bom
-               <input type="hidden" id="productID" class="form-control" name="productID" value="<%'= data("bmBrgID") %>" autocomplete="off"> 
-                -->
             </div>
          </div>
          <div class="row">
@@ -317,7 +316,7 @@
                   <label for="qtty" class="col-form-label">Quantity</label>
                </div>
                <div class="col-sm-4 mb-3">
-                  <input type="number" id="qtty" class="form-control" name="qtty" autocomplete="off" required>
+                  <input type="number" id="qtty" class="form-control" name="qtty" autocomplete="off" step="any" required>
                </div>
          </div>
          <div class="row">

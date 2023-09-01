@@ -127,6 +127,7 @@
       <div class="d-flex mb-3">
             <div class="me-auto p-2">
                <button type="button" class="btn btn-primary btn-modalbomd" data-bs-toggle="modal" data-bs-target="#modalbomd">Tambah Rincian</button>
+               <a href='uploadcsv.asp?id=<%=id%>' class="btn btn-warning">Upload CSV</a>
             </div>
             <div class="p-2">
                <a href="./" class="btn btn-danger">Kembali</a>
@@ -255,7 +256,7 @@
                   <label for="qtty" class="col-form-label">Quantity</label>
                </div>
                <div class="col-sm-4 mb-3">
-                  <input type="number" id="qtty" class="form-control" name="qtty" autocomplete="off" required>
+                  <input type="number" id="qtty" class="form-control" name="qtty" autocomplete="off" step="any" required>
                </div>
          </div>
          <div class="row">

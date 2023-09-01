@@ -240,7 +240,22 @@
     </div>
   </div>
 </div>
-
+<script>
+     ainun = null;
+    // get nama barang by vendor
+    const GetNamabgrAnggaran = (e) => {
+        let nama = e;
+        let cabang = $("#pbcabang").val();
+        $.ajax({
+            method: "POST",
+            url: "../../ajax/getbrgvendor.asp",
+            data: { nama, cabang },
+        }).done(function (msg) {
+            $(".contentdetailpbrg").html(msg);
+            $("input:radio[name=brg]").filter(`[value=${ainun}]`).prop("checked", true);
+        });
+    };
+</script>
 <% 
     if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
         call tambahAnggaranD()

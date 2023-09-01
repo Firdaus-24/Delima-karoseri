@@ -168,11 +168,7 @@
                      <td class="text-center">
                         <div class="btn-group btn-group-sm" role="group">
                            <button type="button" class="btn btn-outline-dark" onclick="window.location.href='export-Dproduksi.asp?id=<%= ddata("PDD_ID") %>'">Cetak</button>
-                           <% if session("ENG1F") = true then %>
-                              <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVoucher" onclick="getDataBOM('<%=ddata("PDD_id")%>')">Voucher</button>
-                           <% end if %>
                         </div>
-                           
                      </td>
                   </tr>
                <% 
@@ -184,41 +180,6 @@
       </div>
    </div>
 </div>  
-
-<!-- Modal voucher-->
-<div class="modal fade" id="modalVoucher" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalVoucherLabel" aria-hidden="true">
-   <div class="modal-dialog">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h1 class="modal-title fs-5" id="modalVoucherLabel">Voucher Permintaan Material</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-         </div>
-         <form action="p_voucher.asp" method="post" onsubmit="validasiForm(this,event,'Voucher Permintaan Produksi', 'warning')">
-         <input type="hidden" id="pddid" name="pddid">
-         <div class="modal-body showVoucher">
-            <!-- content voucher -->
-         </div>
-         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Save</button>
-         </div>
-         </form>
-      </div>
-   </div>
-</div>
-<script>
-   const getDataBOM = (id) => {
-      $("#pddid").val(id)
-      $.ajax({
-         method: "POST",
-         url: "getDNoProduksi.asp",
-         data: { id }
-      }).done(function( msg ) {
-         $(".showVoucher").html(msg)
-         
-      });
-   }
-</script>
 <% 
    call footer()
 %>

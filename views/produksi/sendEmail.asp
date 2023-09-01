@@ -11,7 +11,7 @@
    data_cmd.ActiveConnection = mm_delima_string
 
    ' header
-   data_cmd.commandText = "SELECT DLK_T_ProduksiH.*, GLB_M_Agen.AgenName FROM DLK_T_ProduksiH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_ProduksiH.PDH_AgenID = GLB_M_Agen.AgenID WHERE PDH_ID = '"& id &"' AND PDH_AktifYN = 'Y'"
+   data_cmd.commandText = "SELECT dbo.DLK_T_ProduksiH.*, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_Customer.custNama, dbo.MKT_T_OrJulH.OJH_TimeWork FROM dbo.DLK_M_Customer INNER JOIN dbo.MKT_T_OrJulH ON dbo.DLK_M_Customer.custId = dbo.MKT_T_OrJulH.OJH_CustID RIGHT OUTER JOIN dbo.DLK_T_ProduksiH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_ProduksiH.PDH_AgenID = dbo.GLB_M_Agen.AgenID ON dbo.MKT_T_OrJulH.OJH_ID = dbo.DLK_T_ProduksiH.PDH_OJHID WHERE PDH_ID = '"& id &"' AND PDH_AktifYN = 'Y'"
    ' response.write data_cmd.commandText & "<br>"
    set data = data_cmd.execute
 
@@ -23,10 +23,12 @@
    
    tabledata = ""
    do while not ddata.eof
+      
    tabledata = tabledata &"<tr style='border:1px solid black'>"&_
-               "<th style='border:1px solid black'>"&ddata("PDD_id")&"</th>"&_
-               "<td style='border:1px solid black'>"&ddata("PDD_BMID") &"</td>"&_
-               "<td style='border:1px solid black'>"&ddata("KategoriNama") &"-"& ddata("jenisNama") &"</td>"&_
+               "<th style='border:1px solid black'>"&left(ddata("PDD_id"),2) &"-"& mid(ddata("PDD_id"),3,3) &"/"& mid(ddata("PDD_id"),6,4) &"/"& mid(ddata("PDD_id"),10,4) &"/"& right(ddata("PDD_id"),3)&"</th>"&_
+               "<td style='border:1px solid black'>"&left(ddata("PDD_BMID"),2) &"-"& mid(ddata("PDD_BMID"),3,3) &"/"& mid(ddata("PDD_BMID"),6,4) &"/"& right(ddata("PDD_BMID"),3) &"</td>"&_
+               "<td style='border:1px solid black'>"&ddata("KategoriNama") &"</td>"&_
+               "<td style='border:1px solid black'>"&ddata("jenisNama") &"</td>"&_
                "<td style='border:1px solid black'>"&ddata("Brg_Nama") &"</td>"&_
             "</tr>"
    response.flush
@@ -44,7 +46,7 @@
       "</tr>"&_
       "<tr>"&_
          "<td>Nomor </td>"&_
-         "<td align='left'>: <b>"&data("PDH_ID")&"</b></td>"&_ 
+         "<td align='left'>: <b>"& left(data("PDH_ID"),2) &"-"& mid(data("PDH_ID"),3,3) &"/"& mid(data("PDH_ID"),6,4) &"/"&right(data("PDH_ID"),4)  &"</b></td>"&_ 
          "<td>Cabang</td>"&_
          "<td align='left'>: " &data("AgenName")&"</td>"&_
       "</tr>"&_
@@ -54,6 +56,12 @@
          "<td>Prototype</td>"&_
          "<td align='left'>: "&data("PDH_PrototypeYN")&"</td>"&_
       "</tr>"&_
+      "<tr>"&_
+         "<td>Customer</td>"&_
+         "<td align='left'>: "&data("CustNama")&"</td>"&_
+         "<td>Estimasi Pengerjaan</td>"&_
+         "<td align='left'>: "&data("OJH_TimeWork")&" Hari</td>"&_
+      "</tr>"&_ 
       "<tr>"&_
          "<td>Start Date</td>"&_
          "<td align='left'>: "&Cdate(data("PDH_StartDate"))&"</td>"&_
@@ -69,10 +77,11 @@
    "</table>"&_ 
    "<table width='100%' style='font-size:12px;border-collapse: collapse;right:10px;'>"&_
       "<tr style='border:1px solid black;text-align: center'>"&_
-         "<th style='border:1px solid black'>No</th>"&_
+         "<th style='border:1px solid black'>No. Produksi</th>"&_
          "<th style='border:1px solid black'>No B.O.M</th>"&_
-         "<th style='border:1px solid black'>Kode</th>"&_
-         "<th style='border:1px solid black'>Item</th>"&_
+         "<th style='border:1px solid black'>Kategori</th>"&_
+         "<th style='border:1px solid black'>Jenis</th>"&_
+         "<th style='border:1px solid black'>Model</th>"&_
       "</tr>"&_
       tabledata &_
     "</table>"&_
@@ -114,12 +123,11 @@
    'Mail.Bcc="emailyangdiCCkan@gmail.com" 'Carbon Copy
 
    Mail.HTMLBody=dataBody
-
    Mail.Send
    Set Mail = Nothing
    end if
 %>
 <% 
-   call alert("Email", "berhasil di kirim", "success","index.asp") 
+   call alert("Email", "berhasil di kirim", "success","./") 
    call footer()
 %>

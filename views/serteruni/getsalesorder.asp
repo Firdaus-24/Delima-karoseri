@@ -3,7 +3,7 @@
   jenisUnit = trim(Request.Form("jenisUnit"))
 
   if jenisUnit = 1 then
-    strquery = "SELECT OJH_ID, CustNama FROM DLK_T_OrjulH LEFT OUTER JOIN DLK_M_Customer ON DLK_T_OrjulH.OJH_Custid = DLK_M_Customer.custID WHERE OJH_AktifYN = 'Y' AND NOT EXISTS(SELECT TFK_OJHORHID FROM DLK_T_UnitCustomerH WHERE TFK_OJHORHID = OJH_ID AND TFK_AktifYN = 'Y') ORDER BY OJH_ID ASC"
+    strquery = "SELECT OJH_ID, CustNama FROM MKT_T_OrjulH LEFT OUTER JOIN DLK_M_Customer ON MKT_T_OrjulH.OJH_Custid = DLK_M_Customer.custID WHERE OJH_AktifYN = 'Y' AND NOT EXISTS(SELECT TFK_OJHORHID FROM DLK_T_UnitCustomerH WHERE TFK_OJHORHID = OJH_ID AND TFK_AktifYN = 'Y') ORDER BY OJH_ID ASC"
   elseIf jenisUnit = 2 then
     strquery = "SELECT ORH_ID, CustNama FROM MKT_T_OrjulREpairH LEFT OUTER JOIN DLK_M_Customer ON MKT_T_OrjulRepairH.ORH_Custid = DLK_M_Customer.custID WHERE ORH_AktifYN = 'Y' AND NOT EXISTS(SELECT TFK_OJHORHID FROM DLK_T_UnitCustomerH WHERE TFK_OJHORHID = ORH_ID AND TFK_AktifYN = 'Y') ORDER BY ORH_ID ASC"
   else

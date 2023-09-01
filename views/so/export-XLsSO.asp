@@ -1,18 +1,18 @@
 <!--#include file="../../init.asp"-->
 <% 
   if session("MK1D") = false then
-      Response.Redirect("index.asp")
+      Response.Redirect("./")
    end if
 
   id = trim(Request.QueryString("id"))
   set data_cmd =  Server.CreateObject ("ADODB.Command")
   data_cmd.ActiveConnection = mm_delima_string
 
-  data_cmd.commandTExt = "SELECT dbo.DLK_T_OrJulH.*, dbo.DLK_M_Customer.custNama,  dbo.GLB_M_Agen.AgenName FROM dbo.DLK_T_OrJulH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_OrJulH.OJH_AgenID = dbo.GLB_M_Agen.AgenID  LEFT OUTER JOIN dbo.DLK_M_Customer ON dbo.DLK_T_OrJulH.OJH_CustID = dbo.DLK_M_Customer.custId WHERE (DLK_T_OrJulH.OJH_AktifYN = 'Y') AND (DLK_T_OrJulH.OJH_ID = '"& id &"')"
+  data_cmd.commandTExt = "SELECT dbo.MKT_T_OrJulH.*, dbo.DLK_M_Customer.custNama,  dbo.GLB_M_Agen.AgenName FROM dbo.MKT_T_OrJulH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.MKT_T_OrJulH.OJH_AgenID = dbo.GLB_M_Agen.AgenID  LEFT OUTER JOIN dbo.DLK_M_Customer ON dbo.MKT_T_OrJulH.OJH_CustID = dbo.DLK_M_Customer.custId WHERE (MKT_T_OrJulH.OJH_AktifYN = 'Y') AND (MKT_T_OrJulH.OJH_ID = '"& id &"')"
 
   set data = data_cmd.execute
 
-  data_cmd.commandText = "SELECT dbo.DLK_T_OrJulD.OJD_OJHID, dbo.DLK_T_OrJulD.OJD_Item, dbo.DLK_T_OrJulD.OJD_Qtysatuan, dbo.DLK_T_OrJulD.OJD_JenisSat, dbo.DLK_T_OrJulD.OJD_Harga, dbo.DLK_T_OrJulD.OJD_Diskon, dbo.DLK_T_OrJulD.OJD_Keterangan, dbo.DLK_T_OrJulD.OJD_Updatetime, dbo.DLK_T_OrJulD.OJD_UpdateID, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama, DLK_M_WebLogin.username FROM dbo.DLK_M_JenisBarang INNER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_JenisBarang.JenisID = dbo.DLK_M_Barang.JenisID INNER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId RIGHT OUTER JOIN dbo.DLK_T_OrJulD ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_OrJulD.OJD_Item LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_OrJulD.OJD_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_WebLogin ON DLK_T_OrjulD.OJD_Updateid = DLK_M_webLogin.userid WHERE LEFT(dbo.DLK_T_OrJulD.OJD_OJHID,13) = '"& data("OJH_ID") &"' ORDER BY dbo.DLK_T_OrjulD.OJD_OJHID" ' response.write data_cmd.commandText & "<br>"
+  data_cmd.commandText = "SELECT dbo.MKT_T_OrJulD.OJD_OJHID, dbo.MKT_T_OrJulD.OJD_Item, dbo.MKT_T_OrJulD.OJD_Qtysatuan, dbo.MKT_T_OrJulD.OJD_JenisSat, dbo.MKT_T_OrJulD.OJD_Harga, dbo.MKT_T_OrJulD.OJD_Diskon, dbo.MKT_T_OrJulD.OJD_Keterangan, dbo.MKT_T_OrJulD.OJD_Updatetime, dbo.MKT_T_OrJulD.OJD_UpdateID, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama, DLK_M_WebLogin.username FROM dbo.DLK_M_JenisBarang INNER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_JenisBarang.JenisID = dbo.DLK_M_Barang.JenisID INNER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId RIGHT OUTER JOIN dbo.MKT_T_OrJulD ON dbo.DLK_M_Barang.Brg_Id = dbo.MKT_T_OrJulD.OJD_Item LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.MKT_T_OrJulD.OJD_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_WebLogin ON MKT_T_OrjulD.OJD_Updateid = DLK_M_webLogin.userid WHERE LEFT(dbo.MKT_T_OrJulD.OJD_OJHID,13) = '"& data("OJH_ID") &"' ORDER BY dbo.MKT_T_OrjulD.OJD_OJHID" ' response.write data_cmd.commandText & "<br>"
   set ddata = data_cmd.execute
 
   Response.ContentType = "application/vnd.ms-excel"
@@ -64,7 +64,7 @@
       Lama Pengerjaan
     </td>
     <td colspan="2">
-      : <%= data("OJH_TimeWork") %> 
+      : <%= data("OJH_TimeWork") %> Hari 
     </td>
     <td>
     </td>
@@ -81,20 +81,22 @@
 </table>
 <table style="width:100%">
   <tr>
-    <th style="background-color: #0000a0;color:#fff;">ID</th>
-    <th style="background-color: #0000a0;color:#fff;">Kode</th>
-    <th style="background-color: #0000a0;color:#fff;">Item</th>
+    <th style="background-color: #0000a0;color:#fff;">No</th>
+    <th style="background-color: #0000a0;color:#fff;">Kategori</th>
+    <th style="background-color: #0000a0;color:#fff;">Jenis</th>
+    <th style="background-color: #0000a0;color:#fff;">Model</th>
     <th style="background-color: #0000a0;color:#fff;">Quantity</th>
     <th style="background-color: #0000a0;color:#fff;">Satuan</th>
     <th style="background-color: #0000a0;color:#fff;">Diskon</th>
-    <th style="background-color: #0000a0;color:#fff;">UpdateTime</th>
-    <th style="background-color: #0000a0;color:#fff;">UpdateID</th>
     <th style="background-color: #0000a0;color:#fff;">Harga</th>
+    <th style="background-color: #0000a0;color:#fff;">Keterangan</th>
     <th style="background-color: #0000a0;color:#fff;">Total</th>
   </tr>
   <%
   grantotal = 0
+  no = 0
   do while not ddata.eof
+  no = no + 1
   ' cek diskon peritem
   if ddata("OJD_Diskon") <> 0  then
     dis = Round((ddata("OJD_Diskon")/100) * ddata("OJD_Harga"))
@@ -111,10 +113,13 @@
   %>
     <tr>
       <th>
-        <%= left(ddata("OJD_OJHID"),2) %>-<%= mid(ddata("OJD_OJHID"),3,3) %>/<%= mid(ddata("OJD_OJHID"),6,4) %>/<%= mid(ddata("OJD_OJHID"),10,4) %>/<%= right(ddata("OJD_OJHID"),3)  %>
+        <%= no  %>
       </th>
       <th align="left">
-        <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
+        <%= ddata("KategoriNama") %>
+      </th>
+      <th align="left">
+        <%= ddata("jenisNama") %>
       </th>
       <td align="left">
         <%= ddata("Brg_Nama") %>
@@ -126,22 +131,20 @@
         <%= ddata("Sat_nama") %>
       </td>
       <td>
-        <%= ddata("OJD_Diskon")%> %
-      </td>
-      <td>
-        <%= ddata("OJD_updatetime")%>
-      </td>
-      <td>
-        <%= ddata("username")%>
+        <%= ddata("OJD_Diskon")%>%
       </td>
       <td align="right">
         <%= replace(formatCurrency(ddata("OJD_Harga")),"$","")%>
+      </td>
+      <td>
+        <%= ddata("OJD_Keterangan")%> 
       </td>
       <td align="right">
         <%= replace(formatCurrency(realharga),"$","")%>
       </td>
     </tr>
   <% 
+  Response.flush
   ddata.movenext
   loop
 

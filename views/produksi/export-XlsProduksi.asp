@@ -1,7 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
    if session("ENG1D") = false then
-      Response.Redirect("index.asp")
+      Response.Redirect("./")
    end if
    Response.ContentType = "application/vnd.ms-excel"
    Response.AddHeader "content-disposition", "filename=Produksi "& trim(Request.QueryString("id")) &".xls"
@@ -12,7 +12,7 @@
    data_cmd.ActiveConnection = mm_delima_string
 
    ' header
-   data_cmd.commandTExt = "SELECT DLK_T_ProduksiH.*, GLB_M_Agen.AgenName FROM DLK_T_ProduksiH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_ProduksiH.PDH_AgenID = GLB_M_Agen.AgenID WHERE PDH_ID = '"& id &"'"
+   data_cmd.commandTExt = "SELECT dbo.DLK_T_ProduksiH.*, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_Customer.custNama, dbo.MKT_T_OrJulH.OJH_TimeWork FROM dbo.DLK_M_Customer INNER JOIN dbo.MKT_T_OrJulH ON dbo.DLK_M_Customer.custId = dbo.MKT_T_OrJulH.OJH_CustID RIGHT OUTER JOIN dbo.DLK_T_ProduksiH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_ProduksiH.PDH_AgenID = dbo.GLB_M_Agen.AgenID ON dbo.MKT_T_OrJulH.OJH_ID = dbo.DLK_T_ProduksiH.PDH_OJHID WHERE PDH_ID = '"& id &"' AND PDH_AktifYN = 'Y'"
 
    set data = data_cmd.execute  
 
@@ -25,47 +25,61 @@
 %>
 <table style="width:100%">
    <tr>
-      <td align="center" colspan="4"><b>FORM DETAIL PRODUKSI</b></td>
+      <td align="center" colspan="9"><b>FORM DETAIL PRODUKSI</b></td>
    </tr>
    <tr>
-      <td align="center" colspan="4"><b><%= left(id,2) %>-<% call getAgen(mid(id,3,3),"") %>/<%= mid(id,6,4) %>/<%= right(id,3)  %></b></td>
+      <td align="center" colspan="9"><b><%= left(id,2) %>-<% call getAgen(mid(id,3,3),"") %>/<%= mid(id,6,4) %>/<%= right(id,3)  %></b></td>
    </tr>
    <tr>
-      <td>
+      <td colspan="2">
          Cabang / Agen
       </td>
-      <td>
+      <td colspan="2">
          : <%=data("agenName") %>
       </td>
-      <td>
+      <td colspan="2">
          Tanggal
       </td>
-      <td>
+      <td colspan="2">
          : <%= Cdate(data("PDH_Date")) %>
       </td>
    </tr>
    <tr>
-      <td>
+      <td colspan="2">
          Prototype
       </td>
-      <td>
-         :<% if data("PDH_PrototypeYN") = "Y" then %>Yes <% else %>No <% end if %>
+      <td colspan="2">
+         : <% if data("PDH_PrototypeYN") = "Y" then %>Yes <% else %>No <% end if %>
       </td>
-      <td>
+      <td colspan="2">
          Model
       </td>
-      <td>
+      <td colspan="2">
          : <% if data("PDH_Model") = "L" then %>Leguler <% elseIf data("PDH_Model") = "P" then %>Project <% elseIF data("PDH_Model") = "S" then %>Sub Part<% end if %> 
       </td>
    </tr>
    <tr>
-      <td>
+      <td colspan="2">
+         Customer
+      </td>
+      <td colspan="2">
+         : <%= data("custNama") %>
+      </td>
+      <td colspan="2">
+         Estimasi Pengerjaan
+      </td>
+      <td colspan="2">
+         : <%= data("OJH_TimeWork") %> Hari 
+      </td>
+   </tr>
+   <tr>
+      <td colspan="2">
          Start Date
       </td>
-      <td>
+      <td colspan="2">
          : <%= Cdate(data("PDH_startDate")) %>
       </td>
-      <td>
+      <td colspan="2">
          End Date
       </td>
       <td >
@@ -73,7 +87,7 @@
       </td>
    </tr>
    <tr>
-      <td>
+      <td colspan="2">
          Keterangan
       </td>
       <td colspan="3">
@@ -86,11 +100,12 @@
 </table>
 <table style="width:100%">
    <tr>
-      <th style="background-color: #0000a0;color:#fff;">ID</th>
+      <th style="background-color: #0000a0;color:#fff;">No.Produksi</th>
       <th style="background-color: #0000a0;color:#fff;">B.O.M ID</th>
       <th style="background-color: #0000a0;color:#fff;">No. Drawing</th>
-      <th style="background-color: #0000a0;color:#fff;">Kode</th>
-      <th style="background-color: #0000a0;color:#fff;">Item</th>
+      <th style="background-color: #0000a0;color:#fff;">Kategori</th>
+      <th style="background-color: #0000a0;color:#fff;">Jenis</th>
+      <th style="background-color: #0000a0;color:#fff;">Model</th>
       <th style="background-color: #0000a0;color:#fff;">Type</th>
       <th style="background-color: #0000a0;color:#fff;">Brand</th>
       <th style="background-color: #0000a0;color:#fff;">PPIC</th>
@@ -110,11 +125,14 @@
          </td>
          <td>
             <% if getsasis("drawing") <> "" then %>
-            <%= LEft(getsasis("drawing"),5) &"-"& mid(getsasis("drawing"),6,4) &"-"& right(getsasis("drawing"),3)  %>
+               <%= LEft(getsasis("drawing"),5) &"-"& mid(getsasis("drawing"),6,4) &"-"& right(getsasis("drawing"),3)  %>
             <%  end if %>
          </td>
          <td>
-            <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
+            <%= ddata("KategoriNama") %>
+         </td>
+         <td>
+            <%= ddata("jenisNama") %>
          </td>
          <td>
             <%= ddata("brg_nama")%>

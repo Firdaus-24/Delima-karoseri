@@ -45,6 +45,21 @@ const notifFinanceAnggaran = () => {
   });
   return hasil;
 };
+// notif sales order new
+const notifSalesOrderNew = () => {
+  let hasil = null;
+
+  $.ajax({
+    async: false,
+    type: "get",
+    global: false,
+    url: `${window.location.origin}/views/notifications/salesordernew_produksi.asp`,
+    success: function (data) {
+      hasil = data;
+    },
+  });
+  return hasil;
+};
 
 $(function () {
   // notif anggaran inventory
@@ -90,4 +105,13 @@ $(function () {
   notifFinanceAnggaran().MEMO != 0
     ? $(".notifFinanceNavbar").html(notifFinanceAnggaran().MEMO)
     : $(".notifFinanceNavbar").html("");
+
+  // notif produksi sales order new
+  notifSalesOrderNew().SO != 0
+    ? $(".notifSalesOrderNewNavbar").html(notifSalesOrderNew().SO)
+    : $(".notifSalesOrderNewNavbar").html("");
+  // notif all Produksi
+  notifSalesOrderNew().SO != 0
+    ? $(".notifProduksiNavbar").html(notifSalesOrderNew().SO)
+    : $(".notifProduksiNavbar").html("");
 });

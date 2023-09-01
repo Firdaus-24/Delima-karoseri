@@ -2,7 +2,7 @@
 <!--#include file="../../functions/func_serahterimaunit.asp"-->
 <%  
   if session("MQ2A") = false then
-    Response.Redirect("index.asp")
+    Response.Redirect("./")
   end if
 
   set data_cmd =  Server.CreateObject ("ADODB.Command")

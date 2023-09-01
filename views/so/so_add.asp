@@ -2,7 +2,7 @@
 <!--#include file="../../functions/func_orjul.asp"-->
 <% 
    if session("MK1A") = false then
-      Response.Redirect("index.asp")
+      Response.Redirect("./")
    end if
 
     set data_cmd =  Server.CreateObject ("ADODB.Command")
@@ -104,7 +104,7 @@
             <label for="keterangan" class="col-form-label">Keterangan</label>
          </div>
          <div class="col-lg-4 mb-3">
-            <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" autocomplete="off">
+            <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="100" autocomplete="off">
          </div>
       </div>
       <div class="row">

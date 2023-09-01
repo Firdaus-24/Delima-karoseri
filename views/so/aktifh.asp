@@ -1,7 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
   if session("MK1C") = false then
-    Response.Redirect("index.asp")
+    Response.Redirect("./")
   end if
 
   id = Request.QueryString("id")
@@ -9,7 +9,7 @@
  %>
 <!--#include file="../../navbar.asp"-->
 <%      
-  call query("UPDATE DLK_T_OrjulH SET OJH_AktifYN = 'N' WHERE OJH_ID = '"& id &"'")
+  call query("UPDATE MKT_T_OrjulH SET OJH_AktifYN = 'N' WHERE OJH_ID = '"& id &"'")
   call alert("SALES ORDER DENGAN NO "&id&" ", "berhasil hapus", "success", "index.asp") 
 call footer() 
 %>

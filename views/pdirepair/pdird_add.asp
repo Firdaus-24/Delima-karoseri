@@ -25,7 +25,7 @@
 
   set fs = Server.CreateObject("Scripting.FileSystemObject")
   if not fs.FolderExists(pathDoc & data("PDIR_ID")& "\") then
-    fs.CreateFolder (pathDoc & data("PDIR_ID")& "\")   
+    fs.CreateFolder(pathDoc & data("PDIR_ID")& "\")   
   end if
 
   call header("Detail PDI")

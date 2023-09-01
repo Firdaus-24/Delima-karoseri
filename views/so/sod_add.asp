@@ -2,18 +2,18 @@
 <!--#include file="../../functions/func_orjul.asp"-->
 <% 
    if session("MK1A") = false then
-      Response.Redirect("index.asp")
+      Response.Redirect("./")
    end if
 
    id = trim(Request.QueryString("id"))
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
 
-   data_cmd.commandTExt = "SELECT dbo.DLK_T_OrJulH.*, dbo.DLK_M_Customer.custNama,  dbo.GLB_M_Agen.AgenName FROM dbo.DLK_T_OrJulH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_OrJulH.OJH_AgenID = dbo.GLB_M_Agen.AgenID  LEFT OUTER JOIN dbo.DLK_M_Customer ON dbo.DLK_T_OrJulH.OJH_CustID = dbo.DLK_M_Customer.custId WHERE (DLK_T_OrJulH.OJH_AktifYN = 'Y') AND (DLK_T_OrJulH.OJH_ID = '"& id &"')"
+   data_cmd.commandTExt = "SELECT dbo.MKT_T_OrJulH.*, dbo.DLK_M_Customer.custNama,  dbo.GLB_M_Agen.AgenName FROM dbo.MKT_T_OrJulH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.MKT_T_OrJulH.OJH_AgenID = dbo.GLB_M_Agen.AgenID  LEFT OUTER JOIN dbo.DLK_M_Customer ON dbo.MKT_T_OrJulH.OJH_CustID = dbo.DLK_M_Customer.custId WHERE (MKT_T_OrJulH.OJH_AktifYN = 'Y') AND (MKT_T_OrJulH.OJH_ID = '"& id &"')"
 
    set data = data_cmd.execute
 
-   data_cmd.commandText = "SELECT dbo.DLK_T_OrJulD.OJD_OJHID, dbo.DLK_T_OrJulD.OJD_Item, dbo.DLK_T_OrJulD.OJD_Qtysatuan, dbo.DLK_T_OrJulD.OJD_JenisSat, dbo.DLK_T_OrJulD.OJD_Harga, dbo.DLK_T_OrJulD.OJD_Diskon, dbo.DLK_T_OrJulD.OJD_Keterangan, dbo.DLK_T_OrJulD.OJD_Updatetime, dbo.DLK_T_OrJulD.OJD_UpdateID, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama, DLK_M_WebLogin.username FROM dbo.DLK_M_JenisBarang INNER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_JenisBarang.JenisID = dbo.DLK_M_Barang.JenisID INNER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId RIGHT OUTER JOIN dbo.DLK_T_OrJulD ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_OrJulD.OJD_Item LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_OrJulD.OJD_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_WebLogin ON DLK_T_OrjulD.OJD_Updateid = DLK_M_webLogin.userid WHERE LEFT(dbo.DLK_T_OrJulD.OJD_OJHID,13) = '"& data("OJH_ID") &"' ORDER BY dbo.DLK_T_OrjulD.OJD_OJHID" ' response.write data_cmd.commandText & "<br>"
+   data_cmd.commandText = "SELECT dbo.MKT_T_OrJulD.OJD_OJHID, dbo.MKT_T_OrJulD.OJD_Item, dbo.MKT_T_OrJulD.OJD_Qtysatuan, dbo.MKT_T_OrJulD.OJD_JenisSat, dbo.MKT_T_OrJulD.OJD_Harga, dbo.MKT_T_OrJulD.OJD_Diskon, dbo.MKT_T_OrJulD.OJD_Keterangan, dbo.MKT_T_OrJulD.OJD_Updatetime, dbo.MKT_T_OrJulD.OJD_UpdateID, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama, DLK_M_WebLogin.username FROM dbo.DLK_M_JenisBarang INNER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_JenisBarang.JenisID = dbo.DLK_M_Barang.JenisID INNER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId RIGHT OUTER JOIN dbo.MKT_T_OrJulD ON dbo.DLK_M_Barang.Brg_Id = dbo.MKT_T_OrJulD.OJD_Item LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.MKT_T_OrJulD.OJD_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_WebLogin ON MKT_T_OrjulD.OJD_Updateid = DLK_M_webLogin.userid WHERE LEFT(dbo.MKT_T_OrJulD.OJD_OJHID,13) = '"& data("OJH_ID") &"' ORDER BY dbo.MKT_T_OrjulD.OJD_OJHID" ' response.write data_cmd.commandText & "<br>"
    set ddata = data_cmd.execute
 
    ' get nomor BOM
@@ -114,31 +114,36 @@ call header("Tambah SalesOrder") %>
       </div>
       <div class="row">
          <div class="col-lg-12">
-            <table class="table table-hover">
-               <thead class="bg-secondary text-light">
+            <table class="table table-hover table-bordered">
+               <thead class="bg-secondary text-light ">
                   <tr>
-                     <th scope="col">ID</th>
-                     <th scope="col">Kode</th>
-                     <th scope="col">Item</th>
+                     <th scope="col">No</th>
+                     <th scope="col">Kategori</th>
+                     <th scope="col">Jenis</th>
+                     <th scope="col">Model</th>
                      <th scope="col">Quantity</th>
                      <th scope="col">Satuan</th>
                      <th scope="col">Harga</th>
                      <th scope="col">Diskon</th>
-                     <th scope="col">UpdateTime</th>
-                     <th scope="col">UpdateID</th>
+                     <th scope="col">Keterangan</th>
                      <th scope="col" class="text-center">Aksi</th>
                   </tr>
                </thead>
                <tbody>
                   <% 
+                  no = 0
                   do while not ddata.eof 
+                  no = no + 1
                   %>
                      <tr>
                         <th>
-                           <%= left(ddata("OJD_OJHID"),2) %>-<%= mid(ddata("OJD_OJHID"),3,3) %>/<%= mid(ddata("OJD_OJHID"),6,4) %>/<%= mid(ddata("OJD_OJHID"),10,4) %>/<%= right(ddata("OJD_OJHID"),3)  %>
+                           <%= no  %>
                         </th>
                         <td>
-                           <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
+                           <%=ddata("KategoriNama") %>
+                        </td>
+                        <td>
+                           <%= ddata("jenisNama") %>
                         </td>
                         <td>
                            <%= ddata("Brg_Nama") %>
@@ -156,17 +161,18 @@ call header("Tambah SalesOrder") %>
                            <%= ddata("OJD_Diskon")%>
                         </td>
                         <td>
-                           <%= ddata("OJD_updatetime")%>
-                        </td>
-                        <td>
-                           <%= ddata("username")%>
+                           <%= ddata("OJD_Keterangan")%>
                         </td>
                         <td class="text-center">
-                           <div class="btn-group" role="group" aria-label="Basic example">
-                           <a href="aktifd.asp?id=<%= ddata("OJD_OJHID") %>&p=sod_add" class="btn badge text-bg-danger" onclick="deleteItem(event,'Detail Nomor Sales Order')">Delete</a>
+                           <%if session("MK1C") = true then%>
+                              <a href="aktifd.asp?id=<%= ddata("OJD_OJHID") %>&p=sod_add" class="btn badge text-bg-danger" onclick="deleteItem(event,'Detail Nomor Sales Order')">Delete</a>
+                           <%else%>
+                              -
+                           <%end if%>
                         </td>
                      </tr>
                   <% 
+                  Response.flush
                   ddata.movenext
                   loop
                   %>
@@ -254,7 +260,7 @@ call header("Tambah SalesOrder") %>
                   </label>
                </div>
                <div class="col-sm-6 mb-3">
-                  <input type="number" name="harga" id="harga" class="form-control" required>
+                  <input type="text" name="harga" id="hargaSoNew" class="form-control" onchange="settingFormatRupiah(this.value, 'hargaSoNew')" inputmode="Numeric" required>
                </div>
             </div>
             <div class="row">
@@ -273,8 +279,11 @@ call header("Tambah SalesOrder") %>
                      Keterangan
                   </label>
                </div>
-               <div class="col-sm-6 mb-3">
-                  <input type="text" name="keterangan" id="keterangan" maxlength="50" class="form-control">
+               <div class="col-sm-9 mb-3">
+                  <div class="form-floating">
+                     <textarea class="form-control" name="keterangan" id="keterangan" maxlength="100" style="height: 100px"></textarea>
+                     <label for="keterangan">Keterangan</label>
+                  </div>
                </div>
             </div>
          </div>

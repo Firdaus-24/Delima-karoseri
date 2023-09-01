@@ -264,13 +264,13 @@
             </ul>
           <!-- ppic / produksi-->
           <li class="nav-text">
-            <a href="#" onclick="toggle('sublist-ppic')"><i class="bi bi-layers"></i> PPIC/Prod Dev</a>
+            <a href="#" onclick="toggle('sublist-ppic')"><i class="bi bi-layers"></i> PPIC/Prod Dev <span class="badge text-end bg-danger end-0 rounded-circle notifProduksiNavbar" style="width: 20px;font-size:12px;margin:0;"></span></a> 
             <i class="bi bi-chevron-compact-down" id="iconDown"></i>
           </li>
             <ul class="sub-menu" id="sublist-ppic">
               <% if session("ENG1") = true then %>
               <li>
-                <a class="link-name" href="<%= url %>views/produksi/">Produksi</a>
+                <a class="link-name" href="<%= url %>views/produksi/">Produksi <span class="badge text-bg-danger rounded-circle notifSalesOrderNewNavbar"></span></a>
               </li>
               <% end if %>
               <% if session("PP1") =  true then %>
@@ -311,6 +311,11 @@
               <% if session("PP8") =  true then %>
               <li>
                 <a class="link-name" href="<%= url %>views/anggaranbomproject/">Anggaran B.O.M Project</a>
+              </li>
+              <%end if%>
+              <% if session("PP9") =  true then %>
+              <li>
+                <a class="link-name" href="<%= url %>views/voucher/">Voucher Barang</a>
               </li>
               <%end if%>
             </ul>

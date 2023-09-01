@@ -1,18 +1,18 @@
 <!--#include file="../../init.asp"-->
 <% 
    if session("MK1") = false then
-      Response.Redirect("../index.asp")
+      Response.Redirect("../../")
    end if
 
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
 
    ' filter agen
-   data_cmd.commandText = "SELECT dbo.GLB_M_Agen.AgenName, dbo.GLB_M_Agen.AgenID FROM dbo.DLK_T_OrJulH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_OrJulH.OJH_AgenID = dbo.GLB_M_Agen.AgenID WHERE DLK_T_OrJulH.OJH_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
+   data_cmd.commandText = "SELECT dbo.GLB_M_Agen.AgenName, dbo.GLB_M_Agen.AgenID FROM dbo.MKT_T_OrJulH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.MKT_T_OrJulH.OJH_AgenID = dbo.GLB_M_Agen.AgenID WHERE MKT_T_OrJulH.OJH_AktifYN = 'Y' GROUP BY GLB_M_Agen.AgenID, GLB_M_Agen.AgenName ORDER BY GLB_M_Agen.AgenName ASC"
    set agendata = data_cmd.execute
    
    ' filter customer
-   data_cmd.commandTExt = "SELECT CustID, CustNama FROM DLK_T_OrjulH LEFT OUTER JOIN DLK_M_CUstomer ON DLK_T_OrjulH.OJH_CustID = DLK_M_Customer.custID WHERE OJH_AktifYN = 'Y' ORDER BY CustNAma"
+   data_cmd.commandTExt = "SELECT CustID, CustNama FROM MKT_T_OrjulH LEFT OUTER JOIN DLK_M_CUstomer ON MKT_T_OrjulH.OJH_CustID = DLK_M_Customer.custID WHERE OJH_AktifYN = 'Y' ORDER BY CustNAma"
 
    set custdata = data_cmd.execute
 
@@ -46,27 +46,27 @@
    end if
    
    if agen <> "" then
-      filterAgen = "AND DLK_T_OrJulH.OJH_AgenID = '"& agen &"'"
+      filterAgen = "AND MKT_T_OrJulH.OJH_AgenID = '"& agen &"'"
    else
       filterAgen = ""
    end if
    if cust <> "" then
-      filtercust = "AND DLK_T_OrJulH.OJH_custID = '"& cust &"'"
+      filtercust = "AND MKT_T_OrJulH.OJH_custID = '"& cust &"'"
    else
       filtercust = ""
    end if
 
 
    if tgla <> "" AND tgle <> "" then
-      filtertgl = "AND dbo.DLK_T_OrJulH.OJH_Date BETWEEN '"& tgla &"' AND '"& tgle &"'"
+      filtertgl = "AND dbo.MKT_T_OrJulH.OJH_Date BETWEEN '"& tgla &"' AND '"& tgle &"'"
    elseIf tgla <> "" AND tgle = "" then
-      filtertgl = "AND dbo.DLK_T_OrJulH.OJH_Date = '"& tgla &"'"
+      filtertgl = "AND dbo.MKT_T_OrJulH.OJH_Date = '"& tgla &"'"
    else 
       filtertgl = ""
    end if
 
    ' query seach 
-   strquery = "SELECT dbo.DLK_T_OrJulH.*, dbo.DLK_M_Customer.custNama,  dbo.GLB_M_Agen.AgenName FROM dbo.DLK_T_OrJulH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_OrJulH.OJH_AgenID = dbo.GLB_M_Agen.AgenID  LEFT OUTER JOIN dbo.DLK_M_Customer ON dbo.DLK_T_OrJulH.OJH_CustID = dbo.DLK_M_Customer.custId WHERE (DLK_T_OrJulH.OJH_AktifYN = 'Y') "& filterAgen &""& filtercust &""& filtertgl &""
+   strquery = "SELECT dbo.MKT_T_OrJulH.*, dbo.DLK_M_Customer.custNama,  dbo.GLB_M_Agen.AgenName FROM dbo.MKT_T_OrJulH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.MKT_T_OrJulH.OJH_AgenID = dbo.GLB_M_Agen.AgenID  LEFT OUTER JOIN dbo.DLK_M_Customer ON dbo.MKT_T_OrJulH.OJH_CustID = dbo.DLK_M_Customer.custId WHERE (MKT_T_OrJulH.OJH_AktifYN = 'Y') "& filterAgen &""& filtercust &""& filtertgl &""
    ' untuk data paggination
    page = Request.QueryString("page")
 
@@ -122,7 +122,7 @@
       </div>
    </div>
    <% end if %>
-   <form action="index.asp" method="post">
+   <form action="./" method="post">
       <div class="row">
          <div class="col-lg-4 mb-3">
             <label for="Agen">Cabang</label>
@@ -193,7 +193,7 @@
                do until showrecords = 0 OR  rs.EOF
                recordcounter = recordcounter + 1
 
-               data_cmd.commandTExt = "SELECT OJD_OJHID FROM DLK_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& rs("OJH_ID") &"'"
+               data_cmd.commandTExt = "SELECT OJD_OJHID FROM MKT_T_OrJulD WHERE LEFT(OJD_OJHID,13) = '"& rs("OJH_ID") &"'"
                set p = data_cmd.execute
                %>
                   <tr><TH><%= recordcounter %></TH>
@@ -254,7 +254,7 @@
                   end if
                   if requestrecords <> 0 then 
                %>
-                  <a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&agen=<%=agen%>&cust=<%=cust%>&tgla=<%=tgla%>&tgle=<%=tgle%>">&#x25C4; Prev </a>
+                  <a class="page-link prev" href="./?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&agen=<%=agen%>&cust=<%=cust%>&tgla=<%=tgla%>&tgle=<%=tgle%>">&#x25C4; Prev </a>
                <% else %>
                   <p class="page-link prev-p">&#x25C4; Prev </p>
                <% end if %>
@@ -272,9 +272,9 @@
                   end if
                   if Cint(page) = pagelistcounter then
                   %>
-                     <a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&cust=<%=cust%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
+                     <a class="page-link hal bg-primary text-light" href="./?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&cust=<%=cust%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
                   <%else%>
-                     <a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&cust=<%=cust%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
+                     <a class="page-link hal" href="./?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&cust=<%=cust%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
                   <%
                   end if
                   pagelist = pagelist + recordsonpage
@@ -290,7 +290,7 @@
                   end if
                   %>
                   <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                     <a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&agen=<%=agen%>&cust=<%=cust%>&tgla=<%=tgla%>&tgle=<%=tgle%>">Next &#x25BA;</a>
+                     <a class="page-link next" href="./?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&agen=<%=agen%>&cust=<%=cust%>&tgla=<%=tgla%>&tgle=<%=tgle%>">Next &#x25BA;</a>
                   <% else %>
                      <p class="page-link next-p">Next &#x25BA;</p>
                   <% end if %>

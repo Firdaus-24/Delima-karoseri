@@ -133,9 +133,8 @@
                 No.Drawing
             </td>
             <td colspan="2">
-                : <%= LEft(data("BMSasisID"),5) &"-"& mid(data("BMSasisID"),6,4) &"-"& right(data("BMSasisID"),3) %>
+                : <%if data("BMSasisID") <> "" then%> <%= LEft(data("BMSasisID"),5) &"-"& mid(data("BMSasisID"),6,4) &"-"& right(data("BMSasisID"),3) %> <%end if%>
             </td>
-            
         </tr>
         <tr>
             <td>

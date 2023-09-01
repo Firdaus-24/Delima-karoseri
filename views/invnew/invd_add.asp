@@ -2,7 +2,7 @@
 <!--#include file="../../functions/func_invnew.asp"-->
 <% 
   if session("MK3A") = false OR  session("MK3B") = false then
-    Response.Redirect("index.asp")
+    Response.Redirect("./")
   end if
 
   id = trim(Request.QueryString("id"))
@@ -20,7 +20,7 @@
   set ddata = data_cmd.execute
 
   ' getbarang by po
-  data_cmd.commandText = "SELECT dbo.DLK_T_OrJulD.OJD_Item, dbo.DLK_T_OrJulD.OJD_Qtysatuan, dbo.DLK_T_OrJulD.OJD_Harga, dbo.DLK_T_OrJulD.OJD_Diskon, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_JenisBarang.JenisNama FROM dbo.DLK_M_Barang INNER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId INNER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID RIGHT OUTER JOIN dbo.DLK_T_OrJulD ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_OrJulD.OJD_Item LEFT OUTER JOIN dbo.DLK_T_OrJulH ON LEFT(dbo.DLK_T_OrJulD.OJD_OJHID, 13) = dbo.DLK_T_OrJulH.OJH_ID LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_OrJulD.OJD_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID WHERE dbo.DLK_T_OrJulH.OJH_ID = '"& data("IPH_OJHID") &"' ORDER BY Brg_nama ASC"
+  data_cmd.commandText = "SELECT dbo.MKT_T_OrJulD.OJD_Item, dbo.MKT_T_OrJulD.OJD_Qtysatuan, dbo.MKT_T_OrJulD.OJD_Harga, dbo.MKT_T_OrJulD.OJD_Diskon, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_JenisBarang.JenisNama FROM dbo.DLK_M_Barang INNER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId INNER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID RIGHT OUTER JOIN dbo.MKT_T_OrJulD ON dbo.DLK_M_Barang.Brg_Id = dbo.MKT_T_OrJulD.OJD_Item LEFT OUTER JOIN dbo.MKT_T_OrJulH ON LEFT(dbo.MKT_T_OrJulD.OJD_OJHID, 13) = dbo.MKT_T_OrJulH.OJH_ID LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.MKT_T_OrJulD.OJD_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID WHERE dbo.MKT_T_OrJulH.OJH_ID = '"& data("IPH_OJHID") &"' ORDER BY Brg_nama ASC"
   ' response.write data_cmd.commandText & "<br>"
   set barang = data_cmd.execute
   ' satuan
