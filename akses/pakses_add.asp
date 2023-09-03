@@ -1140,6 +1140,15 @@ call header("Hak Akses") %>
                 <label for="INV10G">Ajukan</label>
               </li>
             </ul>
+          <li>
+            <%
+            data_cmd.commandText = "SELECT AppIDRights FROM DLK_M_AppRight WHERE (Username = '"& data("username") &"') AND (ServerID = '"& data("serverID") &"') and AppIDRights = 'INV11'"
+
+            set app = data_cmd.execute
+            %>
+            <input class="form-check-input" type="checkbox" name="INV11" id="INV11" <%if app.eof = false then%> checked <%end if%> onClick="updateRights('<%=data("username")%>','<%=data("serverID")%>','INV11');" >
+            <label for="INV11">Voucher permintaan</label>
+          </li>
         </ul>
       </div>
     </div>

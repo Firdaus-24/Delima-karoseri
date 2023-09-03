@@ -210,7 +210,8 @@
             <thead class="bg-secondary text-light">
               <tr>
                 <th scope="col">Tanggal</th>
-                <th scope="col">Kode</th>
+                <th scope="col">Kategori</th>
+                <th scope="col">Jenis</th>
                 <th scope="col">Item</th>
                 <th scope="col">Quantity</th>
                 <th scope="col">Satuan</th>
@@ -226,9 +227,12 @@
                     <th>
                       <%= ddata("MO_Date") %>
                     </th>
-                    <th>
-                      <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
-                    </th>
+                    <td>
+                      <%= ddata("KategoriNama") %>
+                    </td>
+                    <td>
+                      <%= ddata("jenisNama") %>
+                    </td>
                     <td>
                       <%= ddata("Brg_Nama") %>
                     </td>
@@ -329,7 +333,7 @@
                           <label for="qty" class="col-form-label">Quantity</label>
                       </div>
                       <div class="col-sm-5 mb-3">
-                          <input type="number" id="qty" name="qty" class="form-control" required>
+                          <input type="number" id="qty" name="qty" class="form-control" autocomplete="off" step="any" required>
                       </div>
                   </div>
               <div class="row">

@@ -1,8 +1,8 @@
 <!--#include file="../../init.asp"-->
 <% 
-  if session("PP9") = false then
-    Response.Redirect(".././")
-  end if
+  ' if session("PP9") = false then
+  '   Response.Redirect(".././")
+  ' end if
 
   set data_cmd =  Server.CreateObject ("ADODB.Command")
   data_cmd.ActiveConnection = mm_delima_string
@@ -12,7 +12,7 @@
   set agendata = data_cmd.execute
   
   ' filter new produksi
-  data_cmd.commandTExt = "SELECT VCH_PDDID FROM dbo.DLK_T_VoucherH WHERE (VCH_AktifYN = 'Y') AND VCH_PDDID <> ''  GROUP BY VCH_PDDID ORDER BY VCH_PDDID ASC"
+  data_cmd.commandTExt = "SELECT VCH_PDDID FROM dbo.DLK_T_VoucherH WHERE (VCH_AktifYN = 'Y') AND VCH_PDDID <> '' GROUP BY VCH_PDDID ORDER BY VCH_PDDID ASC"
 
   set pddid = data_cmd.execute
 
@@ -128,14 +128,7 @@
       <h3>VOUCHER PERMINTAAN BARANG</h3>
     </div>
   </div>
-  <% if session("PP9A") = true then %>
-  <div class="row">
-    <div class="col-lg-12 mb-3">
-      <a href="vc_add.asp" class="btn btn-primary ">Tambah</a>
-    </div>
-  </div>
-  <% end if %>
-  <form action="./" method="post">
+  <form action="voucher.asp" method="post">
     <div class="row">
       <div class="col-lg-4 mb-3">
         <label for="Agen">Cabang</label>
@@ -206,6 +199,7 @@
         <tbody>
           <% 
           'prints records in the table
+          readyn = ""
           showrecords = recordsonpage
           recordcounter = requestrecords
           do until showrecords = 0 OR  rs.EOF
@@ -213,8 +207,15 @@
 
           data_cmd.commandTExt = "SELECT VCH_VCHID FROM DLK_T_VoucherD WHERE LEFT(VCH_VCHID,13) = '"& rs("VCH_ID") &"'"
           set p = data_cmd.execute
+
+          if rs("VCH_readyn") = "N" then
+            readyn = "style='background-color:hsla(120,100%,75%,0.3);'"
+          else  
+            readyn = ""
+          end if
           %>
-            <tr><TH><%= recordcounter %></TH>
+            <tr <%=readyn%>>
+            <TH><%= recordcounter %></TH>
             <th>
               <%= left(rs("VCH_ID"),2) %>-<%= mid(rs("VCH_ID"),3,3) %>/<%= mid(rs("VCH_ID"),6,4) %>/<%= right(rs("VCH_ID"),4)  %>
             </th>
@@ -237,16 +238,8 @@
             <td class="text-center">
               <div class="btn-group" role="group" aria-label="Basic example">
                 <% if not p.eof then %>
-                  <a href="detail.asp?id=<%= rs("VCH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
+                  <a href="voucherdetail.asp?id=<%= rs("VCH_ID") %>" class="btn badge text-light bg-warning">Detail</a>
                 <% end if %>
-                <% if session("PP9B") = true then %>
-                  <a href="vcd_add.asp?id=<%= rs("VCH_ID") %>" class="btn badge text-bg-primary" >Update</a>
-                <% end if %>   
-                <% if session("PP9C") = true then %>
-                  <% if p.eof then %>
-                    <a href="aktifh.asp?id=<%= rs("VCH_ID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'DELETE VOUCHER')">Delete</a>
-                  <% end if %>
-                <%end if %>
               </div>
             </td>
           </tr>
@@ -278,7 +271,7 @@
             end if
             if requestrecords <> 0 then 
           %>
-            <a class="page-link prev" href="./?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&agen=<%=agen%>&dpddid=<%=dpddid%>&dpdrid=<%=dpdrid%>&tgla=<%=tgla%>&tgle=<%=tgle%>">&#x25C4; Prev </a>
+            <a class="page-link prev" href="voucher.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&agen=<%=agen%>&dpddid=<%=dpddid%>&dpdrid=<%=dpdrid%>&tgla=<%=tgla%>&tgle=<%=tgle%>">&#x25C4; Prev </a>
           <% else %>
             <p class="page-link prev-p">&#x25C4; Prev </p>
           <% end if %>
@@ -296,9 +289,9 @@
             end if
             if Cint(page) = pagelistcounter then
             %>
-                <a class="page-link hal bg-primary text-light" href="./?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&dpddid=<%=dpddid%>&dpdrid=<%=dpdrid%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
+                <a class="page-link hal bg-primary text-light" href="voucher.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&dpddid=<%=dpddid%>&dpdrid=<%=dpdrid%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
             <%else%>
-                <a class="page-link hal" href="./?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&dpddid=<%=dpddid%>&dpdrid=<%=dpdrid%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
+                <a class="page-link hal" href="voucher.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&agen=<%=agen%>&dpddid=<%=dpddid%>&dpdrid=<%=dpdrid%>&tgla=<%=tgla%>&tgle=<%=tgle%>"><%= pagelistcounter %></a> 
             <%
             end if
             pagelist = pagelist + recordsonpage
@@ -314,7 +307,7 @@
             end if
             %>
             <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                <a class="page-link next" href="./?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&agen=<%=agen%>&dpddid=<%=dpddid%>&dpdrid=<%=dpdrid%>&tgla=<%=tgla%>&tgle=<%=tgle%>">Next &#x25BA;</a>
+                <a class="page-link next" href="voucher.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&agen=<%=agen%>&dpddid=<%=dpddid%>&dpdrid=<%=dpdrid%>&tgla=<%=tgla%>&tgle=<%=tgle%>">Next &#x25BA;</a>
             <% else %>
                 <p class="page-link next-p">Next &#x25BA;</p>
             <% end if %>

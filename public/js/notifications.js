@@ -14,6 +14,22 @@ const notifReqAnggaran = () => {
 
   return hasil;
 };
+// notif voucher
+const notifVoucher = () => {
+  let hasil = null;
+
+  $.ajax({
+    async: false,
+    type: "get",
+    global: false,
+    url: `${window.location.origin}/views/notifications/voucher_readyn.asp`,
+    success: function (data) {
+      hasil = data;
+    },
+  });
+
+  return hasil;
+};
 
 // notif anggaran purchasing
 const notifUpdateHargaPurchasing = () => {
@@ -72,16 +88,22 @@ $(function () {
   notifReqAnggaran().PROJECT != 0
     ? $(".notifBomProjectNavbar").html(notifReqAnggaran().PROJECT)
     : $(".notifBomProjectNavbar").html("");
+  // voucher permintaan barang
+  notifVoucher().READYN != 0
+    ? $(".notifVoucherNavbar").html(notifVoucher().READYN)
+    : $(".notifVoucherNavbar").html("");
 
   // notif all inventory
   parseInt(notifReqAnggaran().MEMO) +
     parseInt(notifReqAnggaran().REPAIR) +
-    parseInt(notifReqAnggaran().PROJECT) !=
+    parseInt(notifReqAnggaran().PROJECT) +
+    parseInt(notifVoucher().READYN) !=
   0
     ? $(".notifInventoryNavbar").html(
         parseInt(notifReqAnggaran().MEMO) +
           parseInt(notifReqAnggaran().REPAIR) +
-          parseInt(notifReqAnggaran().PROJECT)
+          parseInt(notifReqAnggaran().PROJECT) +
+          parseInt(notifVoucher().READYN)
       )
     : $(".notifInventoryNavbar").html("");
 

@@ -329,7 +329,7 @@
                           <label for="qty" class="col-form-label">Quantity</label>
                       </div>
                       <div class="col-sm-5 mb-3">
-                          <input type="number" id="qty" name="qty" class="form-control" required>
+                          <input type="number" id="qty" name="qty" class="form-control" autocomplete="off" step="any" required>
                       </div>
                   </div>
               <div class="row">

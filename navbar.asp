@@ -132,6 +132,11 @@
                 <a class="link-name" href="<%= url %>views/inventory/">Stok Barang</a>
               </li>
               <% end if %>
+              <% if session("INV11") = true then %>
+              <li>
+                <a class="link-name" href="<%= url %>views/inventory/voucher.asp">Voucher Permintaan <span class="badge text-bg-danger rounded-circle notifVoucherNavbar"></span></a>
+              </li>
+              <% end if %>
             </ul>
           <!-- marketing -->
           <li class="nav-text">
