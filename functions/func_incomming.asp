@@ -100,6 +100,20 @@
 
    end sub
 
+   sub updateheader()
+      id = trim(Request.QueryString("id"))
+      keterangan = trim(Request.Form("keterangan"))
+
+      data_cmd.commandTExt = "SELECT * FROM DLK_T_MaterialReceiptH WHERE MR_ID = '"& id &"' AND MR_AktifYN = 'Y'"
+      set data = data_cmd.execute   
+
+      if not data.eof then
+         call query("UPDATE DLK_T_MaterialReceiptH SET MR_Keterangan = '"& keterangan &"' WHERE MR_id = '"& id &"'")
+         call alert("UDPATE HEADER INCOMMING", "Berhasil diupdate", "success", Request.ServerVariables ("HTTP_REFERER"))
+      else
+         call alert("DATA HEADER INCOMMING", "tidak terdaftar", "error", Request.ServerVariables ("HTTP_REFERER"))
+      end if
+   end sub
 
    sub updateincomepo()
       id = trim(Request.Form("id"))

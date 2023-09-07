@@ -110,7 +110,7 @@ $theme-colors: (
                <% 
                do while not data1.eof 
                %>
-               <tr class="bg-primary text-light">
+               <tr style="background-color:#ffffe0;">
                   <td colspan="2">Document :</td>
                   <td><%= LEFT(data1("MR_Transaksi"),2) &"-"& mid(data1("MR_Transaksi"),3,3) &"/"& mid(data1("MR_Transaksi"),6,4) &"/"& right(data1("MR_Transaksi"),4)%></td>
                   <td>User :</td>

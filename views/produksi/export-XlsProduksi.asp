@@ -28,7 +28,7 @@
       <td align="center" colspan="9"><b>FORM DETAIL PRODUKSI</b></td>
    </tr>
    <tr>
-      <td align="center" colspan="9"><b><%= left(id,2) %>-<% call getAgen(mid(id,3,3),"") %>/<%= mid(id,6,4) %>/<%= right(id,3)  %></b></td>
+      <td align="center" colspan="9"><b><%= left(id,2) %>-<%= mid(id,3,3)%>/<%= mid(id,6,4) %>/<%= right(id,3)  %></b></td>
    </tr>
    <tr>
       <td colspan="2">
@@ -118,10 +118,10 @@
    %>
       <tr>
          <th>
-            <%= left(ddata("PDD_id"),2) %>-<% call getAgen(mid(ddata("PDD_id"),3,3),"") %>/<%= mid(ddata("PDD_id"),6,4) %>/<%= mid(ddata("PDD_id"),10,4) %>/<%= right(ddata("PDD_id"),3)  %>
+            <%= left(ddata("PDD_id"),2) %>-<%= mid(ddata("PDD_id"),3,3)%>/<%= mid(ddata("PDD_id"),6,4) %>/<%= mid(ddata("PDD_id"),10,4) %>/<%= right(ddata("PDD_id"),3)  %>
          </th>
          <td>
-            <%= left(ddata("PDD_BMID"),2) %>-<% call getAgen(mid(ddata("PDD_BMID"),3,3),"") %>/<%= mid(ddata("PDD_BMID"),6,4) %>/<%= right(ddata("PDD_BMID"),3)  %>
+            <%= left(ddata("PDD_BMID"),2) %>-<%= mid(ddata("PDD_BMID"),3,3)%>/<%= mid(ddata("PDD_BMID"),6,4) %>/<%= right(ddata("PDD_BMID"),3)  %>
          </td>
          <td>
             <% if getsasis("drawing") <> "" then %>

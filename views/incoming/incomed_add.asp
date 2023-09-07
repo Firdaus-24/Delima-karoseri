@@ -54,6 +54,9 @@
             <img src="https://chart.googleapis.com/chart?cht=qr&chl=<%= id %>&chs=160x160&chld=L|0" class="qr-code img-thumbnail img-responsive" width="100" height="100"/>
         </div>
     </div>
+
+   <form action="incomed_add.asp?id=<%=id%>" method="post" onsubmit="validasiForm(this,event,'UPDATE HEADER INCOMMING','info')">
+   <input type="hidden" value="" name="mrid">
    <div class="row">
       <div class="col-lg-2 mb-3">
          <label for="cabang" class="col-form-label">Cabang / Agen</label>
@@ -86,14 +89,18 @@
       <div class="col-lg-2 mb-3">
          <label for="keterangan" class="col-form-label">Keterangan</label>
       </div>
-      <div class="col-lg-4 mb-3">
-         <input type="text" id="keterangan" name="keterangan" class="form-control" value="<%= data("MR_Keterangan") %>" autocomplete="off" maxlength="50" readonly>
+      <div class="col-lg-10 mb-3">
+         <input type="text" id="keterangan" name="keterangan" class="form-control" value="<%= data("MR_Keterangan") %>" autocomplete="off" maxlength="50">
       </div>
    </div>
    <div class="row">
       <div class="col-lg-12">
          <div class="d-flex justify-content-spacebetween mb-3">
             <div class="me-auto">
+               <button type="submit" class="btn btn-success">
+                  Update header
+               </button>
+   </form>
                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalIncomedadd">
                   Tambah Rincian
                </button>
@@ -112,7 +119,7 @@
    </div>   
    <div class="row">
       <div class="col-sm-12 mb-3">
-         <table class="table table-striped">
+         <table class="table table-hover table-bordered">
             <thead class="bg-secondary text-light">
                <tr>
                   <th scope="col">No</th>
@@ -130,7 +137,7 @@
                <% 
                do while not data1.eof 
                %>
-               <tr>
+               <tr style="background-color:#ffffe0;">
                   <td colspan="2">Document :</td>
                   <td><%= LEFT(data1("MR_Transaksi"),2) &"-"& mid(data1("MR_Transaksi"),3,3) &"/"& mid(data1("MR_Transaksi"),6,4) &"/"& right(data1("MR_Transaksi"),4)%></td>
                   <td>User :</td>
@@ -157,10 +164,24 @@
                   <td>
                      <input type="number" name="qty" id="qty<%= no1 & data2("MR_Transaksi") %>" value="<%= data2("MR_Qtysatuan") %>" class="form-control" style="width:5rem;padding:3px;border:none;background:none;">
                   </td>
-                  <td><%= data2("Sat_nama") %></td>
+                  <td >
+                     <select class="form-select" aria-label="Default select example" name="satuanmr" id="satuanmr<%= no1 & data2("MR_Transaksi") %>" style="border:none;background:none;padding:10;">
+                        <option value="<%= data2("sat_ID") %>">
+                           <%=data2("sat_nama")%>
+                        </option>
+                        <% do while not dsatuan.eof %>
+                           <option value="<%= dsatuan("sat_id") %>"><%= dsatuan("sat_nama") %></option>
+                        <% 
+                        Response.flush
+                        dsatuan.movenext
+                        loop
+                        dsatuan.movefirst
+                        %>
+                     </select>
+                  </td>
                   <td><%= replace(formatCurrency(data2("MR_Harga")),"$","") %></td>
                   <td>
-                     <select class="form-select" aria-label="Default select example" name="rakIncome" id="rakIncome<%= no1 & data2("MR_Transaksi") %>" style="border:none;background:none;margin:inherit;padding:6px;">
+                     <select class="form-select" aria-label="Default select example" name="rakIncome" id="rakIncome<%= no1 & data2("MR_Transaksi") %>" style="border:none;background:none;">
                         <option value="<%= rakID %>">
                            <% if data2("MR_RakID") = "" then%>
                               Pilih
@@ -171,6 +192,7 @@
                         <% do while not drak.eof %>
                            <option value="<%= drak("rak_Id") %>"><%= drak("Rak_Nama") %></option>
                         <% 
+                        Response.flush
                         drak.movenext
                         loop
                         drak.movefirst
@@ -346,53 +368,62 @@
   </div>
 </div>
 <script>
-const updateData = (id,trans, qtylama, urutan, acpdate) => {
-   
-   let qty = $(`#qty${urutan}${trans}`).val()
-   let rak = $(`#rakIncome${urutan}${trans}`).val()
-   
-   $.post( "updateMRD2.asp", { id, trans, rak, qtylama, qty, acpdate }).done(function( data ) {
-      if(data != "DONE"){
-         swal(`PERHATIAN !!! ${data}`)
-         return false
-      }else{
-         swal({title: 'Data Berhasil Diubah',text: 'Update Rak & Quantity',icon: 'success',button: 'OK',}).then(function() {window.location = 'incomed_add.asp?id='+ id})
-      }
-   });
-}
-const getsisaqtymrpo = (e) => {
-   $("#sisaqtymrpo").val(e);
-}
-const validasiIncomming = (val,e) => {
-   let form = val;
-   e.preventDefault(); // <--- prevent form from submitting
-   if(Number($("#qtyincomed").val()) > Number($("#sisaqtymrpo").val())){
-      swal("Quantity Melebihi batas!!");
-      return false;
-   }else{
-      swal({
-      title: "APAKAH ANDA SUDAH YAKIN??",
-      text: 'TRANSAKSI INCOMMING',
-      icon: 'warning',
-      buttons: [
-         'No',
-         'Yes'
-      ],
-      dangerMode: true,
-      }).then(function (isConfirm) {
-         if (isConfirm) {
-            form.submit(); // <--- submit form programmatically
+   const updateData = (id,trans, qtylama, urutan, acpdate) => {
+      
+      let qty = $(`#qty${urutan}${trans}`).val()
+      let rak = $(`#rakIncome${urutan}${trans}`).val()
+      let satuanmr = $(`#satuanmr${urutan}${trans}`).val()
+      
+      $.post( "updateMRD2.asp", { id, trans, rak, qtylama, qty, acpdate, satuanmr }).done(function( data ) {
+         if (data == "DONE") {
+            swal({title: 'Data Berhasil Diubah',text: 'Update detail incomming',icon: 'success',button: 'OK',}).then(function() {window.location = 'incomed_add.asp?id='+ id})
+            return false
+         } else if (data == "SATUAN DAN RAK") {
+            swal({title: 'Data Berhasil Diubah',text: `${data}`,icon: 'success',button: 'OK',}).then(function() {window.location = 'incomed_add.asp?id='+ id})
+            return false
          } else {
-            swal("Form gagal di kirim");
+            swal(`PERHATIAN !!! ${data}`)
+            return false
          }
-      })
+      });
    }
-   
-}
+   const getsisaqtymrpo = (e) => {
+      $("#sisaqtymrpo").val(e);
+   }
+   const validasiIncomming = (val,e) => {
+      let form = val;
+      e.preventDefault(); // <--- prevent form from submitting
+      if(Number($("#qtyincomed").val()) > Number($("#sisaqtymrpo").val())){
+         swal("Quantity Melebihi batas!!");
+         return false;
+      }else{
+         swal({
+         title: "APAKAH ANDA SUDAH YAKIN??",
+         text: 'TRANSAKSI INCOMMING',
+         icon: 'warning',
+         buttons: [
+            'No',
+            'Yes'
+         ],
+         dangerMode: true,
+         }).then(function (isConfirm) {
+            if (isConfirm) {
+               form.submit(); // <--- submit form programmatically
+            } else {
+               swal("Form gagal di kirim");
+            }
+         })
+      }
+      
+   }
 </script>
 <% 
    if Request.ServerVariables("REQUEST_METHOD") = "POST" then
-      call incomePo()
+      if Request.Form("mrid") <> "" then
+         call incomePo()
+      else
+         call updateheader()
+      end if
    end if
    call footer()
 %>

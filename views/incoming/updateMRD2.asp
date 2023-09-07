@@ -10,6 +10,7 @@
    acpdate = trim(Request.form("acpdate"))
    qtylama = trim(Request.form("qtylama"))
    qty = trim(Request.form("qty"))
+   satuanmr = trim(Request.form("satuanmr"))
  
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
@@ -37,7 +38,9 @@
       set mrincome = data_cmd.execute
 
       if qty = qtylama then
-         response.write "TIDAK ADA PERUBAHAN DI TERANSAKSI INCOMMING"
+         ' hanya update satuan dan rak saja
+         call query("UPDATE DLK_T_MaterialReceiptD2 SET MR_RakID = '"& rak &"', MR_Jenissat = '"& satuanmr &"' WHERE MR_ID = '"& id &"' AND MR_Transaksi = '"& trans &"' AND MR_Qtysatuan = '"& qty &"' AND MR_acpdate = '"& acpdate &"' ")
+         response.write "SATUAN DAN RAK"
          Response.end
       end if
 
@@ -62,7 +65,7 @@
                realharga = 0
             end if
             call query("UPDATE DLK_T_MaterialReceiptD2 SET MR_Harga = '" & realharga &"' WHERE MR_Item = '"& data("MR_Item") &"'")
-            call query("UPDATE DLK_T_MaterialReceiptD2 SET MR_Qtysatuan = "& qty &", MR_RakID = '"& rak &"' WHERE MR_ID = '"& id &"' AND MR_Transaksi = '"& trans &"' AND MR_Qtysatuan = '"& qtylama &"' AND MR_acpdate = '"& acpdate &"' ")
+            call query("UPDATE DLK_T_MaterialReceiptD2 SET MR_Qtysatuan = "& qty &", MR_RakID = '"& rak &"', MR_Jenissat = '"& satuanmr &"' WHERE MR_ID = '"& id &"' AND MR_Transaksi = '"& trans &"' AND MR_Qtysatuan = '"& qtylama &"' AND MR_acpdate = '"& acpdate &"' ")
 
             response.write "DONE"
          elseIf Cint(stokMaster("stok")) = 0 then
@@ -75,7 +78,7 @@
             hppawal = Round(ckharga("OPD_Harga") * qty) + asuransilain
             hargabaru = hppawal / qty
 
-            call query("UPDATE DLK_T_MaterialReceiptD2 SET MR_Qtysatuan = "& qty &", MR_RakID = '"& rak &"', MR_harga = '"& hargabaru &"' WHERE MR_ID = '"& id &"' AND MR_Transaksi = '"& trans &"' AND MR_Qtysatuan = '"& qtylama &"' AND MR_acpdate = '"& acpdate &"' ")
+            call query("UPDATE DLK_T_MaterialReceiptD2 SET MR_Qtysatuan = "& qty &", MR_RakID = '"& rak &"', MR_harga = '"& hargabaru &"', MR_Jenissat = '"& satuanmr &"' WHERE MR_ID = '"& id &"' AND MR_Transaksi = '"& trans &"' AND MR_Qtysatuan = '"& qtylama &"' AND MR_acpdate = '"& acpdate &"' ")
 
             Response.Write "DATA STOK DARI 0 SUDAH TERUPDATE"
          end if

@@ -6,7 +6,7 @@
    data_cmd.ActiveConnection = mm_delima_string
 
    ' header
-   data_cmd.commandTExt = "SELECT DLK_T_ProduksiH.*, GLB_M_Agen.AgenName FROM DLK_T_ProduksiH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_ProduksiH.PDH_AgenID = GLB_M_Agen.AgenID WHERE PDH_ID = '"& id &"'"
+   data_cmd.commandTExt = "SELECT DLK_T_ProduksiH.*, GLB_M_Agen.AgenName,  MKT_T_OrJulH.OJH_timework FROM DLK_T_ProduksiH LEFT OUTER JOIN GLB_M_Agen ON DLK_T_ProduksiH.PDH_AgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN MKT_T_OrJulH ON DLK_T_ProduksiH.PDH_OJHID = MKT_T_OrJulH.OJH_ID WHERE PDH_ID = '"& id &"'"
 
    set data = data_cmd.execute  
 
@@ -51,34 +51,21 @@
    </div>
    <div class="row align-items-center">
       <div class="col-lg-2 mb-3">
-         <label for="prototype" class="col-form-label">Prototype</label>
+         <label for="salesOrderProduksi" class="col-form-label">No Sales Order</label>
       </div>
-      <div class="col-sm-4 mb-3">
-         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="prototype" id="prototypeY" <% if data("PDH_PrototypeYN") = "Y" then %>checked <% end if %> disabled>
-            <label class="form-check-label" for="prototypeY">Yes</label>
-         </div>
-         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="prototype" id="prototypeN"  <% if data("PDH_PrototypeYN") = "N" then %>checked <% end if %> disabled>
-            <label class="form-check-label" for="prototypeN">No</label>
+      <div class="col-lg-4 mb-3">
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1" onclick="window.open('<%=url%>views/so/detail.asp?id=<%=data("PDH_OJHID")%>')"><i class="bi bi-eye"></i></span>
+            <select class="form-select" aria-label="Default select example" id="salesOrderProduksi" name="salesOrderProduksi" disabled>
+               <option value="<%=data("PDH_OJHID")%>"><%= left(data("PDH_OJHID") ,2) %>-<%= mid(data("PDH_OJHID") ,3,3) %>/<%= mid(data("PDH_OJHID") ,6,4) %>/<%= right(data("PDH_OJHID") ,4) %></option>
+            </select>
          </div>
       </div>
       <div class="col-lg-2 mb-3">
-         <label for="model" class="col-form-label">Model</label>
+         <label for="timeworkprod" class="col-form-label">Lama Pengerjaan</label>
       </div>
-      <div class="col-sm-4 mb-3">
-         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="model" id="modelL" value="L" <% if data("PDH_Model") = "L" then %>checked <% end if %> disabled>
-            <label class="form-check-label" for="modelL">Leguler</label>
-         </div>
-         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="model" id="modelP" value="P" <% if data("PDH_Model") = "P" then %>checked <% end if %> disabled>
-            <label class="form-check-label" for="modelP" >Project</label>
-         </div>
-         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="model" id="modelS" value="S" <% if data("PDH_Model") = "S" then %>checked <% end if %> disabled>
-            <label class="form-check-label" for="modelS">Sub Part</label>
-         </div>
+      <div class="col-lg-4 mb-3">
+         <input type="text" id="timeworkprod" name="timeworkprod" class="form-control" value="<%= data("OJH_Timework") & " Hari"%>" readonly>
       </div>
    </div>
    <div class="row">
@@ -86,23 +73,55 @@
          <label for="tgla" class="col-form-label">Start Date</label>
       </div>
       <div class="col-lg-4 mb-3">
-         <input type="text" id="tgla" name="tgla" class="form-control" value="<%= Cdate(data("PDH_startDate")) %>" readonly>
+         <input type="text" id="tgla" name="tgla" class="form-control" value="<%= Cdate(data("PDH_startDate")) %>" onfocus="this.type='date'" disabled>
       </div>
       <div class="col-lg-2 mb-3">
          <label for="tgle" class="col-form-label">End Date</label>
       </div>
       <div class="col-lg-4 mb-3">
-         <input type="text" id="tgle" name="tgle" class="form-control" value="<%= Cdate(data("PDH_EndDate")) %>" readonly>
+         <input type="text" id="tgle" name="tgle" class="form-control" value="<%= Cdate(data("PDH_EndDate")) %>" onfocus="this.type='date'" disabled>
       </div>
    </div>      
    <div class="row">
       <div class="col-lg-2 mb-3">
+         <label for="prototype" class="col-form-label">Prototype</label>
+      </div>
+      <div class="col-sm-4 mb-3">
+         <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="prototype" id="prototypeY" value="Y" <% if data("PDH_PrototypeYN") = "Y" then Response.Write "checked" end if %> disabled>
+            <label class="form-check-label" for="prototypeY">Yes</label>
+         </div>
+         <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="prototype" id="prototypeN" value="N" <% if data("PDH_PrototypeYN") = "N" then Response.Write "checked" end if %>>
+            <label class="form-check-label" for="prototypeN">No</label>
+         </div>
+      </div>
+     <div class="col-lg-2 mb-3">
+         <label for="model" class="col-form-label">Model</label>
+      </div>
+      <div class="col-sm-4 mb-3">
+         <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="model" id="modelL" value="L" <% if data("PDH_Model") = "L" then Response.Write "checked" end if %> disabled>
+            <label class="form-check-label" for="modelL">Leguler</label>
+         </div>
+         <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="model" id="modelP" value="P" <% if data("PDH_Model") = "P" then Response.Write "checked" end if %> disabled>
+            <label class="form-check-label" for="modelP" >Project</label>
+         </div>
+         <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="model" id="modelS" value="S" <% if data("PDH_Model") = "S" then Response.Write "checked" end if %> disabled>
+            <label class="form-check-label" for="modelS">Sub Part</label>
+         </div>
+      </div>
+   </div>  
+   <div class='row'>
+      <div class="col-lg-2 mb-3">
          <label for="keterangan" class="col-form-label">Keterangan</label>
       </div>
       <div class="col-lg-10 mb-3">
-         <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" autocomplete="off" value="<%= data("PDH_Keterangan") %>" readonly>
+         <input type="text" id="keterangan" name="keterangan" class="form-control" maxlength="50" autocomplete="off" value="<%= data("PDH_Keterangan") %>" disabled>
       </div>
-   </div>  
+   </div> 
    <div class="row">
       <div class="col-lg-12 mb-3 text-center d-flex justify-content-between">
          <% if session("ENG1D") = true then %>
@@ -120,8 +139,9 @@
                   <th scope="col">ID</th>
                   <th scope="col">B.O.M ID</th>
                   <th scope="col">No. Drawing</th>
-                  <th scope="col">Kode</th>
-                  <th scope="col">Item</th>
+                  <th scope="col">Kategori</th>
+                  <th scope="col">Jenis</th>
+                  <th scope="col">Model</th>
                   <th scope="col">Type</th>
                   <th scope="col">Brand</th>
                   <th scope="col">PPIC</th>
@@ -151,7 +171,10 @@
                         <% end if %>
                      </td>
                      <td>
-                        <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
+                        <%= ddata("KategoriNama")  %>
+                     </td>
+                     <td>
+                        <%= ddata("jenisNama") %>
                      </td>
                      <td>
                         <%= ddata("brg_nama")%>

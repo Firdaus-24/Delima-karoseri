@@ -1,7 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
    if session("INV2D") = false then
-      Response.Redirect("index.asp")
+      Response.Redirect("./")
    end if
    id = trim(Request.QueryString("id"))
 
@@ -139,13 +139,13 @@
          <% 
          do while not data1.eof 
          %>
-         <tr style="background-color: blue;color:#fff;">
+         <tr style="background-color:#ffffe0;">
             <td colspan="3">Document :</td>
             <td colspan="6"><%= LEFT(data1("MR_Transaksi"),2) &"-"& mid(data1("MR_Transaksi"),3,3) &"/"& mid(data1("MR_Transaksi"),6,4) &"/"& right(data1("MR_Transaksi"),4)%></td>
          </tr>
          <% 
          ' detail2
-         data_cmd.commandTExt = "SELECT dbo.DLK_T_MaterialReceiptD2.*, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id, DLK_M_Rak.Rak_Nama, DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama FROM dbo.DLK_T_MaterialReceiptD2 LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialReceiptD2.MR_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialReceiptD2.MR_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_Rak ON DLK_T_MaterialReceiptD2.MR_RakID = DLK_M_Rak.Rak_ID LEFT OUTER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId LEFT OUTER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID WHERE dbo.DLK_T_MaterialReceiptD2.MR_ID = '"& id &"' AND LEFT(MR_Transaksi,13) = '"& data1("MR_Transaksi") &"'"
+         data_cmd.commandTExt = "SELECT dbo.DLK_T_MaterialReceiptD2.*, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id, DLK_M_Rak.Rak_Nama, DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama, (DLK_T_OrpemD.OPD_Harga) as hargabeli FROM dbo.DLK_T_MaterialReceiptD2 LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialReceiptD2.MR_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialReceiptD2.MR_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_Rak ON DLK_T_MaterialReceiptD2.MR_RakID = DLK_M_Rak.Rak_ID LEFT OUTER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId LEFT OUTER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID LEFT OUTER JOIN DLK_T_OrpemD ON DLK_T_MaterialReceiptD2.MR_Transaksi = DLK_T_OrpemD.OPD_OPHID WHERE dbo.DLK_T_MaterialReceiptD2.MR_ID = '"& id &"' AND LEFT(MR_Transaksi,13) = '"& data1("MR_Transaksi") &"' AND MR_qtysatuan <> 0"
          set data2 = data_cmd.execute
          
          gtotal = 0
@@ -153,18 +153,18 @@
          no = 0
          do while not data2.eof 
          no = no + 1
-         total = (data2("MR_Harga") * data2("MR_Qtysatuan"))
+         total = (data2("hargabeli") * data2("MR_Qtysatuan"))
 
          gtotal = gtotal + total
          %>
          <tr>
             <td><%= no %></td>
             <td><%= data2("MR_AcpDate") %></td>
-            <td><%= data2("kategoriNama") &"-"& data2("jenisNama") %></td>
+            <td><%= data2("kategoriNama") &" - "& data2("jenisNama") %></td>
             <td><%= data2("Brg_Nama") %></td>
             <td><%= data2("MR_Qtysatuan") %></td>
             <td><%= data2("Sat_nama") %></td>
-            <td><%= replace(formatCurrency(data2("MR_Harga")),"$","") %></td>
+            <td><%= replace(formatCurrency(data2("hargabeli")),"$","") %></td>
             <td><%= data2("Rak_nama") %></td>
             <td><%= replace(formatCurrency(total),"$","") %></td>
          </tr>
@@ -188,18 +188,6 @@
          </tr>
       </tbody>
    </table>
-   <div class="footer">
-      <img src="https://chart.googleapis.com/chart?cht=qr&chl=<%= id %>&chs=160x160&chld=L|0" width="60"/></br>
-      <article>
-         <p>
-            PT.Delima Karoseri Indonesia
-         </p>
-         <p>
-            Copyright © 2022, ALL Rights Reserved MuhamadFirdaus-IT Division</br>
-            V.1 Mobile Responsive 2022
-         </p>
-      </article>
-   </div>  
 </body>
 <% 
    call footer()
