@@ -144,11 +144,14 @@
   <div class="row">
     <div class="col-lg-12 mb-3 d-flex justify-content-between ">
       <div class="btn-group" role="group" aria-label="Basic example">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalBmrdRepair">Tambah Rincian</button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalBmrdRepair" onclick="tambahDetailBomRepair()">Tambah Rincian</button>
         <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalcopybomrepair">Copy Rincian</button>
         <button type="submit" class="btn btn-success">Update Header</button>
       </div>
-      <button type="button" onclick="window.location.href='./'" class="btn btn-danger">Kembali</button>
+      <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" onclick="window.location.href='uploadcsv.asp?id=<%=id%>'" class="btn btn-warning">Upload Csv</button>
+        <button type="button" onclick="window.location.href='./'" class="btn btn-danger">Kembali</button>
+      </div>
     </div>
   </div>
   </form>
@@ -197,6 +200,7 @@
                 <%= ddata("BmrdKeterangan")%>
               </td>
               <td class="text-center">
+                <span class="badge text-bg-primary" data-bs-toggle="modal" data-bs-target="#modalBmrdRepair" onclick="updateDetailBomRepair('<%= ddata("BmrdID")%>', '<%= ddata("BmrdBrgID")%>', '<%= ddata("Bmrdqtysatuan")%>', '<%= ddata("Bmrdsatid")%>', '<%= ddata("Bmrdketerangan")%>')">Update</span>
                 <a href="aktifd.asp?id=<%= ddata("BmrDID") %>" class="btn badge text-bg-danger" onclick="deleteItem(event,'Detail Item BOM Repair')">Delete</a>
               </td>
             </tr>
@@ -221,6 +225,8 @@
       <form action="bmrd_add.asp?id=<%= id %>" method="post" onsubmit="validasiForm(this,event,'Detail B.O.M Repair','warning')">
         <div class="modal-body">
           <input type="hidden" name="bmrid" id="bmrid" value="<%= id %>">
+          <!-- id detail bmrdid -->
+          <input type="hidden" name="iddetailbmrdid" id="iddetailbmrdid" >
           <!-- table barang -->
           <div class="row">
             <div class="col-sm-3">
@@ -275,7 +281,7 @@
               <label for="qtty" class="col-form-label">Quantity</label>
             </div>
             <div class="col-sm-4 mb-3">
-              <input type="number" id="qtty" class="form-control" name="qtty" autocomplete="off" autocomplete="off" step="any" required>
+              <input type="number" id="qttybmrd" class="form-control" name="qtty" autocomplete="off" autocomplete="off" step="any" required>
             </div>
           </div>
           <div class="row">
@@ -283,7 +289,7 @@
               <label for="satuan" class="col-form-label">Satuan Barang</label>
             </div>
             <div class="col-sm-4 mb-3">
-              <select class="form-select" aria-label="Default select example" name="satuan" id="satuan" required> 
+              <select class="form-select" aria-label="Default select example" name="satuan" id="satuanbmrd" required> 
                 <option value="">Pilih</option>
                 <% do while not psatuan.eof %>
                 <option value="<%= psatuan("sat_ID") %>"><%= psatuan("sat_nama") %></option>
@@ -300,7 +306,7 @@
               <label for="keterangan" class="col-form-label">Keterangan</label>
             </div>
             <div class="col-sm-9 mb-3">
-              <input type="text" id="keterangan" class="form-control" name="keterangan" autocomplete="off" maxlength="50">
+              <input type="text" id="keteranganbmrd" class="form-control" name="keterangan" autocomplete="off" maxlength="50">
             </div>
           </div>
         </div>
@@ -371,7 +377,11 @@
 
 <% 
   if Request.ServerVariables("REQUEST_METHOD") = "POST" then 
-    call tambahbomD()
+    if Request.Form("iddetailbmrdid") = "" then
+      call tambahbomD()
+    else
+      call updatebomd()
+    end if
   end if
   call footer() 
 %>

@@ -1,3 +1,4 @@
+let brgbomrepair = null;
 $(document).ready(function () {
   // get produksi repair by agen
   $("#bmrcabang").change(function () {
@@ -56,6 +57,9 @@ $(document).ready(function () {
 
     $.post("getbarang.asp", { nama, cabang }, function (data) {
       $(".brgBmrdRepair").html(data);
+      $("input:radio[name=ckbmrdbrg]")
+        .filter(`[value=${brgbomrepair}]`)
+        .prop("checked", true);
       return;
     });
   });
@@ -78,3 +82,24 @@ $(document).ready(function () {
     }
   });
 });
+
+const tambahDetailBomRepair = () => {
+  $("#cbrgbmrd").val("");
+  $("#iddetailbmrdid").val("");
+  $("input:radio[name=ckbmrdbrg]").prop("checked", false);
+  $("#qttybmrd").val(0);
+  $("#satuanbmrd").val("");
+  $("#keteranganbmrd").val("");
+  brgbomrepair = null;
+};
+const updateDetailBomRepair = (id, brg, qty, satuan, keterangan) => {
+  $("#cbrgbmrd").val("");
+  $("#iddetailbmrdid").val(id);
+  $("input:radio[name=ckbmrdbrg]")
+    .filter(`[value=${brg}]`)
+    .prop("checked", true);
+  $("#qttybmrd").val(qty);
+  $("#satuanbmrd").val(satuan);
+  $("#keteranganbmrd").val(keterangan);
+  brgbomrepair = brg;
+};

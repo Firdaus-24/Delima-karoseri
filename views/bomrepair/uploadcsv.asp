@@ -12,35 +12,35 @@
 
 <!--#include file="../../navbar.asp"-->
 <script>
-function onSubmitForm(objForm) {
-  var formDOMObj = document.frmSend;
-  var arrExtensions=new Array("csv");
-	var objInput = objForm.elements["filter"];
-	var strFilePath = objInput.value;
-	var arrTmp = strFilePath.split(".");
-	var strExtension = arrTmp[arrTmp.length-1].toLowerCase();
-	var blnExists = false;
-	
-	
-	for (var i=0; i<arrExtensions.length; i++) 
-	{
-		if (strExtension == arrExtensions[i]) 
-		{
-			blnExists = true;
-			break;
-		}
-	}
-	
-	if (!blnExists)
-		alert("Only upload Photo with CSV extension only","File Upload Failed");
-	return blnExists;
-	
-    if (formDOMObj.attach1.value == "" && formDOMObj.attach2.value == "" && formDOMObj.attach3.value == "" && formDOMObj.attach4.value == "" )
-      alert("Please press the Browse button and pick a file.")
-    else
-      return true;
-    return false;
-}
+  function onSubmitForm(objForm) {
+    var formDOMObj = document.frmSend;
+    var arrExtensions=new Array("csv");
+    var objInput = objForm.elements["filter"];
+    var strFilePath = objInput.value;
+    var arrTmp = strFilePath.split(".");
+    var strExtension = arrTmp[arrTmp.length-1].toLowerCase();
+    var blnExists = false;
+    
+    
+    for (var i=0; i<arrExtensions.length; i++) 
+    {
+      if (strExtension == arrExtensions[i]) 
+      {
+        blnExists = true;
+        break;
+      }
+    }
+    
+    if (!blnExists)
+      alert("Only upload Photo with CSV extension only","File Upload Failed");
+    return blnExists;
+    
+      if (formDOMObj.attach1.value == "" && formDOMObj.attach2.value == "" && formDOMObj.attach3.value == "" && formDOMObj.attach4.value == "" )
+        alert("Please press the Browse button and pick a file.")
+      else
+        return true;
+      return false;
+  }
 </script>
 <style>
    .container{
@@ -64,7 +64,7 @@ function onSubmitForm(objForm) {
 <div class="container">
   <div class='row'>
         <div class='col text-center'>
-            <h3>UPLOAD DOCUMENT B.O.M</h3>
+            <h3>UPLOAD DOCUMENT B.O.M REPAIR</h3>
         </div>
     </div>
     <div class="upload">
@@ -80,7 +80,7 @@ function onSubmitForm(objForm) {
         <li>Kami hanya menerima file dalam bentuk format file *.csv dengan detain CSV (comma delimited) </li>
         <li>Pastikan Nama barang sudah terdaftar di master barang</li>
 
-        <button type="button" onclick="window.location.href='bom_u.asp?id=<%=id%>'" class="btn btn-danger mt-4">Kembali</button>
+        <button type="button" onclick="window.location.href='bmrd_add.asp?id=<%=id%>'" class="btn btn-danger mt-4">Kembali</button>
         <img src="../../public/img/delimalogo.png">
     </div>
 </div>
@@ -116,14 +116,16 @@ function onSubmitForm(objForm) {
       Do Until oInStream.AtEndOfStream  
         sRows = oInStream.readLine  
         arrRows = Split(sRows,";")  
+
         ' cek nomor buntut
-        data_cmd.commandText = "Select ('"& id &"' + Right('000' + Convert(varchar,Convert(int,(Right(isnull(Max(BMDBMID),'000'),3)))+1),3)) as newid From DLK_M_Bomd Where Left(BMDBMID,12) = '"& id &"'"
+        data_cmd.commandText = "SELECT ('"&id&"' + Right('000' + Convert(varchar,Convert(int,(Right(isnull(Max(BMRDID),'000'),3)))+1),3)) as newid From DLK_T_BOMRepairD Where Left(BMRDID,13) = '"& id &"'"
 
         set p = data_cmd.execute
 
         ' ' get id barang by nama
         data_cmd.CommandText = "SELECT Brg_ID FROM DLK_M_Barang LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.kategoriid = DLK_M_Kategori.kategoriid LEFT OUTER JOIN DLK_M_Jenisbarang ON  DLK_M_Barang.jenisid = DLK_M_Jenisbarang.jenisid WHERE LOWER(Brg_Nama) = '"&trim(Lcase(arrRows(2)))&"' AND LOWER(DLK_M_Kategori.Kategorinama) = '"& trim(Lcase(arrRows(0))) &"' AND LOWER(DLK_M_Jenisbarang.jenisnama) = '"& trim(Lcase(arrRows(1))) &"'"
         ' Response.Write data_cmd.commandTExt & "<br>"
+
         set databarang = data_cmd.execute
         ' get id satuan by nama  
         data_cmd.CommandText = "SELECT sat_id FROM DLK_M_SatuanBarang WHERE UPPER(sat_Nama) = '"& ucase(arrRows(4)) &"'"
@@ -136,11 +138,11 @@ function onSubmitForm(objForm) {
         end if
 
         if not databarang.eof then
-          data_cmd.commandTExt = "SELECT * FROM DLK_M_Bomd WHERE BMDItem = '"& databarang("brg_id") &"' and LEFT(BMDBMID,12) = '"& id &"'"
+          data_cmd.commandTExt = "SELECT * FROM DLK_T_BOMRepairD WHERE BmrdBrgID = '"& databarang("brg_id") &"' and LEFT(BmrdID,13) = '"& id &"'"
           set ckdata = data_cmd.execute
 
           if ckdata.eof then
-            call query("INSERT INTO DLK_M_BOMD (BMDBMID,BMDItem,BMDQtty,BMDJenisSat) values ('"& p("newid") &"', '"& databarang("brg_id") &"', '"& replace(arrRows(3),",",".") &"', '"& satuan &"') ")
+            call query("INSERT INTO DLK_T_BOMRepairD (BmrdID,BmrdBrgID,BmrdQtysatuan,BmrdSatID,BmrdUpdateID,BmrdKeterangan) values ('"& p("newid") &"', '"& databarang("brg_id") &"', '"& replace(arrRows(3),",",".") &"', '"& satuan &"', '"& session("userid") &"', '"& arrRows(5) &"') ")
           end if
         end if
         

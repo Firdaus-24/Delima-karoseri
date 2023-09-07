@@ -54,6 +54,41 @@ sub tambahbomD()
     end if
 end sub
 
+sub updatebomd()
+  iddetailbmrdid = trim(Request.Form("iddetailbmrdid"))
+  ckbmrdbrg = trim(Request.Form("ckbmrdbrg"))
+  qtty = trim(Request.Form("qtty"))
+  satuan = trim(Request.Form("satuan"))
+  keterangan = trim(Request.Form("keterangan"))
+
+  set data_cmd =  Server.CreateObject ("ADODB.Command")
+  data_cmd.ActiveConnection = mm_delima_string
+
+  data_cmd.commandText = "SELECT * FROM DLK_T_BOMRepairD WHERE BMRDID = '"& iddetailbmrdid &"'"
+  set data = data_cmd.execute
+
+  if not data.eof then
+    if data("BmrdBrgID") = ckbmrdbrg then
+      call query("UPDATE DLK_T_BomRepairD SET BmrdQtysatuan = "& qtty &",BmrdSatID = '"& satuan &"',BmrdUpdateID = '"& Session("userid") &"',BmrdKeterangan = '"& keterangan &"' WHERE bmrdid = '"& iddetailbmrdid &"' ")
+
+      call alert("DETAIL B.O.M REPAIR", "berhasil di update", "success",Request.ServerVariables("HTTP_REFERER")) 
+    elseIf data("BmrdBrgID") <> ckbmrdbrg then
+      data_cmd.commandTExt = "SELECT * FROM DLK_T_BomrepairD WHERE LEFT(BMRDID,13) = '"& left(iddetailbmrdid,13) &"' AND BmrdBrgid = '"& ckbmrdbrg &"' "
+      set ckdetail = data_cmd.execute
+
+      if ckdetail.eof then
+        call query("UPDATE DLK_T_BomRepairD SET BmrdBrgid = '"& ckbmrdbrg &"', BmrdQtysatuan = "& qtty &",BmrdSatID = '"& satuan &"',BmrdUpdateID = '"& Session("userid") &"',BmrdKeterangan = '"& keterangan &"' WHERE bmrdid = '"& iddetailbmrdid &"' ")
+        call alert("DETAIL B.O.M REPAIR", "berhasil di update", "success",Request.ServerVariables("HTTP_REFERER")) 
+      else
+        call alert("DETAIL B.O.M REPAIR", "barang sudah terdaftar", "error",Request.ServerVariables("HTTP_REFERER")) 
+      end if
+    end if
+
+  else
+    call alert("DETAIL B.O.M REPAIR", "tidak terdaftar", "error",Request.ServerVariables("HTTP_REFERER"))
+  end if
+end sub
+
 
 sub anggaran()
   tgl = trim(Request.Form("tgl"))
