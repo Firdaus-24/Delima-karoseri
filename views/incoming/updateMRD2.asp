@@ -15,7 +15,7 @@
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
 
-   data_cmd.commandText = "SELECT * FROM DLK_T_MaterialReceiptD2 WHERE MR_ID = '"& id &"' AND MR_Transaksi = '"& trans &"' AND MR_Qtysatuan = "& qtylama &" AND MR_Acpdate = '"& acpdate &"'"
+   data_cmd.commandText = "SELECT * FROM DLK_T_MaterialReceiptD2 WHERE MR_ID = '"& id &"' AND MR_OPDOPHID = '"& trans &"' AND MR_Qtysatuan = "& qtylama &" AND MR_Acpdate = '"& acpdate &"'"
    ' Response.Write data_cmd.commandTExt
    set data = data_cmd.execute
    ' Response.end 
@@ -23,7 +23,7 @@
    if not data.eof then
       
       ' cek stok barang
-      data_cmd.commandText = "SELECT Brg_Nama, ISNULL((SELECT MR_Harga as harga FROM DLK_T_MaterialReceiptD2 WHERE MR_Item = DLK_M_Barang.Brg_ID GROUP BY MR_Harga),0) as harga,ISNULL((SELECT SUM(MR_Qtysatuan) as pembelian FROM DLK_T_MaterialReceiptD2 WHERE MR_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT SUM(MO_Qtysatuan) FROM DLK_T_MaterialOutD WHERE MO_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT SUM(DB_QtySatuan) FROM dbo.DLK_T_DelBarang WHERE DB_Item = DLK_M_Barang.Brg_ID AND DB_AktifYN = 'Y'),0) as stok FROM DLK_M_Barang WHERE Brg_ID =  '"& data("MR_Item") &"'"
+      data_cmd.commandText = "SELECT Brg_Nama, ISNULL((SELECT MR_Harga as harga FROM DLK_T_MaterialReceiptD2 WHERE MR_Item = DLK_M_Barang.Brg_ID GROUP BY MR_Harga),0) as harga,ISNULL((SELECT SUM(MR_Qtysatuan) as pembelian FROM DLK_T_MaterialReceiptD2 WHERE MR_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT ROUND(sum(MO_Qtysatuan), 2) FROM DLK_T_MaterialOutD WHERE MO_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT SUM(DB_QtySatuan) FROM dbo.DLK_T_DelBarang WHERE DB_Item = DLK_M_Barang.Brg_ID AND DB_AktifYN = 'Y'),0) as stok FROM DLK_M_Barang WHERE Brg_ID =  '"& data("MR_Item") &"'"
       ' response.write data_cmd.commandText
       set stokMaster = data_cmd.execute
 
@@ -33,13 +33,13 @@
       set ckharga = data_cmd.execute 
 
       ' cek barang yang sudah masuk ke mr
-      data_cmd.commandTExt = "SELECT SUM(ISNULL(MR_Qtysatuan, 0)) AS qtymr FROM dbo.DLK_T_MaterialReceiptD2 WHERE MR_Transaksi = '"& trans &"'"
+      data_cmd.commandTExt = "SELECT SUM(ISNULL(MR_Qtysatuan, 0)) AS qtymr FROM dbo.DLK_T_MaterialReceiptD2 WHERE MR_OPDOPHID = '"& trans &"'"
   
       set mrincome = data_cmd.execute
 
       if qty = qtylama then
          ' hanya update satuan dan rak saja
-         call query("UPDATE DLK_T_MaterialReceiptD2 SET MR_RakID = '"& rak &"', MR_Jenissat = '"& satuanmr &"' WHERE MR_ID = '"& id &"' AND MR_Transaksi = '"& trans &"' AND MR_Qtysatuan = '"& qty &"' AND MR_acpdate = '"& acpdate &"' ")
+         call query("UPDATE DLK_T_MaterialReceiptD2 SET MR_RakID = '"& rak &"', MR_Jenissat = '"& satuanmr &"' WHERE MR_ID = '"& id &"' AND MR_OPDOPHID = '"& trans &"' AND MR_Qtysatuan = '"& qty &"' AND MR_acpdate = '"& acpdate &"' ")
          response.write "SATUAN DAN RAK"
          Response.end
       end if
@@ -65,7 +65,7 @@
                realharga = 0
             end if
             call query("UPDATE DLK_T_MaterialReceiptD2 SET MR_Harga = '" & realharga &"' WHERE MR_Item = '"& data("MR_Item") &"'")
-            call query("UPDATE DLK_T_MaterialReceiptD2 SET MR_Qtysatuan = "& qty &", MR_RakID = '"& rak &"', MR_Jenissat = '"& satuanmr &"' WHERE MR_ID = '"& id &"' AND MR_Transaksi = '"& trans &"' AND MR_Qtysatuan = '"& qtylama &"' AND MR_acpdate = '"& acpdate &"' ")
+            call query("UPDATE DLK_T_MaterialReceiptD2 SET MR_Qtysatuan = "& qty &", MR_RakID = '"& rak &"', MR_Jenissat = '"& satuanmr &"' WHERE MR_ID = '"& id &"' AND MR_OPDOPHID = '"& trans &"' AND MR_Qtysatuan = '"& qtylama &"' AND MR_acpdate = '"& acpdate &"' ")
 
             response.write "DONE"
          elseIf Cint(stokMaster("stok")) = 0 then
@@ -78,7 +78,7 @@
             hppawal = Round(ckharga("OPD_Harga") * qty) + asuransilain
             hargabaru = hppawal / qty
 
-            call query("UPDATE DLK_T_MaterialReceiptD2 SET MR_Qtysatuan = "& qty &", MR_RakID = '"& rak &"', MR_harga = '"& hargabaru &"', MR_Jenissat = '"& satuanmr &"' WHERE MR_ID = '"& id &"' AND MR_Transaksi = '"& trans &"' AND MR_Qtysatuan = '"& qtylama &"' AND MR_acpdate = '"& acpdate &"' ")
+            call query("UPDATE DLK_T_MaterialReceiptD2 SET MR_Qtysatuan = "& qty &", MR_RakID = '"& rak &"', MR_harga = '"& hargabaru &"', MR_Jenissat = '"& satuanmr &"' WHERE MR_ID = '"& id &"' AND MR_OPDOPHID = '"& trans &"' AND MR_Qtysatuan = '"& qtylama &"' AND MR_acpdate = '"& acpdate &"' ")
 
             Response.Write "DATA STOK DARI 0 SUDAH TERUPDATE"
          end if

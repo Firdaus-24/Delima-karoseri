@@ -1,7 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
    if session("INV2") = false then
-      Response.Redirect("../index.asp")
+      Response.Redirect("../../")
    end if
 
    set data_cmd =  Server.CreateObject ("ADODB.Command")
@@ -197,7 +197,7 @@
                recordcounter = recordcounter + 1
 
                ' cek detail material d1
-               data_cmd.commandTExt = "SELECT * FROM DLK_T_MaterialReceiptD1 WHERE MR_ID = '"& rs("MR_ID") &"'"
+               data_cmd.commandTExt = "SELECT * FROM DLK_T_MaterialReceiptD2 WHERE MR_ID = '"& rs("MR_ID") &"'"
 
                set detail = data_cmd.execute
                %>
@@ -211,7 +211,7 @@
                      <div class="btn-group" role="group" aria-label="Basic example">
                         <a href="detail.asp?id=<%= rs("MR_ID") %>" class="btn badge text-bg-warning">Detail</a>
                         <% if session("INV2B") = true then %> 
-                        <a href="income_u.asp?id=<%= rs("MR_ID") %>" class="btn badge text-bg-primary">update</a>
+                        <a href="incomed_add.asp?id=<%= rs("MR_ID") %>" class="btn badge text-bg-primary">update</a>
                         <% end if %>
                         <% if session("INV2C") = true then %> 
                            <% if detail.eof then %>
@@ -248,7 +248,7 @@
                   end if
                if requestrecords <> 0 then 
                %>
-                  <a class="page-link prev" href="index.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&cabang=<%=cabang%>&tgla=<%=tgla%>&tgle=<%=tgle%>&jenis=<%=jenis%>">&#x25C4; Prev </a>
+                  <a class="page-link prev" href="./?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&cabang=<%=cabang%>&tgla=<%=tgla%>&tgle=<%=tgle%>&jenis=<%=jenis%>">&#x25C4; Prev </a>
                <% else %>
                   <p class="page-link prev-p">&#x25C4; Prev </p>
                <% end if %>
@@ -266,9 +266,9 @@
                   end if
                   if Cint(page) = pagelistcounter then
                   %>
-                     <a class="page-link hal bg-primary text-light" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&cabang=<%=cabang%>&tgla=<%=tgla%>&tgle=<%=tgle%>&jenis=<%=jenis%>"><%= pagelistcounter %></a> 
+                     <a class="page-link hal bg-primary text-light" href="./?offset=<% = pagelist %>&page=<%=pagelistcounter%>&cabang=<%=cabang%>&tgla=<%=tgla%>&tgle=<%=tgle%>&jenis=<%=jenis%>"><%= pagelistcounter %></a> 
                   <%else%>
-                     <a class="page-link hal" href="index.asp?offset=<% = pagelist %>&page=<%=pagelistcounter%>&cabang=<%=cabang%>&tgla=<%=tgla%>&tgle=<%=tgle%>&jenis=<%=jenis%>"><%= pagelistcounter %></a> 
+                     <a class="page-link hal" href="./?offset=<% = pagelist %>&page=<%=pagelistcounter%>&cabang=<%=cabang%>&tgla=<%=tgla%>&tgle=<%=tgle%>&jenis=<%=jenis%>"><%= pagelistcounter %></a> 
                   <%
                   end if
                   pagelist = pagelist + recordsonpage
@@ -284,7 +284,7 @@
                   end if
                   %>
                   <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                     <a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&cabang=<%=cabang%>&tgla=<%=tgla%>&tgle=<%=tgle%>&jenis=<%=jenis%>">Next &#x25BA;</a>
+                     <a class="page-link next" href="./?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&cabang=<%=cabang%>&tgla=<%=tgla%>&tgle=<%=tgle%>&jenis=<%=jenis%>">Next &#x25BA;</a>
                   <% else %>
                      <p class="page-link next-p">Next &#x25BA;</p>
                   <% end if %>

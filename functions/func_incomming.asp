@@ -37,12 +37,8 @@
          set ckheader = data_cmd.execute
 
          if not ckheader.eof then
-            ' cek detail 1
-            data_cmd.commandText = "SELECT MR_Transaksi FROM DLK_T_MaterialReceiptD1 WHERE MR_Transaksi = '"& ophid &"' AND MR_ID = '"& ckheader("MR_ID") &"'"
-            set document = data_cmd.execute
-
             ' cek stok barang
-            data_cmd.commandText = "SELECT Brg_Nama, ISNULL((SELECT TOP 1 MR_Harga as harga FROM DLK_T_MaterialReceiptD2 WHERE MR_Item = DLK_M_Barang.Brg_ID GROUP BY MR_Harga order by MR_Harga DESC),0) as harga,ISNULL((SELECT SUM(MR_Qtysatuan) as pembelian FROM DLK_T_MaterialReceiptD2 WHERE MR_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT SUM(MO_Qtysatuan) FROM DLK_T_MaterialOutD WHERE MO_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT SUM(DB_QtySatuan) FROM dbo.DLK_T_DelBarang WHERE DB_Item = DLK_M_Barang.Brg_ID AND DB_AktifYN = 'Y'),0) as stok FROM DLK_M_Barang WHERE Brg_ID =  '"& brgid &"'"
+            data_cmd.commandText = "SELECT Brg_Nama, ISNULL((SELECT TOP 1 MR_Harga as harga FROM DLK_T_MaterialReceiptD2 WHERE MR_Item = DLK_M_Barang.Brg_ID GROUP BY MR_Harga order by MR_Harga DESC),0) as harga,ISNULL((SELECT SUM(MR_Qtysatuan) as pembelian FROM DLK_T_MaterialReceiptD2 WHERE MR_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT ROUND(sum(MO_Qtysatuan), 2) FROM DLK_T_MaterialOutD WHERE MO_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT SUM(DB_QtySatuan) FROM dbo.DLK_T_DelBarang WHERE DB_Item = DLK_M_Barang.Brg_ID AND DB_AktifYN = 'Y'),0) as stok FROM DLK_M_Barang WHERE Brg_ID =  '"& brgid &"'"
             ' response.write data_cmd.commandText
             set stokMaster = data_cmd.execute
 
@@ -50,52 +46,32 @@
             data_cmd.commandTExt = "SELECT OPD_Harga, OPD_Qtysatuan FROM DLK_T_OrpemD WHERE OPD_OPHID = '"& opdophid &"'"
             set ckharga = data_cmd.execute
 
-            if document.eof then
-               ' insert detail 1
-               call query("INSERT INTO DLK_T_MaterialREceiptD1 (MR_ID,MR_Transaksi,MR_UpdateID) VALUES ('"& ckheader("MR_ID") &"', '"& data("OPH_ID") &"','"& session("userID") &"')")
+            if Cint(stokMaster("stok")) = 0 then
+               ' cek harga baru
+               hppawal = Round(ckharga("OPD_Harga") * qty) + asuransilain
 
-               if Cint(stokMaster("stok")) = 0 then
-                  ' cek harga baru
-                  hppawal = Round(ckharga("OPD_Harga") * qty) + asuransilain
+               hargabaru = hppawal / qty
 
-                  hargabaru = hppawal / qty
-
-                  call query("INSERT INTO DLK_T_MaterialREceiptD2 (MR_ID, MR_AcpDate, MR_Transaksi,MR_Item,MR_Qtysatuan,MR_Harga,MR_JenisSat, MR_RakID) VALUES ('"& id &"', '"& acpdate &"','"& opdophid &"','"& brgid &"', "& qty &",'"& hargabaru &"','"& satuan &"', '"& rak &"')")
-               else
-
-                  hppmr = stokMaster("harga") * stokMaster("stok")
-                  hpppo = ckharga("OPD_Harga") * qty
-
-                  hargabaru = Round((hppmr + hpppo + asuransilain) / (qty + stokMaster("stok")))
-                  
-                  call query("INSERT INTO DLK_T_MaterialREceiptD2 (MR_ID, MR_AcpDate, MR_Transaksi,MR_Item,MR_Qtysatuan,MR_Harga,MR_JenisSat, MR_RakID) VALUES ('"& id &"', '"& acpdate &"','"& opdophid &"','"& brgid &"', "& qty &",'"& hargabaru &"','"& satuan &"', '"& rak &"')") 
-
-                  ' update smua harga di MR
-                  call query("UPDATE DLK_T_MaterialReceiptD2 SET MR_Harga = '"& hargabaru &"' WHERE MR_Item = '"& brgid &"'")
-               end if
+               call query("INSERT INTO DLK_T_MaterialREceiptD2 (MR_ID, MR_AcpDate, MR_OPDOPHID,MR_Item,MR_Qtysatuan,MR_Harga,MR_JenisSat, MR_RakID, MR_UpdateID) VALUES ('"& id &"', '"& acpdate &"','"& opdophid &"','"& brgid &"', "& qty &",'"& hargabaru &"','"& satuan &"', '"& rak &"', '"& session("userid") &"')")
             else
-               if Cint(stokMaster("stok")) = 0 then
-                  ' cek harga baru
-                  hppawal = Round(ckharga("OPD_Harga") * qty) + asuransilain
-                  hargabaru = hppawal / qty
 
-                  call query("INSERT INTO DLK_T_MaterialREceiptD2 (MR_ID, MR_AcpDate, MR_Transaksi,MR_Item,MR_Qtysatuan,MR_Harga,MR_JenisSat, MR_RakID) VALUES ('"& id &"', '"& acpdate &"','"& opdophid &"','"& brgid &"', "& qty &",'"& hargabaru &"','"& satuan &"', '"& rak &"')")
-               else
-                  hppmr = stokMaster("harga") * stokMaster("stok")
-                  hpppo = ckharga("OPD_Harga") * qty
+               hppmr = stokMaster("harga") * stokMaster("stok") '20 '251.000
+               hpppo = ckharga("OPD_Harga") * qty
 
-                  hargabaru = Round((hppmr + hpppo + asuransilain) / (qty + stokMaster("stok")))
-                  
-                  call query("INSERT INTO DLK_T_MaterialREceiptD2 (MR_ID, MR_AcpDate, MR_Transaksi,MR_Item,MR_Qtysatuan,MR_Harga,MR_JenisSat, MR_RakID) VALUES ('"& id &"', '"& acpdate &"','"& opdophid &"','"& brgid &"', "& qty &",'"& hargabaru &"','"& satuan &"', '"& rak &"')")
-                  ' update smua harga di MR
-                  call query("UPDATE DLK_T_MaterialReceiptD2 SET MR_Harga = '"& hargabaru &"' WHERE MR_Item = '"& brgid &"'")
-               end if
+               hargabaru = Round((hppmr + hpppo + asuransilain) / (qty + stokMaster("stok")))
+               
+               call query("INSERT INTO DLK_T_MaterialREceiptD2 (MR_ID, MR_AcpDate, MR_OPDOPHID,MR_Item,MR_Qtysatuan,MR_Harga,MR_JenisSat, MR_RakID, MR_UpdateID) VALUES ('"& id &"', '"& acpdate &"','"& opdophid &"','"& brgid &"', "& qty &",'"& hargabaru &"','"& satuan &"', '"& rak &"', '"& session("userid") &"')") 
+
+               ' update smua harga di MR
+               call query("UPDATE DLK_T_MaterialReceiptD2 SET MR_Harga = '"& hargabaru &"' WHERE MR_Item = '"& brgid &"'")
             end if
+           
             call alert("DATA TRANSAKSI INCOMMING", "Berhasil Ditambahkan", "success",Request.ServerVariables("HTTP_REFERER")) 
          else
             call alert("DATA HEADER TIDAK TERDAFTAR", "Erorr", "error",Request.ServerVariables("HTTP_REFERER")) 
          end if
-
+      else
+            call alert("NO PURCHASE ORDER TIDAK TERDAFTAR", "Erorr", "error",Request.ServerVariables("HTTP_REFERER")) 
       end if
 
    end sub

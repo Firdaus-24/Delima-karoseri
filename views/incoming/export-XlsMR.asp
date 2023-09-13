@@ -8,12 +8,9 @@
    set data_cmd =  Server.CreateObject ("ADODB.Command")
    data_cmd.ActiveConnection = mm_delima_string
    ' header
-   data_cmd.commandTExt = "SELECT dbo.DLK_T_MaterialReceiptH.*, dbo.GLB_M_Agen.AgenName, dbo.GLB_M_Agen.AgenID, DLK_M_WebLogin.username FROM dbo.DLK_T_MaterialReceiptH LEFT OUTER JOIN DLK_M_WebLogin ON DLK_T_MaterialReceiptH.MR_UpdateID = DLK_M_Weblogin.userid LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialReceiptH.MR_AgenID = dbo.GLB_M_Agen.AgenID WHERE (dbo.DLK_T_MaterialReceiptH.MR_AktifYN = 'Y') AND (dbo.DLK_T_MaterialReceiptH.MR_ID = '"& id &"')"
+   data_cmd.commandTExt = "SELECT dbo.DLK_T_MaterialReceiptH.*, dbo.GLB_M_Agen.AgenName, dbo.GLB_M_Agen.AgenID, DLK_M_WebLogin.username, DLK_M_Vendor.ven_nama FROM dbo.DLK_T_MaterialReceiptH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialReceiptH.MR_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_WebLogin ON DLK_T_MaterialReceiptH.MR_UpdateID = DLK_M_Weblogin.userid LEFT OUTER JOIN DLK_M_vendor ON DLK_T_MaterialReceiptH.MR_Venid = DLK_M_Vendor.ven_ID WHERE (dbo.DLK_T_MaterialReceiptH.MR_AktifYN = 'Y') AND (dbo.DLK_T_MaterialReceiptH.MR_ID = '"& id &"')"
 
    set data = data_cmd.execute
-   ' detail1
-   data_cmd.commandTExt = "SELECT DLK_T_MaterialReceiptD1.*, DLK_M_WebLogin.username FROM DLK_T_MaterialReceiptD1 LEFT OUTER JOIN DLK_M_WebLogin ON DLK_T_MaterialReceiptD1.MR_Updateid = DLK_M_Weblogin.userid WHERE MR_ID = '"& id &"'"
-   set data1 = data_cmd.execute
 
    call header("Proses Incomming")
 %>
@@ -45,8 +42,17 @@
       font-size:12px;
       border-collapse: collapse;
    }
-   .footer article{
-      font-size:10px;
+   .legalitas{
+      font-size:12px;
+      display:flex;
+      justify-content:space-between;
+      padding:10px;
+   }
+   .titiktitik{
+      display:flex;
+      justify-content:space-between;
+      padding:10px;
+      margin-top:40px;
    }
    @page {
       size: A4;
@@ -95,20 +101,20 @@
       </tr>
       <tr>
          <th>
-            Update ID
+            No. Purchase
          </th>
          <td>
-            : <%= data("username") %>
+            : <%= left(data("MR_OPHID"),2) %>-<%= mid(data("MR_OPHID"),3,3)%>/<%= mid(data("MR_OPHID"),6,4) %>/<%= right(data("MR_OPHID"),4) %>
          </td>
          <th>
-            Type
+            Vendor
          </th>
          <td>
-            :  <% if data("MR_Type") = 1 then %>Purchase <% else %>Produksi <% end if %> 
+            : <%= data("ven_nama") %>
          </td>
       </tr>
       <tr>
-            <th>
+         <th>
             Keterangan
          </th>
          <td>
@@ -126,8 +132,9 @@
          <tr style="background-color: gray;color:#fff;">
             <th scope="col">No</th>
             <th scope="col">Diterima</th>
-            <th scope="col">Kode Item</th>
-            <th scope="col">Item</th>
+            <th scope="col">Kategori</th>
+            <th scope="col">Jenis</th>
+            <th scope="col">Barang</th>
             <th scope="col">Quantity</th>
             <th scope="col">Satuan</th>
             <th scope="col">Harga</th>
@@ -137,30 +144,25 @@
       </thead>
       <tbody>
          <% 
-         do while not data1.eof 
-         %>
-         <tr style="background-color:#ffffe0;">
-            <td colspan="3">Document :</td>
-            <td colspan="6"><%= LEFT(data1("MR_Transaksi"),2) &"-"& mid(data1("MR_Transaksi"),3,3) &"/"& mid(data1("MR_Transaksi"),6,4) &"/"& right(data1("MR_Transaksi"),4)%></td>
-         </tr>
-         <% 
          ' detail2
-         data_cmd.commandTExt = "SELECT dbo.DLK_T_MaterialReceiptD2.*, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id, DLK_M_Rak.Rak_Nama, DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama, (DLK_T_OrpemD.OPD_Harga) as hargabeli FROM dbo.DLK_T_MaterialReceiptD2 LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialReceiptD2.MR_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialReceiptD2.MR_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_Rak ON DLK_T_MaterialReceiptD2.MR_RakID = DLK_M_Rak.Rak_ID LEFT OUTER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId LEFT OUTER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID LEFT OUTER JOIN DLK_T_OrpemD ON DLK_T_MaterialReceiptD2.MR_Transaksi = DLK_T_OrpemD.OPD_OPHID WHERE dbo.DLK_T_MaterialReceiptD2.MR_ID = '"& id &"' AND LEFT(MR_Transaksi,13) = '"& data1("MR_Transaksi") &"' AND MR_qtysatuan <> 0"
+         data_cmd.commandTExt = "SELECT dbo.DLK_T_MaterialReceiptD2.*, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_SatuanBarang.Sat_ID, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_Id, DLK_M_Rak.Rak_Nama, DLK_M_Kategori.KategoriNama, DLK_M_JenisBarang.JenisNama, (DLK_T_OrpemD.OPD_Harga) as hargabeli FROM dbo.DLK_T_MaterialReceiptD2 LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialReceiptD2.MR_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialReceiptD2.MR_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN DLK_M_Rak ON DLK_T_MaterialReceiptD2.MR_RakID = DLK_M_Rak.Rak_ID LEFT OUTER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId LEFT OUTER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID LEFT OUTER JOIN DLK_T_OrpemD ON DLK_T_MaterialReceiptD2.MR_OPDOPHID = DLK_T_OrpemD.OPD_OPHID WHERE dbo.DLK_T_MaterialReceiptD2.MR_ID = '"& id &"' AND LEFT(MR_OPDOPHID,13) = '"& data("MR_OPHID") &"' AND MR_qtysatuan <> 0"
          set data2 = data_cmd.execute
          
          gtotal = 0
          total = 0
          no = 0
          do while not data2.eof 
-         no = no + 1
-         total = (data2("hargabeli") * data2("MR_Qtysatuan"))
+         dim x
+            no = no + 1
+            total = (data2("hargabeli") * data2("MR_Qtysatuan"))
 
-         gtotal = gtotal + total
+            gtotal = gtotal + total
          %>
          <tr>
             <td><%= no %></td>
             <td><%= data2("MR_AcpDate") %></td>
-            <td><%= data2("kategoriNama") &" - "& data2("jenisNama") %></td>
+            <td><%= data2("kategoriNama") %></td>
+            <td><%= data2("jenisNama") %></td>
             <td><%= data2("Brg_Nama") %></td>
             <td><%= data2("MR_Qtysatuan") %></td>
             <td><%= data2("Sat_nama") %></td>
@@ -172,14 +174,10 @@
          response.flush
          data2.movenext
          loop
-         %>
-         <% 
-         response.flush
-         data1.movenext
-         loop
+         data2.movefirst
          %>
          <tr>
-            <th colspan="8">
+            <th colspan="9">
                Grand Total
             </th>
             <th>
@@ -188,6 +186,18 @@
          </tr>
       </tbody>
    </table>
+   <footer id="pageFooter">
+      <div class='legalitas'>
+         <p><b>Dibuat Oleh</b></p>
+         <p><b>Di Setujui Oleh</b></p>
+         <p><b>Mengetahui</b></p>
+      </div>
+      <div class='titiktitik'>
+         <p><b>...................</b></p>
+         <p><b>...................</b></p>
+         <p><b>...................</b></p>
+      </div>
+   </footer>
 </body>
 <% 
    call footer()

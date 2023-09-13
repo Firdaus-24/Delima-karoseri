@@ -1,3 +1,4 @@
+<!--#include file="func_ceil.asp"-->
 <%
   sub tambah()
     cabang = trim(Request.Form("cabang"))
@@ -128,7 +129,7 @@ sub anggaran()
       ' response.write data_cmd.commandText & "<br>"
       set p = data_cmd.execute
 
-      call query("INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoKeterangan, memoHarga) VALUES ( '"& p("newid") &"','"& drepar("BmrdBrgID") &"', '', "& drepar("BmrdQtysatuan") &",'"& drepar("BmrdSatID") &"', '"& drepar("BmrdKeterangan") &"', '"& ckharga("harga") &"')")
+      call query("INSERT INTO DLK_T_Memo_D (memoID, memoItem, memoSpect, memoQtty, memoSatuan, memoKeterangan, memoHarga) VALUES ( '"& p("newid") &"','"& drepar("BmrdBrgID") &"', '', "& ceil(drepar("BmrdQtysatuan")) &",'"& drepar("BmrdSatID") &"', '"& drepar("BmrdKeterangan") &"', '"& ckharga("harga") &"')")
   
     response.flush
     drepar.movenext
