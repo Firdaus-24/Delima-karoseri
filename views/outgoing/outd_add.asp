@@ -14,24 +14,13 @@
 
   set data = data_cmd.execute
 
-  ' detail bom by nomor produksi
-  if data("MO_Type") = "R" then
-    strquerybarang = "SELECT (dbo.DLK_T_BOMRepairD.BmrdQtysatuan) AS qty, dbo.DLK_M_Barang.Brg_Nama,dbo.DLK_M_Barang.Brg_ID, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_TypeBarang.T_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama FROM dbo.DLK_T_BOMRepairD LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_BOMRepairD.BmrdSatID = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.DLK_M_Kategori INNER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_Kategori.KategoriId = dbo.DLK_M_Barang.KategoriID INNER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID INNER JOIN dbo.DLK_M_TypeBarang ON dbo.DLK_M_Barang.Brg_Type = dbo.DLK_M_TypeBarang.T_ID ON dbo.DLK_T_BOMRepairD.BmrdBrgID = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_T_BOMRepairH ON LEFT(dbo.DLK_T_BOMRepairD.BmrdID, 13) = dbo.DLK_T_BOMRepairH.BmrID WHERE (dbo.DLK_T_BOMRepairH.BmrAktifYN = 'Y') AND (dbo.DLK_T_BOMRepairH.BmrPDRID = '"& data("MO_PDDPDRID") &"') ORDER BY dbo.DLK_M_TypeBarang.T_Nama, dbo.DLK_M_Barang.Brg_Nama"
-  elseIf data("MO_Type") = "P" then
-    strquerybarang = "SELECT dbo.DLK_M_Barang.Brg_Nama,dbo.DLK_M_Barang.Brg_ID, dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_TypeBarang.T_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, (dbo.DLK_M_BOMD.BMDQtty) as qty FROM dbo.DLK_M_BOMH INNER JOIN dbo.DLK_T_ProduksiD ON dbo.DLK_M_BOMH.BMID = dbo.DLK_T_ProduksiD.PDD_BMID RIGHT OUTER JOIN dbo.DLK_M_Kategori INNER JOIN dbo.DLK_M_Barang ON dbo.DLK_M_Kategori.KategoriId = dbo.DLK_M_Barang.KategoriID INNER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID INNER JOIN dbo.DLK_M_TypeBarang ON dbo.DLK_M_Barang.Brg_Type = dbo.DLK_M_TypeBarang.T_ID RIGHT OUTER JOIN dbo.DLK_M_BOMD ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_M_BOMD.BMDItem LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_M_BOMD.BMDJenisSat = dbo.DLK_M_SatuanBarang.Sat_ID ON dbo.DLK_M_BOMH.BMID = LEFT(dbo.DLK_M_BOMD.BMDBMID, 12) WHERE (dbo.DLK_M_BOMH.BMApproveYN = 'Y') AND (dbo.DLK_M_BOMH.BMAktifYN = 'Y') AND (dbo.DLK_T_ProduksiD.PDD_ID = '"& data("MO_PDDPDRID") &"') ORDER BY dbo.DLK_M_TypeBarang.T_Nama, dbo.DLK_M_Barang.Brg_Nama"
-  else
-    strquerybarang = ""
-  end if
-  data_cmd.commandTExt = strquerybarang
-  set barang = data_cmd.execute
-
   ' detail data
   data_cmd.commandText = "SELECT dbo.DLK_T_MaterialOutD.MO_ID, dbo.DLK_T_MaterialOutD.MO_Date, dbo.DLK_T_MaterialOutD.MO_Item, dbo.DLK_T_MaterialOutD.MO_Qtysatuan, dbo.DLK_T_MaterialOutD.MO_Harga, dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_SatuanBarang.Sat_Nama, dbo.DLK_M_Rak.Rak_nama, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriNama FROM dbo.DLK_T_MaterialOutD LEFT OUTER JOIN dbo.DLK_M_Rak ON dbo.DLK_T_MaterialOutD.MO_RakID = dbo.DLK_M_Rak.Rak_ID LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialOutD.MO_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID LEFT OUTER JOIN dbo.DLK_M_Barang ON dbo.DLK_T_MaterialOutD.MO_Item = dbo.DLK_M_Barang.Brg_Id LEFT OUTER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId LEFT OUTER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID WHERE MO_ID = '"& data("MO_ID") &"' ORDER BY DLK_M_Barang.Brg_Nama ASC"
 
   set ddata = data_cmd.execute
 
   ' get stok barang
-  data_cmd.commandTExt = "SELECT dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_ID, dbo.DLK_M_Barang.Brg_Type, dbo.DLK_M_JenisBarang.JenisID, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriId,dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_Barang.Brg_AktifYN, dbo.DLK_M_TypeBarang.T_ID, dbo.DLK_M_TypeBarang.T_Nama, ISNULL(ISNULL((SELECT SUM(MR_Qtysatuan) as pembelian FROM DLK_T_MaterialReceiptD2 WHERE MR_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT SUM(MO_Qtysatuan) FROM DLK_T_MaterialOutD WHERE MO_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT SUM(DB_QtySatuan) FROM dbo.DLK_T_DelBarang WHERE DB_Item = DLK_M_Barang.Brg_ID AND DB_AktifYN = 'Y' AND DB_Acc1 = 'Y' AND DB_Acc2 = 'Y'),0),0) as stok, ISNULL(dbo.DLK_T_MaterialReceiptD2.MR_Harga, 0) as harga, ISNULL((SELECT TOP 1 dbo.DLK_M_SatuanBarang.Sat_Nama FROM dbo.DLK_T_MaterialReceiptD2 LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialReceiptD2.MR_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID WHERE DLK_T_MaterialReceiptD2.MR_Item = DLK_M_Barang.Brg_ID GROUP BY Sat_nama),'') as satuan FROM DLK_M_Barang LEFT OUTER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId LEFT OUTER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID  LEFT OUTER JOIN dbo.DLK_M_TypeBarang ON dbo.DLK_M_Barang.Brg_Type = dbo.DLK_M_TypeBarang.T_ID LEFT OUTER JOIN dbo.DLK_T_MaterialReceiptD2 ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_MaterialReceiptD2.MR_Item WHERE Brg_AktifYN = 'Y' AND Brg_type <> 'T01' AND Brg_type <> 'T05' AND Brg_type <> 'T06' AND Brg_type <> 'T12' AND LEFT(Brg_ID,3) = '"& data("AgenID") &"' AND ISNULL(ISNULL((SELECT SUM(MR_Qtysatuan) as pembelian FROM DLK_T_MaterialReceiptD2 WHERE MR_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT SUM(MO_Qtysatuan) FROM DLK_T_MaterialOutD WHERE MO_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT SUM(DB_QtySatuan) FROM dbo.DLK_T_DelBarang WHERE DB_Item = DLK_M_Barang.Brg_ID AND DB_AktifYN = 'Y' AND DB_Acc1 = 'Y' AND DB_Acc2 = 'Y'),0),0) > 0 GROUP BY dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_MinStok, dbo.DLK_M_Barang.Brg_Type, dbo.DLK_M_JenisBarang.JenisID, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriId,dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_Barang.Brg_AktifYN, dbo.DLK_M_TypeBarang.T_ID, dbo.DLK_M_TypeBarang.T_Nama, DLK_M_Barang.Brg_ID, dbo.DLK_T_MaterialReceiptD2.MR_Harga ORDER BY Brg_Nama ASC"
+  data_cmd.commandTExt = "SELECT dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_ID, dbo.DLK_M_Barang.Brg_Type, dbo.DLK_M_JenisBarang.JenisID, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriId,dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_Barang.Brg_AktifYN, dbo.DLK_M_TypeBarang.T_ID, dbo.DLK_M_TypeBarang.T_Nama, ISNULL(ISNULL((SELECT SUM(MR_Qtysatuan) as pembelian FROM DLK_T_MaterialReceiptD2 WHERE MR_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT ROUND(sum(MO_Qtysatuan), 2) FROM DLK_T_MaterialOutD WHERE MO_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT ROUND(SUM(DB_QtySatuan),2) FROM dbo.DLK_T_DelBarang WHERE DB_Item = DLK_M_Barang.Brg_ID AND DB_AktifYN = 'Y' AND DB_Acc1 = 'Y' AND DB_Acc2 = 'Y'),0),0) as stok, ISNULL(dbo.DLK_T_MaterialReceiptD2.MR_Harga, 0) as harga, ISNULL((SELECT TOP 1 dbo.DLK_M_SatuanBarang.Sat_Nama FROM dbo.DLK_T_MaterialReceiptD2 LEFT OUTER JOIN dbo.DLK_M_SatuanBarang ON dbo.DLK_T_MaterialReceiptD2.MR_JenisSat = dbo.DLK_M_SatuanBarang.Sat_ID WHERE DLK_T_MaterialReceiptD2.MR_Item = DLK_M_Barang.Brg_ID GROUP BY Sat_nama),'') as satuan FROM DLK_M_Barang LEFT OUTER JOIN dbo.DLK_M_Kategori ON dbo.DLK_M_Barang.KategoriID = dbo.DLK_M_Kategori.KategoriId LEFT OUTER JOIN dbo.DLK_M_JenisBarang ON dbo.DLK_M_Barang.JenisID = dbo.DLK_M_JenisBarang.JenisID  LEFT OUTER JOIN dbo.DLK_M_TypeBarang ON dbo.DLK_M_Barang.Brg_Type = dbo.DLK_M_TypeBarang.T_ID LEFT OUTER JOIN dbo.DLK_T_MaterialReceiptD2 ON dbo.DLK_M_Barang.Brg_Id = dbo.DLK_T_MaterialReceiptD2.MR_Item WHERE Brg_AktifYN = 'Y' AND Brg_type <> 'T01' AND Brg_type <> 'T05' AND Brg_type <> 'T06' AND Brg_type <> 'T12' AND LEFT(Brg_ID,3) = '"& data("AgenID") &"' AND ISNULL(ISNULL((SELECT SUM(MR_Qtysatuan) as pembelian FROM DLK_T_MaterialReceiptD2 WHERE MR_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT ROUND(sum(MO_Qtysatuan), 2) FROM DLK_T_MaterialOutD WHERE MO_Item = DLK_M_Barang.Brg_ID),0) - ISNULL((SELECT ROUND(SUM(DB_QtySatuan),2) FROM dbo.DLK_T_DelBarang WHERE DB_Item = DLK_M_Barang.Brg_ID AND DB_AktifYN = 'Y' AND DB_Acc1 = 'Y' AND DB_Acc2 = 'Y'),0),0) > 0 GROUP BY dbo.DLK_M_Barang.Brg_Nama, dbo.DLK_M_Barang.Brg_MinStok, dbo.DLK_M_Barang.Brg_Type, dbo.DLK_M_JenisBarang.JenisID, dbo.DLK_M_JenisBarang.JenisNama, dbo.DLK_M_Kategori.KategoriId,dbo.DLK_M_Kategori.KategoriNama, dbo.DLK_M_Barang.Brg_AktifYN, dbo.DLK_M_TypeBarang.T_ID, dbo.DLK_M_TypeBarang.T_Nama, DLK_M_Barang.Brg_ID, dbo.DLK_T_MaterialReceiptD2.MR_Harga ORDER BY Brg_Nama ASC"
 
   set getstok = data_cmd.execute
 
@@ -60,7 +49,8 @@
       display:none; 
   }
 </style>
-<div class="container">
+<body onload="getDaftarBom('<%= data("MO_PDDPDRID") %>','<%= data("MO_Type") %>', '<%= data("MO_ID") %>')" >
+<div class="container" >
   <div class="row">
     <div class="col-lg-12 mt-3 text-center">
       <h3>DETAIL BARANG OUTGOING</h3>
@@ -139,62 +129,8 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-lg-12 d-block mb-3">
-          <table class="table table-hover table-bordered" style="font-size:12px;">
-            <thead class="bg-secondary text-light">
-              <tr>
-                <th scope="col">Kode</th>
-                <th scope="col">Item</th>
-                <th scope="col">Quantity</th>
-                <th scope="col">Satuan</th>
-                <th scope="col">Type</th>
-              </tr>
-            </thead>
-            <tbody>
-            <% 
-            do while not barang.eof 
-
-            ' cek data yang sudah di keluarkan
-            data_cmd.commandTExt = "SELECT ISNULL(SUM(MO_Qtysatuan),0) as total FROM DLK_T_MaterialOutD where MO_Item = '"& barang("Brg_ID") &"' AND MO_ID = '"& data("MO_ID") &"' GROUP BY MO_Item "
-            ' Response.Write data_cmd.commandTExt
-            set ckdataout = data_cmd.execute
-
-            if not ckdataout.eof then
-              if Cint(barang("qty")) < Cint(ckdataout("total")) then
-                strbg = "bg-danger"
-              else
-                strbg = "bg-info"
-              end if
-            else  
-              strbg = ""
-              cktotal = 0
-            end if
-
-            %>
-              <tr class=<%=strbg%>>
-                <th>
-                  <%= barang("KategoriNama") &"-"& barang("jenisNama") %>
-                </th>
-                <td>
-                  <%= barang("Brg_Nama") %>
-                </td>
-                <td>
-                  <%= barang("qty") %>
-                </td>
-                <td>
-                  <%= barang("Sat_nama") %>
-                </td>
-                <td>
-                  <%= barang("T_nama") %>
-                </td>
-              </tr>
-            <% 
-            response.flush
-            barang.movenext
-            loop
-            %>
-            </tbody>
-          </table>
+        <div class="col-lg-12 d-block mb-3 content-daftarbom-outdadd" >
+          
         </div>
       </div>
     </div>
@@ -215,6 +151,7 @@
                 <th scope="col">Item</th>
                 <th scope="col">Quantity</th>
                 <th scope="col">Satuan</th>
+                <th scope="col">Harga</th>
                 <th scope="col">Rak</th>
                 <th scope="col" class="text-center">Aksi</th>
               </tr>
@@ -241,6 +178,9 @@
                     </td>
                     <td>
                       <%= ddata("Sat_Nama") %>
+                    </td>
+                    <td>
+                      <%= replace(formatCurrency(ddata("MO_Harga")),"$","") %>
                     </td>
                     <td>
                       <%= ddata("Rak_Nama") %>
@@ -359,7 +299,9 @@
                               <option value="">Pilih</option>
                               <% do while not datasatuan.eof %>
                                   <option value="<%= datasatuan("Sat_ID") %>"><%= datasatuan("Sat_Nama") %></option>
-                              <% datasatuan.movenext
+                              <% 
+                              Response.flush
+                              datasatuan.movenext
                               loop %>
                           </select>
                       </div>

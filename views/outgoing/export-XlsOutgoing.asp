@@ -1,18 +1,17 @@
 <!--#include file="../../init.asp"-->
+<!--#include file="../../functions/func_ceil.asp"-->
 <% 
   if session("INV4D") = false then
       Response.Redirect("./")
   end if
 
   id = trim(Request.QueryString("id"))
-  ' Response.ContentType = "application/vnd.ms-excel"
-  ' Response.AddHeader "content-disposition", "filename=Outgoing No:"&left(id,2)&"-"& mid(id,3,3) &"/"& mid(id,6,4) &"/"&  right(id,4) &".xls"
 
 
   set data_cmd =  Server.CreateObject ("ADODB.Command")
   data_cmd.ActiveConnection = mm_delima_string
 
-  data_cmd.commandText = "SELECT dbo.DLK_T_MaterialOutH.*, dbo.GLB_M_Agen.AgenName, dbo.GLB_M_Agen.AgenID, DLK_M_Weblogin.username FROM dbo.DLK_T_MaterialOutH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialOutH.MO_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Weblogin ON DLK_T_MaterialOutH.MO_UpdateID = DLK_M_Weblogin.userid WHERE (dbo.DLK_T_MaterialOutH.MO_ID = '"&id&"')"
+  data_cmd.commandText = "SELECT dbo.DLK_T_MaterialOutH.*, dbo.GLB_M_Agen.AgenName, dbo.GLB_M_Agen.AgenID, DLK_M_Weblogin.realname FROM dbo.DLK_T_MaterialOutH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialOutH.MO_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Weblogin ON DLK_T_MaterialOutH.MO_UpdateID = DLK_M_Weblogin.userid WHERE (dbo.DLK_T_MaterialOutH.MO_ID = '"&id&"')"
 
   set data = data_cmd.execute
 
@@ -138,7 +137,7 @@
       Update ID
     </span>
     <span>
-      : <%= data("username") %>
+      : <%= data("realname") %>
     </span>
   </div>
   <div class="rowIncrd">
@@ -162,25 +161,31 @@
   <table width="100%" class="tableIncrd">
     <tr>
       <th>Tanggal</th>
-      <th>Kode</th>
+      <th>Kategori</th>
+      <th>Jenis</th>
       <th>Item</th>
       <th>Quantity</th>
       <th>Satuan</th>
       <th>Rak</th>
+      <th>Harga</th>
+      <th>Total</th>
     </tr>
     <% 
-    tharga = 0
+    gtotal = 0
     total = 0
     do while not ddata.eof
     total =  ddata("MO_Harga") * ddata("MO_QtySatuan")
-    tharga = tharga + total
+    gtotal = gtotal + total
     %>
       <tr>
         <th>
           <%= ddata("MO_Date") %>
         </th>
         <th>
-          <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
+          <%= ddata("KategoriNama") %>
+        </th>
+        <th>
+          <%= ddata("jenisNama") %>
         </th>
         <td>
           <%= ddata("Brg_Nama") %>
@@ -194,12 +199,24 @@
         <td>
           <%= ddata("Rak_Nama") %>
         </td>
+        <td align="right">
+          <%= replace(formatCurrency(ddata("MO_Harga")),"$","") %>
+        </td>
+        <td align="right">
+          <%= replace(formatCurrency(ceil(total)),"$","") %>
+        </td>
       </tr>
     <% 
     Response.flush
     ddata.movenext
     loop
     %>
+    <tr>  
+      <th colspan="8">Grand Total</th>
+      <td class="text-end">
+        <%= replace(formatCurrency(ceil(gtotal)),"$","") %>
+      </td>
+    </tr> 
   </table>
 </body>
 <% 

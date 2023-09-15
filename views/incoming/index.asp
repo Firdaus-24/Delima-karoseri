@@ -12,10 +12,10 @@
 
    set datacabang = data_cmd.execute
 
-   ' get users
-   data_cmd.commandTExt = "SELECT dbo.DLK_M_WebLogin.UserName, dbo.DLK_M_WebLogin.UserID FROM dbo.DLK_T_MaterialReceiptH LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_MaterialReceiptH.MR_updateID = dbo.DLK_M_WebLogin.UserID WHERE (dbo.DLK_T_MaterialReceiptH.MR_AktifYN = 'Y')GROUP BY dbo.DLK_M_WebLogin.UserName, dbo.DLK_M_WebLogin.UserID ORDER BY Username ASC"
+   ' get po
+   data_cmd.commandTExt = "SELECT DLK_T_MaterialReceiptH.MR_OPHID FROM DLK_T_MaterialReceiptH WHERE MR_Aktifyn = 'Y' GROUP BY DLK_T_MaterialReceiptH.MR_OPHID ORDER BY MR_OPHID "
 
-   set users = data_cmd.execute
+   set datapo = data_cmd.execute
 
    set conn = Server.CreateObject("ADODB.Connection")
    conn.open MM_Delima_string
@@ -44,27 +44,21 @@
       tgle = trim(Request.Form("tgle"))
    end if
 
-   jenis = request.QueryString("jenis")
-   if len(jenis) = 0 then 
-      jenis = trim(Request.Form("jenis"))
+   ophidmr = request.QueryString("ophidmr")
+   if len(ophidmr) = 0 then 
+      ophidmr = trim(Request.Form("ophidmr"))
    end if
-
-   ' user = trim(Request.Form("user"))
 
    if cabang <> "" then 
       filtercabang = " AND DLK_T_MaterialReceiptH.MR_AgenID = '"& cabang &"'"
    else 
       filtercabang = ""
    end if
-   ' if user <> "" then 
-   '    filteruser = " AND DLK_T_MaterialReceiptH.MR_UpdateID = '"& user &"'"
-   ' else 
-   '    filteruser = ""
-   ' end if
-   if jenis <> "" then 
-      filterjenis = " AND DLK_T_MaterialReceiptH.MR_Jenis = '"& jenis &"'"
+  
+   if ophidmr <> "" then 
+      filterophidmr = " AND DLK_T_MaterialReceiptH.MR_ophid = '"& ophidmr &"'"
    else 
-      filterjenis = ""
+      filterophidmr = ""
    end if
 
    if tgla <> "" AND tgle <> "" then
@@ -76,7 +70,7 @@
    end if
 
    ' query seach 
-   strquery = "SELECT dbo.DLK_T_MaterialReceiptH.*, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_WebLogin.UserName FROM dbo.DLK_T_MaterialReceiptH LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_MaterialReceiptH.MR_updateID = dbo.DLK_M_WebLogin.UserID LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialReceiptH.MR_AgenID = dbo.GLB_M_Agen.AgenID WHERE (dbo.DLK_T_MaterialReceiptH.MR_AktifYN = 'Y') "& filtercabang &" "& filteruser &" "& filtertgl &""
+   strquery = "SELECT dbo.DLK_T_MaterialReceiptH.*, dbo.GLB_M_Agen.AgenName, dbo.DLK_M_WebLogin.UserName FROM dbo.DLK_T_MaterialReceiptH LEFT OUTER JOIN dbo.DLK_M_WebLogin ON dbo.DLK_T_MaterialReceiptH.MR_updateID = dbo.DLK_M_WebLogin.UserID LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialReceiptH.MR_AgenID = dbo.GLB_M_Agen.AgenID WHERE (dbo.DLK_T_MaterialReceiptH.MR_AktifYN = 'Y') "& filtercabang &" "& filterophidmr &" "& filtertgl &""
 
    ' untuk data paggination
    page = Request.QueryString("page")
@@ -133,7 +127,7 @@
       </div>   
    </div>
    <% end if %>
-   <form action="index.asp" method="post">
+   <form action="./" method="post">
    <div class="row">
       <div class="col-sm-4 mt-3">
          <label for="tgla">Tanggal Pertama</label>
@@ -142,10 +136,6 @@
       <div class="col-sm-4 mt-3">
          <label for="tgle">Tanggal kedua</label>
          <input type="date" class="form-control" name="tgle" id="tgle" autocomplete="off">
-      </div>
-      <div class="col-sm-2 mt-3">
-         </br>
-         <button type="submit" class="btn btn-primary">Cari</button>
       </div>
    </div>
    <div class="row">
@@ -162,28 +152,33 @@
          </select>
       </div>
       <div class="col-lg-4 mt-3">
-         <label for="user">User ID</label>
-         <select class="form-select" aria-label="Default select example" name="user" id="user">
+         <label for="ophidmr">No. Purchase</label>
+         <select class="form-select" aria-label="Default select example" name="ophidmr" id="ophidmr">
             <option value="">Pilih</option>
-            <% do while not users.eof %>
-               <option value="<%= users("userid") %>"><%= users("username") %></option>
+            <% do while not datapo.eof %>
+               <option value="<%= datapo("MR_OPHID") %>"><%= left(datapo("MR_OPHID"),2) %>-<%= mid(datapo("MR_OPHID"),3,3)%>/<%= mid(datapo("MR_OPHID"),6,4) %>/<%= right(datapo("MR_OPHID"),4) %></option>
             <% 
-            users.movenext
+            Response.flush
+            datapo.movenext
             loop
             %>
          </select>
+      </div>
+      <div class="col-sm-2 mt-3">
+         </br>
+         <button type="submit" class="btn btn-primary">Cari</button>
       </div>
    </div>
    </form>
    <div class="row">
       <div class="col-sm-12 mt-3">
-         <table class="table">
+         <table class="table table-hover table-bordered">
             <thead class="bg-secondary text-light">
                <tr>
                <th scope="col">No</th>
-               <th scope="col">Cabang</th>
                <th scope="col">Tanggal</th>
-               <th scope="col">Update ID</th>
+               <th scope="col">No.M.R</th>
+               <th scope="col">No.Purchase</th>
                <th scope="col">Keterangan</th>
                <th scope="col" class="text-center">Aksi</th>
                </tr>
@@ -202,10 +197,10 @@
                set detail = data_cmd.execute
                %>
                <tr>
-                  <th> <%= LEFT(rs("MR_ID"),2) &"-"& mid(rs("MR_ID"),3,3) &"/"& mid(rs("MR_ID"),6,4) &"/"& right(rs("MR_ID"),4)%></th>
-                  <td><%= rs("AgenName") %></td>
+                  <th><%= recordcounter%></th>
                   <td><%= Cdate(rs("MR_Date")) %></td>
-                  <td><%= rs("username") %></td>
+                  <td> <%= LEFT(rs("MR_ID"),2) &"-"& mid(rs("MR_ID"),3,3) &"/"& mid(rs("MR_ID"),6,4) &"/"& right(rs("MR_ID"),4)%></td>
+                  <td><%= left(rs("MR_OPHID"),2) %>-<%= mid(rs("MR_OPHID"),3,3)%>/<%= mid(rs("MR_OPHID"),6,4) %>/<%= right(rs("MR_OPHID"),4) %></td>
                   <td><%= rs("MR_Keterangan") %></td>
                   <td class="text-center">
                      <div class="btn-group" role="group" aria-label="Basic example">
@@ -222,6 +217,7 @@
                   </td>
                </tr>
                <% 
+               Response.flush
                showrecords = showrecords - 1
                rs.movenext
                if rs.EOF then
@@ -248,7 +244,7 @@
                   end if
                if requestrecords <> 0 then 
                %>
-                  <a class="page-link prev" href="./?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&cabang=<%=cabang%>&tgla=<%=tgla%>&tgle=<%=tgle%>&jenis=<%=jenis%>">&#x25C4; Prev </a>
+                  <a class="page-link prev" href="./?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&cabang=<%=cabang%>&tgla=<%=tgla%>&tgle=<%=tgle%>&ophidmr=<%=ophidmr%>">&#x25C4; Prev </a>
                <% else %>
                   <p class="page-link prev-p">&#x25C4; Prev </p>
                <% end if %>
@@ -266,9 +262,9 @@
                   end if
                   if Cint(page) = pagelistcounter then
                   %>
-                     <a class="page-link hal bg-primary text-light" href="./?offset=<% = pagelist %>&page=<%=pagelistcounter%>&cabang=<%=cabang%>&tgla=<%=tgla%>&tgle=<%=tgle%>&jenis=<%=jenis%>"><%= pagelistcounter %></a> 
+                     <a class="page-link hal bg-primary text-light" href="./?offset=<% = pagelist %>&page=<%=pagelistcounter%>&cabang=<%=cabang%>&tgla=<%=tgla%>&tgle=<%=tgle%>&ophidmr=<%=ophidmr%>"><%= pagelistcounter %></a> 
                   <%else%>
-                     <a class="page-link hal" href="./?offset=<% = pagelist %>&page=<%=pagelistcounter%>&cabang=<%=cabang%>&tgla=<%=tgla%>&tgle=<%=tgle%>&jenis=<%=jenis%>"><%= pagelistcounter %></a> 
+                     <a class="page-link hal" href="./?offset=<% = pagelist %>&page=<%=pagelistcounter%>&cabang=<%=cabang%>&tgla=<%=tgla%>&tgle=<%=tgle%>&ophidmr=<%=ophidmr%>"><%= pagelistcounter %></a> 
                   <%
                   end if
                   pagelist = pagelist + recordsonpage
@@ -284,7 +280,7 @@
                   end if
                   %>
                   <% if(recordcounter > 1) and (lastrecord <> 1) then %>
-                     <a class="page-link next" href="./?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&cabang=<%=cabang%>&tgla=<%=tgla%>&tgle=<%=tgle%>&jenis=<%=jenis%>">Next &#x25BA;</a>
+                     <a class="page-link next" href="./?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&cabang=<%=cabang%>&tgla=<%=tgla%>&tgle=<%=tgle%>&ophidmr=<%=ophidmr%>">Next &#x25BA;</a>
                   <% else %>
                      <p class="page-link next-p">Next &#x25BA;</p>
                   <% end if %>

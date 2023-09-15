@@ -39,3 +39,13 @@ const getPdrOutgoing = (e) => {
     });
   }
 };
+
+const getDaftarBom = (id, tpout, idmo) => {
+  $.ajax({
+    method: "POST",
+    url: "daftarbom.asp",
+    data: { id, tpout, idmo },
+  }).done(function (msg) {
+    $(".content-daftarbom-outdadd").html(msg);
+  });
+};

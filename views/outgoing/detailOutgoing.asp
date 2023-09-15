@@ -1,11 +1,12 @@
 <!--#include file="../../init.asp"-->
+<!--#include file="../../functions/func_ceil.asp"-->
 <% 
   id = trim(Request.QueryString("id"))
 
   set data_cmd =  Server.CreateObject ("ADODB.Command")
   data_cmd.ActiveConnection = mm_delima_string
 
-  data_cmd.commandText = "SELECT dbo.DLK_T_MaterialOutH.*, dbo.GLB_M_Agen.AgenName, dbo.GLB_M_Agen.AgenID, DLK_M_Weblogin.username FROM dbo.DLK_T_MaterialOutH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialOutH.MO_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Weblogin ON DLK_T_MaterialOutH.MO_UpdateID = DLK_M_Weblogin.userid WHERE (dbo.DLK_T_MaterialOutH.MO_ID = '"&id&"')"
+  data_cmd.commandText = "SELECT dbo.DLK_T_MaterialOutH.*, dbo.GLB_M_Agen.AgenName, dbo.GLB_M_Agen.AgenID, DLK_M_Weblogin.realname FROM dbo.DLK_T_MaterialOutH LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.DLK_T_MaterialOutH.MO_AgenID = dbo.GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Weblogin ON DLK_T_MaterialOutH.MO_UpdateID = DLK_M_Weblogin.userid WHERE (dbo.DLK_T_MaterialOutH.MO_ID = '"&id&"')"
 
   set data = data_cmd.execute
 
@@ -58,7 +59,7 @@
       <label>Update ID</label>
     </div>
     <div class="col-sm-4">
-      <input type="text" class="form-control" value="<%= data("username") %>" readonly>
+      <input type="text" class="form-control" value="<%= data("realname") %>" readonly>
     </div>
   </div>
   <div class="row mb-3">
@@ -98,23 +99,33 @@
         <thead class="bg-secondary text-light">
           <tr>
             <th scope="col">Tanggal</th>
-            <th scope="col">Kode</th>
+            <th scope="col">Kategori</th>
+            <th scope="col">Jenis</th>
             <th scope="col">Item</th>
             <th scope="col">Quantity</th>
             <th scope="col">Satuan</th>
             <th scope="col">Rak</th>
+            <th scope="col">Harga</th>
+            <th scope="col">Total</th>
           </tr>
         </thead>
         <tbody>
           <% 
+          total = 0
+          gtotal = 0
           do while not ddata.eof 
+          total = ddata("MO_Harga") * ddata("MO_QtySatuan")
+          
           %>
             <tr>
               <th>
                 <%= ddata("MO_Date") %>
               </th>
               <th>
-                <%= ddata("KategoriNama") &"-"& ddata("jenisNama") %>
+                <%= ddata("KategoriNama") %>
+              </th>
+              <th>
+                <%=  ddata("jenisNama") %>
               </th>
               <td>
                 <%= ddata("Brg_Nama") %>
@@ -128,12 +139,25 @@
               <td>
                 <%= ddata("Rak_Nama") %>
               </td>
+              <td class="text-end">
+                <%= replace(formatCurrency(ddata("MO_Harga")),"$","") %>
+              </td>
+              <td class="text-end">
+                <%= replace(formatCurrency(ceil(total)),"$","") %>
+              </td>
             </tr>
           <% 
+          gtotal = gtotal + total
           response.flush
           ddata.movenext
           loop
           %>
+          <tr>  
+            <th colspan="8">Grand Total</th>
+            <td class="text-end">
+              <%= replace(formatCurrency(ceil(gtotal)),"$","") %>
+            </td>
+          </tr> 
         </tbody>
       </table>
     </div>
