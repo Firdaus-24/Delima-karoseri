@@ -5,24 +5,16 @@
     set data_cmd =  Server.CreateObject ("ADODB.Command")
     data_cmd.ActiveConnection = mm_delima_string
 
-    data_cmd.commandText = "SELECT DLK_T_Memo_H.*, DLK_M_Departement.DepNama, GLB_M_Agen.AgenName, DLK_M_Divisi.DivNama FROM DLK_T_Memo_H LEFT OUTER JOIN DLK_M_Departement ON DLK_T_Memo_H.memoDepID = DLK_M_Departement.DepID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN DLK_M_Divisi ON DLK_T_Memo_H.memoDivID = DLK_M_Divisi.divID WHERE memoID = '"& id &"' and memoAktifYN = 'Y'"
+    data_cmd.commandText = "SELECT DLK_T_Memo_H.*, HRD_M_Departement.DepNama, GLB_M_Agen.AgenName, HRD_M_Divisi.DivNama,  DLK_M_Kebutuhan.K_Name FROM DLK_T_Memo_H LEFT OUTER JOIN HRD_M_Departement ON DLK_T_Memo_H.memoDepID = HRD_M_Departement.DepID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.AgenID LEFT OUTER JOIN HRD_M_Divisi ON DLK_T_Memo_H.memoDivID = HRD_M_Divisi.divID LEFT OUTER JOIN DLK_M_Kebutuhan ON DLK_T_Memo_H.memoKebutuhan = DLK_M_Kebutuhan.K_ID WHERE memoID = '"& id &"' and memoAktifYN = 'Y'"
     ' response.write data_cmd.commandText
     set dataH = data_cmd.execute
 
-    ' cek kebutuhan
-    if dataH("memoKebutuhan") = 0 then
-        kebutuhan = "Produksi"
-    elseif dataH("memoKebutuhan") = 1 then
-        kebutuhan = "Khusus"
-    elseif dataH("memoKebutuhan") = 2 then
-        kebutuhan = "Umum"
-    else
-        kebutuhan = "Sendiri"
-    end if
-    ' nomor id
-    ' left(dataH("memoID"),4)/ mid(dataH("memoId"),5,3)- getAgen(mid(dataH("memoID"),8,3),"")/ mid(dataH("memoID"),11,4)/ right(dataH("memoID"),3)
+    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama, DLK_M_Kategori.kategoriNama, DLK_M_JenisBarang.JenisNama, DLK_M_TypeBarang.T_Nama, DLK_M_SatuanBarang.sat_nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID LEFT OUTER JOIN DLK_M_Kategori ON DLK_M_Barang.KategoriID = DLK_M_Kategori.KAtegoriID LEFT OUTER JOIN DLK_M_JenisBarang ON DLK_M_Barang.JenisID = DLK_M_JenisBarang.jenisID LEFT OUTER JOIN DLK_M_TypeBarang ON DLK_M_Barang.BRg_Type = DLK_M_Typebarang.T_ID LEFT OUTER JOIN DLK_M_SatuanBarang ON DLK_T_Memo_D.memosatuan = DLK_M_Satuanbarang.sat_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY DLK_M_TypeBarang.T_Nama, DLK_M_Barang.Brg_Nama ASC"
+
+    set dataD = data_cmd.execute
+
+    call header("Detail Barang Kurang") 
 %>
-<% call header("Detail Barang Kurang") %>
 <!--#include file="../../navbar.asp"-->
 <div class="container">
     <div class="row">
@@ -68,7 +60,7 @@
             <label for="kebutuhan" class="col-form-label">Kebutuhan</label>
         </div>
         <div class="col-sm-4 mb-3">
-            <input type="text" id="kebutuhan" class="form-control" name="kebutuhan" value="<%= kebutuhan %>" readonly>
+            <input type="text" id="kebutuhan" class="form-control" name="kebutuhan" value="<%= datah("K_name") %>" readonly>
         </div>
         <div class="col-sm-2">
             <label for="keterangan" class="col-form-label">Keterangan</label>
@@ -95,20 +87,18 @@
                 <thead class="bg-secondary text-light">
                     <tr>
                         <th scope="col">No</th>
-                        <th scope="col">Item</th>
-                        <th scope="col">Spesification</th>
+                        <th scope="col">Kategori</th>
+                        <th scope="col">Jenis</th>
+                        <th scope="col">Barang</th>
                         <th scope="col">Pesan</th>
                         <th scope="col">PO</th>
                         <th scope="col">Satuan</th>
+                        <th scope="col">Type</th>
                         <th scope="col">Keterangan</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% 
-                    data_cmd.commandText = "SELECT DLK_T_Memo_D.*, DLK_M_Barang.Brg_Nama FROM DLK_T_Memo_D LEFT OUTER JOIN DLK_M_Barang ON DLK_T_Memo_D.MemoItem = DLK_M_Barang.Brg_ID WHERE left(MemoID,17) = '"& dataH("MemoID") &"' ORDER BY memoItem ASC"
-                    ' response.write data_cmd.commandText
-                    set dataD = data_cmd.execute
-
                     no = 0
                     do while not dataD.eof
                     no = no + 1
@@ -131,18 +121,23 @@
                     end if
 
                     %>
-                        <tr>
+                        <tr <%= classbg %>>
                             <th scope="row"><%= no %></th>
-                            <td <%= classbg %>><%= dataD("Brg_Nama") %></td>
-                            <td><%= dataD("memoSpect") %></td>
+                            <td ><%= dataD("kategorinama") %></td>
+                            <td ><%= dataD("Jenisnama") %></td>
+                            <td><%= dataD("Brg_Nama") %></td>
                             <td><%= dataD("memoQtty") %></td>
                             <td><%= qtypo %></td>
-                            <td><% call getSatBerat(dataD("memoSatuan")) %></td>
+                            <td><%= dataD("Sat_nama") %></td>
+                            <td>
+                                <%= dataD("T_nama") %>
+                            </td>
                             <td>
                                 <%= dataD("memoKeterangan") %>
                             </td>
                         </tr>
                     <% 
+                    Response.flush
                     dataD.movenext
                     loop
                     %>

@@ -1,13 +1,13 @@
 <!--#include file="../../init.asp"-->
 <% 
     if session("INV6") = false then
-        Response.Redirect("index.asp")
+        Response.Redirect("./")
     end if
     ' query cabang  
     set agen_cmd =  Server.CreateObject ("ADODB.Command")
     agen_cmd.ActiveConnection = mm_delima_string
     ' filter agen
-    agen_cmd.commandText = "SELECT SUM(dbo.DLK_T_Memo_D.memoQtty) AS minta, dbo.DLK_T_Memo_H.memoID, dbo.DLK_T_Memo_H.memoApproveYN, dbo.DLK_T_Memo_H.memoAktifYN, GLB_M_Agen.AgenName, GLB_M_Agen.Agenid FROM dbo.DLK_T_Memo_D RIGHT OUTER JOIN dbo.DLK_T_Memo_H ON LEFT(dbo.DLK_T_Memo_D.memoID, 17) = dbo.DLK_T_Memo_H.memoID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.Agenid GROUP BY dbo.DLK_T_Memo_H.memoID, dbo.DLK_T_Memo_H.memoApproveYN, dbo.DLK_T_Memo_H.memoAktifYN, GLB_M_Agen.AgenName, GLB_M_Agen.Agenid HAVING (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN = 'Y') AND (SUM(dbo.DLK_T_Memo_D.memoQtty) > (SELECT SUM(dbo.DLK_T_OrPemD.OPD_QtySatuan) AS po FROM dbo.DLK_T_OrPemH RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID, 13) WHERE OPH_AktifYN = 'Y' AND OPH_MemoID = DLK_T_Memo_H.memoID GROUP BY dbo.DLK_T_OrPemH.OPH_MemoID)) "
+    agen_cmd.commandText = "SELECT agenid, Agenname FROM GLB_M_Agen WHERE AgenaktifYN = 'Y'"
     set agendata = agen_cmd.execute
 
     ' filter departemen
@@ -63,7 +63,7 @@
         filtertgl = ""
     end if
     ' query seach 
-    strquery = "SELECT SUM(dbo.DLK_T_Memo_D.memoQtty) AS minta, dbo.DLK_T_Memo_H.memoID, dbo.DLK_T_Memo_H.memoTgl, dbo.DLK_T_Memo_H.memoAgenID, dbo.DLK_T_Memo_H.memoDepID, dbo.DLK_T_Memo_H.memoDivID, dbo.DLK_T_Memo_H.memoKeterangan, dbo.DLK_T_Memo_H.memoKebutuhan, dbo.DLK_T_Memo_H.memoApproveYN, dbo.DLK_T_Memo_H.memoAktifYN, dbo.DLK_T_Memo_H.memoUpdateID, GLB_M_Agen.AgenName, HRD_M_Divisi.DivNama, HRD_M_Departement.DepNama FROM dbo.DLK_T_Memo_D RIGHT OUTER JOIN dbo.DLK_T_Memo_H ON LEFT(dbo.DLK_T_Memo_D.memoID, 17) = dbo.DLK_T_Memo_H.memoID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.Agenid LEFT OUTER JOIN HRD_M_Divisi ON DLK_T_Memo_H.memoDivid = HRD_M_Divisi.DivID LEFT OUTER JOIN HRD_M_Departement ON DLK_T_Memo_H.memoDepid = HRD_M_Departement.DepID GROUP BY dbo.DLK_T_Memo_H.memoID, dbo.DLK_T_Memo_H.memoTgl, dbo.DLK_T_Memo_H.memoAgenID, dbo.DLK_T_Memo_H.memoDepID, dbo.DLK_T_Memo_H.memoDivID, dbo.DLK_T_Memo_H.memoKeterangan, dbo.DLK_T_Memo_H.memoKebutuhan, dbo.DLK_T_Memo_H.memoApproveYN, dbo.DLK_T_Memo_H.memoAktifYN, dbo.DLK_T_Memo_H.memoUpdateID, GLB_M_Agen.AgenName, HRD_M_Divisi.DivNama, HRD_M_Departement.DepNama HAVING (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN = 'Y') "& filterAgen &" "& filterdep &" "& filtertgl &" AND (SUM(dbo.DLK_T_Memo_D.memoQtty) > (SELECT SUM(dbo.DLK_T_OrPemD.OPD_QtySatuan) AS po FROM dbo.DLK_T_OrPemH RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID, 13) WHERE OPH_AktifYN = 'Y' AND OPH_MemoID = DLK_T_Memo_H.memoID GROUP BY dbo.DLK_T_OrPemH.OPH_MemoID)) "
+    strquery = "SELECT SUM(dbo.DLK_T_Memo_D.memoQtty) AS minta, dbo.DLK_T_Memo_H.memoID, dbo.DLK_T_Memo_H.memoTgl, dbo.DLK_T_Memo_H.memoAgenID, dbo.DLK_T_Memo_H.memoDepID, dbo.DLK_T_Memo_H.memoDivID, dbo.DLK_T_Memo_H.memoKeterangan, dbo.DLK_T_Memo_H.memoKebutuhan, dbo.DLK_T_Memo_H.memoApproveYN, dbo.DLK_T_Memo_H.memoAktifYN, dbo.DLK_T_Memo_H.memoUpdateID, GLB_M_Agen.AgenName, HRD_M_Divisi.DivNama, HRD_M_Departement.DepNama, DLK_M_Kebutuhan.K_Name FROM dbo.DLK_T_Memo_D RIGHT OUTER JOIN dbo.DLK_T_Memo_H ON LEFT(dbo.DLK_T_Memo_D.memoID, 17) = dbo.DLK_T_Memo_H.memoID LEFT OUTER JOIN GLB_M_Agen ON DLK_T_Memo_H.memoAgenID = GLB_M_Agen.Agenid LEFT OUTER JOIN HRD_M_Divisi ON DLK_T_Memo_H.memoDivid = HRD_M_Divisi.DivID LEFT OUTER JOIN HRD_M_Departement ON DLK_T_Memo_H.memoDepid = HRD_M_Departement.DepID LEFT OUTER JOIN DLK_M_Kebutuhan ON DLK_T_Memo_H.memoKebutuhan = DLK_M_Kebutuhan.K_ID GROUP BY dbo.DLK_T_Memo_H.memoID, dbo.DLK_T_Memo_H.memoTgl, dbo.DLK_T_Memo_H.memoAgenID, dbo.DLK_T_Memo_H.memoDepID, dbo.DLK_T_Memo_H.memoDivID, dbo.DLK_T_Memo_H.memoKeterangan, dbo.DLK_T_Memo_H.memoKebutuhan, dbo.DLK_T_Memo_H.memoApproveYN, dbo.DLK_T_Memo_H.memoAktifYN, dbo.DLK_T_Memo_H.memoUpdateID, GLB_M_Agen.AgenName, HRD_M_Divisi.DivNama, HRD_M_Departement.DepNama,  DLK_M_Kebutuhan.K_Name HAVING (dbo.DLK_T_Memo_H.memoAktifYN = 'Y') AND (dbo.DLK_T_Memo_H.memoApproveYN = 'Y') "& filterAgen &" "& filterdep &" "& filtertgl &" AND (SUM(dbo.DLK_T_Memo_D.memoQtty) > (SELECT SUM(dbo.DLK_T_OrPemD.OPD_QtySatuan) AS po FROM dbo.DLK_T_OrPemH RIGHT OUTER JOIN dbo.DLK_T_OrPemD ON dbo.DLK_T_OrPemH.OPH_ID = LEFT(dbo.DLK_T_OrPemD.OPD_OPHID, 13) WHERE OPH_AktifYN = 'Y' AND OPH_MemoID = DLK_T_Memo_H.memoID GROUP BY dbo.DLK_T_OrPemH.OPH_MemoID)) "
 
     ' untuk data paggination
     page = Request.QueryString("page")
@@ -160,9 +160,9 @@
                     <th scope="col">No</th>
                     <th scope="col">No memo</th>
                     <th scope="col">Tanggal</th>
-                    <th scope="col">Cabang</th>
                     <th scope="col">Divisi</th>
                     <th scope="col">Departement</th>
+                    <th scope="col">Kebutuhan</th>
                     <th scope="col">Aktif</th>
                     <th scope="col" class="text-center">Aksi</th>
                     </tr>
@@ -179,12 +179,12 @@
                     <tr>
                         <th scope="row"><%= recordcounter %></th>
                         <th>
-                            <%= rs("memoID") %>
+                            <%= left(rs("memoID"),4) %>/<%=mid(rs("memoId"),5,3) %>-<% call getAgen(mid(rs("memoID"),8,3),"") %>/<%= mid(rs("memoID"),11,4) %>/<%= right(rs("memoID"),3)  %>
                         </th>
                         <td><%= Cdate(rs("memoTgl")) %></td>
-                        <td><%= rs("AgenName") %></td>
                         <td><%= rs("DivNama") %></td>
                         <td><%= rs("DepNama")%></td>
+                        <td><%= rs("K_Name")%></td>
                         <td>
                             <%if rs("memoAktifYN") = "Y" then %>Aktif <% else %>Off <% end if %>
                         </td>
@@ -195,6 +195,7 @@
                         </td>
                     </tr>
                     <% 
+                    Response.flush
                     showrecords = showrecords - 1
                     rs.movenext
                     if rs.EOF then
