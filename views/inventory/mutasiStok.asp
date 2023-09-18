@@ -1,7 +1,7 @@
 <!--#include file="../../init.asp"-->
 <% 
    if session("INV7") = false then
-      Response.Redirect("index.asp")
+      Response.Redirect("./")
    end if
 
    set data_cmd =  Server.CreateObject ("ADODB.Command")
@@ -188,20 +188,27 @@
    <% if agen <> "" OR tgl <>  "" then %>
    <div class="row">
       <div class="col-sm-12">
-         <table class="table" style="font-size:14px;">
-            <thead class="bg-secondary text-light">
+         <table class="table table-hover table-bordered" style="font-size:14px;" >
+            <thead class="bg-secondary text-light text-center">
                <tr>
-                  <th scope="col">No</th>
-                  <th scope="col">Kode</th>
-                  <th scope="col">Item</th>
-                  <th scope="col">Saldo-Awal</th>
-                  <th scope="col">Harga-Awal</th>
-                  <th scope="col">Saldo-Beli</th>
-                  <th scope="col">Harga-Beli</th>
-                  <th scope="col">Saldo-Jual</th>
-                  <th scope="col">Harga-Jual</th>
-                  <th scope="col">Saldo-Akhir</th>
-                  <th scope="col">Harga-Akhir</th>
+                  <th scope="col" rowspan="2">No</th>
+                  <th scope="col" rowspan="2">Kategori</th>
+                  <th scope="col" rowspan="2">Jenis</th>
+                  <th scope="col" rowspan="2">Barang</th>
+                  <th scope="col" colspan="2">Saldo-Awal</th>
+                  <th scope="col" colspan="2">Saldo-Beli</th>
+                  <th scope="col" colspan="2">Saldo-Jual</th>
+                  <th scope="col" colspan="2">Saldo-Akhir</th>
+               </tr>
+               <tr>
+                  <th>Qty</th>
+                  <th>Harga</th>
+                  <th>Qty</th>
+                  <th>Harga</th>
+                  <th>Qty</th>
+                  <th>Harga</th>
+                  <th>Qty</th>
+                  <th>Harga</th>
                </tr>
             </thead>
             <tbody>
@@ -216,7 +223,8 @@
                %>
                <tr>
                   <th scope="row"><%= recordcounter %></th>
-                  <td><%= rs("kategoriNama") &"-"& rs("jenisNama") %></td>
+                  <td><%= rs("kategoriNama") %></td>
+                  <td><%= rs("jenisNama") %></td>
                   <td><%= rs("Brg_Nama") %></td>
                   <td><%= rs("MSAwal") %></td>
                   <td><%= replace(formatCurrency(rs("MSHAwal")),"$","") %></td>

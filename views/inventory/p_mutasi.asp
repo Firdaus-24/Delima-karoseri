@@ -2,7 +2,7 @@
 <!--#include file="../../init.asp"-->
 <% 
    if session("INV7A") = false then
-      Response.Redirect("index.asp")
+      Response.Redirect("./")
    end if
    call header("Proses Mutasi")
 

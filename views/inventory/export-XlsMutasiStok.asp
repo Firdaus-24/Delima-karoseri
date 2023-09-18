@@ -71,56 +71,100 @@
 
    set data = data_cmd.execute
 %>
+<style>
+.table{
+   font-family: Calibri, Arial, sans-serif;
+   font-size:16px;
+}
+.table th {
+   background-color:yellow;
+}
+</style>
 
-<table widht="100%" style="font-family: Calibri, Arial, sans-serif;font-size:12px;">
+<table widht="100%" class="table">
    <tr>
-      <td colspan="11" align="center">MUTASI STOK INVENTORY</td> 
+      <td colspan="11" align="center" style="font-size:18px;">MUTASI STOK INVENTORY</td> 
    </tr>
    <% if agen <> "" then %>
    <tr>
-      <td colspan="11" align="center">Cabang : <%= dagen("agenName") %></td> 
+      <td colspan="11" align="center" style="font-size:18px;">Cabang : <%= dagen("agenName") %></td> 
    </tr>
    <% end if %>
    <tr>
-      <td colspan="11" align="center">Priode : <%= bulan &"/"& tahun %></td> 
+      <td colspan="11" align="center" style="font-size:18px;">Priode : <%= MonthName(bulan) &" / "& tahun %></td> 
    </tr>
     <tr>
-      <td colspan="11" align="center">&nbsp</td> 
+      <td colspan="11" align="center" style="font-size:18px;">&nbsp</td> 
    </tr>
-   <tr style="font-size:12px;">
-      <th style="background-color: #0000a0;color:#fff;">No</th>
-      <th style="background-color: #0000a0;color:#fff;">Kode</th>
-      <th style="background-color: #0000a0;color:#fff;">Item</th>
-      <th style="background-color: #0000a0;color:#fff;">Qty-Awal</th>
-      <th style="background-color: #0000a0;color:#fff;">Harga-Awal</th>
-      <th style="background-color: #0000a0;color:#fff;">Qty-Beli</th>
-      <th style="background-color: #0000a0;color:#fff;">Harga-Beli</th>
-      <th style="background-color: #0000a0;color:#fff;">Qty-Jual</th>
-      <th style="background-color: #0000a0;color:#fff;">Harga-Jual</th>
-      <th style="background-color: #0000a0;color:#fff;">Qty-Akhir</th>
-      <th style="background-color: #0000a0;color:#fff;">Harga-Akhir</th>
+   <tr>
+      <th rowspan="2">No</th>
+      <th rowspan="2">Kategori</th>
+      <th rowspan="2">Jenis</th>
+      <th rowspan="2">Barang</th>
+      <th colspan="2">Qty-Awal</th>
+      <th colspan="2">Qty-Beli</th>
+      <th colspan="2">Qty-Jual</th>
+      <th colspan="2">Qty-Akhir</th>
+   </tr>
+   <tr>
+      <th>Qty</th>
+      <th>Harga</th>
+      <th>Qty</th>
+      <th>Harga</th>
+      <th>Qty</th>
+      <th>Harga</th>
+      <th>Qty</th>
+      <th>Harga</th>
    </tr>
    <% 
    no = 0
+   qtyawal = 0
+   hawal = 0
+   qtybeli = 0
+   hbeli = 0
+   qtyjual = 0
+   hjual = 0
+   qtyakhir = 0
+   hakhir = 0
    Do While not data.eof  
    no = no + 1
+   qtyawal = qtyawal +  data("MSAwal")
+   hawal = hawal +  data("MSHAwal")
+   qtybeli = qtybeli +  data("beli")
+   hbeli = hbeli +  data("hbeli")
+   qtyjual = qtyjual +  data("jual")
+   hjual = hjual +  data("hjual")
+   qtyakhir = qtyakhir +  data("tsaldoakhir")
+   hakhir = hakhir +  data("hargaakhir")
    %>
    <tr style="font-size:12px"> 
-      <th scope="row"><%= no %></th>
-      <td><%= data("kategoriNama") &"-"& data("jenisNama") %></td>
+      <td scope="row"><%= no %></td>
+      <td><%= data("kategoriNama") %></td>
+      <td><%=  data("jenisNama") %></td>
       <td><%= data("Brg_Nama") %></td>
       <td><%= data("MSAwal") %></td>
-      <td><%= replace(formatCurrency(data("MSHAwal")),"$","") %></td>
+      <td align="right"><%= replace(formatCurrency(data("MSHAwal")),"$","") %></td>
       <td><%= data("beli") %></td>
-      <td><%= replace(formatCurrency(data("hbeli")),"$","") %></td>
+      <td align="right"><%= replace(formatCurrency(data("hbeli")),"$","") %></td>
       <td><%= data("jual") %></td>
-      <td><%= replace(formatCurrency(data("hjual")),"$","") %></td>
+      <td align="right"><%= replace(formatCurrency(data("hjual")),"$","") %></td>
       <td><%= data("tsaldoakhir") %></td>
-      <td><%= replace(formatCurrency(data("hargaakhir")),"$","") %></td>
+      <td align="right"><%= replace(formatCurrency(data("hargaakhir")),"$","") %></td>
    </tr>
    <% 
    response.flush
    data.movenext
    loop
    %>
+   <tr>
+      <td colspan="4">Total</td>
+      <td ><%=qtyawal%></td>
+      <td align="right"><%=replace(formatCurrency(hawal),"$","")%></td>
+      <td ><%=qtybeli%></td>
+      <td align="right"><%=replace(formatCurrency(hbeli),"$","")%></td>
+      <td ><%=qtyjual%></td>
+      <td align="right"><%=replace(formatCurrency(hjual),"$","")%></td>
+      <td ><%=qtyakhir%></td>
+      <td align="right"><%=replace(formatCurrency(hakhir),"$","")%></td>
+   </tr>
 </table>
